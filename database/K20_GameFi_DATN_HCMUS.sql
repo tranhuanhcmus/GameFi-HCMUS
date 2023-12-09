@@ -10,11 +10,11 @@
 DROP SCHEMA IF EXISTS K20_GameFi_DATN_HCMUS;
 CREATE SCHEMA K20_GameFi_DATN_HCMUS;
 
--- Select the database
-USE K20_GameFi_DATN_HCMUS;
+-- Set search path to the TAXI schema
+SET search_path = K20_GameFi_DATN_HCMUS;
 
--- Create USER table
-CREATE TABLE USER
+-- Create ACCOUNT table
+CREATE TABLE ACCOUNT
 (
    MAIL                 CHAR(50) NOT NULL,
    TEL                  CHAR(15) NOT NULL,
