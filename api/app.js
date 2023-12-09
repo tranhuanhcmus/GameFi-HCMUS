@@ -15,7 +15,7 @@ app.use(cors());
 app.use('/api/user', userRouter);
 
 // Check the database connection
-db.getConnection((err, connection) => {
+db.connect((err, connection) => {
   if (err) {
     console.error('Error connecting to database:', err);
     return;
