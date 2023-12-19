@@ -1,0 +1,10 @@
+{
+  "name": "Game",
+  "uuid": "c890526e-6976-4342-81d4-68d96e84b6f2",
+  "creator": {
+    "version": "3.8.1"
+  },
+  "dependencies": {
+    "web3": "^4.3.0"
+  }
+}
