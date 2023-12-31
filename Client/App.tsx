@@ -4,7 +4,9 @@ import '@walletconnect/react-native-compat';
 import { WagmiConfig, useAccount } from 'wagmi'
 import { mainnet, polygon, arbitrum } from 'viem/chains'
 import { createWeb3Modal, defaultWagmiConfig, useWeb3Modal, W3mButton, Web3Modal } from '@web3modal/wagmi-react-native'
-import HomeScreen from './Screens/HomeScreen';
+import ConnectScreen from './src/Screens/ConnectScreen';
+import HomeScreen from './src/Screens/HomeScreen';
+import Route from './src/routes';
 
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = '039c22f40077998e7e7a801569526cd9'
@@ -37,11 +39,9 @@ export default function App() {
 
   return (
     <WagmiConfig config={wagmiConfig}>
-      <HomeScreen />
+      <Route />
       <Web3Modal />
     </WagmiConfig>
-
-
   );
 }
 
