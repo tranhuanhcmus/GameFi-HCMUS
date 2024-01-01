@@ -33,7 +33,7 @@ const HomeScreen = (props: Props) => {
   }, [isConnected]);
   return (
     <SafeAreaView className="flex flex-1 bg-[#210035]">
-      <View className="w-full">
+      <View className="">
         {isConnected && <W3mAccountButton balance="show" />}
         {isConnected && (
           <NormalButton onPress={() => disconnect()}>
@@ -43,10 +43,10 @@ const HomeScreen = (props: Props) => {
           </NormalButton>
         )}
       </View>
-      <View className="w-full flex-1">
+      <View className=" flex-1">
         <PetCarousel />
       </View>
-      <View className=" flex w-full flex-row items-center justify-center gap-4">
+      <View className=" flex  flex-row items-center justify-center gap-4">
         <NormalButton className={"bg-[#FFE243]"}>
           <Text className="text-center text-base font-semibold  text-black">
             Line-Up build
