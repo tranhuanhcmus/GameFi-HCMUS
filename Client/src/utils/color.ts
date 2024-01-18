@@ -1,0 +1,9 @@
+export const COLOR = {
+  PURPLE: "#210035",
+  RED: "#E60722",
+  GRAY: "#B6B8B5",
+  BLUE: "#1A87EE",
+  YELLOW: "#F9CF2A",
+  GREEN: "#42B50F",
+  LIGHT_PURPLE: "#BC93F4",
+};
