@@ -1,5 +1,7 @@
 // NavigationParams.ts
 export type RootStackParamList = {
-	Home: any;
-	Connect:any;
-  };
+  Home: any;
+  Connect: any;
+  TestScreen: any;
+  PlayScreen: any;
+};
