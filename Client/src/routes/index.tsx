@@ -23,11 +23,13 @@ import { Svg } from "react-native-svg";
 import AlertComponent from "../components/AlertComponent";
 import LoadingComponent from "../components/LoadingComponent";
 import Header from "../components/Header";
-import HeaderLeft from "../components/HeaderLeft";
+
+import { flare } from "viem/chains";
 
 type LocalRootStackParamList = {
   Connect: undefined;
   MainTab: undefined;
+  Game: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -140,7 +142,13 @@ const Route = () => (
           //headerTitle: () => <HeaderLeft></HeaderLeft>,
         }}
       />
-      <Stack.Screen name="Game" component={GameScreen} />
+      <Stack.Screen
+        name="Game"
+        component={GameScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="MainTab" component={MainTab} />
     </Stack.Navigator>
     <AlertComponent />
