@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Image, Text, View } from "react-native";
+import { Button, Image, View } from "react-native";
 import { W3mAccountButton, useWeb3Modal } from "@web3modal/wagmi-react-native";
 import { useAccount, useDisconnect } from "wagmi"; // Import useDisconnect hook
 import NormalButton from "../components/Button/NormalButton";
@@ -7,6 +7,7 @@ import Moon from "../../assets/Moon.png";
 import { LinearGradient } from "expo-linear-gradient";
 import GradientButton from "../components/Button/GradientButton";
 import useCustomNavigation from "./../hooks/useCustomNavigation/index";
+import CustomText from "../components/CustomText";
 
 export default function ConnectScreen() {
   const { open } = useWeb3Modal();
@@ -25,14 +26,14 @@ export default function ConnectScreen() {
         <Image className="absolute inset-0 z-0" source={Moon} />
 
         <View className="absolute z-10 flex h-full w-full flex-col p-4">
-          <Text className="mt-4 w-full py-4 text-center text-lg font-bold text-white">
+          <CustomText className="mt-4 w-full py-4 text-center font-rexlia text-lg font-bold text-white">
             GAME NAME
-          </Text>
+          </CustomText>
 
           <View className="mx-[5%] my-[15%] flex flex-1 flex-col items-center justify-between ">
-            <Text className="w-full text-center text-[20px] font-bold text-white ">
+            <CustomText className="w-full text-center font-rexlia text-[20px] text-white ">
               PLAY GAMES, CHALLENGE OTHERS & HAVE FUN
-            </Text>
+            </CustomText>
 
             <View className="w-full ">
               {!isConnected && (
@@ -44,13 +45,13 @@ export default function ConnectScreen() {
                   onPress={() => open()}
                 >
                   {isConnecting ? (
-                    <Text className="text-center text-base font-semibold  text-white">
+                    <CustomText className="text-center font-rexlia text-base font-semibold  text-white">
                       Connecting...
-                    </Text>
+                    </CustomText>
                   ) : (
-                    <Text className="text-center text-base font-semibold  text-white">
+                    <CustomText className="text-center font-rexlia text-base font-semibold  text-white">
                       Connect Wallet
-                    </Text>
+                    </CustomText>
                   )}
                 </GradientButton>
               )}
@@ -58,9 +59,9 @@ export default function ConnectScreen() {
           </View>
 
           <View className="p-4">
-            <Text className="m-auto w-[60%] text-center text-sm text-white ">
+            <CustomText className="m-auto w-[60%] text-center font-rexlia text-sm text-white ">
               Terms and conditions policies & privacy
-            </Text>
+            </CustomText>
           </View>
         </View>
       </View>

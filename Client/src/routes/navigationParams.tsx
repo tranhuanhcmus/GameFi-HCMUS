@@ -2,6 +2,10 @@
 export type RootStackParamList = {
   // TODO
   Game: any;
-  Home: any;
+
   Connect: any;
+  Home: any;
+
+  TestScreen: any;
+  PlayScreen: any;
 };

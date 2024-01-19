@@ -54,6 +54,7 @@ export class HelloWorld extends Component {
   protected onLoad(): void {
     this.initUI();
     this.button.clickEvents.push(this.connectWalletEvent);
+    const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
   }
 
   private initUI() {
