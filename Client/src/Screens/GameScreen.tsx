@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, SafeAreaView } from "react-native";
 import Pet from "../../assets/Pet.png";
 import Fire from "../../assets/fire.jpg";
 import LightNight from "../../assets/lightnight.jpg";
@@ -27,97 +27,99 @@ const randomNumber = () => {
 
 export default function GameScreen() {
   return (
-    <View style={styles.container}>
-      {/* Character area */}
-      <View style={styles.characterArea}>
-        {/* Player 1 - Left*/}
-        <View style={styles.player}>
-          <View style={styles.playerHeader}>
-            {/* Thay anh sau */}
-            <Image style={styles.avatarImage} source={Pet}></Image>
-            <View style={styles.bar}>
-              <View style={styles.energyBar}></View>
-              <View style={styles.damageBar}></View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        {/* Character area */}
+        <View style={styles.characterArea}>
+          {/* Player 1 - Left*/}
+          <View style={styles.player}>
+            <View style={styles.playerHeader}>
+              {/* Thay anh sau */}
+              <Image style={styles.avatarImage} source={Pet}></Image>
+              <View style={styles.bar}>
+                <View style={styles.energyBar}></View>
+                <View style={styles.damageBar}></View>
+              </View>
             </View>
+            <Image style={styles.petImage} source={Pet} />
           </View>
-          <Image style={styles.petImage} source={Pet} />
-        </View>
-        {/* Player 2 - Right */}
-        <View style={styles.player}>
-          <View style={styles.playerHeader}>
-            {/* Thay anh sau */}
-            <View style={styles.bar}>
-              <View style={styles.energyBar}></View>
-              <View style={styles.damageBar}></View>
+          {/* Player 2 - Right */}
+          <View style={styles.player}>
+            <View style={styles.playerHeader}>
+              {/* Thay anh sau */}
+              <View style={styles.bar}>
+                <View style={styles.energyBar}></View>
+                <View style={styles.damageBar}></View>
+              </View>
+              <Image style={styles.avatarImage} source={Pet}></Image>
             </View>
-            <Image style={styles.avatarImage} source={Pet}></Image>
+            <Image style={styles.petImage} source={Pet} />
           </View>
-          <Image style={styles.petImage} source={Pet} />
         </View>
+        {/* Board */}
+        <View style={styles.boardContainer}>
+          {TABLE.map((row, indexRow) => (
+            <View key={indexRow} style={styles.row}>
+              {row.map((cell, index) => {
+                let randomItem = randomNumber();
+                if (randomItem === 0)
+                  return (
+                    <View
+                      key={index}
+                      style={{ ...styles.cell, backgroundColor: COLOR.RED }}
+                    >
+                      <Image style={styles.imageInCell} source={Fire}></Image>
+                    </View>
+                  );
+                if (randomItem === 1)
+                  return (
+                    <View
+                      key={index}
+                      style={{ ...styles.cell, backgroundColor: COLOR.BLUE }}
+                    >
+                      <Image
+                        style={styles.imageInCell}
+                        source={LightNight}
+                      ></Image>
+                    </View>
+                  );
+                if (randomItem === 2)
+                  return (
+                    <View
+                      key={index}
+                      style={{
+                        ...styles.cell,
+                        backgroundColor: COLOR.LIGHT_PURPLE,
+                      }}
+                    >
+                      <Image style={styles.imageInCell} source={Shield}></Image>
+                    </View>
+                  );
+                if (randomItem === 3)
+                  return (
+                    <View
+                      key={index}
+                      style={{ ...styles.cell, backgroundColor: COLOR.YELLOW }}
+                    >
+                      <Image style={styles.imageInCell} source={Sword}></Image>
+                    </View>
+                  );
+                if (randomItem === 4)
+                  return (
+                    <View
+                      key={index}
+                      style={{ ...styles.cell, backgroundColor: COLOR.GRAY }}
+                    >
+                      <Image style={styles.imageInCell} source={YinYan}></Image>
+                    </View>
+                  );
+              })}
+            </View>
+          ))}
+        </View>
+        {/* Bottom nav */}
       </View>
-      {/* Board */}
-      <View style={styles.boardContainer}>
-        {TABLE.map((row, indexRow) => (
-          <View key={indexRow} style={styles.row}>
-            {row.map((cell, index) => {
-              let randomItem = randomNumber();
-              if (randomItem === 0)
-                return (
-                  <View
-                    key={index}
-                    style={{ ...styles.cell, backgroundColor: COLOR.RED }}
-                  >
-                    <Image style={styles.imageInCell} source={Fire}></Image>
-                  </View>
-                );
-              if (randomItem === 1)
-                return (
-                  <View
-                    key={index}
-                    style={{ ...styles.cell, backgroundColor: COLOR.BLUE }}
-                  >
-                    <Image
-                      style={styles.imageInCell}
-                      source={LightNight}
-                    ></Image>
-                  </View>
-                );
-              if (randomItem === 2)
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      ...styles.cell,
-                      backgroundColor: COLOR.LIGHT_PURPLE,
-                    }}
-                  >
-                    <Image style={styles.imageInCell} source={Shield}></Image>
-                  </View>
-                );
-              if (randomItem === 3)
-                return (
-                  <View
-                    key={index}
-                    style={{ ...styles.cell, backgroundColor: COLOR.YELLOW }}
-                  >
-                    <Image style={styles.imageInCell} source={Sword}></Image>
-                  </View>
-                );
-              if (randomItem === 4)
-                return (
-                  <View
-                    key={index}
-                    style={{ ...styles.cell, backgroundColor: COLOR.GRAY }}
-                  >
-                    <Image style={styles.imageInCell} source={YinYan}></Image>
-                  </View>
-                );
-            })}
-          </View>
-        ))}
-      </View>
-      {/* Bottom nav */}
-    </View>
+    </SafeAreaView>
   );
 }
 
