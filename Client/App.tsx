@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import "@walletconnect/react-native-compat";
 import { WagmiConfig, useAccount } from "wagmi";
 import { mainnet, polygon, arbitrum } from "viem/chains";
+import { SafeAreaView } from "react-native";
 import {
   createWeb3Modal,
   defaultWagmiConfig,
