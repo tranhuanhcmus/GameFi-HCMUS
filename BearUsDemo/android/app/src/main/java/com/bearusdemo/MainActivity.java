@@ -1,4 +1,4 @@
-package com.bearusdemo;
+package app.src.main.java.com.bearusdemo;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

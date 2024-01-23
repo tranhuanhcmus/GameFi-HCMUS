@@ -6,4 +6,5 @@ export type RootStackParamList = {
   Home: any;
   TestScreen: any;
   PlayScreen: any;
+  DetailOfPet: any;
 };
