@@ -58,7 +58,6 @@ export default function DetailOfPet() {
         <CustomText style={styles.levelTitle}>Level</CustomText>
         <CustomText style={styles.levelTitle}>10</CustomText>
       </View>
-      {/* Bottom nav bar */}
     </View>
   );
 }
