@@ -1,4 +1,10 @@
 import React from "react";
+
+import HomeScreen from "./../Screens/HomeScreen";
+
+import GameScreen from "../Screens/GameScreen";
+
+type Props = {};
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -17,11 +23,15 @@ import { Svg } from "react-native-svg";
 import AlertComponent from "../components/AlertComponent";
 import LoadingComponent from "../components/LoadingComponent";
 import Header from "../components/Header";
-import HeaderLeft from "../components/HeaderLeft";
+
+import { flare } from "viem/chains";
+import DetailOfPet from "../Screens/DetailOfPetScreen";
 
 type LocalRootStackParamList = {
+  DetailOfPet: undefined;
   Connect: undefined;
   MainTab: undefined;
+  Game: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -117,12 +127,26 @@ const MainTab = () => (
         ),
       }}
     />
+    <Tab.Screen
+      name="DetailOfPetScreen"
+      component={DetailOfPet}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <ComponentNavElement content="Shop" focused={focused}>
+            <SVGBird
+              width={`${focused ? "50" : "30"}`}
+              height={`${focused ? "50" : "30"}`}
+            />
+          </ComponentNavElement>
+        ),
+      }}
+    />
   </Tab.Navigator>
 );
 
 const Route = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="Connect">
+    <Stack.Navigator initialRouteName="DetailOfPet">
       <Stack.Screen
         name="Connect"
         component={MainTab}
@@ -132,6 +156,20 @@ const Route = () => (
             backgroundColor: "#0C0113",
           },
           //headerTitle: () => <HeaderLeft></HeaderLeft>,
+        }}
+      />
+      <Stack.Screen
+        name="Game"
+        component={GameScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="DetailOfPet"
+        component={DetailOfPet}
+        options={{
+          headerShown: false,
         }}
       />
       <Stack.Screen name="MainTab" component={MainTab} />
