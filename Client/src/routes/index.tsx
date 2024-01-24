@@ -26,8 +26,10 @@ import Header from "../components/Header";
 
 import { flare } from "viem/chains";
 import DetailOfPet from "../Screens/DetailOfPetScreen";
+import { BreedScreen } from "../Screens/BreedScreen";
 
 type LocalRootStackParamList = {
+  Breed: undefined;
   DetailOfPet: undefined;
   Connect: undefined;
   MainTab: undefined;
@@ -39,7 +41,7 @@ const Tab = createBottomTabNavigator();
 
 const MainTab = () => (
   <Tab.Navigator
-    initialRouteName="PlayScreen"
+    initialRouteName="BreedScreen"
     screenOptions={{
       headerShown: false,
       tabBarShowLabel: false,
@@ -56,6 +58,20 @@ const MainTab = () => (
       },
     }}
   >
+    <Tab.Screen
+      name="BreedScreen"
+      component={BreedScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <ComponentNavElement content="Shop" focused={focused}>
+            <SVGStore
+              width={`${focused ? "50" : "30"}`}
+              height={`${focused ? "50" : "30"}`}
+            />
+          </ComponentNavElement>
+        ),
+      }}
+    />
     <Tab.Screen
       name="ShopScreen"
       component={PlayScreen}
@@ -146,7 +162,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="DetailOfPet">
+    <Stack.Navigator initialRouteName="Breed">
       <Stack.Screen
         name="Connect"
         component={MainTab}
@@ -156,6 +172,13 @@ const Route = () => (
             backgroundColor: "#0C0113",
           },
           //headerTitle: () => <HeaderLeft></HeaderLeft>,
+        }}
+      />
+      <Stack.Screen
+        name="Breed"
+        component={BreedScreen}
+        options={{
+          headerShown: false,
         }}
       />
       <Stack.Screen
