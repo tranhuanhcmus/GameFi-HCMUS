@@ -1,35 +1,38 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { COLOR } from "../utils/color";
-import CustomText from "../components/CustomText";
 import Heart from "../../assets/heart.png";
-
+import { RoundButton } from "../components/Button/RoundButton";
+import CustomText from "../components/CustomText";
+import { COLOR } from "../utils/color";
+import AwesomeButton from "react-native-really-awesome-button";
 export function BreedScreen() {
   return (
     <View style={styles.container}>
       <CustomText style={styles.title}>Breed</CustomText>
       <Image source={Heart} alt="Heart" style={styles.imageContainer} />
       <View style={styles.addButtonContainer}>
-        <TouchableOpacity
-          style={styles.addButton}
+        <RoundButton
           onPress={() => {
-            console.log("Press");
+            console.log("Pressed");
           }}
-        ></TouchableOpacity>
-        <TouchableOpacity
-          style={styles.addButton}
+        />
+        <RoundButton
           onPress={() => {
-            console.log("Press");
+            console.log("Pressed");
           }}
-        ></TouchableOpacity>
+        />
       </View>
-      <TouchableOpacity
+      <AwesomeButton
         style={styles.breedButton}
         onPress={() => {
           console.log("Pressed");
         }}
+        width={225}
+        height={65}
+        borderRadius={20}
+        backgroundColor={COLOR.RED}
       >
         <CustomText style={styles.breedText}>Breed</CustomText>
-      </TouchableOpacity>
+      </AwesomeButton>
     </View>
   );
 }
@@ -63,17 +66,12 @@ const styles = StyleSheet.create({
     marginTop: -30,
     zIndex: 99,
   },
-  addButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 100,
-    backgroundColor: COLOR.YELLOW,
-  },
+
   breedButton: {
-    width: 225,
-    height: 65,
-    borderRadius: 20,
-    backgroundColor: COLOR.RED,
+    // width: 225,
+    // height: 65,
+    // borderRadius: 20,
+    // backgroundColor: COLOR.RED,
     justifyContent: "center",
     marginTop: 22,
   },

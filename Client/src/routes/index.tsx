@@ -1,32 +1,26 @@
 import React from "react";
 
-import HomeScreen from "./../Screens/HomeScreen";
-
-import GameScreen from "../Screens/GameScreen";
-
-type Props = {};
-import { View, Text } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { RootStackParamList } from "./navigationParams";
-import TestScreen from "../Screens/TestScreen";
-import ConnectScreen from "../Screens/ConnectScreen";
-import ComponentNavElement from "../components/ComponentNavElement";
-import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
-import SVGTrophy from "../../assets/SVGTrophy.svg";
-import SVGEvent from "../../assets/SVGEvent.svg";
-import SVGPlay from "../../assets/SVGPlay.svg";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SVGBird from "../../assets/SVGBird.svg";
+import SVGEvent from "../../assets/SVGEvent.svg";
+import SVGPlay from "../../assets/SVGPlay.svg";
+import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
+import SVGTrophy from "../../assets/SVGTrophy.svg";
+import ConnectScreen from "../Screens/ConnectScreen";
+import GameScreen from "../Screens/GameScreen";
 import PlayScreen from "../Screens/PlayScreen";
-import { Svg } from "react-native-svg";
+import TestScreen from "../Screens/TestScreen";
 import AlertComponent from "../components/AlertComponent";
-import LoadingComponent from "../components/LoadingComponent";
+import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
+import LoadingComponent from "../components/LoadingComponent";
 
-import { flare } from "viem/chains";
-import DetailOfPet from "../Screens/DetailOfPetScreen";
+type Props = {};
+
 import { BreedScreen } from "../Screens/BreedScreen";
+import DetailOfPet from "../Screens/DetailOfPetScreen";
 
 type LocalRootStackParamList = {
   Breed: undefined;
@@ -162,7 +156,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="Breed">
+    <Stack.Navigator initialRouteName="Game">
       <Stack.Screen
         name="Connect"
         component={MainTab}
