@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   energyBar: {
-    width: 60,
+    width: 80,
     height: 20,
     backgroundColor: "#FF8C05",
     borderTopRightRadius: 4,
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   damageBar: {
-    width: 60,
+    width: 80,
     height: 20,
     backgroundColor: "#70A2FF",
     borderTopRightRadius: 10,

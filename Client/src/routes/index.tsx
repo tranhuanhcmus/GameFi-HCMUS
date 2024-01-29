@@ -1,33 +1,29 @@
 import React from "react";
 
-import HomeScreen from "./../Screens/HomeScreen";
-
-import GameScreen from "../Screens/GameScreen";
-
-type Props = {};
-import { View, Text } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { RootStackParamList } from "./navigationParams";
-import TestScreen from "../Screens/TestScreen";
-import ConnectScreen from "../Screens/ConnectScreen";
-import ComponentNavElement from "../components/ComponentNavElement";
-import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
-import SVGTrophy from "../../assets/SVGTrophy.svg";
-import SVGEvent from "../../assets/SVGEvent.svg";
-import SVGPlay from "../../assets/SVGPlay.svg";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SVGBird from "../../assets/SVGBird.svg";
+import SVGEvent from "../../assets/SVGEvent.svg";
+import SVGPlay from "../../assets/SVGPlay.svg";
+import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
+import SVGTrophy from "../../assets/SVGTrophy.svg";
+import ConnectScreen from "../Screens/ConnectScreen";
+import GameScreen from "../Screens/GameScreen";
 import PlayScreen from "../Screens/PlayScreen";
-import { Svg } from "react-native-svg";
+import TestScreen from "../Screens/TestScreen";
 import AlertComponent from "../components/AlertComponent";
-import LoadingComponent from "../components/LoadingComponent";
+import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
+import LoadingComponent from "../components/LoadingComponent";
 
-import { flare } from "viem/chains";
+type Props = {};
+
+import { BreedScreen } from "../Screens/BreedScreen";
 import DetailOfPet from "../Screens/DetailOfPetScreen";
 
 type LocalRootStackParamList = {
+  Breed: undefined;
   DetailOfPet: undefined;
   Connect: undefined;
   MainTab: undefined;
@@ -39,7 +35,7 @@ const Tab = createBottomTabNavigator();
 
 const MainTab = () => (
   <Tab.Navigator
-    initialRouteName="PlayScreen"
+    initialRouteName="BreedScreen"
     screenOptions={{
       headerShown: false,
       tabBarShowLabel: false,
@@ -56,6 +52,20 @@ const MainTab = () => (
       },
     }}
   >
+    <Tab.Screen
+      name="BreedScreen"
+      component={BreedScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <ComponentNavElement content="Shop" focused={focused}>
+            <SVGStore
+              width={`${focused ? "50" : "30"}`}
+              height={`${focused ? "50" : "30"}`}
+            />
+          </ComponentNavElement>
+        ),
+      }}
+    />
     <Tab.Screen
       name="ShopScreen"
       component={PlayScreen}
@@ -146,7 +156,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="DetailOfPet">
+    <Stack.Navigator initialRouteName="Game">
       <Stack.Screen
         name="Connect"
         component={MainTab}
@@ -156,6 +166,13 @@ const Route = () => (
             backgroundColor: "#0C0113",
           },
           //headerTitle: () => <HeaderLeft></HeaderLeft>,
+        }}
+      />
+      <Stack.Screen
+        name="Breed"
+        component={BreedScreen}
+        options={{
+          headerShown: false,
         }}
       />
       <Stack.Screen
