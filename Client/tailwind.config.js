@@ -4,10 +4,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        inter: ['Inter'],
+        inter: ["Inter"],
+        rexlia: ["rexlia"],
       },
     },
   },
   plugins: [],
-}
-
+};

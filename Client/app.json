@@ -11,9 +11,8 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+
+    "assetBundlePatterns": ["**/*"],
     "permissions": ["INTERNET"],
     "ios": {
       "supportsTablet": true,
@@ -25,13 +24,15 @@
           "rainbow",
           "uniswap"
         ]
-      }
+      },
+      "bundleIdentifier": "com.anonymous.Client"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.Client"
     },
     "web": {
       "favicon": "./assets/favicon.png"

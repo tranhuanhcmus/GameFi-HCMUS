@@ -1,5 +1,11 @@
 // NavigationParams.ts
 export type RootStackParamList = {
-	Home: any;
-	Connect:any;
-  };
+  // TODO
+  Game: any;
+  Connect: any;
+  Home: any;
+  TestScreen: any;
+  PlayScreen: any;
+  DetailOfPet: any;
+  Breed: any;
+};
