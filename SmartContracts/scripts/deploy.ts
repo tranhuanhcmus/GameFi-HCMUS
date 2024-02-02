@@ -1,19 +1,30 @@
-import { ethers } from "hardhat";
+import { ethers, hardhatArguments } from "hardhat";
+import * as Config from "./config";
 
 async function main() {
-  const vendingMachine = await ethers.deployContract('VendingMachine');
-  await vendingMachine.waitForDeployment();
+  await Config.initConfig();
+  const network = hardhatArguments.network ? hardhatArguments.network : "dev";
+  const [deployer] = await ethers.getSigners();
+  console.log("deploy from address: ", deployer.address);
 
-  const store = await ethers.deployContract('SimpleStore');
-  await store.waitForDeployment();
+  // const Factory = await ethers.getContractFactory("Floppy");
+  // const token = await Factory.deploy();
+  // const tokenAddress = await token.getAddress();
+  // console.log("Token address:", tokenAddress);
+  // Config.setConfig(network + ".Floppy", tokenAddress);
 
-  console.log(`Cupcake vending machine deployed to ${vendingMachine.target}`);
-  console.log(`Store deployed to ${store.target}`);
+  const Factory = await ethers.getContractFactory("Vault");
+  const token = await Factory.deploy();
+  const tokenAddress = await token.getAddress();
+  console.log("Token address:", tokenAddress);
+  Config.setConfig(network + ".Vault", tokenAddress);
+
+  await Config.updateConfig();
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
