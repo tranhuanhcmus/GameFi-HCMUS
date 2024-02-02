@@ -16,6 +16,7 @@
     "dotenv": "^16.3.1",
     "ethers": "^6.9.0",
     "hardhat-deploy": "^0.11.44",
-    "hardhat-deploy-ethers": "^0.4.1"
+    "hardhat-deploy-ethers": "^0.4.1",
+    "web3": "^4.4.0"
   }
 }

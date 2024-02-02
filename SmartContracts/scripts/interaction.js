@@ -1,4 +1,6 @@
-import Web3 from "web3"
+//const Web3 = require('web3') 
+//import {Web3} from "web3";
+const {Web3} = require('web3');
 const floppyAbi = [{
         "inputs": [],
         "stateMutability": "nonpayable",
@@ -387,13 +389,15 @@ const floppyAbi = [{
         "type": "function"
     }
 ]
-const floppyAddress = "0xd11875cE6854da3518273cF16Ab2FC399224Bed9"
-const PRVK='b90780c26b591ca8ffb24a607aa1de101da9122609d269c34aff2e2238a2cab2'
+//const floppyAddress = "0xd11875cE6854da3518273cF16Ab2FC399224Bed9"
+const floppyAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+const PRVK='0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
-const myAddress="0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"
-const receiverAddress="0x0E9A319aCE579BC0142d7b8186AfD84647bcDb3D"
+const myAddress="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+const receiverAddress="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
 async function interact(){
-	web3=await new Web3('https://eth-sepolia.api.onfinality.io/public')
+    const web3 = new Web3("ws://localhost:8545");
+	//const web3=await new Web3('http://127.0.0.1:8545/')
 	floppyContract =await new web3.eth.Contract(floppyAbi,floppyAddress)
 
 	//call
