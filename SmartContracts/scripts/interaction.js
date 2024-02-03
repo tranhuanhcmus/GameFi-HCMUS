@@ -1,6 +1,7 @@
 //const Web3 = require('web3') 
 //import {Web3} from "web3";
 const {Web3} = require('web3');
+const axios = require('axios');
 const floppyAbi = [{
         "inputs": [],
         "stateMutability": "nonpayable",
@@ -391,13 +392,13 @@ const floppyAbi = [{
 ]
 //const floppyAddress = "0xd11875cE6854da3518273cF16Ab2FC399224Bed9"
 const floppyAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
-const PRVK='0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+const PRVK='0xde9be858da4a475276426320d5e9262ecfc3ba460bfac56360bfa6c4c28b4ee0'
 
-const myAddress="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-const receiverAddress="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+const myAddress="0xdD2FD4581271e230360230F9337D5c0430Bf44C0"
+const receiverAddress="0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199"
 async function interact(){
-    const web3 = new Web3("ws://localhost:8545");
-	//const web3=await new Web3('http://127.0.0.1:8545/')
+    // const web3 = new Web3("ws://localhost:8545");
+	const web3=await new Web3('http://127.0.0.1:8545/')
 	floppyContract =await new web3.eth.Contract(floppyAbi,floppyAddress)
 
 	//call
@@ -416,8 +417,47 @@ async function interact(){
 
 	receiverBalanceAfter=await floppyContract.methods.balanceOf(receiverAddress).call()
 	
+    // floppyContract.events.Transfer({
+    //     filter: { }, // Optional event filtering
+    //     fromBlock: 0, // Start block number
+    //     toBlock: 'latest' // End block number
+    // }, (error, event) => {
+    //     catchEvent(error, event);
+    // })
+    // .on("connected", (subscriptionId) => {
+    //     // fired after subscribing to an event
+    //     console.log(subscriptionId);
+    // })
+    // .on('data', (event) => {
+    //     // fired when we get a new log that matches the filters for the event type we subscribed to
+    //     // will be fired at the same moment as the callback above
+    //     console.log(event);
+    // })
 
 	console.log(rs,receiverBalanceBefore,receiverBalanceAfter);
 }
+
+async function catchEvent (error, event) {
+    // fired when we get a new log that matches the filters for the event type we subscribed to
+    if (!error) {
+        console.log(event);
+
+        // Make a POST request when the 'data' event is triggered
+        try {
+            const response = await axios.post('http://localhost:4500/ev-in',
+                event,
+                {
+                    headers: {
+                    "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            console.log('POST request successful:', response.data);
+        } catch (postError) {
+            console.error('Error making POST request:', postError.message);
+        }
+    }
+};
 
 interact()
