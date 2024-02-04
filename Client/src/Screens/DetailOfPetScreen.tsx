@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   Button,
+  FlatList,
   TouchableOpacity,
 } from "react-native";
 import { COLOR } from "../utils/color";

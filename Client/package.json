@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "watch": "npx tailwindcss -i ./src/input.css -o ./src/dist/output.css --watch"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
@@ -24,10 +25,12 @@
     "expo-linear-gradient": "~12.3.0",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "native-base": "^3.4.28",
     "nativewind": "^2.0.11",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-native": "^0.73.2",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-eject": "^0.2.0",
     "react-native-get-random-values": "~1.9.0",
     "react-native-linear-gradient": "^2.8.3",

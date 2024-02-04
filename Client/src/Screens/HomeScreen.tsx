@@ -23,17 +23,17 @@ const HomeScreen = (props: Props) => {
   const navigate = useCustomNavigation();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!isConnected) {
-      navigate.replace("Connect");
-      dispatch(setAddress(undefined));
-    } else {
-      dispatch(setAddress(address));
-    }
-  }, [isConnected]);
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     navigate.replace("Connect");
+  //     dispatch(setAddress(undefined));
+  //   } else {
+  //     dispatch(setAddress(address));
+  //   }
+  // }, [isConnected]);
   return (
-    <SafeAreaView className="flex flex-1 bg-[#210035]">
-      <View className="">
+    <SafeAreaView>
+      {/* <View className="flex h-full w-full bg-[#210035]">
         {isConnected && <W3mAccountButton balance="show" />}
         {isConnected && (
           <NormalButton onPress={() => disconnect()}>
@@ -42,21 +42,29 @@ const HomeScreen = (props: Props) => {
             </Text>
           </NormalButton>
         )}
-      </View>
-      <View className=" flex-1">
-        <PetCarousel />
-      </View>
-      <View className=" flex  flex-row items-center justify-center gap-4">
-        <NormalButton className={"bg-[#FFE243]"}>
-          <Text className="text-center text-base font-semibold  text-black">
-            Line-Up build
-          </Text>
-        </NormalButton>
-        <NormalButton className={"bg-[#FFE243]"}>
-          <Text className="text-center text-base font-semibold  text-black">
-            Normal play
-          </Text>
-        </NormalButton>
+      </View> */}
+      <View className="flex h-screen w-screen flex-col items-center bg-[#210035]">
+        <View className="mt-7 h-[55%] w-[100%]">
+          <PetCarousel />
+        </View>
+        <View className=" flex h-[9%] w-[90%]  flex-row  justify-between ">
+          <NormalButton
+            className={
+              "flex w-[40%] items-center justify-center bg-[#FFE243] px-5"
+            }
+          >
+            <Text className="text-center text-base font-semibold  text-black">
+              Line-Up build
+            </Text>
+          </NormalButton>
+          <NormalButton
+            className={"w-[40%] items-center justify-center bg-[#FFE243] px-5 "}
+          >
+            <Text className=" text-center text-base font-semibold  text-black">
+              Normal play
+            </Text>
+          </NormalButton>
+        </View>
       </View>
     </SafeAreaView>
   );
