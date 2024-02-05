@@ -3,6 +3,7 @@ const cors = require('cors');
 const db = require('./config.js');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRouter');
+const {interact} = require('./interaction');
 
 const app = express();
 const port = 4500 || process.env.PORT;
@@ -29,5 +30,6 @@ db.connect((err, connection) => {
   // Start the server
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+    interact();
   });
 });

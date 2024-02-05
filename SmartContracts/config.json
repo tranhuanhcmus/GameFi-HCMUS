@@ -2,7 +2,12 @@
   "dev": {},
   "arbitrumSepolia": {
     "Floppy": "0xd11875cE6854da3518273cF16Ab2FC399224Bed9",
-    "Vault": "0xF9645Aa96638a1c712f63848039Ca157DCb484DE"
+    "Vault": "0xe0e651d4B298C8c654A4F4C83CBE1E13f071Eac0",
+    "Pet": "0x5CcFB35Ff506254faBe1e83071098C7C3602281F"
   },
-  "main": {}
+  "main": {},
+  "localhost": {
+    "Pet": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "Floppy": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  }
 }

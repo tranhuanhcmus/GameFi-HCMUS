@@ -390,52 +390,64 @@ const floppyAbi = [{
         "type": "function"
     }
 ]
-//const floppyAddress = "0xd11875cE6854da3518273cF16Ab2FC399224Bed9"
 const floppyAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
 const PRVK='0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
 const myAddress="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 const receiverAddress="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-async function interact(){
-    // const web3 = new Web3("ws://localhost:8545");
-	const web3=await new Web3('http://127.0.0.1:8545/')
-	floppyContract =await new web3.eth.Contract(floppyAbi,floppyAddress)
+function interact(){
+    const web3 = new Web3('ws://127.0.0.1:8545');
+    const floppyContract = new web3.eth.Contract(floppyAbi, floppyAddress);
 
-	//call
-	myBalance=await floppyContract.methods.balanceOf(myAddress).call()
-	console.log(myBalance);
+    //    floppyContract.getPastEvents('Transfer', {
+    //         filter: { }, // Optional event filtering
+    //         fromBlock: 0, // Start block number
+    //         toBlock: 'latest' // End block number
+    //         })
+    //         .then(function(events) {
+    //         // Process the retrieved events
+    //         console.log("event: ", events[events.length - 1].returnValues);
+    //         })
+    //         .catch(function(error) {
+    //         // Handle errors
+    //         console.error("error: ", error);
+    //     });
 
-	//send
-	//transfer token
-	await web3.eth.accounts.wallet.add(PRVK)
-	receiverBalanceBefore=await floppyContract.methods.balanceOf(receiverAddress).call()
-
-	rs= await floppyContract.methods.transfer(receiverAddress,100000).send({
-		from:myAddress,
-		gas:300000,
-	})
-
-	receiverBalanceAfter=await floppyContract.methods.balanceOf(receiverAddress).call()
-	
-    floppyContract.events.Transfer({
+    var evMitter = floppyContract.events.Transfer({
         filter: { }, // Optional event filtering
         fromBlock: 0, // Start block number
         toBlock: 'latest' // End block number
     }, (error, event) => {
-        catchEvent(error, event);
+        // catchEvent(error, event);
     })
-    .on("connected", (subscriptionId) => {
-        // fired after subscribing to an event
-        console.log(subscriptionId);
-    })
-    .on('data', (event) => {
+    // // console.log("evMitter: ", evMitter);
+    // // debugger;
+    // evMitter.on('error', (error, receipt) => {
+    //     // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+    //     console.log(error);
+    // });
+    evMitter.on('data', (event) => {
         // fired when we get a new log that matches the filters for the event type we subscribed to
         // will be fired at the same moment as the callback above
-        console.log(event);
+        console.log(event.returnValues);
     })
-
-	console.log(rs,receiverBalanceBefore,receiverBalanceAfter);
-}
+    // .on("connected", (subscriptionId) => {
+    //     // fired after subscribing to an event
+    //     console.log(subscriptionId);
+    // })
+    // .on('data', (event) => {
+    //     // fired when we get a new log that matches the filters for the event type we subscribed to
+    //     // will be fired at the same moment as the callback above
+    //     console.log(event);
+    // })
+    let options = {
+        filter: {
+            value: [],
+        },
+        fromBlock: 0,
+        toBlock: 'latest'
+    };
+} 
 
 async function catchEvent (error, event) {
     // fired when we get a new log that matches the filters for the event type we subscribed to
@@ -460,4 +472,4 @@ async function catchEvent (error, event) {
     }
 };
 
-interact()
+module.exports = {interact};
