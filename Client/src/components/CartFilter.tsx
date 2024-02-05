@@ -1,5 +1,6 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
+import TrendComponent from "./TrendComponent";
 
 import Pet from "../../assets/Pet.png";
 import {
@@ -10,21 +11,24 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from "react-native-chart-kit";
-import { flare } from "viem/chains";
-import { position } from "native-base/lib/typescript/theme/styled-system";
-import TrendComponent from "./TrendComponent";
 
 interface Props {
+  className: string;
+  up: boolean;
+  number: number;
   imgUrl: string;
   name: string;
   price: number;
-  up: boolean;
-  number: number;
 }
 
-const TrendCard: React.FC<Props> = ({ imgUrl, name, price, up, number }) => {
-  // Import the random function from lodash or any other library
-
+const CartFilter: React.FC<Props> = ({
+  className,
+  name,
+  up,
+  price,
+  number,
+  imgUrl,
+}) => {
   const data = {
     labels: Array.from({ length: 30 }, (_, i) => (i + 1).toString()), // Labels for days 1 to 30
     datasets: [
@@ -47,15 +51,14 @@ const TrendCard: React.FC<Props> = ({ imgUrl, name, price, up, number }) => {
     color: (opacity = 1) => `rgba(75, 112, 255, ${opacity})`,
     barPercentage: 1,
   };
-
   return (
-    <View className="z-0 flex flex-col rounded-2xl bg-color_card_trend p-3">
+    <View className="flex flex-row items-center">
       <View className=" flex h-fit flex-row items-center gap-2">
         <Image className="h-[40px] w-[40px]  " source={Pet} />
 
-        <Text className="font-bold text-[#4B70FF]">{name}</Text>
+        <Text className="font-bold text-white">{name}</Text>
       </View>
-      <View className="flex h-fit w-fit items-start justify-start ">
+      <View className="ml-2 flex h-fit w-fit items-start justify-start ">
         <LineChart
           data={data}
           width={250}
@@ -73,7 +76,7 @@ const TrendCard: React.FC<Props> = ({ imgUrl, name, price, up, number }) => {
           bezier
         />
       </View>
-      <View className="mt-3 flex flex-row justify-between">
+      <View className="mt-3 flex flex-col justify-center">
         <Text className="text-white">${price}</Text>
         <TrendComponent up={up} number={number}></TrendComponent>
       </View>
@@ -81,4 +84,4 @@ const TrendCard: React.FC<Props> = ({ imgUrl, name, price, up, number }) => {
   );
 };
 
-export default TrendCard;
+export default CartFilter;

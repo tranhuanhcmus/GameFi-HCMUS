@@ -11,7 +11,7 @@ interface TrendProps {
 const TrendComponent: React.FC<TrendProps> = ({ up, number }) => {
   return (
     <View className="flex flex-row items-center justify-center gap-1">
-      {up ? <ArrowUp></ArrowUp> : <ArrowDrop />}
+      {up ? <ArrowUp /> : <ArrowDrop />}
       <Text className={`${up ? "text-green-500" : "text-red-500"} font-bold`}>
         {number}%
       </Text>

@@ -3,12 +3,14 @@ import React from "react";
 import TrendComponent from "../components/TrendComponent";
 import TrendCard from "../components/TrendCard";
 import ButtonFilter from "../components/Button/ButtonFilter";
+import CartFilter from "../components/CartFilter";
+import { flare } from "viem/chains";
 
 type Props = {};
 const trend = true;
 const TrendMarketScreen = (props: Props) => {
   return (
-    <SafeAreaView className="h-screen w-screen bg-[#210035]">
+    <SafeAreaView className="bg-color_app h-screen w-screen">
       <View className="ml-3 mt-3 flex flex-col">
         <View className="gap-1">
           <Text className="font-light text-white">TrendMarketScreen</Text>
@@ -39,46 +41,62 @@ const TrendMarketScreen = (props: Props) => {
           </Text>
           <ScrollView
             horizontal
-            className="mt-2 flex flex-row gap-x-3 overflow-auto"
+            className="mb-3 mt-2 flex flex-row gap-x-3 overflow-auto"
           >
             <ButtonFilter
-              className="bg-color_button_filter rounded-xl py-2 "
+              className="rounded-xl bg-color_button_filter py-2 "
               textColor="text-white"
             >
               24 hrs
             </ButtonFilter>
             <ButtonFilter
-              className="bg-color_button_filter rounded-xl py-2 "
+              className="rounded-xl bg-color_button_filter py-2 "
               textColor="text-white"
             >
               Hot
             </ButtonFilter>
             <ButtonFilter
-              className="bg-color_button_filter rounded-xl py-2 "
+              className="rounded-xl bg-color_button_filter py-2 "
               textColor="text-white"
             >
               Profit
             </ButtonFilter>
 
             <ButtonFilter
-              className="bg-color_button_filter rounded-xl py-2 "
+              className="rounded-xl bg-color_button_filter py-2 "
               textColor="text-white"
             >
               Rising
             </ButtonFilter>
             <ButtonFilter
-              className="bg-color_button_filter rounded-xl py-2 "
+              className="rounded-xl bg-color_button_filter py-2 "
               textColor="text-white"
             >
               Loss
             </ButtonFilter>
             <ButtonFilter
-              className="bg-color_button_filter rounded-xl py-2 "
+              className="rounded-xl bg-color_button_filter py-2 "
               textColor="text-white"
             >
               Top Gain
             </ButtonFilter>
           </ScrollView>
+          <CartFilter
+            imgUrl=""
+            name="FireBird"
+            price={20}
+            up={false}
+            number={10}
+            className="w-[80%]"
+          ></CartFilter>
+          <CartFilter
+            imgUrl=""
+            name="FireBird"
+            price={20}
+            up={true}
+            number={11.2}
+            className="w-[80%]"
+          ></CartFilter>
         </View>
       </View>
     </SafeAreaView>

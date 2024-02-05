@@ -32,6 +32,7 @@ type LocalRootStackParamList = {
   MainTab: undefined;
   Game: undefined;
   TrendMarket: undefined;
+  Home: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -39,7 +40,7 @@ const Tab = createBottomTabNavigator();
 
 const MainTab = () => (
   <Tab.Navigator
-    initialRouteName="BreedScreen"
+    initialRouteName="PlayScreen"
     screenOptions={{
       headerShadowVisible: false, // applied here
 
@@ -58,21 +59,6 @@ const MainTab = () => (
       },
     }}
   >
-    <Tab.Screen
-      name="BreedScreen"
-      component={BreedScreen}
-      options={{
-        headerShown: false,
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Shop" focused={focused}>
-            <SVGStore
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
     <Tab.Screen
       name="ShopScreen"
       component={PlayScreen}
@@ -130,7 +116,7 @@ const MainTab = () => (
     />
     <Tab.Screen
       name="TrophyScreen"
-      component={PlayScreen}
+      component={BreedScreen}
       options={{
         tabBarIcon: ({ focused }) => (
           <ComponentNavElement content="Trophy" focused={focused}>
@@ -166,25 +152,11 @@ const MainTab = () => (
         ),
       }}
     />
-    <Tab.Screen
-      name="DetailOfPetScreen"
-      component={DetailOfPet}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Shop" focused={focused}>
-            <SVGBird
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
   </Tab.Navigator>
 );
 
 const Route = () => (
-  <NavigationContainer>
+  <NavigationContainer independent={true}>
     <Stack.Navigator initialRouteName="MainTab">
       {/* <Stack.Screen
         name="Connect"
@@ -204,6 +176,7 @@ const Route = () => (
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="Game"
         component={GameScreen}

@@ -58,6 +58,9 @@ const HomeScreen = (props: Props) => {
             </Text>
           </NormalButton>
           <NormalButton
+            onPress={() => {
+              navigate.replace("Game");
+            }}
             className={"w-[40%] items-center justify-center bg-[#FFE243] px-5 "}
           >
             <Text className=" text-center text-base font-semibold  text-black">

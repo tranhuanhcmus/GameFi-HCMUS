@@ -13,6 +13,7 @@ module.exports = {
         color_card_trend: "rgba(255, 255, 255, 0.12)",
         white_trend: "rgba(255, 255, 255, 1)",
         color_button_filter: "#282828",
+        color_app: "#210035",
       },
     },
   },
