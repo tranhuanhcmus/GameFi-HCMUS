@@ -15,6 +15,8 @@ import Shield from "../../assets/shield.jpg";
 import Sword from "../../assets/sword.jpg";
 import YinYan from "../../assets/batquai.jpg";
 import { COLOR } from "../utils/color";
+import NormalButton from "../components/Button/NormalButton";
+import useCustomNavigation from "../hooks/useCustomNavigation";
 
 const SIZE_TABLE = 280;
 
@@ -58,10 +60,18 @@ export default function GameScreen() {
     });
   };
 
+  const navigate = useCustomNavigation();
   return (
     <SafeAreaView>
       <View style={styles.container}>
         {/* Character area */}
+        <NormalButton
+          onPress={() => {
+            navigate.navigate("MainTab");
+          }}
+        >
+          <Text>{"< back"}</Text>
+        </NormalButton>
         <View style={styles.characterArea}>
           {/* Player 1 - Left*/}
           <View style={styles.player}>

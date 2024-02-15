@@ -10,6 +10,7 @@ import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
 import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../Screens/ConnectScreen";
 import GameScreen from "../Screens/GameScreen";
+import { View } from "react-native";
 import PlayScreen from "../Screens/PlayScreen";
 import TestScreen from "../Screens/TestScreen";
 import AlertComponent from "../components/AlertComponent";
@@ -21,6 +22,8 @@ type Props = {};
 
 import { BreedScreen } from "../Screens/BreedScreen";
 import DetailOfPet from "../Screens/DetailOfPetScreen";
+import HomeScreen from "../Screens/HomeScreen";
+import TrendMarketScreen from "../Screens/TrendMarketScreen";
 
 type LocalRootStackParamList = {
   Breed: undefined;
@@ -28,6 +31,8 @@ type LocalRootStackParamList = {
   Connect: undefined;
   MainTab: undefined;
   Game: undefined;
+  TrendMarket: undefined;
+  Home: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -35,8 +40,10 @@ const Tab = createBottomTabNavigator();
 
 const MainTab = () => (
   <Tab.Navigator
-    initialRouteName="BreedScreen"
+    initialRouteName="PlayScreen"
     screenOptions={{
+      headerShadowVisible: false, // applied here
+
       headerShown: false,
       tabBarShowLabel: false,
       tabBarStyle: {
@@ -53,20 +60,6 @@ const MainTab = () => (
     }}
   >
     <Tab.Screen
-      name="BreedScreen"
-      component={BreedScreen}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Shop" focused={focused}>
-            <SVGStore
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
-    <Tab.Screen
       name="ShopScreen"
       component={PlayScreen}
       options={{
@@ -82,8 +75,14 @@ const MainTab = () => (
     />
     <Tab.Screen
       name="EventScreen"
-      component={ConnectScreen}
+      component={TrendMarketScreen}
       options={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: "#210035",
+        },
+
+        headerTitle: (props) => <Header name="Home" />,
         tabBarIcon: ({ focused }) => (
           <ComponentNavElement content="Event" focused={focused}>
             <SVGEvent
@@ -97,8 +96,14 @@ const MainTab = () => (
 
     <Tab.Screen
       name="PlayScreen"
-      component={TestScreen}
+      component={HomeScreen}
       options={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: "#210035",
+        },
+
+        headerTitle: (props) => <Header name="Home" />,
         tabBarIcon: ({ focused }) => (
           <ComponentNavElement content="Play" focused={focused}>
             <SVGPlay
@@ -111,7 +116,7 @@ const MainTab = () => (
     />
     <Tab.Screen
       name="TrophyScreen"
-      component={PlayScreen}
+      component={BreedScreen}
       options={{
         tabBarIcon: ({ focused }) => (
           <ComponentNavElement content="Trophy" focused={focused}>
@@ -127,22 +132,18 @@ const MainTab = () => (
       name="PetScreen"
       component={PlayScreen}
       options={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: "#210035",
+        },
+        headerTintColor: "#fff",
+        headerShadowVisible: false, // applied here
+
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
         tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Shop" focused={focused}>
-            <SVGBird
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="DetailOfPetScreen"
-      component={DetailOfPet}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Shop" focused={focused}>
+          <ComponentNavElement content="Pet" focused={focused}>
             <SVGBird
               width={`${focused ? "50" : "30"}`}
               height={`${focused ? "50" : "30"}`}
@@ -155,9 +156,9 @@ const MainTab = () => (
 );
 
 const Route = () => (
-  <NavigationContainer>
-    <Stack.Navigator initialRouteName="Game">
-      <Stack.Screen
+  <NavigationContainer independent={true}>
+    <Stack.Navigator initialRouteName="MainTab">
+      {/* <Stack.Screen
         name="Connect"
         component={MainTab}
         options={{
@@ -167,7 +168,7 @@ const Route = () => (
           },
           //headerTitle: () => <HeaderLeft></HeaderLeft>,
         }}
-      />
+      /> */}
       <Stack.Screen
         name="Breed"
         component={BreedScreen}
@@ -175,6 +176,7 @@ const Route = () => (
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="Game"
         component={GameScreen}
@@ -189,7 +191,15 @@ const Route = () => (
           headerShown: false,
         }}
       />
-      <Stack.Screen name="MainTab" component={MainTab} />
+      <Stack.Screen
+        name="MainTab"
+        options={{
+          headerShown: false,
+
+          //headerTitle: () => <HeaderLeft></HeaderLeft>,
+        }}
+        component={MainTab}
+      />
     </Stack.Navigator>
     <AlertComponent />
     <LoadingComponent />

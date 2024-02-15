@@ -1,4 +1,11 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  SafeAreaView,
+  SafeAreaViewBase,
+} from "react-native";
 import Heart from "../../assets/heart.png";
 import { RoundButton } from "../components/Button/RoundButton";
 import CustomText from "../components/CustomText";
@@ -6,34 +13,36 @@ import { COLOR } from "../utils/color";
 import AwesomeButton from "react-native-really-awesome-button";
 export function BreedScreen() {
   return (
-    <View style={styles.container}>
-      <CustomText style={styles.title}>Breed</CustomText>
-      <Image source={Heart} alt="Heart" style={styles.imageContainer} />
-      <View style={styles.addButtonContainer}>
-        <RoundButton
+    <SafeAreaView className="h-screen w-screen bg-[#210035]">
+      <View style={styles.container}>
+        <CustomText style={styles.title}>Breed</CustomText>
+        <Image source={Heart} alt="Heart" style={styles.imageContainer} />
+        <View style={styles.addButtonContainer}>
+          <RoundButton
+            onPress={() => {
+              console.log("Pressed");
+            }}
+          />
+          <RoundButton
+            onPress={() => {
+              console.log("Pressed");
+            }}
+          />
+        </View>
+        <AwesomeButton
+          style={styles.breedButton}
           onPress={() => {
             console.log("Pressed");
           }}
-        />
-        <RoundButton
-          onPress={() => {
-            console.log("Pressed");
-          }}
-        />
+          width={225}
+          height={65}
+          borderRadius={20}
+          backgroundColor={COLOR.RED}
+        >
+          <CustomText style={styles.breedText}>Breed</CustomText>
+        </AwesomeButton>
       </View>
-      <AwesomeButton
-        style={styles.breedButton}
-        onPress={() => {
-          console.log("Pressed");
-        }}
-        width={225}
-        height={65}
-        borderRadius={20}
-        backgroundColor={COLOR.RED}
-      >
-        <CustomText style={styles.breedText}>Breed</CustomText>
-      </AwesomeButton>
-    </View>
+    </SafeAreaView>
   );
 }
 
