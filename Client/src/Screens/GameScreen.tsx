@@ -1,5 +1,13 @@
 import React from "react";
-import { Text, View, StyleSheet, Image, SafeAreaView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  Animated,
+  TouchableOpacity,
+} from "react-native";
 import Pet from "../../assets/Pet.png";
 import Fire from "../../assets/fire.jpg";
 import LightNight from "../../assets/lightnight.jpg";
@@ -26,6 +34,30 @@ const randomNumber = () => {
 };
 
 export default function GameScreen() {
+  // TODO Animation
+  const state = {
+    animation: new Animated.Value(1),
+  };
+
+  const animatedStyles = {
+    opacity: state.animation,
+  };
+
+  // Function to change opacity
+  const changeOpacity = () => {
+    Animated.timing(state.animation, {
+      toValue: 0,
+      duration: 350,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.timing(state.animation, {
+        toValue: 1,
+        duration: 350,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -62,57 +94,72 @@ export default function GameScreen() {
             <View key={indexRow} style={styles.row}>
               {row.map((cell, index) => {
                 let randomItem = randomNumber();
-                if (randomItem === 0)
-                  return (
-                    <View
-                      key={index}
-                      style={{ ...styles.cell, backgroundColor: COLOR.RED }}
-                    >
-                      <Image style={styles.imageInCell} source={Fire}></Image>
-                    </View>
-                  );
-                if (randomItem === 1)
-                  return (
-                    <View
-                      key={index}
-                      style={{ ...styles.cell, backgroundColor: COLOR.BLUE }}
-                    >
-                      <Image
-                        style={styles.imageInCell}
-                        source={LightNight}
-                      ></Image>
-                    </View>
-                  );
-                if (randomItem === 2)
-                  return (
-                    <View
+                // if (randomItem === 0)
+                //   return (
+                //     <Animated.View
+                //       key={index}
+                //       style={{ ...styles.cell, backgroundColor: COLOR.RED }}
+                //     >
+                //       <Image style={styles.imageInCell} source={Fire}></Image>
+                //     </Animated.View>
+                //   );
+                // if (randomItem === 1)
+                //   return (
+                //     <Animated.View
+                //       key={index}
+                //       style={{ ...styles.cell, backgroundColor: COLOR.BLUE }}
+                //     >
+                //       <Image
+                //         style={styles.imageInCell}
+                //         source={LightNight}
+                //       ></Image>
+                //     </Animated.View>
+                //   );
+                // if (randomItem === 2)
+                //   return (
+                //     <Animated.View
+                //       key={index}
+                //       style={{
+                //         ...styles.cell,
+                //         backgroundColor: COLOR.LIGHT_PURPLE,
+                //       }}
+                //     >
+                //       <Image style={styles.imageInCell} source={Shield}></Image>
+                //     </Animated.View>
+                //   );
+                // if (randomItem === 3)
+                //   return (
+                //     <Animated.View
+                //       key={index}
+                //       style={{ ...styles.cell, backgroundColor: COLOR.YELLOW }}
+                //     >
+                //       <Image style={styles.imageInCell} source={Sword}></Image>
+                //     </Animated.View>
+                //   );
+                // if (randomItem === 4)
+                //   return (
+                //     <Animated.View
+                //       key={index}
+                //       style={{ ...styles.cell, backgroundColor: COLOR.GRAY }}
+                //     >
+                //       <Image style={styles.imageInCell} source={YinYan}></Image>
+                //     </Animated.View>
+                //   );
+
+                return (
+                  <TouchableOpacity key={index} onPress={changeOpacity}>
+                    <Animated.View
                       key={index}
                       style={{
                         ...styles.cell,
-                        backgroundColor: COLOR.LIGHT_PURPLE,
+                        backgroundColor: COLOR.RED,
+                        opacity: animatedStyles.opacity,
                       }}
                     >
-                      <Image style={styles.imageInCell} source={Shield}></Image>
-                    </View>
-                  );
-                if (randomItem === 3)
-                  return (
-                    <View
-                      key={index}
-                      style={{ ...styles.cell, backgroundColor: COLOR.YELLOW }}
-                    >
-                      <Image style={styles.imageInCell} source={Sword}></Image>
-                    </View>
-                  );
-                if (randomItem === 4)
-                  return (
-                    <View
-                      key={index}
-                      style={{ ...styles.cell, backgroundColor: COLOR.GRAY }}
-                    >
-                      <Image style={styles.imageInCell} source={YinYan}></Image>
-                    </View>
-                  );
+                      <Image style={styles.imageInCell} source={Fire}></Image>
+                    </Animated.View>
+                  </TouchableOpacity>
+                );
               })}
             </View>
           ))}
@@ -197,7 +244,7 @@ const styles = StyleSheet.create({
   boardContainer: {
     height: "auto",
     width: "auto",
-
+    backgroundColor: COLOR.WHITE,
     alignContent: "center",
   },
   row: {
