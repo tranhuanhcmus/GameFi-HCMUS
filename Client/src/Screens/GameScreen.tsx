@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Animated,
   TouchableOpacity,
+  PanResponder,
 } from "react-native";
 import Pet from "../../assets/Pet.png";
 import Fire from "../../assets/fire.jpg";
@@ -76,6 +77,49 @@ export default function GameScreen() {
     opacity: state.opacityAnimation,
     backgroundColor: interpolation.backgroundInterpolation,
   };
+
+  /**
+   * Handle gesture with press and then release on screen.
+   */
+  const panResponders = Array.from({ length: TABLE.length }, () =>
+    Array.from({ length: TABLE.length }, () =>
+      React.useRef(
+        PanResponder.create({
+          // Ask to be the responder:
+          onStartShouldSetPanResponder: (evt, gestureState) => true,
+          onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+          onMoveShouldSetPanResponder: (evt, gestureState) => true,
+          onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+          onPanResponderGrant: (evt, gestureState) => {
+            // The gesture has started. Show visual feedback so the user knows
+            // what is happening!
+            // gestureState.d{x,y} will be set to zero now
+          },
+          onPanResponderMove: (evt, gestureState) => {
+            // The most recent move distance is gestureState.move{X,Y}
+            // The accumulated gesture distance since becoming responder is
+            // gestureState.d{x,y}
+          },
+          onPanResponderTerminationRequest: (evt, gestureState) => true,
+          onPanResponderRelease: (evt, gestureState) => {
+            console.log("alooo");
+            // The user has released all touches while this view is the
+            // responder. This typically means a gesture has succeeded
+          },
+          onPanResponderTerminate: (evt, gestureState) => {
+            // Another component has become the responder, so this gesture
+            // should be cancelled
+          },
+          onShouldBlockNativeResponder: (evt, gestureState) => {
+            // Returns whether this component should block native components from becoming the JS
+            // responder. Returns true by default. Is currently only supported on android.
+            return true;
+          },
+        }),
+      ),
+    ),
+  );
 
   /**
    * Function to handle the opacity of 1 cell position indexRow, indexCol
@@ -171,9 +215,9 @@ export default function GameScreen() {
                         ...styles.cell,
                         backgroundColor:
                           animatedStyles.backgroundColor[indexRow][indexCol],
-                        // backgroundColor: COLOR.RED,
                         opacity: animatedStyles.opacity[indexRow][indexCol],
                       }}
+                      {...panResponders[indexRow][indexCol].current.panHandlers}
                     >
                       <Image style={styles.imageInCell} source={Fire}></Image>
                     </Animated.View>
