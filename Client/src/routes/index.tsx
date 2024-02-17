@@ -38,6 +38,7 @@ type LocalRootStackParamList = {
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
 const Tab = createBottomTabNavigator();
 
+// Bottom tab navigator.
 const MainTab = () => (
   <Tab.Navigator
     initialRouteName="PlayScreen"
@@ -157,7 +158,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="MainTab">
+    <Stack.Navigator initialRouteName="Game">
       {/* <Stack.Screen
         name="Connect"
         component={MainTab}
@@ -195,8 +196,6 @@ const Route = () => (
         name="MainTab"
         options={{
           headerShown: false,
-
-          //headerTitle: () => <HeaderLeft></HeaderLeft>,
         }}
         component={MainTab}
       />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -18,8 +18,14 @@ import { COLOR } from "../utils/color";
 import NormalButton from "../components/Button/NormalButton";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 
+/**
+ * Size in pixel of table, please change if needed.
+ */
 const SIZE_TABLE = 280;
 
+/**
+ * Table in diamond game
+ */
 const TABLE = [
   [0, 1, 2, 3, 4, 5, 6, 7],
   [0, 1, 2, 3, 4, 5, 6, 7],
@@ -31,35 +37,85 @@ const TABLE = [
   [0, 1, 2, 3, 4, 5, 6, 7],
 ];
 
+/**
+ * This will create a brand new random element in diamond game.
+ * @returns a random number
+ */
 const randomNumber = () => {
   return Math.floor(Math.random() * 4);
 };
 
 export default function GameScreen() {
-  // TODO Animation
+  const INPUT_RANGE = [0, 1, 2];
+  const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
+
+  /**
+   * Define animation of each square in diamond game
+   */
   const state = {
-    animation: new Animated.Value(1),
+    opacityAnimation: Array.from({ length: TABLE.length }, () =>
+      Array.from({ length: TABLE.length }, () => new Animated.Value(1)),
+    ),
+    backgroundAnimation: Array.from({ length: TABLE.length }, () =>
+      Array.from({ length: TABLE.length }, () => new Animated.Value(0)),
+    ),
+  };
+
+  const interpolation = {
+    backgroundInterpolation: state.backgroundAnimation.map((row) =>
+      row.map((cell) =>
+        cell.interpolate({
+          inputRange: INPUT_RANGE,
+          outputRange: OUTPUT_RANGE,
+        }),
+      ),
+    ),
   };
 
   const animatedStyles = {
-    opacity: state.animation,
+    opacity: state.opacityAnimation,
+    backgroundColor: interpolation.backgroundInterpolation,
   };
 
-  // Function to change opacity
-  const changeOpacity = () => {
-    Animated.timing(state.animation, {
-      toValue: 0,
-      duration: 350,
-      useNativeDriver: true,
-    }).start(() => {
-      Animated.timing(state.animation, {
-        toValue: 1,
-        duration: 350,
+  /**
+   * Function to handle the opacity of 1 cell position indexRow, indexCol
+   * @param indexRox
+   * @param indexCol
+   */
+  const startAnimation = (indexRow: number, indexCol: number) => {
+    Animated.parallel([
+      /**
+       * Change opacity
+       */
+      Animated.timing(state.opacityAnimation[indexRow][indexCol], {
+        toValue: 0,
+        duration: 1500,
         useNativeDriver: true,
-      }).start();
-    });
+      }),
+      /**
+       * Change opacity
+       */
+      Animated.timing(state.backgroundAnimation[indexRow][indexCol], {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true,
+      }),
+    ]).start(() =>
+      /**
+       * Change background
+       */
+      Animated.timing(state.opacityAnimation[indexRow][indexCol], {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true,
+      }).start(),
+    );
   };
 
+  /**
+   * DELETE useEffect
+   */
+  useEffect(() => {}, []);
   const navigate = useCustomNavigation();
   return (
     <SafeAreaView>
@@ -102,68 +158,21 @@ export default function GameScreen() {
         <View style={styles.boardContainer}>
           {TABLE.map((row, indexRow) => (
             <View key={indexRow} style={styles.row}>
-              {row.map((cell, index) => {
+              {row.map((cell, indexCol) => {
                 let randomItem = randomNumber();
-                // if (randomItem === 0)
-                //   return (
-                //     <Animated.View
-                //       key={index}
-                //       style={{ ...styles.cell, backgroundColor: COLOR.RED }}
-                //     >
-                //       <Image style={styles.imageInCell} source={Fire}></Image>
-                //     </Animated.View>
-                //   );
-                // if (randomItem === 1)
-                //   return (
-                //     <Animated.View
-                //       key={index}
-                //       style={{ ...styles.cell, backgroundColor: COLOR.BLUE }}
-                //     >
-                //       <Image
-                //         style={styles.imageInCell}
-                //         source={LightNight}
-                //       ></Image>
-                //     </Animated.View>
-                //   );
-                // if (randomItem === 2)
-                //   return (
-                //     <Animated.View
-                //       key={index}
-                //       style={{
-                //         ...styles.cell,
-                //         backgroundColor: COLOR.LIGHT_PURPLE,
-                //       }}
-                //     >
-                //       <Image style={styles.imageInCell} source={Shield}></Image>
-                //     </Animated.View>
-                //   );
-                // if (randomItem === 3)
-                //   return (
-                //     <Animated.View
-                //       key={index}
-                //       style={{ ...styles.cell, backgroundColor: COLOR.YELLOW }}
-                //     >
-                //       <Image style={styles.imageInCell} source={Sword}></Image>
-                //     </Animated.View>
-                //   );
-                // if (randomItem === 4)
-                //   return (
-                //     <Animated.View
-                //       key={index}
-                //       style={{ ...styles.cell, backgroundColor: COLOR.GRAY }}
-                //     >
-                //       <Image style={styles.imageInCell} source={YinYan}></Image>
-                //     </Animated.View>
-                //   );
-
                 return (
-                  <TouchableOpacity key={index} onPress={changeOpacity}>
+                  <TouchableOpacity
+                    key={indexCol}
+                    onPress={() => startAnimation(indexRow, indexCol)}
+                  >
                     <Animated.View
-                      key={index}
+                      key={indexCol}
                       style={{
                         ...styles.cell,
-                        backgroundColor: COLOR.RED,
-                        opacity: animatedStyles.opacity,
+                        backgroundColor:
+                          animatedStyles.backgroundColor[indexRow][indexCol],
+                        // backgroundColor: COLOR.RED,
+                        opacity: animatedStyles.opacity[indexRow][indexCol],
                       }}
                     >
                       <Image style={styles.imageInCell} source={Fire}></Image>
