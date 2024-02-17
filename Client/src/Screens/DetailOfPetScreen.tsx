@@ -5,11 +5,13 @@ import {
   Text,
   Image,
   Button,
+  FlatList,
   TouchableOpacity,
 } from "react-native";
 import { COLOR } from "../utils/color";
 import CustomText from "../components/CustomText";
 import Pet from "../../assets/Pet.png";
+import { RoundButton } from "../components/Button/RoundButton";
 export default function DetailOfPet() {
   return (
     <View style={styles.container}>
@@ -29,27 +31,21 @@ export default function DetailOfPet() {
       <View style={styles.petContainer}>
         <Image source={Pet} alt="" style={styles.petImage} />
         <View style={styles.equipmentContainer}>
-          <TouchableOpacity
+          <RoundButton
             onPress={() => {
-              console.log("Pressed");
+              console.log("press");
             }}
-            style={styles.button}
-            accessibilityLabel="Learn more about this purple button"
-          ></TouchableOpacity>
-          <TouchableOpacity
+          />
+          <RoundButton
             onPress={() => {
-              console.log("Pressed");
+              console.log("press");
             }}
-            style={styles.button}
-            accessibilityLabel="Learn more about this purple button"
-          ></TouchableOpacity>
-          <TouchableOpacity
+          />
+          <RoundButton
             onPress={() => {
-              console.log("Pressed");
+              console.log("press");
             }}
-            style={styles.button}
-            accessibilityLabel="Learn more about this purple button"
-          ></TouchableOpacity>
+          />
         </View>
       </View>
 

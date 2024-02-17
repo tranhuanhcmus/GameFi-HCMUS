@@ -1,36 +1,48 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { COLOR } from "../utils/color";
-import CustomText from "../components/CustomText";
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  SafeAreaView,
+  SafeAreaViewBase,
+} from "react-native";
 import Heart from "../../assets/heart.png";
-
+import { RoundButton } from "../components/Button/RoundButton";
+import CustomText from "../components/CustomText";
+import { COLOR } from "../utils/color";
+import AwesomeButton from "react-native-really-awesome-button";
 export function BreedScreen() {
   return (
-    <View style={styles.container}>
-      <CustomText style={styles.title}>Breed</CustomText>
-      <Image source={Heart} alt="Heart" style={styles.imageContainer} />
-      <View style={styles.addButtonContainer}>
-        <TouchableOpacity
-          style={styles.addButton}
+    <SafeAreaView className="h-screen w-screen bg-[#210035]">
+      <View style={styles.container}>
+        <CustomText style={styles.title}>Breed</CustomText>
+        <Image source={Heart} alt="Heart" style={styles.imageContainer} />
+        <View style={styles.addButtonContainer}>
+          <RoundButton
+            onPress={() => {
+              console.log("Pressed");
+            }}
+          />
+          <RoundButton
+            onPress={() => {
+              console.log("Pressed");
+            }}
+          />
+        </View>
+        <AwesomeButton
+          style={styles.breedButton}
           onPress={() => {
-            console.log("Press");
+            console.log("Pressed");
           }}
-        ></TouchableOpacity>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => {
-            console.log("Press");
-          }}
-        ></TouchableOpacity>
+          width={225}
+          height={65}
+          borderRadius={20}
+          backgroundColor={COLOR.RED}
+        >
+          <CustomText style={styles.breedText}>Breed</CustomText>
+        </AwesomeButton>
       </View>
-      <TouchableOpacity
-        style={styles.breedButton}
-        onPress={() => {
-          console.log("Pressed");
-        }}
-      >
-        <CustomText style={styles.breedText}>Breed</CustomText>
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -63,17 +75,12 @@ const styles = StyleSheet.create({
     marginTop: -30,
     zIndex: 99,
   },
-  addButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 100,
-    backgroundColor: COLOR.YELLOW,
-  },
+
   breedButton: {
-    width: 225,
-    height: 65,
-    borderRadius: 20,
-    backgroundColor: COLOR.RED,
+    // width: 225,
+    // height: 65,
+    // borderRadius: 20,
+    // backgroundColor: COLOR.RED,
     justifyContent: "center",
     marginTop: 22,
   },

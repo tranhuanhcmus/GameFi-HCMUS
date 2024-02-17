@@ -1,5 +1,14 @@
-import React from "react";
-import { Text, View, StyleSheet, Image, SafeAreaView } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  Animated,
+  TouchableOpacity,
+  PanResponder,
+} from "react-native";
 import Pet from "../../assets/Pet.png";
 import Fire from "../../assets/fire.jpg";
 import LightNight from "../../assets/lightnight.jpg";
@@ -7,9 +16,17 @@ import Shield from "../../assets/shield.jpg";
 import Sword from "../../assets/sword.jpg";
 import YinYan from "../../assets/batquai.jpg";
 import { COLOR } from "../utils/color";
+import NormalButton from "../components/Button/NormalButton";
+import useCustomNavigation from "../hooks/useCustomNavigation";
 
+/**
+ * Size in pixel of table, please change if needed.
+ */
 const SIZE_TABLE = 280;
 
+/**
+ * Table in diamond game
+ */
 const TABLE = [
   [0, 1, 2, 3, 4, 5, 6, 7],
   [0, 1, 2, 3, 4, 5, 6, 7],
@@ -21,15 +38,140 @@ const TABLE = [
   [0, 1, 2, 3, 4, 5, 6, 7],
 ];
 
+/**
+ * This will create a brand new random element in diamond game.
+ * @returns a random number
+ */
 const randomNumber = () => {
   return Math.floor(Math.random() * 4);
 };
 
 export default function GameScreen() {
+  const INPUT_RANGE = [0, 1, 2];
+  const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
+
+  /**
+   * Define animation of each square in diamond game
+   */
+  const state = {
+    opacityAnimation: Array.from({ length: TABLE.length }, () =>
+      Array.from({ length: TABLE.length }, () => new Animated.Value(1)),
+    ),
+    backgroundAnimation: Array.from({ length: TABLE.length }, () =>
+      Array.from({ length: TABLE.length }, () => new Animated.Value(0)),
+    ),
+  };
+
+  const interpolation = {
+    backgroundInterpolation: state.backgroundAnimation.map((row) =>
+      row.map((cell) =>
+        cell.interpolate({
+          inputRange: INPUT_RANGE,
+          outputRange: OUTPUT_RANGE,
+        }),
+      ),
+    ),
+  };
+
+  const animatedStyles = {
+    opacity: state.opacityAnimation,
+    backgroundColor: interpolation.backgroundInterpolation,
+  };
+
+  /**
+   * Handle gesture with press and then release on screen.
+   */
+  const panResponders = Array.from({ length: TABLE.length }, () =>
+    Array.from({ length: TABLE.length }, () =>
+      React.useRef(
+        PanResponder.create({
+          // Ask to be the responder:
+          onStartShouldSetPanResponder: (evt, gestureState) => true,
+          onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+          onMoveShouldSetPanResponder: (evt, gestureState) => true,
+          onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+          onPanResponderGrant: (evt, gestureState) => {
+            // The gesture has started. Show visual feedback so the user knows
+            // what is happening!
+            // gestureState.d{x,y} will be set to zero now
+          },
+          onPanResponderMove: (evt, gestureState) => {
+            // The most recent move distance is gestureState.move{X,Y}
+            // The accumulated gesture distance since becoming responder is
+            // gestureState.d{x,y}
+          },
+          onPanResponderTerminationRequest: (evt, gestureState) => true,
+          onPanResponderRelease: (evt, gestureState) => {
+            console.log("alooo");
+            // The user has released all touches while this view is the
+            // responder. This typically means a gesture has succeeded
+          },
+          onPanResponderTerminate: (evt, gestureState) => {
+            // Another component has become the responder, so this gesture
+            // should be cancelled
+          },
+          onShouldBlockNativeResponder: (evt, gestureState) => {
+            // Returns whether this component should block native components from becoming the JS
+            // responder. Returns true by default. Is currently only supported on android.
+            return true;
+          },
+        }),
+      ),
+    ),
+  );
+
+  /**
+   * Function to handle the opacity of 1 cell position indexRow, indexCol
+   * @param indexRox
+   * @param indexCol
+   */
+  const startAnimation = (indexRow: number, indexCol: number) => {
+    Animated.parallel([
+      /**
+       * Change opacity
+       */
+      Animated.timing(state.opacityAnimation[indexRow][indexCol], {
+        toValue: 0,
+        duration: 1500,
+        useNativeDriver: true,
+      }),
+      /**
+       * Change opacity
+       */
+      Animated.timing(state.backgroundAnimation[indexRow][indexCol], {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true,
+      }),
+    ]).start(() =>
+      /**
+       * Change background
+       */
+      Animated.timing(state.opacityAnimation[indexRow][indexCol], {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true,
+      }).start(),
+    );
+  };
+
+  /**
+   * DELETE useEffect
+   */
+  useEffect(() => {}, []);
+  const navigate = useCustomNavigation();
   return (
     <SafeAreaView>
       <View style={styles.container}>
         {/* Character area */}
+        <NormalButton
+          onPress={() => {
+            navigate.navigate("MainTab");
+          }}
+        >
+          <Text>{"< back"}</Text>
+        </NormalButton>
         <View style={styles.characterArea}>
           {/* Player 1 - Left*/}
           <View style={styles.player}>
@@ -60,59 +202,27 @@ export default function GameScreen() {
         <View style={styles.boardContainer}>
           {TABLE.map((row, indexRow) => (
             <View key={indexRow} style={styles.row}>
-              {row.map((cell, index) => {
+              {row.map((cell, indexCol) => {
                 let randomItem = randomNumber();
-                if (randomItem === 0)
-                  return (
-                    <View
-                      key={index}
-                      style={{ ...styles.cell, backgroundColor: COLOR.RED }}
-                    >
-                      <Image style={styles.imageInCell} source={Fire}></Image>
-                    </View>
-                  );
-                if (randomItem === 1)
-                  return (
-                    <View
-                      key={index}
-                      style={{ ...styles.cell, backgroundColor: COLOR.BLUE }}
-                    >
-                      <Image
-                        style={styles.imageInCell}
-                        source={LightNight}
-                      ></Image>
-                    </View>
-                  );
-                if (randomItem === 2)
-                  return (
-                    <View
-                      key={index}
+                return (
+                  <TouchableOpacity
+                    key={indexCol}
+                    onPress={() => startAnimation(indexRow, indexCol)}
+                  >
+                    <Animated.View
+                      key={indexCol}
                       style={{
                         ...styles.cell,
-                        backgroundColor: COLOR.LIGHT_PURPLE,
+                        backgroundColor:
+                          animatedStyles.backgroundColor[indexRow][indexCol],
+                        opacity: animatedStyles.opacity[indexRow][indexCol],
                       }}
+                      {...panResponders[indexRow][indexCol].current.panHandlers}
                     >
-                      <Image style={styles.imageInCell} source={Shield}></Image>
-                    </View>
-                  );
-                if (randomItem === 3)
-                  return (
-                    <View
-                      key={index}
-                      style={{ ...styles.cell, backgroundColor: COLOR.YELLOW }}
-                    >
-                      <Image style={styles.imageInCell} source={Sword}></Image>
-                    </View>
-                  );
-                if (randomItem === 4)
-                  return (
-                    <View
-                      key={index}
-                      style={{ ...styles.cell, backgroundColor: COLOR.GRAY }}
-                    >
-                      <Image style={styles.imageInCell} source={YinYan}></Image>
-                    </View>
-                  );
+                      <Image style={styles.imageInCell} source={Fire}></Image>
+                    </Animated.View>
+                  </TouchableOpacity>
+                );
               })}
             </View>
           ))}
@@ -159,7 +269,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   energyBar: {
-    width: 60,
+    width: 80,
     height: 20,
     backgroundColor: "#FF8C05",
     borderTopRightRadius: 4,
@@ -169,7 +279,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   damageBar: {
-    width: 60,
+    width: 80,
     height: 20,
     backgroundColor: "#70A2FF",
     borderTopRightRadius: 10,
@@ -197,7 +307,7 @@ const styles = StyleSheet.create({
   boardContainer: {
     height: "auto",
     width: "auto",
-
+    backgroundColor: COLOR.WHITE,
     alignContent: "center",
   },
   row: {
