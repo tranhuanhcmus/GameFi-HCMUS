@@ -1,26 +1,19 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  SafeAreaView,
   Animated,
-  TouchableOpacity,
   PanResponder,
+  TouchableOpacity,
+  View,
+  Image,
+  StyleSheet,
 } from "react-native";
+import { COLOR } from "../../utils/color";
 import Pet from "../../../assets/Pet.png";
 import Fire from "../../../assets/fire.jpg";
 import LightNight from "../../../assets/lightnight.jpg";
 import Shield from "../../../assets/shield.jpg";
 import Sword from "../../../assets/sword.jpg";
 import YinYan from "../../../assets/batquai.jpg";
-import { COLOR } from "../../utils/color";
-import NormalButton from "../../components/Button/NormalButton";
-import useCustomNavigation from "../../hooks/useCustomNavigation";
-import GameHeader from "../../components/Game/Header";
-import GameBoard from "../../components/Game/Board";
-
 /**
  * Size in pixel of table, please change if needed.
  */
@@ -48,7 +41,7 @@ const randomNumber = () => {
   return Math.floor(Math.random() * 4);
 };
 
-const GameScreen = () => {
+const GameBoard = () => {
   const INPUT_RANGE = [0, 1, 2];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
@@ -166,29 +159,35 @@ const GameScreen = () => {
    * TODO Collapse animation
    */
 
-  /**
-   * DELETE useEffect
-   */
-  useEffect(() => {}, []);
-  const navigate = useCustomNavigation();
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        {/* Character area */}
-        <NormalButton
-          onPress={() => {
-            navigate.navigate("MainTab");
-          }}
-        >
-          <Text>{"< back"}</Text>
-        </NormalButton>
-
-        <GameHeader />
-
-        <GameBoard />
-        {/* TODO: Bottom nav */}
-      </View>
-    </SafeAreaView>
+    <View style={styles.boardContainer}>
+      {TABLE.map((row, indexRow) => (
+        <View key={indexRow} style={styles.row}>
+          {row.map((cell, indexCol) => {
+            let randomItem = randomNumber();
+            return (
+              <TouchableOpacity
+                key={indexCol}
+                onPress={() => startAnimation(indexRow, indexCol)}
+              >
+                <Animated.View
+                  key={indexCol}
+                  style={{
+                    ...styles.cell,
+                    backgroundColor:
+                      animatedStyles.backgroundColor[indexRow][indexCol],
+                    opacity: animatedStyles.opacity[indexRow][indexCol],
+                  }}
+                  {...panResponders[indexRow][indexCol].current.panHandlers}
+                >
+                  <Image style={styles.imageInCell} source={Fire}></Image>
+                </Animated.View>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      ))}
+    </View>
   );
 };
 
@@ -202,6 +201,95 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
+  characterArea: {
+    height: 200,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  player: {
+    width: "50%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  petImage: {
+    width: 100,
+    height: 100,
+  },
+  avatarImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+  },
+  energyBar: {
+    width: 80,
+    height: 20,
+    backgroundColor: "#FF8C05",
+    borderTopRightRadius: 4,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 10,
+    marginBottom: 5,
+  },
+  damageBar: {
+    width: 80,
+    height: 20,
+    backgroundColor: "#70A2FF",
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 4,
+  },
+  bar: {
+    height: "auto",
+    width: "auto",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginHorizontal: 10,
+  },
+  playerHeader: {
+    height: "auto",
+    width: "auto",
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "center",
+    alignItems: "center",
+  },
+  boardContainer: {
+    height: "auto",
+    width: "auto",
+    backgroundColor: COLOR.WHITE,
+    alignContent: "center",
+  },
+  row: {
+    height: "auto",
+    width: "auto",
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "space-around",
+  },
+  cell: {
+    height: SIZE_TABLE / 8,
+    width: SIZE_TABLE / 8,
+    margin: 3,
+    borderRadius: 5,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  imageInCell: {
+    width: "80%",
+    height: "80%",
+  },
 });
 
-export default GameScreen;
+export default GameBoard;
