@@ -1,16 +1,16 @@
 import { View, Text, SafeAreaView, ScrollView } from "react-native";
 import React from "react";
-import TrendComponent from "../components/TrendComponent";
-import TrendCard from "../components/TrendCard";
-import ButtonFilter from "../components/Button/ButtonFilter";
-import CartFilter from "../components/CartFilter";
+import TrendComponent from "../../components/TrendComponent";
+import TrendCard from "../../components/TrendCard";
+import ButtonFilter from "../../components/Button/ButtonFilter";
+import CartFilter from "../../components/CartFilter";
 import { flare } from "viem/chains";
 
 type Props = {};
 const trend = true;
 const TrendMarketScreen = (props: Props) => {
   return (
-    <SafeAreaView className="bg-color_app h-screen w-screen">
+    <SafeAreaView className="h-screen w-screen bg-color_app">
       <View className="ml-3 mt-3 flex flex-col">
         <View className="gap-1">
           <Text className="font-light text-white">TrendMarketScreen</Text>

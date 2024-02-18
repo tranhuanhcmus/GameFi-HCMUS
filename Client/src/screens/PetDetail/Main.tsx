@@ -8,10 +8,10 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { COLOR } from "../utils/color";
-import CustomText from "../components/CustomText";
-import Pet from "../../assets/Pet.png";
-import { RoundButton } from "../components/Button/RoundButton";
+import { COLOR } from "../../utils/color";
+import CustomText from "../../components/CustomText";
+import Pet from "../../../assets/Pet.png"; // TODO: CHANGE LATER
+import { RoundButton } from "../../components/Button/RoundButton";
 export default function DetailOfPet() {
   return (
     <View style={styles.container}>

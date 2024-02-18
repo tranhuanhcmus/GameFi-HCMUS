@@ -6,10 +6,10 @@ import {
   SafeAreaView,
   SafeAreaViewBase,
 } from "react-native";
-import Heart from "../../assets/heart.png";
-import { RoundButton } from "../components/Button/RoundButton";
-import CustomText from "../components/CustomText";
-import { COLOR } from "../utils/color";
+import Heart from "../../../assets/heart.png";
+import { RoundButton } from "../../components/Button/RoundButton";
+import CustomText from "../../components/CustomText";
+import { COLOR } from "../../utils/color";
 import AwesomeButton from "react-native-really-awesome-button";
 export function BreedScreen() {
   return (

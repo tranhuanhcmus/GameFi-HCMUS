@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { SafeAreaView, Text, View } from "react-native";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
-import GradientButton from "../components/Button/GradientButton";
+import GradientButton from "../../components/Button/GradientButton";
 import { W3mAccountButton } from "@web3modal/wagmi-react-native";
-import useCustomNavigation from "./../hooks/useCustomNavigation/index";
-import { useAppDispatch } from "../redux/store";
-import { selectUser, setAddress } from "../redux/userSlice";
+import useCustomNavigation from "../../hooks/useCustomNavigation/index";
+import { useAppDispatch } from "../../redux/store";
+import { selectUser, setAddress } from "../../redux/userSlice";
 import { useSelector } from "react-redux";
-import PetCarousel from "../components/Pets/PetCarousel";
-import NormalButton from "../components/Button/NormalButton";
+import PetCarousel from "../../components/Pets/PetCarousel";
+import NormalButton from "../../components/Button/NormalButton";
 
 type Props = {};
 

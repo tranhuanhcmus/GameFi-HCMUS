@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native";
-import { startLoading, stopLoading } from "../redux/loadingSlice";
+import { startLoading, stopLoading } from "../../redux/loadingSlice";
 import { useDispatch } from "react-redux";
 
 type Props = {};
