@@ -1,4 +1,7 @@
-import React from "react";
+/**
+ * @author: duy-nhan
+ */
+import React, { useMemo } from "react";
 import {
   Animated,
   PanResponder,
@@ -14,6 +17,10 @@ import LightNight from "../../../assets/lightnight.jpg";
 import Shield from "../../../assets/shield.jpg";
 import Sword from "../../../assets/sword.jpg";
 import YinYan from "../../../assets/batquai.jpg";
+import boardSlice from "../../redux/boardSlice";
+import { useSelector } from "react-redux";
+import { store } from "../../redux/store";
+
 /**
  * Size in pixel of table, please change if needed.
  */
@@ -46,19 +53,137 @@ const GameBoard = () => {
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
   /**
-   * Define animation of each square in diamond game
+   * Initial state of board
    */
-  const state = {
-    opacityAnimation: Array.from({ length: TABLE.length }, () =>
-      Array.from({ length: TABLE.length }, () => new Animated.Value(1)),
-    ),
-    backgroundAnimation: Array.from({ length: TABLE.length }, () =>
-      Array.from({ length: TABLE.length }, () => new Animated.Value(0)),
-    ),
-  };
+
+  const blockState = store.getState().board;
+
+  const state = useMemo(() => {
+    const rotateInterpolate = blockState.rotation.map((row: any[]) =>
+      row.map((item) =>
+        item.interpolate({
+          inputRange: [0, 360],
+          outputRange: ["0deg", "360deg"],
+        }),
+      ),
+    );
+
+    // TODO
+    //  const borderColorInterpolate = blockState.borderColor.map((row: any[]) =>
+    //   row.map((item) =>
+    //     item.interpolate({
+    //       inputRange: [-1, 0, 1],
+    //       outputRange: [COLOR.BLUE, COLOR.WHITE, COLOR.YELLOW],
+    //     }),
+    //   ),
+    // );
+
+    // TODO
+    // const backgroundColorInterpolate = blockState.backgroundColor.map(
+    //   (row: any[], i: string | number) =>
+    //     row.map((item, j) => {
+    //       if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
+    //         return item.interpolate({
+    //           inputRange: [-1, 0, 1],
+    //           outputRange: [Colors.win, Colors.purple, Colors.border],
+    //         });
+    //       } else if (
+    //         blockState.cells[i][j].effect === WordSearchCellEffect.vertical
+    //       ) {
+    //         return item.interpolate({
+    //           inputRange: [-1, 0, 1],
+    //           outputRange: [Colors.win, Colors.win, Colors.border],
+    //         });
+    //       } else if (
+    //         blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
+    //       ) {
+    //         return item.interpolate({
+    //           inputRange: [-1, 0, 1],
+    //           outputRange: [Colors.win, Colors.white, Colors.border],
+    //         });
+    //       } else {
+    //         return item.interpolate({
+    //           inputRange: [-1, 0, 1],
+    //           outputRange: [Colors.win, Colors.blue2, Colors.border],
+    //         });
+    //       }
+    //     }),
+    // );
+
+    // TODO
+    // const colorInterpolate = blockState.color.map((row, i) =>
+    //   row.map((item, j) => {
+    //     if (blockState.cells[i][j].effect === WordSearchCellEffect.vertical) {
+    //       return item.interpolate({
+    //         inputRange: [0, 1],
+    //         outputRange: [Colors.btnText, Colors.constract],
+    //       });
+    //     } else if (
+    //       blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
+    //     ) {
+    //       return item.interpolate({
+    //         inputRange: [-1, 0, 1],
+    //         outputRange: [Colors.win, Colors.constract, Colors.constract],
+    //       });
+    //     } else {
+    //       return item.interpolate({
+    //         inputRange: [0, 1],
+    //         outputRange: [Colors.white, Colors.constract],
+    //       });
+    //     }
+    //   }),
+    // );
+
+    // TODO
+    // const scoreCircleOpacityInterpolate = blockState.scoreCircleAnimation.map(
+    //   (row) =>
+    //     row.map((item) =>
+    //       item.interpolate({
+    //         inputRange: [0, 0.5, 1],
+    //         outputRange: [0, 1, 0],
+    //       }),
+    //     ),
+    // );
+
+    // TODO
+    // const scoreCircleScaleInterpolate = blockState.scoreCircleAnimation.map(
+    //   (row: any[]) =>
+    //     row.map((item) =>
+    //       item.interpolate({
+    //         inputRange: [0, 0.5, 1],
+    //         outputRange: [0, 1, 2],
+    //       }),
+    //     ),
+    // );
+
+    return {
+      //   animation: blockState.animation, TODO
+      //   scoreOpacity: blockState.scoreOpacity, TODO
+      rotation: rotateInterpolate,
+      scale: blockState.scale,
+      //   borderColor: borderColorInterpolate, TODO
+      //   backgroundColor: backgroundColorInterpolate, TODO
+      //   color: colorInterpolate,
+      zIndex: blockState.zIndex,
+      //   scoreCircle: blockState.scoreCircleAnimation, TODO
+      //   scoreCircleOpacity: scoreCircleOpacityInterpolate, TODO
+      //   scoreCircleScale: scoreCircleScaleInterpolate, TODO
+    };
+  }, [
+    blockState.rotation,
+    // blockState.borderColor, TODO
+    blockState.backgroundColor,
+    // blockState.color, TODO
+    // blockState.animation, TODO
+    // blockState.scoreOpacity, TODO
+    blockState.scale,
+    blockState.zIndex,
+    // blockState.cells,
+    // blockState.scoreCircleAnimation, TODO
+  ]);
 
   const interpolation = {
-    backgroundInterpolation: state.backgroundAnimation.map((row) =>
+    backgroundInterpolation: blockState.backgroundColor.map((row: any[]) =>
       row.map((cell) =>
         cell.interpolate({
           inputRange: INPUT_RANGE,
@@ -69,7 +194,6 @@ const GameBoard = () => {
   };
 
   const animatedStyles = {
-    opacity: state.opacityAnimation,
     backgroundColor: interpolation.backgroundInterpolation,
   };
 
@@ -121,39 +245,93 @@ const GameBoard = () => {
    * @param indexRox
    * @param indexCol
    */
-  const startAnimation = (indexRow: number, indexCol: number) => {
-    Animated.parallel([
-      /**
-       * Change opacity
-       */
-      Animated.timing(state.opacityAnimation[indexRow][indexCol], {
-        toValue: 0,
-        duration: 1500,
-        useNativeDriver: true,
-      }),
-      /**
-       * Change opacity
-       */
-      Animated.timing(state.backgroundAnimation[indexRow][indexCol], {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: true,
-      }),
-    ]).start(() =>
-      /**
-       * Change background
-       */
-      Animated.timing(state.opacityAnimation[indexRow][indexCol], {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start(),
-    );
-  };
+  //   const startAnimation = (indexRow: number, indexCol: number) => {
+  //     Animated.parallel([
+  //       /**
+  //        * Change opacity
+  //        */
+  //       Animated.timing(state.opacityAnimation[indexRow][indexCol], {
+  //         toValue: 0,
+  //         duration: 1500,
+  //         useNativeDriver: true,
+  //       }),
+  //       /**
+  //        * Change opacity
+  //        */
+  //       Animated.timing(state.backgroundAnimation[indexRow][indexCol], {
+  //         toValue: 1,
+  //         duration: 1500,
+  //         useNativeDriver: true,
+  //       }),
+  //     ]).start(() =>
+  //       /**
+  //        * Change background
+  //        */
+  //       Animated.timing(state.opacityAnimation[indexRow][indexCol], {
+  //         toValue: 1,
+  //         duration: 1500,
+  //         useNativeDriver: true,
+  //       }).start(),
+  //     );
+  //   };
 
   /**
-   * TODO Disapear animation
+   * Destroy 1 cell animation
    */
+  const onDestroyOneCell = (row: number, col: number) => {
+    Animated.parallel([
+      Animated.sequence([
+        Animated.timing(blockState.backgroundColor[row][col], {
+          toValue: 1,
+          useNativeDriver: false,
+          duration: 200,
+        }),
+        Animated.timing(blockState.backgroundColor[row][col], {
+          toValue: 0,
+          useNativeDriver: false,
+          duration: 200,
+          delay: 1000,
+        }),
+      ]),
+      Animated.sequence([
+        Animated.timing(blockState.zIndex[row][col], {
+          toValue: 1000,
+          useNativeDriver: false,
+          duration: 0,
+        }),
+        Animated.timing(blockState.rotation[row][col], {
+          toValue: 10,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(blockState.rotation[row][col], {
+          toValue: -10,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(blockState.rotation[row][col], {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(blockState.scale[row][col], {
+          toValue: 2,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(blockState.scale[row][col], {
+          toValue: 1,
+          duration: 100,
+          useNativeDriver: false,
+        }),
+        Animated.timing(blockState.zIndex[row][col], {
+          toValue: 1,
+          useNativeDriver: false,
+          duration: 0,
+        }),
+      ]),
+    ]);
+  };
 
   /**
    * TODO Collapse animation
@@ -168,7 +346,7 @@ const GameBoard = () => {
             return (
               <TouchableOpacity
                 key={indexCol}
-                onPress={() => startAnimation(indexRow, indexCol)}
+                onPress={() => onDestroyOneCell(indexRow, indexCol)}
               >
                 <Animated.View
                   key={indexCol}
@@ -176,7 +354,6 @@ const GameBoard = () => {
                     ...styles.cell,
                     backgroundColor:
                       animatedStyles.backgroundColor[indexRow][indexCol],
-                    opacity: animatedStyles.opacity[indexRow][indexCol],
                   }}
                   {...panResponders[indexRow][indexCol].current.panHandlers}
                 >
