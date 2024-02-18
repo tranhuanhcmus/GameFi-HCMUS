@@ -11,8 +11,8 @@ import {
   W3mButton,
   Web3Modal,
 } from "@web3modal/wagmi-react-native";
-import ConnectScreen from "./src/Screens/ConnectScreen";
-import HomeScreen from "./src/Screens/HomeScreen";
+import ConnectScreen from "./src/screens/Connect/Main";
+import HomeScreen from "./src/screens/Home/Main";
 import Route from "./src/routes";
 import { Provider } from "react-redux";
 import { store } from "./src/redux/store";

@@ -9,15 +9,15 @@ import {
   TouchableOpacity,
   PanResponder,
 } from "react-native";
-import Pet from "../../assets/Pet.png";
-import Fire from "../../assets/fire.jpg";
-import LightNight from "../../assets/lightnight.jpg";
-import Shield from "../../assets/shield.jpg";
-import Sword from "../../assets/sword.jpg";
-import YinYan from "../../assets/batquai.jpg";
-import { COLOR } from "../utils/color";
-import NormalButton from "../components/Button/NormalButton";
-import useCustomNavigation from "../hooks/useCustomNavigation";
+import Pet from "../../../assets/Pet.png";
+import Fire from "../../../assets/fire.jpg";
+import LightNight from "../../../assets/lightnight.jpg";
+import Shield from "../../../assets/shield.jpg";
+import Sword from "../../../assets/sword.jpg";
+import YinYan from "../../../assets/batquai.jpg";
+import { COLOR } from "../../utils/color";
+import NormalButton from "../../components/Button/NormalButton";
+import useCustomNavigation from "../../hooks/useCustomNavigation";
 
 /**
  * Size in pixel of table, please change if needed.
@@ -155,6 +155,14 @@ export default function GameScreen() {
       }).start(),
     );
   };
+
+  /**
+   * TODO Disapear animation
+   */
+
+  /**
+   * TODO Collapse animation
+   */
 
   /**
    * DELETE useEffect
