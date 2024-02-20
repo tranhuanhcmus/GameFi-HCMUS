@@ -9,6 +9,7 @@ import {
   View,
   Image,
   StyleSheet,
+  PanResponderGestureState,
 } from "react-native";
 import { COLOR } from "../../utils/color";
 import Pet from "../../../assets/Pet.png";
@@ -49,7 +50,7 @@ const randomNumber = () => {
 };
 
 const GameBoard = () => {
-  const INPUT_RANGE = [0, 1, 2];
+  const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
   /**
@@ -58,129 +59,124 @@ const GameBoard = () => {
 
   const blockState = store.getState().board;
 
-  const state = useMemo(() => {
-    const rotateInterpolate = blockState.rotation.map((row: any[]) =>
-      row.map((item) =>
-        item.interpolate({
-          inputRange: [0, 360],
-          outputRange: ["0deg", "360deg"],
-        }),
-      ),
-    );
+  // const state = useMemo(() => {
+  //   const rotateInterpolate = blockState.rotation.map((row: any[]) =>
+  //     row.map((item) =>
+  //       item.interpolate({
+  //         inputRange: [0, 360],
+  //         outputRange: ["0deg", "360deg"],
+  //       }),
+  //     ),
+  //   );
 
-    // TODO
-    //  const borderColorInterpolate = blockState.borderColor.map((row: any[]) =>
-    //   row.map((item) =>
-    //     item.interpolate({
-    //       inputRange: [-1, 0, 1],
-    //       outputRange: [COLOR.BLUE, COLOR.WHITE, COLOR.YELLOW],
-    //     }),
-    //   ),
-    // );
+  //   const borderColorInterpolate = blockState.borderColor.map((row: any[]) =>
+  //     row.map((item) =>
+  //       item.interpolate({
+  //         inputRange: [-1, 0, 1],
+  //         outputRange: [Colors.win, Colors.blue, Colors.yellow],
+  //       }),
+  //     ),
+  //   );
 
-    // TODO
-    // const backgroundColorInterpolate = blockState.backgroundColor.map(
-    //   (row: any[], i: string | number) =>
-    //     row.map((item, j) => {
-    //       if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.purple, Colors.border],
-    //         });
-    //       } else if (
-    //         blockState.cells[i][j].effect === WordSearchCellEffect.vertical
-    //       ) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.win, Colors.border],
-    //         });
-    //       } else if (
-    //         blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
-    //       ) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.white, Colors.border],
-    //         });
-    //       } else {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.blue2, Colors.border],
-    //         });
-    //       }
-    //     }),
-    // );
+  //   const backgroundColorInterpolate = blockState.backgroundColor.map(
+  //     (row: any[], i: number) =>
+  //       row.map((item, j) => {
+  //         if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
+  //           return item.interpolate({
+  //             inputRange: [-1, 0, 1],
+  //             outputRange: [Colors.win, Colors.purple, Colors.border],
+  //           });
+  //         } else if (
+  //           blockState.cells[i][j].effect === WordSearchCellEffect.vertical
+  //         ) {
+  //           return item.interpolate({
+  //             inputRange: [-1, 0, 1],
+  //             outputRange: [Colors.win, Colors.win, Colors.border],
+  //           });
+  //         } else if (
+  //           blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
+  //         ) {
+  //           return item.interpolate({
+  //             inputRange: [-1, 0, 1],
+  //             outputRange: [Colors.win, Colors.white, Colors.border],
+  //           });
+  //         } else {
+  //           return item.interpolate({
+  //             inputRange: [-1, 0, 1],
+  //             outputRange: [Colors.win, Colors.blue2, Colors.border],
+  //           });
+  //         }
+  //       }),
+  //   );
 
-    // TODO
-    // const colorInterpolate = blockState.color.map((row, i) =>
-    //   row.map((item, j) => {
-    //     if (blockState.cells[i][j].effect === WordSearchCellEffect.vertical) {
-    //       return item.interpolate({
-    //         inputRange: [0, 1],
-    //         outputRange: [Colors.btnText, Colors.constract],
-    //       });
-    //     } else if (
-    //       blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
-    //     ) {
-    //       return item.interpolate({
-    //         inputRange: [-1, 0, 1],
-    //         outputRange: [Colors.win, Colors.constract, Colors.constract],
-    //       });
-    //     } else {
-    //       return item.interpolate({
-    //         inputRange: [0, 1],
-    //         outputRange: [Colors.white, Colors.constract],
-    //       });
-    //     }
-    //   }),
-    // );
+  //   const colorInterpolate = blockState.color.map((row, i) =>
+  //     row.map((item: any, j: number) => {
+  //       if (blockState.cells[i][j].effect === WordSearchCellEffect.vertical) {
+  //         return item.interpolate({
+  //           inputRange: [0, 1],
+  //           outputRange: [Colors.btnText, Colors.constract],
+  //         });
+  //       } else if (
+  //         blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
+  //       ) {
+  //         return item.interpolate({
+  //           inputRange: [-1, 0, 1],
+  //           outputRange: [Colors.win, Colors.constract, Colors.constract],
+  //         });
+  //       } else {
+  //         return item.interpolate({
+  //           inputRange: [0, 1],
+  //           outputRange: [Colors.white, Colors.constract],
+  //         });
+  //       }
+  //     }),
+  //   );
 
-    // TODO
-    // const scoreCircleOpacityInterpolate = blockState.scoreCircleAnimation.map(
-    //   (row) =>
-    //     row.map((item) =>
-    //       item.interpolate({
-    //         inputRange: [0, 0.5, 1],
-    //         outputRange: [0, 1, 0],
-    //       }),
-    //     ),
-    // );
+  //   const scoreCircleOpacityInterpolate = blockState.scoreCircleAnimation.map(
+  //     (row: any[]) =>
+  //       row.map((item) =>
+  //         item.interpolate({
+  //           inputRange: [0, 0.5, 1],
+  //           outputRange: [0, 1, 0],
+  //         }),
+  //       ),
+  //   );
 
-    // TODO
-    // const scoreCircleScaleInterpolate = blockState.scoreCircleAnimation.map(
-    //   (row: any[]) =>
-    //     row.map((item) =>
-    //       item.interpolate({
-    //         inputRange: [0, 0.5, 1],
-    //         outputRange: [0, 1, 2],
-    //       }),
-    //     ),
-    // );
+  //   const scoreCircleScaleInterpolate = blockState.scoreCircleAnimation.map(
+  //     (row: any[]) =>
+  //       row.map((item) =>
+  //         item.interpolate({
+  //           inputRange: [0, 0.5, 1],
+  //           outputRange: [0, 1, 2],
+  //         }),
+  //       ),
+  //   );
 
-    return {
-      //   animation: blockState.animation, TODO
-      //   scoreOpacity: blockState.scoreOpacity, TODO
-      rotation: rotateInterpolate,
-      scale: blockState.scale,
-      //   borderColor: borderColorInterpolate, TODO
-      //   backgroundColor: backgroundColorInterpolate, TODO
-      //   color: colorInterpolate,
-      zIndex: blockState.zIndex,
-      //   scoreCircle: blockState.scoreCircleAnimation, TODO
-      //   scoreCircleOpacity: scoreCircleOpacityInterpolate, TODO
-      //   scoreCircleScale: scoreCircleScaleInterpolate, TODO
-    };
-  }, [
-    blockState.rotation,
-    // blockState.borderColor, TODO
-    blockState.backgroundColor,
-    // blockState.color, TODO
-    // blockState.animation, TODO
-    // blockState.scoreOpacity, TODO
-    blockState.scale,
-    blockState.zIndex,
-    // blockState.cells,
-    // blockState.scoreCircleAnimation, TODO
-  ]);
+  //   return {
+  //     animation: blockState.animation,
+  //     scoreOpacity: blockState.scoreOpacity,
+  //     rotation: rotateInterpolate,
+  //     scale: blockState.scale,
+  //     borderColor: borderColorInterpolate,
+  //     backgroundColor: backgroundColorInterpolate,
+  //     color: colorInterpolate,
+  //     zIndex: blockState.zIndex,
+  //     scoreCircle: blockState.scoreCircleAnimation,
+  //     scoreCircleOpacity: scoreCircleOpacityInterpolate,
+  //     scoreCircleScale: scoreCircleScaleInterpolate,
+  //   };
+  // }, [
+  //   blockState.rotation,
+  //   blockState.borderColor,
+  //   blockState.backgroundColor,
+  //   blockState.color,
+  //   blockState.animation,
+  //   blockState.scoreOpacity,
+  //   blockState.scale,
+  //   blockState.zIndex,
+  //   blockState.cells,
+  //   blockState.scoreCircleAnimation,
+  // ]);
 
   const interpolation = {
     backgroundInterpolation: blockState.backgroundColor.map((row: any[]) =>
@@ -196,49 +192,6 @@ const GameBoard = () => {
   const animatedStyles = {
     backgroundColor: interpolation.backgroundInterpolation,
   };
-
-  /**
-   * Handle gesture with press and then release on screen.
-   */
-  const panResponders = Array.from({ length: TABLE.length }, () =>
-    Array.from({ length: TABLE.length }, () =>
-      React.useRef(
-        PanResponder.create({
-          // Ask to be the responder:
-          onStartShouldSetPanResponder: (evt, gestureState) => true,
-          onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-          onMoveShouldSetPanResponder: (evt, gestureState) => true,
-          onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-
-          onPanResponderGrant: (evt, gestureState) => {
-            // The gesture has started. Show visual feedback so the user knows
-            // what is happening!
-            // gestureState.d{x,y} will be set to zero now
-          },
-          onPanResponderMove: (evt, gestureState) => {
-            // The most recent move distance is gestureState.move{X,Y}
-            // The accumulated gesture distance since becoming responder is
-            // gestureState.d{x,y}
-          },
-          onPanResponderTerminationRequest: (evt, gestureState) => true,
-          onPanResponderRelease: (evt, gestureState) => {
-            console.log("alooo");
-            // The user has released all touches while this view is the
-            // responder. This typically means a gesture has succeeded
-          },
-          onPanResponderTerminate: (evt, gestureState) => {
-            // Another component has become the responder, so this gesture
-            // should be cancelled
-          },
-          onShouldBlockNativeResponder: (evt, gestureState) => {
-            // Returns whether this component should block native components from becoming the JS
-            // responder. Returns true by default. Is currently only supported on android.
-            return true;
-          },
-        }),
-      ),
-    ),
-  );
 
   /**
    * Function to handle the opacity of 1 cell position indexRow, indexCol
@@ -279,6 +232,7 @@ const GameBoard = () => {
    * Destroy 1 cell animation
    */
   const onDestroyOneCell = (row: number, col: number) => {
+    console.log("Chay animation nay", row, " + ", col);
     Animated.parallel([
       Animated.sequence([
         Animated.timing(blockState.backgroundColor[row][col], {
@@ -290,7 +244,7 @@ const GameBoard = () => {
           toValue: 0,
           useNativeDriver: false,
           duration: 200,
-          delay: 1000,
+          //   delay: 1000,
         }),
       ]),
       Animated.sequence([
@@ -337,6 +291,312 @@ const GameBoard = () => {
    * TODO Collapse animation
    */
 
+  const selectedCells: Animated.Value[] = useMemo(() => [], [blockState]);
+  let selectedIndexes: { row: number; col: number }[] = useMemo(
+    () => [],
+    [blockState],
+  );
+
+  /**
+   * TODO Swap animation
+   */
+  const panResponder = useMemo(() => {
+    let handleEndPanResponder = false;
+
+    const onPressCell = (row: number, col: number) => {
+      console.log("onPressCell " + row + " " + col);
+      selectedCells.push(blockState.borderColor[row][col]);
+      selectedIndexes.push({ row, col });
+
+      Animated.timing(blockState.borderColor[row][col], {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: false,
+      }).start();
+    };
+
+    const onMoveCell = (
+      gesture: PanResponderGestureState,
+      index: number,
+      index2: number,
+    ) => {
+      console.log("onMoveCell " + index + " " + index);
+      const width = blockState.size.WIDTH_PER_CELL;
+      // Check if the user is sliding in the x-axis direction
+      const xDirection = Math.abs(gesture.dx) > width / 2;
+      // Check if the user is sliding in the y-axis direction
+      const yDirection = Math.abs(gesture.dy) > width / 2;
+
+      // Number of selected cells in x-axis
+      let numCellX = 0;
+
+      // Number of selected cells in y-axis
+      let numCellY = 0;
+
+      if (xDirection || yDirection) {
+        // Number of selected cells = length of slider / width of each cell
+        numCellX = Math.floor(Math.abs(gesture.dx) / width);
+        numCellY = Math.floor(Math.abs(gesture.dy) / width);
+
+        // Check the user is sliding left of right
+        numCellX = gesture.dx > 0 ? numCellX : -numCellX;
+        // Check the user is sliding up of down
+        numCellY = gesture.dy > 0 ? numCellY : -numCellY;
+
+        // Check if the user is sliding in the out of the board
+        if (
+          index2 + numCellY < 0 ||
+          index2 + numCellY > blockState.size.CELLS_IN_COLUMN - 1 ||
+          index + numCellX < 0 ||
+          index + numCellX > blockState.size.CELLS_IN_ROW - 1
+        )
+          return;
+
+        // Check if the user is sliding in the x-axis direction and y-axis direction
+        if (
+          !(
+            (index2 + numCellY ===
+              selectedIndexes[selectedIndexes.length - 1].row + 1 &&
+              index + numCellX ===
+                selectedIndexes[selectedIndexes.length - 1].col) ||
+            (index2 + numCellY ===
+              selectedIndexes[selectedIndexes.length - 1].row - 1 &&
+              index + numCellX ===
+                selectedIndexes[selectedIndexes.length - 1].col) ||
+            (index2 + numCellY ===
+              selectedIndexes[selectedIndexes.length - 1].row &&
+              index + numCellX ===
+                selectedIndexes[selectedIndexes.length - 1].col + 1) ||
+            (index2 + numCellY ===
+              selectedIndexes[selectedIndexes.length - 1].row &&
+              index + numCellX ===
+                selectedIndexes[selectedIndexes.length - 1].col - 1)
+          )
+        )
+          return;
+
+        // if (
+        //   blockState.cells[index2 + numCellY][index + numCellX].letter === " "
+        // ) {
+        //   return;
+        // }
+
+        // get cell that user putting their finger
+        const selectedCell =
+          blockState.borderColor[index2 + numCellY][index + numCellX];
+
+        // Colorize border of cell that the user putting their finger
+        // if (!selectedCells.includes(selectedCell)) {
+        //   if (blockState.effects.destroyOneCell.status) {
+        //     return;
+        //   }
+
+        //   if (
+        //     blockState.cells[selectedIndexes[0].row][selectedIndexes[0].col]
+        //       .effect === WordSearchCellEffect.gift &&
+        //     (blockState.cells[index2 + numCellY][index + numCellX].effect ===
+        //       WordSearchCellEffect.gift ||
+        //       selectedIndexes.length > 1)
+        //   ) {
+        //     return;
+        //   }
+        //   if (
+        //     blockState.cells[index2 + numCellY][index + numCellX].effect ===
+        //       WordSearchCellEffect.gift &&
+        //     selectedIndexes.length > 1
+        //   )
+        //     return;
+        //   if (
+        //     selectedIndexes.length === 2 &&
+        //     blockState.cells[selectedIndexes[0].row][selectedIndexes[0].col]
+        //       .effect !== WordSearchCellEffect.gift &&
+        //     blockState.cells[selectedIndexes[1].row][selectedIndexes[1].col]
+        //       .effect === WordSearchCellEffect.gift
+        //   )
+        //     return;
+        //   Animated.timing(selectedCell, {
+        //     toValue: 1,
+        //     duration: 150,
+        //     useNativeDriver: false,
+        //   }).start();
+        //   selectedCells.push(selectedCell);
+        //   // selectedIndexes.push([index2 + numCellY, index + numCellX]);
+
+        //   selectedIndexes.push({
+        //     row: index2 + numCellY,
+        //     col: index + numCellX,
+        //   });
+        // }
+
+        // Check if the user is rolling back
+        // else if (
+        //   selectedCells.indexOf(selectedCell) ==
+        //   selectedCells.length - 2
+        // ) {
+        //   // Remove the last selected cell
+        //   const lastSelectedCell = selectedCells.pop();
+        //   if (lastSelectedCell) {
+        //     Animated.timing(lastSelectedCell, {
+        //       toValue: 0,
+        //       duration: 150,
+        //       useNativeDriver: false,
+        //     }).start();
+        //   }
+        //   selectedIndexes.pop();
+        // }
+      }
+
+      // setLetters([
+      //   ...selectedIndexes
+      //     .filter(
+      //       (item) =>
+      //         blockState.cells[item.row][item.col].effect !==
+      //         WordSearchCellEffect.gift,
+      //     )
+      //     .map((item) => blockState.cells[item.row][item.col].letter),
+      // ]);
+
+      // setSelectedCell(selectedIndexes[selectedIndexes.length - 1]);
+    };
+
+    const onReleaseCell = (index: number, index2: number) => {
+      console.log("onReleaseCell " + index + " " + index2);
+      handleEndPanResponder = true;
+
+      // setSelectedCell(null);
+      // if (blockState.effects.destroyOneCell.status == true) {
+      //   dispatch({
+      //     type: "UPDATE_EFFECT",
+      //     payload: {
+      //       effect: WordSearchFeatureEffectsInGame.destroyOneCell,
+      //       status: { x: index2, y: index },
+      //     },
+      //   });
+      //   return;
+      // }
+
+      let explosionGift = false;
+      let countDoubleAffectedCells = 0;
+      // const word = selectedIndexes
+      //   .map((cell) => {
+      //     const effect = blockState.cells[cell.row][cell.col].effect;
+      //     if (effect === WordSearchCellEffect.gift) {
+      //       explosionGift = true;
+      //     }
+      //     if (effect === WordSearchCellEffect.double) {
+      //       countDoubleAffectedCells++;
+      //     }
+      //     return blockState.cells[cell.row][cell.col].letter;
+      //   })
+      //   .join("");
+
+      // Fill the border of selected cells back to original when finger
+      //                                            is released.
+      const animationList = [];
+
+      // TODO
+      // while (selectedCells.length > 0) {
+      //   const selectedCell = selectedCells.pop();
+      //   if (selectedCell)
+      //     animationList.push(
+      //       Animated.timing(selectedCell, {
+      //         toValue: 0,
+      //         duration: 200,
+      //         useNativeDriver: false,
+      //       }),
+      //     );
+      // }
+
+      // dispatch({
+      //   type: "SET_CHECK_ANIMATION_IN_PROGRESS",
+      //   payload: {
+      //     animation: true,
+      //   },
+      // });
+
+      // Animated.parallel(animationList).start(({ finished }) => {
+      //   if (finished) {
+      //     setLetters([]);
+      //     handleEndPanResponder = false;
+      //     if (
+      //       blockState.effects.destroyOneCell.status === null &&
+      //       !explosionGift &&
+      //       (!word || !blockState.words[word])
+      //     ) {
+      //       // if (settings.sound) {
+      //       //   SoundPlayer.playSoundFile(
+      //       //     SOUND_PLAYER.CONGRATULATIONS,
+      //       //     "wav",
+      //       //   );
+      //       // }
+      //       dispatch({
+      //         type: "HANDLE_WRONG_WORD",
+      //         payload: null,
+      //       });
+      //       selectedIndexes = [];
+      //       return;
+      //     }
+
+      //     if (
+      //       !(
+      //         selectedIndexes.length === 1 &&
+      //         blockState.cells[selectedIndexes[0].row][selectedIndexes[0].col]
+      //           .effect === WordSearchCellEffect.gift
+      //       )
+      //     ) {
+      //       // (1) TRIGGER ANIMATION
+      //       startAnimation(selectedIndexes, 10);
+      //       dispatch({
+      //         type: "SET_CHECK_ANIMATION_IN_PROGRESS",
+      //         payload: {
+      //           word,
+      //           animation: true,
+      //           countDoubleAffectedCells,
+      //         },
+      //       });
+      //     } else {
+      //       dispatch({
+      //         type: "SET_CHECK_ANIMATION_IN_PROGRESS",
+      //         payload: {
+      //           word,
+      //           animation: false,
+      //           countDoubleAffectedCells,
+      //         },
+      //       });
+      //     }
+      //     selectedIndexes = [];
+      //   }
+      // });
+    };
+
+    return Array(blockState.size.CELLS_IN_ROW)
+      .fill(0)
+      .map((_, index: number) =>
+        Array(blockState.size.CELLS_IN_COLUMN)
+          .fill(0)
+          .map((_, index2: number) =>
+            PanResponder.create({
+              onStartShouldSetPanResponder: () => true,
+              onStartShouldSetPanResponderCapture: (_event, _gesture) => true,
+              onMoveShouldSetPanResponder: (_event, _gesture) => true,
+              onMoveShouldSetPanResponderCapture: (_event, _gesture) => true,
+              onPanResponderGrant: () => {
+                if (handleEndPanResponder) return true;
+                onPressCell(index2, index);
+              },
+              onPanResponderMove: (_event, gesture) => {
+                if (handleEndPanResponder) return;
+                onMoveCell(gesture, index, index2);
+              },
+              onPanResponderRelease: () => {
+                if (handleEndPanResponder) return true;
+                onReleaseCell(index, index2);
+              },
+            }),
+          ),
+      );
+  }, [blockState.effects.destroyOneCell.status, blockState.cells]);
+
   return (
     <View style={styles.boardContainer}>
       {TABLE.map((row, indexRow) => (
@@ -344,22 +604,18 @@ const GameBoard = () => {
           {row.map((cell, indexCol) => {
             let randomItem = randomNumber();
             return (
-              <TouchableOpacity
+              <Animated.View
                 key={indexCol}
-                onPress={() => onDestroyOneCell(indexRow, indexCol)}
+                style={{
+                  ...styles.cell,
+                  backgroundColor: COLOR.YELLOW,
+                  //   animatedStyles.backgroundColor[indexRow][indexCol],
+                  // state.backgroundColor[indexRow][indexCol],
+                }}
+                {...panResponder[indexRow][indexCol].panHandlers}
               >
-                <Animated.View
-                  key={indexCol}
-                  style={{
-                    ...styles.cell,
-                    backgroundColor:
-                      animatedStyles.backgroundColor[indexRow][indexCol],
-                  }}
-                  {...panResponders[indexRow][indexCol].current.panHandlers}
-                >
-                  <Image style={styles.imageInCell} source={Fire}></Image>
-                </Animated.View>
-              </TouchableOpacity>
+                <Image style={styles.imageInCell} source={Fire}></Image>
+              </Animated.View>
             );
           })}
         </View>
@@ -369,6 +625,14 @@ const GameBoard = () => {
 };
 
 const styles = StyleSheet.create({
+  square: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "red",
+  },
   container: {
     backgroundColor: COLOR.PURPLE,
     width: "100%",

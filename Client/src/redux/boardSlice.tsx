@@ -29,16 +29,42 @@ const generateAnimatedValue = (
 
 interface BoardState {
   backgroundColor: any;
+  borderColor: any;
   zIndex: any;
   rotation: any;
   scale: any;
+  size: any;
+  cells: any[];
+  effects: any;
 }
 
 const initialState: BoardState = {
-  backgroundColor: generateAnimatedValue(0),
+  backgroundColor: generateAnimatedValue(-1),
+  borderColor: generateAnimatedValue(0),
   zIndex: generateAnimatedValue(0),
   rotation: generateAnimatedValue(0),
   scale: generateAnimatedValue(0),
+  size: {
+    CELLS_IN_ROW: 8,
+    CELLS_IN_COLUMN: 8,
+  },
+  cells: [],
+  effects: {
+    doubleScore: {
+      status: false,
+      count: 0,
+    },
+    destroyOneCell: {
+      status: null, // null - no, true - pending to choose 1 cell, 2 - { x: 0, y: 0 } - coords of cell to destroy
+      count: 0,
+    },
+    resetBoard: {
+      count: 0,
+    },
+    findWord: {
+      count: 0,
+    },
+  },
 };
 
 const boardSlice = createSlice({
