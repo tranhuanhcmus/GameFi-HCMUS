@@ -174,13 +174,6 @@ const GameScreen = () => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <NormalButton
-          onPress={() => {
-            navigate.navigate("MainTab");
-          }}
-        >
-          <Text>{"< back"}</Text>
-        </NormalButton>
 
         <GameHeader />
 
