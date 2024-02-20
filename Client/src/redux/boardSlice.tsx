@@ -35,7 +35,7 @@ interface BoardState {
 }
 
 const initialState: BoardState = {
-  backgroundColor: generateAnimatedValue(0),
+  backgroundColor: generateAnimatedValue(-1),
   zIndex: generateAnimatedValue(0),
   rotation: generateAnimatedValue(0),
   scale: generateAnimatedValue(0),

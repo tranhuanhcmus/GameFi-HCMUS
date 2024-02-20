@@ -49,7 +49,7 @@ const randomNumber = () => {
 };
 
 const GameBoard = () => {
-  const INPUT_RANGE = [0, 1, 2];
+  const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
   /**
@@ -79,35 +79,43 @@ const GameBoard = () => {
     // );
 
     // TODO
-    // const backgroundColorInterpolate = blockState.backgroundColor.map(
-    //   (row: any[], i: string | number) =>
-    //     row.map((item, j) => {
-    //       if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.purple, Colors.border],
-    //         });
-    //       } else if (
-    //         blockState.cells[i][j].effect === WordSearchCellEffect.vertical
-    //       ) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.win, Colors.border],
-    //         });
-    //       } else if (
-    //         blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
-    //       ) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.white, Colors.border],
-    //         });
-    //       } else {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.blue2, Colors.border],
-    //         });
-    //       }
-    //     }),
+    const backgroundColorInterpolate = blockState.backgroundColor.map(
+      (row: any[], i: string | number) =>
+        row.map((item, j) => {
+          return item.interpolate({
+            inputRange: INPUT_RANGE,
+            outputRange: OUTPUT_RANGE,
+          });
+        }),
+    );
+
+    // TODO for background animation
+    //   if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
+    //     return item.interpolate({
+    //       inputRange: [-1, 0, 1],
+    //       outputRange: [Colors.win, Colors.purple, Colors.border],
+    //     });
+    //   } else if (
+    //     blockState.cells[i][j].effect === WordSearchCellEffect.vertical
+    //   ) {
+    //     return item.interpolate({
+    //       inputRange: [-1, 0, 1],
+    //       outputRange: [Colors.win, Colors.win, Colors.border],
+    //     });
+    //   } else if (
+    //     blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
+    //   ) {
+    //     return item.interpolate({
+    //       inputRange: [-1, 0, 1],
+    //       outputRange: [Colors.win, Colors.white, Colors.border],
+    //     });
+    //   } else {
+    //     return item.interpolate({
+    //       inputRange: [-1, 0, 1],
+    //       outputRange: [Colors.win, Colors.blue2, Colors.border],
+    //     });
+    //   }
+    // }),
     // );
 
     // TODO
@@ -162,7 +170,7 @@ const GameBoard = () => {
       rotation: rotateInterpolate,
       scale: blockState.scale,
       //   borderColor: borderColorInterpolate, TODO
-      //   backgroundColor: backgroundColorInterpolate, TODO
+      backgroundColor: backgroundColorInterpolate,
       //   color: colorInterpolate,
       zIndex: blockState.zIndex,
       //   scoreCircle: blockState.scoreCircleAnimation, TODO
@@ -222,7 +230,6 @@ const GameBoard = () => {
           },
           onPanResponderTerminationRequest: (evt, gestureState) => true,
           onPanResponderRelease: (evt, gestureState) => {
-            console.log("alooo");
             // The user has released all touches while this view is the
             // responder. This typically means a gesture has succeeded
           },
@@ -279,6 +286,7 @@ const GameBoard = () => {
    * Destroy 1 cell animation
    */
   const onDestroyOneCell = (row: number, col: number) => {
+    console.log("Chay animation nay", row, " + ", col);
     Animated.parallel([
       Animated.sequence([
         Animated.timing(blockState.backgroundColor[row][col], {
@@ -290,7 +298,7 @@ const GameBoard = () => {
           toValue: 0,
           useNativeDriver: false,
           duration: 200,
-          delay: 1000,
+          //   delay: 1000,
         }),
       ]),
       Animated.sequence([
@@ -353,7 +361,8 @@ const GameBoard = () => {
                   style={{
                     ...styles.cell,
                     backgroundColor:
-                      animatedStyles.backgroundColor[indexRow][indexCol],
+                      //   animatedStyles.backgroundColor[indexRow][indexCol],
+                      state.backgroundColor[indexRow][indexCol],
                   }}
                   {...panResponders[indexRow][indexCol].current.panHandlers}
                 >
