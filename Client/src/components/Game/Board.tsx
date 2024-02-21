@@ -229,13 +229,31 @@ const GameBoard = () => {
   //     );
   //   };
 
-  const startAnimation = (row: any, col: any) => {
+  const startAnimation = (
+    row: any,
+    col: any,
+    numCellX: number,
+    numCellY: number,
+  ) => {
     console.log("Chay animation");
 
-    Animated.spring(blockState.coordinate[row][col], {
-      toValue: { x: 100, y: 100 },
-      useNativeDriver: true,
-    }).start();
+    // THIS WORK
+    Animated.parallel([
+      Animated.spring(blockState.coordinate[row][col], {
+        toValue: {
+          x: numCellX,
+          y: numCellY,
+        },
+        useNativeDriver: true,
+      }),
+      Animated.spring(blockState.coordinate[row][col + 1], {
+        toValue: {
+          x: numCellX,
+          y: numCellY,
+        },
+        useNativeDriver: true,
+      }),
+    ]).start();
 
     console.log(
       "blockState.coordinate[row][col] ",
@@ -578,7 +596,7 @@ const GameBoard = () => {
       //   }
       // });
       console.log("onReleaseCell " + index2 + " " + index);
-      startAnimation(index2, index);
+      startAnimation(index2, index, 20, 100);
     };
 
     return Array(blockState.size.CELLS_IN_ROW)
