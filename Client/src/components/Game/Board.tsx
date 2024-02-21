@@ -1,7 +1,7 @@
 /**
  * @author: duy-nhan
  */
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -53,6 +53,7 @@ const GameBoard = () => {
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
+  const [test, setTest] = useState(0);
   /**
    * Initial state of board
    */
@@ -228,21 +229,19 @@ const GameBoard = () => {
   //     );
   //   };
 
-  const startAnimation = () => {
+  const startAnimation = (row: any, col: any) => {
     console.log("Chay animation");
-    console.log("coordinate ", blockState.coordinate);
-    const animatedXY = new Animated.ValueXY();
 
-    Animated.spring(animatedXY, {
-      toValue: { x: 2, y: 4 },
+    Animated.spring(blockState.coordinate[row][col], {
+      toValue: { x: 100, y: 100 },
       useNativeDriver: true,
     }).start();
 
-    // THIS WORK
-    // Add a listener to the animated value to log its current value
-    animatedXY.addListener((value) => {
-      console.log("animatedXY", value.x, value.y);
-    });
+    console.log(
+      "blockState.coordinate[row][col] ",
+      blockState.coordinate[row][col].getTranslateTransform(),
+    );
+    setTest(2);
   };
   /**
    * Destroy 1 cell animation
@@ -579,7 +578,7 @@ const GameBoard = () => {
       //   }
       // });
       console.log("onReleaseCell " + index2 + " " + index);
-      startAnimation();
+      startAnimation(index2, index);
     };
 
     return Array(blockState.size.CELLS_IN_ROW)
@@ -625,6 +624,10 @@ const GameBoard = () => {
                 style={{
                   ...styles.cell,
                   backgroundColor: COLOR.YELLOW,
+                  transform: [
+                    { translateX: blockState.coordinate[indexRow][indexCol].x },
+                    { translateY: blockState.coordinate[indexRow][indexCol].y },
+                  ],
                   //   animatedStyles.backgroundColor[indexRow][indexCol],
                   // state.backgroundColor[indexRow][indexCol],
                 }}
@@ -641,14 +644,6 @@ const GameBoard = () => {
 };
 
 const styles = StyleSheet.create({
-  square: {
-    position: "absolute",
-    width: 100,
-    height: 100,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "red",
-  },
   container: {
     backgroundColor: COLOR.PURPLE,
     width: "100%",
