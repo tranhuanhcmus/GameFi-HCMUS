@@ -59,124 +59,124 @@ const GameBoard = () => {
 
   const blockState = store.getState().board;
 
-  // const state = useMemo(() => {
-  //   const rotateInterpolate = blockState.rotation.map((row: any[]) =>
-  //     row.map((item) =>
-  //       item.interpolate({
-  //         inputRange: [0, 360],
-  //         outputRange: ["0deg", "360deg"],
-  //       }),
-  //     ),
-  //   );
+  const state = useMemo(() => {
+    const rotateInterpolate = blockState.rotation.map((row: any[]) =>
+      row.map((item) =>
+        item.interpolate({
+          inputRange: [0, 360],
+          outputRange: ["0deg", "360deg"],
+        }),
+      ),
+    );
 
-  //   const borderColorInterpolate = blockState.borderColor.map((row: any[]) =>
-  //     row.map((item) =>
-  //       item.interpolate({
-  //         inputRange: [-1, 0, 1],
-  //         outputRange: [Colors.win, Colors.blue, Colors.yellow],
-  //       }),
-  //     ),
-  //   );
+    // const borderColorInterpolate = blockState.borderColor.map((row: any[]) =>
+    //   row.map((item) =>
+    //     item.interpolate({
+    //       inputRange: [-1, 0, 1],
+    //       outputRange: [Colors.win, Colors.blue, Colors.yellow],
+    //     }),
+    //   ),
+    // );
 
-  //   const backgroundColorInterpolate = blockState.backgroundColor.map(
-  //     (row: any[], i: number) =>
-  //       row.map((item, j) => {
-  //         if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
-  //           return item.interpolate({
-  //             inputRange: [-1, 0, 1],
-  //             outputRange: [Colors.win, Colors.purple, Colors.border],
-  //           });
-  //         } else if (
-  //           blockState.cells[i][j].effect === WordSearchCellEffect.vertical
-  //         ) {
-  //           return item.interpolate({
-  //             inputRange: [-1, 0, 1],
-  //             outputRange: [Colors.win, Colors.win, Colors.border],
-  //           });
-  //         } else if (
-  //           blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
-  //         ) {
-  //           return item.interpolate({
-  //             inputRange: [-1, 0, 1],
-  //             outputRange: [Colors.win, Colors.white, Colors.border],
-  //           });
-  //         } else {
-  //           return item.interpolate({
-  //             inputRange: [-1, 0, 1],
-  //             outputRange: [Colors.win, Colors.blue2, Colors.border],
-  //           });
-  //         }
-  //       }),
-  //   );
+    // const backgroundColorInterpolate = blockState.backgroundColor.map(
+    //   (row: any[], i: number) =>
+    //     row.map((item, j) => {
+    //       if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
+    //         return item.interpolate({
+    //           inputRange: [-1, 0, 1],
+    //           outputRange: [Colors.win, Colors.purple, Colors.border],
+    //         });
+    //       } else if (
+    //         blockState.cells[i][j].effect === WordSearchCellEffect.vertical
+    //       ) {
+    //         return item.interpolate({
+    //           inputRange: [-1, 0, 1],
+    //           outputRange: [Colors.win, Colors.win, Colors.border],
+    //         });
+    //       } else if (
+    //         blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
+    //       ) {
+    //         return item.interpolate({
+    //           inputRange: [-1, 0, 1],
+    //           outputRange: [Colors.win, Colors.white, Colors.border],
+    //         });
+    //       } else {
+    //         return item.interpolate({
+    //           inputRange: [-1, 0, 1],
+    //           outputRange: [Colors.win, Colors.blue2, Colors.border],
+    //         });
+    //       }
+    //     }),
+    // );
 
-  //   const colorInterpolate = blockState.color.map((row, i) =>
-  //     row.map((item: any, j: number) => {
-  //       if (blockState.cells[i][j].effect === WordSearchCellEffect.vertical) {
-  //         return item.interpolate({
-  //           inputRange: [0, 1],
-  //           outputRange: [Colors.btnText, Colors.constract],
-  //         });
-  //       } else if (
-  //         blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
-  //       ) {
-  //         return item.interpolate({
-  //           inputRange: [-1, 0, 1],
-  //           outputRange: [Colors.win, Colors.constract, Colors.constract],
-  //         });
-  //       } else {
-  //         return item.interpolate({
-  //           inputRange: [0, 1],
-  //           outputRange: [Colors.white, Colors.constract],
-  //         });
-  //       }
-  //     }),
-  //   );
+    // const colorInterpolate = blockState.color.map((row, i) =>
+    //   row.map((item: any, j: number) => {
+    //     if (blockState.cells[i][j].effect === WordSearchCellEffect.vertical) {
+    //       return item.interpolate({
+    //         inputRange: [0, 1],
+    //         outputRange: [Colors.btnText, Colors.constract],
+    //       });
+    //     } else if (
+    //       blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
+    //     ) {
+    //       return item.interpolate({
+    //         inputRange: [-1, 0, 1],
+    //         outputRange: [Colors.win, Colors.constract, Colors.constract],
+    //       });
+    //     } else {
+    //       return item.interpolate({
+    //         inputRange: [0, 1],
+    //         outputRange: [Colors.white, Colors.constract],
+    //       });
+    //     }
+    //   }),
+    // );
 
-  //   const scoreCircleOpacityInterpolate = blockState.scoreCircleAnimation.map(
-  //     (row: any[]) =>
-  //       row.map((item) =>
-  //         item.interpolate({
-  //           inputRange: [0, 0.5, 1],
-  //           outputRange: [0, 1, 0],
-  //         }),
-  //       ),
-  //   );
+    // const scoreCircleOpacityInterpolate = blockState.scoreCircleAnimation.map(
+    //   (row: any[]) =>
+    //     row.map((item) =>
+    //       item.interpolate({
+    //         inputRange: [0, 0.5, 1],
+    //         outputRange: [0, 1, 0],
+    //       }),
+    //     ),
+    // );
 
-  //   const scoreCircleScaleInterpolate = blockState.scoreCircleAnimation.map(
-  //     (row: any[]) =>
-  //       row.map((item) =>
-  //         item.interpolate({
-  //           inputRange: [0, 0.5, 1],
-  //           outputRange: [0, 1, 2],
-  //         }),
-  //       ),
-  //   );
+    // const scoreCircleScaleInterpolate = blockState.scoreCircleAnimation.map(
+    //   (row: any[]) =>
+    //     row.map((item) =>
+    //       item.interpolate({
+    //         inputRange: [0, 0.5, 1],
+    //         outputRange: [0, 1, 2],
+    //       }),
+    //     ),
+    // );
 
-  //   return {
-  //     animation: blockState.animation,
-  //     scoreOpacity: blockState.scoreOpacity,
-  //     rotation: rotateInterpolate,
-  //     scale: blockState.scale,
-  //     borderColor: borderColorInterpolate,
-  //     backgroundColor: backgroundColorInterpolate,
-  //     color: colorInterpolate,
-  //     zIndex: blockState.zIndex,
-  //     scoreCircle: blockState.scoreCircleAnimation,
-  //     scoreCircleOpacity: scoreCircleOpacityInterpolate,
-  //     scoreCircleScale: scoreCircleScaleInterpolate,
-  //   };
-  // }, [
-  //   blockState.rotation,
-  //   blockState.borderColor,
-  //   blockState.backgroundColor,
-  //   blockState.color,
-  //   blockState.animation,
-  //   blockState.scoreOpacity,
-  //   blockState.scale,
-  //   blockState.zIndex,
-  //   blockState.cells,
-  //   blockState.scoreCircleAnimation,
-  // ]);
+    return {
+      // animation: blockState.animation,
+      // scoreOpacity: blockState.scoreOpacity,
+      rotation: rotateInterpolate,
+      scale: blockState.scale,
+      // borderColor: borderColorInterpolate,
+      // backgroundColor: backgroundColorInterpolate,
+      // color: colorInterpolate,
+      zIndex: blockState.zIndex,
+      // scoreCircle: blockState.scoreCircleAnimation,
+      // scoreCircleOpacity: scoreCircleOpacityInterpolate,
+      // scoreCircleScale: scoreCircleScaleInterpolate,
+    };
+  }, [
+    blockState.rotation,
+    blockState.borderColor,
+    blockState.backgroundColor,
+    // blockState.color,
+    // blockState.animation,
+    // blockState.scoreOpacity,
+    blockState.scale,
+    blockState.zIndex,
+    blockState.cells,
+    // blockState.scoreCircleAnimation,
+  ]);
 
   const interpolation = {
     backgroundInterpolation: blockState.backgroundColor.map((row: any[]) =>
@@ -228,6 +228,22 @@ const GameBoard = () => {
   //     );
   //   };
 
+  const startAnimation = () => {
+    console.log("Chay animation");
+    console.log("coordinate ", blockState.coordinate);
+    const animatedXY = new Animated.ValueXY();
+
+    Animated.spring(animatedXY, {
+      toValue: { x: 2, y: 4 },
+      useNativeDriver: true,
+    }).start();
+
+    // THIS WORK
+    // Add a listener to the animated value to log its current value
+    animatedXY.addListener((value) => {
+      console.log("animatedXY", value.x, value.y);
+    });
+  };
   /**
    * Destroy 1 cell animation
    */
@@ -297,9 +313,6 @@ const GameBoard = () => {
     [blockState],
   );
 
-  /**
-   * TODO Swap animation
-   */
   const panResponder = useMemo(() => {
     let handleEndPanResponder = false;
 
@@ -308,11 +321,11 @@ const GameBoard = () => {
       selectedCells.push(blockState.borderColor[row][col]);
       selectedIndexes.push({ row, col });
 
-      Animated.timing(blockState.borderColor[row][col], {
-        toValue: 1,
-        duration: 250,
-        useNativeDriver: false,
-      }).start();
+      // Animated.timing(blockState.borderColor[row][col], {
+      //   toValue: 1,
+      //   duration: 250,
+      //   useNativeDriver: false,
+      // }).start();
     };
 
     const onMoveCell = (
@@ -320,7 +333,7 @@ const GameBoard = () => {
       index: number,
       index2: number,
     ) => {
-      console.log("onMoveCell " + index + " " + index);
+      // console.log("onMoveCell " + index + " " + index2);
       const width = blockState.size.WIDTH_PER_CELL;
       // Check if the user is sliding in the x-axis direction
       const xDirection = Math.abs(gesture.dx) > width / 2;
@@ -352,28 +365,28 @@ const GameBoard = () => {
         )
           return;
 
-        // Check if the user is sliding in the x-axis direction and y-axis direction
-        if (
-          !(
-            (index2 + numCellY ===
-              selectedIndexes[selectedIndexes.length - 1].row + 1 &&
-              index + numCellX ===
-                selectedIndexes[selectedIndexes.length - 1].col) ||
-            (index2 + numCellY ===
-              selectedIndexes[selectedIndexes.length - 1].row - 1 &&
-              index + numCellX ===
-                selectedIndexes[selectedIndexes.length - 1].col) ||
-            (index2 + numCellY ===
-              selectedIndexes[selectedIndexes.length - 1].row &&
-              index + numCellX ===
-                selectedIndexes[selectedIndexes.length - 1].col + 1) ||
-            (index2 + numCellY ===
-              selectedIndexes[selectedIndexes.length - 1].row &&
-              index + numCellX ===
-                selectedIndexes[selectedIndexes.length - 1].col - 1)
-          )
-        )
-          return;
+        // TODO Check if the user is sliding in the x-axis direction and y-axis direction
+        // if (
+        //   !(
+        //     (index2 + numCellY ===
+        //       selectedIndexes[selectedIndexes.length - 1].row + 1 &&
+        //       index + numCellX ===
+        //         selectedIndexes[selectedIndexes.length - 1].col) ||
+        //     (index2 + numCellY ===
+        //       selectedIndexes[selectedIndexes.length - 1].row - 1 &&
+        //       index + numCellX ===
+        //         selectedIndexes[selectedIndexes.length - 1].col) ||
+        //     (index2 + numCellY ===
+        //       selectedIndexes[selectedIndexes.length - 1].row &&
+        //       index + numCellX ===
+        //         selectedIndexes[selectedIndexes.length - 1].col + 1) ||
+        //     (index2 + numCellY ===
+        //       selectedIndexes[selectedIndexes.length - 1].row &&
+        //       index + numCellX ===
+        //         selectedIndexes[selectedIndexes.length - 1].col - 1)
+        //   )
+        // )
+        //   return;
 
         // if (
         //   blockState.cells[index2 + numCellY][index + numCellX].letter === " "
@@ -445,6 +458,7 @@ const GameBoard = () => {
         //   selectedIndexes.pop();
         // }
       }
+      console.log("row ", index2 + numCellY, "col ", index + numCellX);
 
       // setLetters([
       //   ...selectedIndexes
@@ -460,7 +474,6 @@ const GameBoard = () => {
     };
 
     const onReleaseCell = (index: number, index2: number) => {
-      console.log("onReleaseCell " + index + " " + index2);
       handleEndPanResponder = true;
 
       // setSelectedCell(null);
@@ -475,8 +488,6 @@ const GameBoard = () => {
       //   return;
       // }
 
-      let explosionGift = false;
-      let countDoubleAffectedCells = 0;
       // const word = selectedIndexes
       //   .map((cell) => {
       //     const effect = blockState.cells[cell.row][cell.col].effect;
@@ -567,6 +578,8 @@ const GameBoard = () => {
       //     selectedIndexes = [];
       //   }
       // });
+      console.log("onReleaseCell " + index2 + " " + index);
+      startAnimation();
     };
 
     return Array(blockState.size.CELLS_IN_ROW)
@@ -582,21 +595,24 @@ const GameBoard = () => {
               onMoveShouldSetPanResponderCapture: (_event, _gesture) => true,
               onPanResponderGrant: () => {
                 if (handleEndPanResponder) return true;
-                onPressCell(index2, index);
+                onPressCell(index, index2);
               },
               onPanResponderMove: (_event, gesture) => {
                 if (handleEndPanResponder) return;
-                onMoveCell(gesture, index, index2);
+                onMoveCell(gesture, index2, index);
               },
               onPanResponderRelease: () => {
                 if (handleEndPanResponder) return true;
-                onReleaseCell(index, index2);
+                onReleaseCell(index2, index);
               },
             }),
           ),
       );
-  }, [blockState.effects.destroyOneCell.status, blockState.cells]);
+  }, [blockState.cells]);
 
+  /**
+   * TODO Swap animation
+   */
   return (
     <View style={styles.boardContainer}>
       {TABLE.map((row, indexRow) => (

@@ -14,8 +14,8 @@ import { Animated } from "react-native";
  */
 const generateAnimatedValue = (
   value: number,
-  CELLS_IN_ROW = 10,
-  CELLS_IN_COLUMN = 10,
+  CELLS_IN_ROW = 8,
+  CELLS_IN_COLUMN = 8,
 ) => {
   const animation = Array(CELLS_IN_COLUMN);
   for (let i = 0; i < CELLS_IN_COLUMN; i++) {
@@ -27,10 +27,26 @@ const generateAnimatedValue = (
   return animation;
 };
 
+const generateAnimatedValueXY = (
+  // value: number,
+  CELLS_IN_ROW = 8,
+  CELLS_IN_COLUMN = 8,
+) => {
+  const animation = Array(CELLS_IN_COLUMN);
+  for (let i = 0; i < CELLS_IN_COLUMN; i++) {
+    animation[i] = new Array(CELLS_IN_ROW);
+    for (let j = 0; j < CELLS_IN_ROW; j++) {
+      animation[i][j] = new Animated.ValueXY();
+    }
+  }
+  return animation;
+};
+const SIZE_TABLE = 280;
 interface BoardState {
   backgroundColor: any;
   borderColor: any;
   zIndex: any;
+  coordinate: any;
   rotation: any;
   scale: any;
   size: any;
@@ -43,10 +59,12 @@ const initialState: BoardState = {
   borderColor: generateAnimatedValue(0),
   zIndex: generateAnimatedValue(0),
   rotation: generateAnimatedValue(0),
+  coordinate: generateAnimatedValueXY(),
   scale: generateAnimatedValue(0),
   size: {
     CELLS_IN_ROW: 8,
     CELLS_IN_COLUMN: 8,
+    WIDTH_PER_CELL: SIZE_TABLE / 8,
   },
   cells: [],
   effects: {
