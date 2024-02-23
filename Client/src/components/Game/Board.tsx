@@ -1,7 +1,7 @@
 /**
  * @author: duy-nhan
  */
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -54,6 +54,16 @@ const GameBoard = () => {
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
   const [test, setTest] = useState(0);
+  const [table, setTable] = useState([
+    [0, 1, 2, 3, 4, 5, 6, 7],
+    [8, 9, 10, 11, 12, 13, 14, 15],
+    [16, 17, 18, 19, 20, 21, 22, 23],
+    [24, 25, 26, 27, 28, 29, 30, 31],
+    [32, 33, 34, 35, 36, 37, 38, 39],
+    [40, 41, 42, 43, 44, 45, 46, 47],
+    [48, 49, 50, 51, 52, 53, 54, 55],
+    [56, 57, 58, 59, 60, 61, 62, 63],
+  ]);
   /**
    * Initial state of board
    */
@@ -235,37 +245,72 @@ const GameBoard = () => {
     numCellX: number,
     numCellY: number,
   ) => {
-    console.log("Chay animation");
+    // TODO: MISSING CASE WITH NEAR LINE
+    if (
+      row + numCellY < 0 ||
+      row + numCellY >= blockState.size.CELLS_IN_ROW ||
+      col + numCellX < 0 ||
+      col + numCellX >= blockState.size.CELLS_IN_COL ||
+      (numCellX == 0 && numCellY == 0)
+    ) {
+      return;
+    }
 
+    // EXTRA MARGIN ON CELL ON X_AXIS
+    const MARGIN_X =
+      numCellX > 0
+        ? blockState.size.MARGIN
+        : numCellX < 0
+          ? -blockState.size.MARGIN
+          : 0;
+
+    // EXTRA MARGIN ON CELL ON Y_AXIS
+    const MARGIN_Y =
+      numCellY > 0
+        ? blockState.size.MARGIN
+        : numCellY < 0
+          ? -blockState.size.MARGIN
+          : 0;
     // THIS WORK
     Animated.parallel([
       Animated.spring(blockState.coordinate[row][col], {
         toValue: {
-          x: numCellX,
-          y: numCellY,
+          x: numCellX * blockState.size.WIDTH_PER_CELL + MARGIN_X * 2,
+          y: numCellY * blockState.size.WIDTH_PER_CELL + MARGIN_Y * 2,
         },
         useNativeDriver: true,
       }),
-      Animated.spring(blockState.coordinate[row][col + 1], {
+      Animated.spring(blockState.coordinate[row + numCellY][col + numCellX], {
         toValue: {
-          x: numCellX,
-          y: numCellY,
+          x: -numCellX * blockState.size.WIDTH_PER_CELL - MARGIN_X * 2,
+          y: -numCellY * blockState.size.WIDTH_PER_CELL - MARGIN_Y * 2,
         },
         useNativeDriver: true,
       }),
     ]).start();
 
-    console.log(
-      "blockState.coordinate[row][col] ",
-      blockState.coordinate[row][col].getTranslateTransform(),
-    );
+    onDestroyOneCell(row, col);
+    // TODO FIX THIS
+    // setTable((prevState: number[][]) => {
+    //   const matrixCopy = prevState.map((row) => [...row]);
+    //   const temp = matrixCopy[row][col];
+    //   matrixCopy[row][col] = matrixCopy[row + numCellY][col + numCellX];
+    //   matrixCopy[row + numCellY][col + numCellX] = temp;
+    //   return { matrix: matrixCopy };
+    // });
+
     setTest(2);
   };
+
+  // LOG TO SEE THE UPDATE TABLE
+  useEffect(() => {
+    console.log("table ", table);
+  }, [table]);
   /**
    * Destroy 1 cell animation
    */
   const onDestroyOneCell = (row: number, col: number) => {
-    console.log("Chay animation nay", row, " + ", col);
+    console.log("Chay animation onDestroyOneCell");
     Animated.parallel([
       Animated.sequence([
         Animated.timing(blockState.backgroundColor[row][col], {
@@ -333,6 +378,11 @@ const GameBoard = () => {
   const panResponder = useMemo(() => {
     let handleEndPanResponder = false;
 
+    // Number of selected cells in x-axis
+    let numCellX = 0;
+
+    // Number of selected cells in y-axis
+    let numCellY = 0;
     const onPressCell = (row: number, col: number) => {
       console.log("onPressCell " + row + " " + col);
       selectedCells.push(blockState.borderColor[row][col]);
@@ -358,10 +408,10 @@ const GameBoard = () => {
       const yDirection = Math.abs(gesture.dy) > width / 2;
 
       // Number of selected cells in x-axis
-      let numCellX = 0;
+      numCellX = 0;
 
       // Number of selected cells in y-axis
-      let numCellY = 0;
+      numCellY = 0;
 
       if (xDirection || yDirection) {
         // Number of selected cells = length of slider / width of each cell
@@ -475,48 +525,15 @@ const GameBoard = () => {
         //   selectedIndexes.pop();
         // }
       }
+
+      console.log({ numCellX });
+      console.log({ numCellY });
+
       console.log("row ", index2 + numCellY, "col ", index + numCellX);
-
-      // setLetters([
-      //   ...selectedIndexes
-      //     .filter(
-      //       (item) =>
-      //         blockState.cells[item.row][item.col].effect !==
-      //         WordSearchCellEffect.gift,
-      //     )
-      //     .map((item) => blockState.cells[item.row][item.col].letter),
-      // ]);
-
-      // setSelectedCell(selectedIndexes[selectedIndexes.length - 1]);
     };
 
     const onReleaseCell = (index: number, index2: number) => {
       handleEndPanResponder = true;
-
-      // setSelectedCell(null);
-      // if (blockState.effects.destroyOneCell.status == true) {
-      //   dispatch({
-      //     type: "UPDATE_EFFECT",
-      //     payload: {
-      //       effect: WordSearchFeatureEffectsInGame.destroyOneCell,
-      //       status: { x: index2, y: index },
-      //     },
-      //   });
-      //   return;
-      // }
-
-      // const word = selectedIndexes
-      //   .map((cell) => {
-      //     const effect = blockState.cells[cell.row][cell.col].effect;
-      //     if (effect === WordSearchCellEffect.gift) {
-      //       explosionGift = true;
-      //     }
-      //     if (effect === WordSearchCellEffect.double) {
-      //       countDoubleAffectedCells++;
-      //     }
-      //     return blockState.cells[cell.row][cell.col].letter;
-      //   })
-      //   .join("");
 
       // Fill the border of selected cells back to original when finger
       //                                            is released.
@@ -595,8 +612,8 @@ const GameBoard = () => {
       //     selectedIndexes = [];
       //   }
       // });
-      console.log("onReleaseCell " + index2 + " " + index);
-      startAnimation(index2, index, 20, 100);
+      console.log("onRelase numCellX ", numCellX, "numCellY", numCellY);
+      startAnimation(index2, index, numCellX, numCellY);
     };
 
     return Array(blockState.size.CELLS_IN_ROW)
@@ -627,9 +644,6 @@ const GameBoard = () => {
       );
   }, [blockState.cells]);
 
-  /**
-   * TODO Swap animation
-   */
   return (
     <View style={styles.boardContainer}>
       {TABLE.map((row, indexRow) => (
@@ -642,6 +656,8 @@ const GameBoard = () => {
                 style={{
                   ...styles.cell,
                   backgroundColor: COLOR.YELLOW,
+                  // zIndex: blockState.zIndex[indexRow][indexCol],
+                  // rotation: state.rotation[indexRow][indexCol],
                   transform: [
                     { translateX: blockState.coordinate[indexRow][indexCol].x },
                     { translateY: blockState.coordinate[indexRow][indexCol].y },

@@ -174,8 +174,7 @@ const GameScreen = () => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-
-        <GameHeader />
+        {/* <GameHeader /> */}
 
         <GameBoard />
         {/* TODO: Bottom nav */}
@@ -192,7 +191,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignContent: "center",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
 });
 
