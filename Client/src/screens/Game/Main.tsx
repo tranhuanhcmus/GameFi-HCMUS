@@ -20,6 +20,7 @@ import NormalButton from "../../components/Button/NormalButton";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import GameHeader from "../../components/Game/Header";
 import GameBoard from "../../components/Game/Board";
+import UpperLayer from "../../components/Game/UpperLayer";
 
 /**
  * Size in pixel of table, please change if needed.
@@ -176,7 +177,17 @@ const GameScreen = () => {
       <View style={styles.container}>
         {/* <GameHeader /> */}
 
-        <GameBoard />
+        {/* TODO MODIFY THIS LATER */}
+        <UpperLayer
+          CELLS_IN_COLUMN={2}
+          CELLS_IN_ROW={2}
+          callbackFunction={() => {}}
+          blockList={[2]}
+          cells={[2]}
+          blockLists={[]}
+          matrix={[2]}
+        />
+        {/* <GameBoard /> */}
         {/* TODO: Bottom nav */}
       </View>
     </SafeAreaView>

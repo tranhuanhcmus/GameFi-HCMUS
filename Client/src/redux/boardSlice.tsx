@@ -41,6 +41,7 @@ const generateAnimatedValueXY = (
   }
   return animation;
 };
+
 const SIZE_TABLE = 280;
 interface BoardState {
   backgroundColor: any;

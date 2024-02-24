@@ -21,6 +21,7 @@ import YinYan from "../../../assets/batquai.jpg";
 import boardSlice from "../../redux/boardSlice";
 import { useSelector } from "react-redux";
 import { store } from "../../redux/store";
+import UpperLayer from "./UpperLayer";
 
 /**
  * Size in pixel of table, please change if needed.
@@ -306,8 +307,9 @@ const GameBoard = () => {
   useEffect(() => {
     console.log("table ", table);
   }, [table]);
+
   /**
-   * Destroy 1 cell animation
+   * TODO Destroy 1 cell animation
    */
   const onDestroyOneCell = (row: number, col: number) => {
     console.log("Chay animation onDestroyOneCell");
