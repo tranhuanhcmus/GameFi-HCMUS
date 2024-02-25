@@ -44,7 +44,7 @@ const generateAnimatedValueXY = (
 
 const SIZE_TABLE = 280;
 interface BoardState {
-  backgroundColor: any;
+  backgroundColor: Animated.Value[][];
   borderColor: any;
   zIndex: any;
   coordinate: any;
@@ -53,6 +53,10 @@ interface BoardState {
   size: any;
   cells: any[];
   effects: any;
+  blockList: {
+    startCell: { i: number; j: number };
+    endCell: { i: number; j: number };
+  }[];
 }
 
 const initialState: BoardState = {
@@ -94,6 +98,21 @@ const initialState: BoardState = {
       count: 0,
     },
   },
+  // THIS IS FOR TESTING
+  blockList: [
+    {
+      startCell: { i: 0, j: 0 },
+      endCell: { i: 1, j: 1 },
+    },
+    {
+      startCell: { i: 2, j: 2 },
+      endCell: { i: 3, j: 3 },
+    },
+    {
+      startCell: { i: 4, j: 4 },
+      endCell: { i: 5, j: 5 },
+    },
+  ],
 };
 
 const boardSlice = createSlice({

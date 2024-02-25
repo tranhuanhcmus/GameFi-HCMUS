@@ -532,6 +532,22 @@ const GameBoard = () => {
       console.log({ numCellY });
 
       console.log("row ", index2 + numCellY, "col ", index + numCellX);
+
+      // TODO DELETE THIS LATER.
+      // TEST TO SET CELLS TO BLOCKLIST COLLAPSE
+      blockState.blockList.push({
+        startCell: { i: 0, j: 0 },
+        endCell: { i: 1, j: 1 },
+      });
+      blockState.blockList.push({
+        startCell: { i: 2, j: 2 },
+        endCell: { i: 3, j: 3 },
+      });
+
+      blockState.blockList.push({
+        startCell: { i: 4, j: 4 },
+        endCell: { i: 5, j: 5 },
+      });
     };
 
     const onReleaseCell = (index: number, index2: number) => {

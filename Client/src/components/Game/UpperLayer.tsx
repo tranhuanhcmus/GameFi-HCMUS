@@ -1,5 +1,11 @@
-import React, { useContext, useEffect, useMemo, useReducer } from "react";
-import { Animated, View, Text } from "react-native";
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
+import { Animated, View, Text, TouchableHighlight } from "react-native";
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 // import {
@@ -32,13 +38,9 @@ const UpperLayer = React.memo(
     }[][];
     [key: string]: any;
   }) => {
-    // TODO WILL DELETE LATER
-    blockList = [
-      {
-        startCell: { i: 0, j: 0 },
-        endCell: { i: 1, j: 1 },
-      },
-    ];
+    // TODO TEST
+    const coordinate = new Animated.ValueXY();
+
     /**
      * THIS FUNCTION TO CLONE MATRIX
      * @param matrix
@@ -48,40 +50,38 @@ const UpperLayer = React.memo(
       return matrix.map((row) => [...row]);
     };
 
-    const randLetter = () => {
-      const letters = [
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-      ];
-      const letter = letters[Math.floor(Math.random() * letters.length)];
-      return letter;
-    };
     // const { blockState } = useContext(WordSearchContext);
     const blockState = store.getState().board;
     const state = store.getState().upperLayer;
+
     // const [state, dispatch] = useReducer(
     //   upperLayerReducer,
     //   INITIAL_UPPER_LAYER_STATE,
     // );
+
+    /**
+     * THIS FUNCTION WILL GET THE COLLAPSE COLS NEED TO SLIDE DOWN
+     */
+    const getCollapseCols = useMemo<(blockLists: Block[][]) => number[]>(() => {
+      return (blockLists: Block[][]) => {
+        const triggerCols: number[] = new Array(
+          blockState.size.CELLS_IN_COLUMN,
+        ).fill(0);
+
+        console.log("trigger Cols log ", triggerCols);
+
+        blockLists.forEach((blockList) => {
+          blockList.forEach((block) => {
+            for (let i = block.startCell.j; i <= block.endCell.j; i++) {
+              triggerCols[i]++;
+            }
+          });
+        });
+
+        console.log("Debug triggerCols", triggerCols);
+        return triggerCols;
+      };
+    }, [blockState]);
 
     const collapseCols = useMemo(() => {
       // const triggerCols = new Array(matrix[0].length).fill(0);
@@ -281,15 +281,54 @@ const UpperLayer = React.memo(
 
     // LOG OUT INFOMATION
     useEffect(() => {
-      blockList = [
-        {
-          startCell: { i: 0, j: 0 },
-          endCell: { i: 1, j: 1 },
-        },
-      ];
-      console.log("Log blocklist ", blockList);
-      console.log("blockList === null  ", blockList === null);
+      console.log("Log out the prop passed in");
+
+      console.log({ blockList });
+      console.log({ blockLists });
+      console.log({ CELLS_IN_COLUMN });
+      console.log({ CELLS_IN_ROW });
+
+      // blockLists = [
+      //   [
+      //     {
+      //       startCell: { i: 0, j: 0 },
+      //       endCell: { i: 1, j: 1 },
+      //     },
+      //   ],
+      //   [
+      //     {
+      //       startCell: { i: 2, j: 2 },
+      //       endCell: { i: 3, j: 3 },
+      //     },
+      //   ],
+      //   [
+      //     {
+      //       startCell: { i: 4, j: 4 },
+      //       endCell: { i: 5, j: 5 },
+      //     },
+      //   ],
+      // ];
+      getCollapseCols(blockLists);
+      startAnimation();
     }, []);
+
+    /**
+     * start animation
+     */
+    const startAnimation = () => {
+      if (blockList !== null && blockList.length > 0)
+        Animated.timing(coordinate, {
+          toValue: { x: 100, y: 100 },
+          duration: 2000,
+          useNativeDriver: true,
+        }).start();
+    };
+
+    // TODO
+    // 1. Initialize blocklists
+    // 2. After pan responder then add to block list
+    // 3. Run animation move down those block
+    // 4. reFill zeros with for the upper layer.
 
     return useMemo(
       () =>
@@ -299,39 +338,6 @@ const UpperLayer = React.memo(
           // state.stateList.length !== 0 && TODO UNCOMMENT LATER
           // state.blocksValues.length !== 0 && TODO UNCOMMENT LATER
           // blockList.map((block: any, indexBlock: any) => {
-          //   const start = block.startCell;
-          //   const end = block.endCell;
-          //   let countEmptyTop = 0;
-
-          //   // for (let k = 0; k <= end.i; k++) {
-          //   //   for (let h = start.j; h <= end.j; h++) {
-          //   //     if (cells[k][h].letter === " ") {
-          //   //       countEmptyTop++;
-          //   //       continue;
-          //   //     }
-          //   //   }
-          //   // }
-
-          //   const startCellPos = {
-          //     x: +block.startCell.j * blockState.size.WIDTH_PER_CELL,
-          //     y: +block.startCell.i * blockState.size.WIDTH_PER_CELL,
-          //   };
-
-          //   const endCellPos = {
-          //     x:
-          //       +block.endCell.j * blockState.size.WIDTH_PER_CELL +
-          //       blockState.size.WIDTH_PER_CELL,
-          //     y:
-          //       +block.endCell.i * blockState.size.WIDTH_PER_CELL +
-          //       blockState.size.WIDTH_PER_CELL,
-          //   };
-
-          //   const startBlockPos = {
-          //     x: Math.min(startCellPos.x, endCellPos.x),
-          //     y: blockState.size.WIDTH_PER_CELL,
-          //   };
-
-          //   const endBlockPos = endCellPos;
 
           //   const top =
           //     Math.min(startBlockPos.y, endBlockPos.y) +
@@ -346,11 +352,6 @@ const UpperLayer = React.memo(
           //   //     { translateY: state.stateList[indexBlock].animation },
           //   //   ],
           //   // };
-          //   // const temp = state.blocksValues[indexBlock];
-          //   // const blockCells = temp.blocks;
-          //   const blockCells: any[] = [];
-          //   const collapseMatrix: any[] = [];
-          //   // const collapseMatrix = temp.collapseMatrix;
 
           //   // TODO UNCOMMENT LATER
           //   // return (
@@ -432,55 +433,65 @@ const UpperLayer = React.memo(
 
           // })
 
-          <View
-            // key={indexBlock}
-            style={{
-              position: "absolute",
-              // zIndex: 2,
-              // top: top,
-              // left: left,
-              // height: blockHeight + 4,
-              // width: blockWidth + 2.9,
-              width: 500,
-              height: 500,
-              overflow: "hidden",
-              backgroundColor: COLOR.BLUE,
-            }}
-          >
-            <Animated.View
-              style={[
-                {
-                  // height: blockHeight + 4,
-                  // width: blockWidth + 2.9,
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  zIndex: 2,
-                },
-                // animatedStyle,
-              ]}
-            >
-              <View style={{ position: "relative" }}>
-                <View
-                  // cell={cell}
-                  style={{
-                    width: blockState.size.WIDTH_PER_CELL,
-                    height: blockState.size.HEIGHT_PER_CELL,
-
-                    // backgroundColor:
-                    //   state.backgroundColor[index][index2],
-                    borderColor: COLOR.BLUE,
-                    borderWidth: 2,
-                    borderRadius: 5,
-                    zIndex: 3,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: -5,
-                    marginLeft: -5,
-                  }}
-                />
+          blockList.map((block: any, indexBlock: any) => {
+            return (
+              <View
+                // key={indexBlock}
+                style={{
+                  position: "absolute",
+                  // zIndex: 2,
+                  // top: top,
+                  // left: left,
+                  top: 0,
+                  left: 0 + indexBlock * 100,
+                  height: 200,
+                  width: 200,
+                  // width: blockState.size.WIDTH_PER_CELL,
+                  // height: blockState.size.WIDTH_PER_CELL,
+                  overflow: "hidden",
+                  backgroundColor: COLOR.BLUE,
+                }}
+              >
+                <Animated.View
+                  style={[
+                    {
+                      // height: blockHeight + 4,
+                      // width: blockWidth + 2.9,
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      zIndex: 2,
+                      transform: [
+                        { translateX: coordinate.x },
+                        { translateY: coordinate.y },
+                      ],
+                    },
+                    // animatedStyle,
+                  ]}
+                >
+                  <View style={{ position: "relative" }}>
+                    <View
+                      // cell={cell}
+                      style={{
+                        width: blockState.size.WIDTH_PER_CELL,
+                        height: blockState.size.WIDTH_PER_CELL,
+                        backgroundColor: COLOR.PURPLE,
+                        // backgroundColor:
+                        //   state.backgroundColor[index][index2],
+                        borderColor: COLOR.YELLOW,
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        zIndex: 3,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: -5,
+                        marginLeft: -5,
+                      }}
+                    />
+                  </View>
+                </Animated.View>
               </View>
-            </Animated.View>
-          </View>
+            );
+          })
         ),
       [state.blockList, state.stateList],
     );
