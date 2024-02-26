@@ -1,7 +1,7 @@
 /**
  * @author: duy-nhan
  */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -32,16 +32,15 @@ const SIZE_TABLE = 280;
  * Table in diamond game
  */
 const TABLE = [
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
+  [1, 4, 3, 2, 0, 1, 3, 2],
+  [2, 3, 1, 4, 0, 2, 1, 3],
+  [0, 4, 1, 2, 3, 0, 2, 4],
+  [3, 2, 1, 0, 4, 3, 2, 1],
+  [0, 2, 4, 3, 1, 2, 3, 0],
+  [1, 3, 2, 0, 4, 1, 0, 3],
+  [4, 2, 3, 1, 0, 4, 2, 1],
+  [3, 1, 4, 0, 2, 3, 1, 4],
 ];
-
 /**
  * This will create a brand new random element in diamond game.
  * @returns a random number
@@ -65,9 +64,165 @@ const GameBoard = () => {
     [48, 49, 50, 51, 52, 53, 54, 55],
     [56, 57, 58, 59, 60, 61, 62, 63],
   ]);
-  /**
-   * Initial state of board
-   */
+
+  const hammerAnimation = useRef(new Animated.Value(0)).current;
+
+  /** LOGIC TO CHECK IF A COLUMN OR ROW IS THE SAME ELEMENT */
+  const isColumnOfFive = (
+    numCols: number,
+    grid: any[],
+    fomulaForColumnOfFive: number,
+  ) => {
+    for (let i = 0; i < fomulaForColumnOfFive; i++) {
+      const columnOfFive = [
+        i,
+        i + numCols,
+        i + numCols * 2,
+        i + numCols * 3,
+        i + numCols * 4,
+      ];
+
+      const decidedColor = grid[i].color;
+      const isBlank = grid[i].color === "";
+
+      if (
+        columnOfFive.every(
+          (cell) => grid[cell].color === decidedColor && !isBlank,
+        )
+      ) {
+        columnOfFive.forEach((cell) => (grid[cell].color = ""));
+        // setScore((score) => score + 5);
+        return true;
+      }
+    }
+  };
+
+  const isColumnOfFour = (
+    numCols: number,
+    grid: any[],
+    fomulaForColumnOfFour: number,
+  ) => {
+    for (let i = 0; i < fomulaForColumnOfFour; i++) {
+      const columnOfFour = [i, i + numCols, i + numCols * 2, i + numCols * 3];
+
+      const decidedColor = grid[i].color;
+      const isBlank = grid[i].color === "";
+
+      if (
+        columnOfFour.every(
+          (cell) => grid[cell].color === decidedColor && !isBlank,
+        )
+      ) {
+        columnOfFour.forEach((cell) => (grid[cell].color = ""));
+        // setScore((score) => score + 4);
+        return true;
+      }
+    }
+  };
+
+  const isColumnOfThree = (
+    numCols: number,
+    grid: any[],
+    fomulaForColumnOfThree: number,
+  ) => {
+    for (let i = 0; i < fomulaForColumnOfThree; i++) {
+      const columnOfThree = [i, i + numCols, i + numCols * 2];
+
+      const decidedColor = grid[i].color;
+      const isBlank = grid[i].color === "";
+
+      if (
+        columnOfThree.every(
+          (cell) => grid[cell].color === decidedColor && !isBlank,
+        )
+      ) {
+        columnOfThree.forEach((cell) => (grid[cell].color = ""));
+        // setScore((score) => score + 3);
+        return true;
+      }
+    }
+  };
+
+  const isRowOfFive = (
+    numCols: number,
+    numRows: number,
+    grid: any[],
+    invalidIndexes: number[],
+  ) => {
+    for (let i = 0; i < numCols * numRows; i++) {
+      const rowOfFive = [i, i + 1, i + 2, i + 3, i + 4];
+
+      const decidedColor = grid[i].color;
+      const isBlank = grid[i].color === "";
+
+      if (invalidIndexes.includes(i)) continue;
+      else {
+        if (
+          rowOfFive.every(
+            (cell) => grid[cell].color === decidedColor && !isBlank,
+          )
+        ) {
+          rowOfFive.forEach((cell) => (grid[cell].color = ""));
+          // setScore((score) => score + 5);
+          return true;
+        }
+      }
+    }
+  };
+
+  const isRowOfFour = (
+    numCols: number,
+    numRows: number,
+    grid: any[],
+    invalidIndexes: number[],
+  ) => {
+    for (let i = 0; i < numCols * numRows; i++) {
+      const rowOfFour = [i, i + 1, i + 2, i + 3];
+
+      const decidedColor = grid[i].color;
+      const isBlank = grid[i].color === "";
+
+      if (invalidIndexes.includes(i)) continue;
+      else {
+        if (
+          rowOfFour.every(
+            (cell) => grid[cell].color === decidedColor && !isBlank,
+          )
+        ) {
+          rowOfFour.forEach((cell) => (grid[cell].color = ""));
+          // setScore((score) => score + 4);
+          return true;
+        }
+      }
+    }
+  };
+
+  const isRowOfThree = (
+    numCols: number,
+    numRows: number,
+    grid: any[],
+    invalidIndexes: number[],
+  ) => {
+    for (let i = 0; i < numCols * numRows; i++) {
+      const rowOfThree = [i, i + 1, i + 2];
+
+      const decidedColor = grid[i].color;
+      const isBlank = grid[i].color === "";
+
+      if (invalidIndexes.includes(i)) continue;
+      else {
+        if (
+          rowOfThree.every(
+            (cell) => grid[cell].color === decidedColor && !isBlank,
+          )
+        ) {
+          rowOfThree.forEach((cell) => (grid[cell].color = ""));
+          // setScore((score) => score + 3);
+          return true;
+        }
+      }
+    }
+  };
 
   const blockState = store.getState().board;
 
@@ -90,36 +245,24 @@ const GameBoard = () => {
     //   ),
     // );
 
-    // const backgroundColorInterpolate = blockState.backgroundColor.map(
-    //   (row: any[], i: number) =>
-    //     row.map((item, j) => {
-    //       if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.purple, Colors.border],
-    //         });
-    //       } else if (
-    //         blockState.cells[i][j].effect === WordSearchCellEffect.vertical
-    //       ) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.win, Colors.border],
-    //         });
-    //       } else if (
-    //         blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
-    //       ) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.white, Colors.border],
-    //         });
-    //       } else {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.blue2, Colors.border],
-    //         });
-    //       }
-    //     }),
-    // );
+    const backgroundColorInterpolate = blockState.backgroundColor.map(
+      (row: any[]) =>
+        row.map((cell) =>
+          cell.interpolate({
+            inputRange: INPUT_RANGE,
+            outputRange: OUTPUT_RANGE,
+          }),
+        ),
+    );
+
+    const scaleInterpolation = blockState.scale.map((row: any[]) =>
+      row.map((cell) =>
+        cell.interpolate({
+          inputRange: [0, 0.8, 1],
+          outputRange: [1, 1.5, 1],
+        }),
+      ),
+    );
 
     // const colorInterpolate = blockState.color.map((row, i) =>
     //   row.map((item: any, j: number) => {
@@ -166,11 +309,11 @@ const GameBoard = () => {
 
     return {
       // animation: blockState.animation,
-      // scoreOpacity: blockState.scoreOpacity,
+      scoreOpacity: blockState.scoreOpacity,
       rotation: rotateInterpolate,
-      scale: blockState.scale,
+      scale: scaleInterpolation,
       // borderColor: borderColorInterpolate,
-      // backgroundColor: backgroundColorInterpolate,
+      backgroundColor: backgroundColorInterpolate,
       // color: colorInterpolate,
       zIndex: blockState.zIndex,
       // scoreCircle: blockState.scoreCircleAnimation,
@@ -183,27 +326,12 @@ const GameBoard = () => {
     blockState.backgroundColor,
     // blockState.color,
     // blockState.animation,
-    // blockState.scoreOpacity,
+    blockState.scoreOpacity,
     blockState.scale,
     blockState.zIndex,
     blockState.cells,
     // blockState.scoreCircleAnimation,
   ]);
-
-  const interpolation = {
-    backgroundInterpolation: blockState.backgroundColor.map((row: any[]) =>
-      row.map((cell) =>
-        cell.interpolate({
-          inputRange: INPUT_RANGE,
-          outputRange: OUTPUT_RANGE,
-        }),
-      ),
-    ),
-  };
-
-  const animatedStyles = {
-    backgroundColor: interpolation.backgroundInterpolation,
-  };
 
   /**
    * Function to handle the opacity of 1 cell position indexRow, indexCol
@@ -240,6 +368,71 @@ const GameBoard = () => {
   //     );
   //   };
 
+  /**
+   * FUNCTION TO PRINT OUT THE THREE MATCHED BLOCK.
+   * @param matrix
+   */
+  function findMatchThree(matrix: number[][]) {
+    let blockList: any[] = [];
+    const rows = matrix.length;
+    const cols = matrix[0].length;
+
+    // Iterate through each cell in the matrix
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const current = matrix[i][j];
+
+        // Check horizontally (to the right)
+        if (
+          j + 2 < cols &&
+          matrix[i][j + 1] === current &&
+          matrix[i][j + 2] === current
+        ) {
+          blockList.push({
+            startCell: { i: i, j: j },
+            endCell: { i: i, j: j + 2 },
+          });
+          console.log(
+            `Match three found at (${i},${j}), (${i},${j + 1}), (${i},${j + 2}): ${current}`,
+          );
+        }
+
+        // Check vertically (below)
+        if (
+          i + 2 < rows &&
+          matrix[i + 1][j] === current &&
+          matrix[i + 2][j] === current
+        ) {
+          blockList.push({
+            startCell: { i: i, j: j },
+            endCell: { i: i + 2, j: j },
+          });
+          console.log(
+            `Match three found at (${i},${j}), (${i + 1},${j}), (${i + 2},${j}): ${current}`,
+          );
+        }
+      }
+    }
+
+    return blockList;
+  }
+
+  useEffect(() => {
+    const blockList = findMatchThree(TABLE);
+    console.log({ blockList });
+
+    onDestroyOneCell(0, 0);
+    onDestroyOneCell(1, 1);
+    onDestroyOneCell(2, 2);
+  }, []);
+  /**
+   * ANIMATION TO SWAP 2 CELLS.
+   * @param row
+   * @param col
+   * @param numCellX
+   * @param numCellY
+   * @returns
+   */
   const startAnimation = (
     row: any,
     col: any,
@@ -290,81 +483,75 @@ const GameBoard = () => {
       }),
     ]).start();
 
+    // CALLING FUNCTION TO DESTROY CELSS ANIMATION.
     onDestroyOneCell(row, col);
-    // TODO FIX THIS
-    // setTable((prevState: number[][]) => {
-    //   const matrixCopy = prevState.map((row) => [...row]);
-    //   const temp = matrixCopy[row][col];
-    //   matrixCopy[row][col] = matrixCopy[row + numCellY][col + numCellX];
-    //   matrixCopy[row + numCellY][col + numCellX] = temp;
-    //   return { matrix: matrixCopy };
-    // });
-
+    onDestroyOneCell(row + numCellY, col + numCellX);
     setTest(2);
   };
 
-  // LOG TO SEE THE UPDATE TABLE
-  useEffect(() => {
-    console.log("table ", table);
-  }, [table]);
-
   /**
-   * TODO Destroy 1 cell animation
+   * ANIMATION TO DESTROY 1 CELLS
    */
   const onDestroyOneCell = (row: number, col: number) => {
-    console.log("Chay animation onDestroyOneCell");
+    console.log("Debug Chay animation onDestroyOneCell");
+
     Animated.parallel([
       Animated.sequence([
         Animated.timing(blockState.backgroundColor[row][col], {
           toValue: 1,
-          useNativeDriver: false,
+          useNativeDriver: true,
           duration: 200,
         }),
         Animated.timing(blockState.backgroundColor[row][col], {
           toValue: 0,
-          useNativeDriver: false,
+          useNativeDriver: true,
           duration: 200,
-          //   delay: 1000,
+          delay: 1000,
         }),
       ]),
       Animated.sequence([
         Animated.timing(blockState.zIndex[row][col], {
           toValue: 1000,
-          useNativeDriver: false,
+          useNativeDriver: true,
           duration: 0,
         }),
         Animated.timing(blockState.rotation[row][col], {
           toValue: 10,
           duration: 200,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(blockState.rotation[row][col], {
           toValue: -10,
           duration: 200,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(blockState.rotation[row][col], {
           toValue: 0,
           duration: 200,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(blockState.scale[row][col], {
           toValue: 2,
           duration: 200,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(blockState.scale[row][col], {
           toValue: 1,
           duration: 100,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(blockState.zIndex[row][col], {
           toValue: 1,
-          useNativeDriver: false,
+          useNativeDriver: true,
           duration: 0,
         }),
       ]),
-    ]);
+      Animated.timing(blockState.scoreOpacity[row][col], {
+        toValue: 0,
+        useNativeDriver: true,
+        duration: 2000,
+      }),
+    ]).start();
   };
 
   /**
@@ -535,19 +722,19 @@ const GameBoard = () => {
 
       // TODO DELETE THIS LATER.
       // TEST TO SET CELLS TO BLOCKLIST COLLAPSE
-      blockState.blockList.push({
-        startCell: { i: 0, j: 0 },
-        endCell: { i: 1, j: 1 },
-      });
-      blockState.blockList.push({
-        startCell: { i: 2, j: 2 },
-        endCell: { i: 3, j: 3 },
-      });
+      // blockState.blockList.push({
+      //   startCell: { i: 0, j: 0 },
+      //   endCell: { i: 1, j: 1 },
+      // });
+      // blockState.blockList.push({
+      //   startCell: { i: 2, j: 2 },
+      //   endCell: { i: 3, j: 3 },
+      // });
 
-      blockState.blockList.push({
-        startCell: { i: 4, j: 4 },
-        endCell: { i: 5, j: 5 },
-      });
+      // blockState.blockList.push({
+      //   startCell: { i: 4, j: 4 },
+      //   endCell: { i: 5, j: 5 },
+      // });
     };
 
     const onReleaseCell = (index: number, index2: number) => {
@@ -673,19 +860,29 @@ const GameBoard = () => {
                 key={indexCol}
                 style={{
                   ...styles.cell,
-                  backgroundColor: COLOR.YELLOW,
-                  // zIndex: blockState.zIndex[indexRow][indexCol],
-                  // rotation: state.rotation[indexRow][indexCol],
+                  backgroundColor: state.backgroundColor[indexRow][indexCol],
+                  zIndex: blockState.zIndex[indexRow][indexCol],
+                  opacity: state.scoreOpacity[indexRow][indexCol],
                   transform: [
+                    { scale: state.scale[indexRow][indexCol] },
+                    { rotate: state.rotation[indexRow][indexCol] },
                     { translateX: blockState.coordinate[indexRow][indexCol].x },
                     { translateY: blockState.coordinate[indexRow][indexCol].y },
                   ],
-                  //   animatedStyles.backgroundColor[indexRow][indexCol],
-                  // state.backgroundColor[indexRow][indexCol],
                 }}
                 {...panResponder[indexRow][indexCol].panHandlers}
               >
-                <Image style={styles.imageInCell} source={Fire}></Image>
+                {cell == 0 ? (
+                  <Image style={styles.imageInCell} source={Fire}></Image>
+                ) : cell == 1 ? (
+                  <Image style={styles.imageInCell} source={LightNight}></Image>
+                ) : cell == 2 ? (
+                  <Image style={styles.imageInCell} source={Shield}></Image>
+                ) : cell == 3 ? (
+                  <Image style={styles.imageInCell} source={Sword}></Image>
+                ) : (
+                  <Image style={styles.imageInCell} source={YinYan}></Image>
+                )}
               </Animated.View>
             );
           })}

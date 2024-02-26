@@ -45,12 +45,13 @@ const generateAnimatedValueXY = (
 const SIZE_TABLE = 280;
 interface BoardState {
   backgroundColor: Animated.Value[][];
-  borderColor: any;
-  zIndex: any;
-  coordinate: any;
-  rotation: any;
-  scale: any;
+  borderColor: Animated.Value[][];
+  zIndex: Animated.Value[][];
+  coordinate: Animated.ValueXY[][];
+  rotation: Animated.Value[][];
+  scale: Animated.Value[][];
   size: any;
+  scoreOpacity: Animated.Value[][];
   cells: any[];
   effects: any;
   blockList: {
@@ -66,6 +67,7 @@ const initialState: BoardState = {
   rotation: generateAnimatedValue(0),
   coordinate: generateAnimatedValueXY(),
   scale: generateAnimatedValue(0),
+  scoreOpacity: generateAnimatedValue(1),
   size: {
     CELLS_IN_ROW: 8,
     CELLS_IN_COLUMN: 8,

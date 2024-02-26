@@ -313,7 +313,7 @@ const UpperLayer = React.memo(
     }, []);
 
     /**
-     * start animation
+     * ANIMATION FOR UPPER LAYER TO COLLAPSE
      */
     const startAnimation = () => {
       if (blockList !== null && blockList.length > 0)

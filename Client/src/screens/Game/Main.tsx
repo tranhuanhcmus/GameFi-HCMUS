@@ -180,7 +180,7 @@ const GameScreen = () => {
         {/* <GameHeader /> */}
 
         {/* TODO MODIFY THIS LATER */}
-        <UpperLayer
+        {/* <UpperLayer
           CELLS_IN_COLUMN={blockState.size.CELLS_IN_COLUMN}
           CELLS_IN_ROW={blockState.size.CELLS_IN_ROW}
           callbackFunction={() => {}}
@@ -188,7 +188,7 @@ const GameScreen = () => {
           cells={blockState.cells}
           blockLists={[]}
           matrix={[2]}
-        />
+        /> */}
 
         <GameBoard />
         {/* TODO: Bottom nav */}
