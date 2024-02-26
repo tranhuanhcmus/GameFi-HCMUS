@@ -1,27 +1,19 @@
 /**
  * @author: duy-nhan
  */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
-  TouchableOpacity,
-  View,
-  Image,
-  StyleSheet,
   PanResponderGestureState,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import { COLOR } from "../../utils/color";
-import Pet from "../../../assets/Pet.png";
-import Fire from "../../../assets/fire.jpg";
-import LightNight from "../../../assets/lightnight.jpg";
-import Shield from "../../../assets/shield.jpg";
-import Sword from "../../../assets/sword.jpg";
-import YinYan from "../../../assets/batquai.jpg";
-import boardSlice from "../../redux/boardSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateBlockList } from "../../redux/boardSlice";
 import { store } from "../../redux/store";
-import UpperLayer from "./UpperLayer";
+import { COLOR } from "../../utils/color";
 
 /**
  * Size in pixel of table, please change if needed.
@@ -32,16 +24,15 @@ const SIZE_TABLE = 280;
  * Table in diamond game
  */
 const TABLE = [
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
+  [1, 4, 3, 2, 0, 1, 3, 2],
+  [2, 3, 1, 4, 0, 2, 1, 3],
+  [0, 4, 1, 2, 3, 0, 2, 4],
+  [3, 2, 1, 0, 4, 3, 2, 1],
+  [0, 2, 4, 3, 1, 2, 3, 0],
+  [1, 3, 2, 0, 4, 1, 0, 3],
+  [4, 2, 3, 1, 0, 4, 2, 1],
+  [3, 1, 4, 0, 2, 3, 1, 4],
 ];
-
 /**
  * This will create a brand new random element in diamond game.
  * @returns a random number
@@ -50,29 +41,79 @@ const randomNumber = () => {
   return Math.floor(Math.random() * 4);
 };
 
-const GameBoard = () => {
+/**
+ * Function to generate 2D Matrix Animated.Value
+ * @param value
+ * @param CELLS_IN_ROW
+ * @param CELLS_IN_COLUMN
+ * @returns
+ */
+const generateAnimatedValue = (
+  value: number,
+  CELLS_IN_ROW = 8,
+  CELLS_IN_COLUMN = 8,
+) => {
+  const animation = Array(CELLS_IN_COLUMN);
+  for (let i = 0; i < CELLS_IN_COLUMN; i++) {
+    animation[i] = new Array(CELLS_IN_ROW);
+    for (let j = 0; j < CELLS_IN_ROW; j++) {
+      animation[i][j] = new Animated.Value(value);
+    }
+  }
+  return animation;
+};
+
+const generateAnimatedValueXY = (
+  // value: number,
+  CELLS_IN_ROW = 8,
+  CELLS_IN_COLUMN = 8,
+) => {
+  const animation = Array(CELLS_IN_COLUMN);
+  for (let i = 0; i < CELLS_IN_COLUMN; i++) {
+    animation[i] = new Array(CELLS_IN_ROW);
+    for (let j = 0; j < CELLS_IN_ROW; j++) {
+      animation[i][j] = new Animated.ValueXY();
+    }
+  }
+  return animation;
+};
+
+const GameBoard = (props: any) => {
+  const { blockList, setBlockList } = props;
+  const dispatch = useDispatch();
+  const blockState = store.getState().board;
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
-
+  // const blockList = useSelector((state: any) => state.board.blockList);
+  // const blockList = useRef<any[]>([]);
+  const blockStateTable = useSelector((state: any) => state.board.table);
+  const cells = useSelector((state: any) => state.board.cells);
   const [test, setTest] = useState(0);
-  const [table, setTable] = useState([
-    [0, 1, 2, 3, 4, 5, 6, 7],
-    [8, 9, 10, 11, 12, 13, 14, 15],
-    [16, 17, 18, 19, 20, 21, 22, 23],
-    [24, 25, 26, 27, 28, 29, 30, 31],
-    [32, 33, 34, 35, 36, 37, 38, 39],
-    [40, 41, 42, 43, 44, 45, 46, 47],
-    [48, 49, 50, 51, 52, 53, 54, 55],
-    [56, 57, 58, 59, 60, 61, 62, 63],
-  ]);
+
+  const table = useRef<any[]>(blockState.cells.map((row) => [...row]));
+
+  useEffect(() => {
+    // console.error("===============================");
+    // console.error("Render the board");
+  }, [blockStateTable, blockList]);
   /**
-   * Initial state of board
+   * Ininitial state of board
    */
+  const [initialState, setInitialState] = useState({
+    backgroundColor: generateAnimatedValue(-1),
+    borderColor: generateAnimatedValue(0),
+    zIndex: generateAnimatedValue(0),
+    rotation: generateAnimatedValue(0),
+    coordinate: generateAnimatedValueXY(),
+    scale: generateAnimatedValue(0),
+    scoreOpacity: generateAnimatedValue(1),
+  });
 
-  const blockState = store.getState().board;
-
+  /**
+   * State to interpolate
+   */
   const state = useMemo(() => {
-    const rotateInterpolate = blockState.rotation.map((row: any[]) =>
+    const rotateInterpolate = generateAnimatedValue(0).map((row: any[]) =>
       row.map((item) =>
         item.interpolate({
           inputRange: [0, 360],
@@ -81,172 +122,158 @@ const GameBoard = () => {
       ),
     );
 
-    // const borderColorInterpolate = blockState.borderColor.map((row: any[]) =>
-    //   row.map((item) =>
-    //     item.interpolate({
-    //       inputRange: [-1, 0, 1],
-    //       outputRange: [Colors.win, Colors.blue, Colors.yellow],
-    //     }),
-    //   ),
-    // );
+    const backgroundColorInterpolate = generateAnimatedValue(-1).map(
+      (row: any[]) =>
+        row.map((cell) =>
+          cell.interpolate({
+            inputRange: INPUT_RANGE,
+            outputRange: OUTPUT_RANGE,
+          }),
+        ),
+    );
 
-    // const backgroundColorInterpolate = blockState.backgroundColor.map(
-    //   (row: any[], i: number) =>
-    //     row.map((item, j) => {
-    //       if (blockState.cells[i][j].effect === WordSearchCellEffect.gift) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.purple, Colors.border],
-    //         });
-    //       } else if (
-    //         blockState.cells[i][j].effect === WordSearchCellEffect.vertical
-    //       ) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.win, Colors.border],
-    //         });
-    //       } else if (
-    //         blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
-    //       ) {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.white, Colors.border],
-    //         });
-    //       } else {
-    //         return item.interpolate({
-    //           inputRange: [-1, 0, 1],
-    //           outputRange: [Colors.win, Colors.blue2, Colors.border],
-    //         });
-    //       }
-    //     }),
-    // );
-
-    // const colorInterpolate = blockState.color.map((row, i) =>
-    //   row.map((item: any, j: number) => {
-    //     if (blockState.cells[i][j].effect === WordSearchCellEffect.vertical) {
-    //       return item.interpolate({
-    //         inputRange: [0, 1],
-    //         outputRange: [Colors.btnText, Colors.constract],
-    //       });
-    //     } else if (
-    //       blockState.cells[i][j].effect === WordSearchCellEffect.horizontal
-    //     ) {
-    //       return item.interpolate({
-    //         inputRange: [-1, 0, 1],
-    //         outputRange: [Colors.win, Colors.constract, Colors.constract],
-    //       });
-    //     } else {
-    //       return item.interpolate({
-    //         inputRange: [0, 1],
-    //         outputRange: [Colors.white, Colors.constract],
-    //       });
-    //     }
-    //   }),
-    // );
-
-    // const scoreCircleOpacityInterpolate = blockState.scoreCircleAnimation.map(
-    //   (row: any[]) =>
-    //     row.map((item) =>
-    //       item.interpolate({
-    //         inputRange: [0, 0.5, 1],
-    //         outputRange: [0, 1, 0],
-    //       }),
-    //     ),
-    // );
-
-    // const scoreCircleScaleInterpolate = blockState.scoreCircleAnimation.map(
-    //   (row: any[]) =>
-    //     row.map((item) =>
-    //       item.interpolate({
-    //         inputRange: [0, 0.5, 1],
-    //         outputRange: [0, 1, 2],
-    //       }),
-    //     ),
-    // );
-
-    return {
-      // animation: blockState.animation,
-      // scoreOpacity: blockState.scoreOpacity,
-      rotation: rotateInterpolate,
-      scale: blockState.scale,
-      // borderColor: borderColorInterpolate,
-      // backgroundColor: backgroundColorInterpolate,
-      // color: colorInterpolate,
-      zIndex: blockState.zIndex,
-      // scoreCircle: blockState.scoreCircleAnimation,
-      // scoreCircleOpacity: scoreCircleOpacityInterpolate,
-      // scoreCircleScale: scoreCircleScaleInterpolate,
-    };
-  }, [
-    blockState.rotation,
-    blockState.borderColor,
-    blockState.backgroundColor,
-    // blockState.color,
-    // blockState.animation,
-    // blockState.scoreOpacity,
-    blockState.scale,
-    blockState.zIndex,
-    blockState.cells,
-    // blockState.scoreCircleAnimation,
-  ]);
-
-  const interpolation = {
-    backgroundInterpolation: blockState.backgroundColor.map((row: any[]) =>
+    const scaleInterpolation = generateAnimatedValue(0).map((row: any[]) =>
       row.map((cell) =>
         cell.interpolate({
-          inputRange: INPUT_RANGE,
-          outputRange: OUTPUT_RANGE,
+          inputRange: [0, 0.8, 1],
+          outputRange: [1, 1.5, 1],
         }),
       ),
-    ),
+    );
+
+    const scoreOpacity = generateAnimatedValue(1);
+    // console.error("Chay lai state memo ne scoreOpacity ", scoreOpacity);
+    // scoreOpacity[1][2].addListener(() => {
+    //   console.error("Chay lai state memo ne scoreOpacity ", scoreOpacity);
+    // });
+    return {
+      scoreOpacity: scoreOpacity,
+      rotation: rotateInterpolate,
+      scale: scaleInterpolation,
+
+      backgroundColor: backgroundColorInterpolate,
+
+      zIndex: initialState.zIndex,
+    };
+  }, [
+    initialState.rotation,
+    initialState.borderColor,
+    initialState.backgroundColor,
+    initialState.scoreOpacity,
+    initialState.scale,
+    initialState.zIndex,
+    blockState.cells,
+    test,
+    blockStateTable,
+  ]);
+
+  const checkTable = () => {
+    console.log("check Table after swap ", table.current);
+    const rows = blockState.size.CELLS_IN_ROW;
+    const cols = blockState.size.CELLS_IN_COLUMN;
+
+    // Iterate through each cell in the matrix
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const current = table.current[i][j];
+
+        // Check horizontally (to the right)
+        if (
+          j + 2 < cols &&
+          table.current[i][j + 1] === current &&
+          table.current[i][j + 2] === current
+        ) {
+          // dispatch(
+          //   updateBlockList({
+          //     startCell: { i: i, j: j },
+          //     endCell: { i: i, j: j + 2 },
+          //   }),
+          // );
+          blockList.push({
+            startCell: { i: i, j: j },
+            endCell: { i: i, j: j + 2 },
+          });
+        }
+
+        // Check vertically (below)
+        if (
+          i + 2 < rows &&
+          table.current[i + 1][j] === current &&
+          table.current[i + 2][j] === current
+        ) {
+          // dispatch(
+          //   updateBlockList({
+          //     startCell: { i: i, j: j },
+          //     endCell: { i: i + 2, j: j },
+          //   }),
+          // );
+          blockList.push({
+            startCell: { i: i, j: j },
+            endCell: { i: i + 2, j: j },
+          });
+        }
+      }
+    }
+
+    console.log("blockList ", blockList);
+    if (blockList && blockList.length > 0) {
+      blockList.forEach((item: any) => {
+        onDestroyOneCell(item);
+      });
+    }
+
+    // setBlockList(useRef<any[]>([]));
   };
 
-  const animatedStyles = {
-    backgroundColor: interpolation.backgroundInterpolation,
+  // SWAP 2 CELLS AND THE PROP CORRESPONDING
+  const swap2CellsAnimatedProp = (
+    oldRow: any,
+    oldCol: any,
+    newRow: any,
+    newCol: any,
+  ) => {
+    let temp: any;
+    // Swap 2 animated value.
+    temp = initialState.backgroundColor[oldRow][oldCol];
+    initialState.backgroundColor[oldRow][oldCol] =
+      initialState.backgroundColor[newRow][newCol];
+    initialState.backgroundColor[newRow][newCol] = temp;
+
+    temp = initialState.borderColor[oldRow][oldCol];
+    initialState.borderColor[oldRow][oldCol] =
+      initialState.borderColor[newRow][newCol];
+    initialState.borderColor[newRow][newCol] = temp;
+
+    temp = initialState.rotation[oldRow][oldCol];
+    initialState.rotation[oldRow][oldCol] =
+      initialState.rotation[newRow][newCol];
+    initialState.rotation[newRow][newCol] = temp;
+
+    temp = initialState.scale[oldRow][oldCol];
+    initialState.scale[oldRow][oldCol] = initialState.scale[newRow][newCol];
+    initialState.scale[newRow][newCol] = temp;
+
+    temp = initialState.scoreOpacity[oldRow][oldCol];
+    initialState.scoreOpacity[oldRow][oldCol] =
+      initialState.scoreOpacity[newRow][newCol];
+    initialState.scoreOpacity[newRow][newCol] = temp;
   };
 
   /**
-   * Function to handle the opacity of 1 cell position indexRow, indexCol
-   * @param indexRox
-   * @param indexCol
+   * ANIMATION TO SWAP 2 CELLS.
+   * @param row
+   * @param col
+   * @param numCellX
+   * @param numCellY
+   * @returns
    */
-  //   const startAnimation = (indexRow: number, indexCol: number) => {
-  //     Animated.parallel([
-  //       /**
-  //        * Change opacity
-  //        */
-  //       Animated.timing(state.opacityAnimation[indexRow][indexCol], {
-  //         toValue: 0,
-  //         duration: 1500,
-  //         useNativeDriver: true,
-  //       }),
-  //       /**
-  //        * Change opacity
-  //        */
-  //       Animated.timing(state.backgroundAnimation[indexRow][indexCol], {
-  //         toValue: 1,
-  //         duration: 1500,
-  //         useNativeDriver: true,
-  //       }),
-  //     ]).start(() =>
-  //       /**
-  //        * Change background
-  //        */
-  //       Animated.timing(state.opacityAnimation[indexRow][indexCol], {
-  //         toValue: 1,
-  //         duration: 1500,
-  //         useNativeDriver: true,
-  //       }).start(),
-  //     );
-  //   };
-
   const startAnimation = (
     row: any,
     col: any,
     numCellX: number,
     numCellY: number,
   ) => {
-    // TODO: MISSING CASE WITH NEAR LINE
+    // CHECK CELL NEARE BORDER OF TABLE
     if (
       row + numCellY < 0 ||
       row + numCellY >= blockState.size.CELLS_IN_ROW ||
@@ -272,16 +299,16 @@ const GameBoard = () => {
         : numCellY < 0
           ? -blockState.size.MARGIN
           : 0;
-    // THIS WORK
+
     Animated.parallel([
-      Animated.spring(blockState.coordinate[row][col], {
+      Animated.spring(initialState.coordinate[row][col], {
         toValue: {
           x: numCellX * blockState.size.WIDTH_PER_CELL + MARGIN_X * 2,
           y: numCellY * blockState.size.WIDTH_PER_CELL + MARGIN_Y * 2,
         },
         useNativeDriver: true,
       }),
-      Animated.spring(blockState.coordinate[row + numCellY][col + numCellX], {
+      Animated.spring(initialState.coordinate[row + numCellY][col + numCellX], {
         toValue: {
           x: -numCellX * blockState.size.WIDTH_PER_CELL - MARGIN_X * 2,
           y: -numCellY * blockState.size.WIDTH_PER_CELL - MARGIN_Y * 2,
@@ -290,93 +317,118 @@ const GameBoard = () => {
       }),
     ]).start();
 
-    onDestroyOneCell(row, col);
-    // TODO FIX THIS
-    // setTable((prevState: number[][]) => {
-    //   const matrixCopy = prevState.map((row) => [...row]);
-    //   const temp = matrixCopy[row][col];
-    //   matrixCopy[row][col] = matrixCopy[row + numCellY][col + numCellX];
-    //   matrixCopy[row + numCellY][col + numCellX] = temp;
-    //   return { matrix: matrixCopy };
-    // });
+    // swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
 
-    setTest(2);
+    let temp = table.current[row][col];
+    table.current[row][col] = table.current[row + numCellY][col + numCellX];
+    table.current[row + numCellY][col + numCellX] = temp;
+
+    swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
+
+    checkTable();
+
+    // dispatchrblockList.current = [];
   };
-
-  // LOG TO SEE THE UPDATE TABLE
-  useEffect(() => {
-    console.log("table ", table);
-  }, [table]);
 
   /**
-   * TODO Destroy 1 cell animation
+   * ANIMATION TO DESTROY 1 CELLS
    */
-  const onDestroyOneCell = (row: number, col: number) => {
-    console.log("Chay animation onDestroyOneCell");
-    Animated.parallel([
-      Animated.sequence([
-        Animated.timing(blockState.backgroundColor[row][col], {
-          toValue: 1,
-          useNativeDriver: false,
-          duration: 200,
-        }),
-        Animated.timing(blockState.backgroundColor[row][col], {
-          toValue: 0,
-          useNativeDriver: false,
-          duration: 200,
-          //   delay: 1000,
-        }),
-      ]),
-      Animated.sequence([
-        Animated.timing(blockState.zIndex[row][col], {
-          toValue: 1000,
-          useNativeDriver: false,
-          duration: 0,
-        }),
-        Animated.timing(blockState.rotation[row][col], {
-          toValue: 10,
-          duration: 200,
-          useNativeDriver: false,
-        }),
-        Animated.timing(blockState.rotation[row][col], {
-          toValue: -10,
-          duration: 200,
-          useNativeDriver: false,
-        }),
-        Animated.timing(blockState.rotation[row][col], {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: false,
-        }),
-        Animated.timing(blockState.scale[row][col], {
-          toValue: 2,
-          duration: 200,
-          useNativeDriver: false,
-        }),
-        Animated.timing(blockState.scale[row][col], {
-          toValue: 1,
-          duration: 100,
-          useNativeDriver: false,
-        }),
-        Animated.timing(blockState.zIndex[row][col], {
-          toValue: 1,
-          useNativeDriver: false,
-          duration: 0,
-        }),
-      ]),
-    ]);
-  };
+  const onDestroyOneCell = useMemo<(block: any) => void>(() => {
+    return (block: any) => {
+      const startCell = block.startCell;
+      const endCell = block.endCell;
+
+      const cells = [];
+      if (startCell.i == endCell.i) {
+        // IN A ROW
+        for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
+          cells.push({ row: startCell.i, col: cnt });
+      } else {
+        // IN A COLUMN
+        for (let cnt = startCell.i; cnt <= endCell.i; cnt++)
+          cells.push({ row: cnt, col: startCell.j });
+      }
+
+      cells.forEach((cell) => {
+        console.log(
+          "Debug cell will be destroyed ",
+          cell,
+          "talbe value ",
+          table.current[cell.row][cell.col],
+        );
+        Animated.parallel([
+          Animated.sequence([
+            Animated.timing(initialState.backgroundColor[cell.row][cell.col], {
+              toValue: 1,
+              useNativeDriver: true,
+              duration: 200,
+            }),
+            Animated.timing(initialState.backgroundColor[cell.row][cell.col], {
+              toValue: 0,
+              useNativeDriver: true,
+              duration: 200,
+              delay: 1000,
+            }),
+          ]),
+          Animated.sequence([
+            Animated.timing(initialState.zIndex[cell.row][cell.col], {
+              toValue: 1000,
+              useNativeDriver: true,
+              duration: 0,
+            }),
+            Animated.timing(initialState.rotation[cell.row][cell.col], {
+              toValue: 10,
+              duration: 200,
+              useNativeDriver: true,
+            }),
+            Animated.timing(initialState.rotation[cell.row][cell.col], {
+              toValue: -10,
+              duration: 200,
+              useNativeDriver: true,
+            }),
+            Animated.timing(initialState.rotation[cell.row][cell.col], {
+              toValue: 0,
+              duration: 200,
+              useNativeDriver: true,
+            }),
+            Animated.timing(initialState.scale[cell.row][cell.col], {
+              toValue: 2,
+              duration: 200,
+              useNativeDriver: true,
+            }),
+            Animated.timing(initialState.scale[cell.row][cell.col], {
+              toValue: 1,
+              duration: 100,
+              useNativeDriver: true,
+            }),
+            Animated.timing(initialState.zIndex[cell.row][cell.col], {
+              toValue: 1,
+              useNativeDriver: true,
+              duration: 0,
+            }),
+          ]),
+          Animated.timing(state.scoreOpacity[cell.row][cell.col], {
+            toValue: 0,
+            useNativeDriver: true,
+            duration: 2000,
+          }),
+        ]).start();
+      });
+    };
+  }, [blockList]);
 
   /**
    * TODO Collapse animation
    */
-
   const selectedCells: Animated.Value[] = useMemo(() => [], [blockState]);
   let selectedIndexes: { row: number; col: number }[] = useMemo(
     () => [],
     [blockState],
   );
 
+  /**
+   * PAN RESPONDER TO HANDLE HAND GESTURE (SWIPING)
+   */
   const panResponder = useMemo(() => {
     let handleEndPanResponder = false;
 
@@ -385,16 +437,9 @@ const GameBoard = () => {
 
     // Number of selected cells in y-axis
     let numCellY = 0;
-    const onPressCell = (row: number, col: number) => {
-      console.log("onPressCell " + row + " " + col);
-      selectedCells.push(blockState.borderColor[row][col]);
-      selectedIndexes.push({ row, col });
 
-      // Animated.timing(blockState.borderColor[row][col], {
-      //   toValue: 1,
-      //   duration: 250,
-      //   useNativeDriver: false,
-      // }).start();
+    const onPressCell = (row: number, col: number) => {
+      selectedIndexes.push({ row, col });
     };
 
     const onMoveCell = (
@@ -402,7 +447,6 @@ const GameBoard = () => {
       index: number,
       index2: number,
     ) => {
-      // console.log("onMoveCell " + index + " " + index2);
       const width = blockState.size.WIDTH_PER_CELL;
       // Check if the user is sliding in the x-axis direction
       const xDirection = Math.abs(gesture.dx) > width / 2;
@@ -433,204 +477,12 @@ const GameBoard = () => {
           index + numCellX > blockState.size.CELLS_IN_ROW - 1
         )
           return;
-
-        // TODO Check if the user is sliding in the x-axis direction and y-axis direction
-        // if (
-        //   !(
-        //     (index2 + numCellY ===
-        //       selectedIndexes[selectedIndexes.length - 1].row + 1 &&
-        //       index + numCellX ===
-        //         selectedIndexes[selectedIndexes.length - 1].col) ||
-        //     (index2 + numCellY ===
-        //       selectedIndexes[selectedIndexes.length - 1].row - 1 &&
-        //       index + numCellX ===
-        //         selectedIndexes[selectedIndexes.length - 1].col) ||
-        //     (index2 + numCellY ===
-        //       selectedIndexes[selectedIndexes.length - 1].row &&
-        //       index + numCellX ===
-        //         selectedIndexes[selectedIndexes.length - 1].col + 1) ||
-        //     (index2 + numCellY ===
-        //       selectedIndexes[selectedIndexes.length - 1].row &&
-        //       index + numCellX ===
-        //         selectedIndexes[selectedIndexes.length - 1].col - 1)
-        //   )
-        // )
-        //   return;
-
-        // if (
-        //   blockState.cells[index2 + numCellY][index + numCellX].letter === " "
-        // ) {
-        //   return;
-        // }
-
-        // get cell that user putting their finger
-        const selectedCell =
-          blockState.borderColor[index2 + numCellY][index + numCellX];
-
-        // Colorize border of cell that the user putting their finger
-        // if (!selectedCells.includes(selectedCell)) {
-        //   if (blockState.effects.destroyOneCell.status) {
-        //     return;
-        //   }
-
-        //   if (
-        //     blockState.cells[selectedIndexes[0].row][selectedIndexes[0].col]
-        //       .effect === WordSearchCellEffect.gift &&
-        //     (blockState.cells[index2 + numCellY][index + numCellX].effect ===
-        //       WordSearchCellEffect.gift ||
-        //       selectedIndexes.length > 1)
-        //   ) {
-        //     return;
-        //   }
-        //   if (
-        //     blockState.cells[index2 + numCellY][index + numCellX].effect ===
-        //       WordSearchCellEffect.gift &&
-        //     selectedIndexes.length > 1
-        //   )
-        //     return;
-        //   if (
-        //     selectedIndexes.length === 2 &&
-        //     blockState.cells[selectedIndexes[0].row][selectedIndexes[0].col]
-        //       .effect !== WordSearchCellEffect.gift &&
-        //     blockState.cells[selectedIndexes[1].row][selectedIndexes[1].col]
-        //       .effect === WordSearchCellEffect.gift
-        //   )
-        //     return;
-        //   Animated.timing(selectedCell, {
-        //     toValue: 1,
-        //     duration: 150,
-        //     useNativeDriver: false,
-        //   }).start();
-        //   selectedCells.push(selectedCell);
-        //   // selectedIndexes.push([index2 + numCellY, index + numCellX]);
-
-        //   selectedIndexes.push({
-        //     row: index2 + numCellY,
-        //     col: index + numCellX,
-        //   });
-        // }
-
-        // Check if the user is rolling back
-        // else if (
-        //   selectedCells.indexOf(selectedCell) ==
-        //   selectedCells.length - 2
-        // ) {
-        //   // Remove the last selected cell
-        //   const lastSelectedCell = selectedCells.pop();
-        //   if (lastSelectedCell) {
-        //     Animated.timing(lastSelectedCell, {
-        //       toValue: 0,
-        //       duration: 150,
-        //       useNativeDriver: false,
-        //     }).start();
-        //   }
-        //   selectedIndexes.pop();
-        // }
       }
-
-      console.log({ numCellX });
-      console.log({ numCellY });
-
-      console.log("row ", index2 + numCellY, "col ", index + numCellX);
-
-      // TODO DELETE THIS LATER.
-      // TEST TO SET CELLS TO BLOCKLIST COLLAPSE
-      blockState.blockList.push({
-        startCell: { i: 0, j: 0 },
-        endCell: { i: 1, j: 1 },
-      });
-      blockState.blockList.push({
-        startCell: { i: 2, j: 2 },
-        endCell: { i: 3, j: 3 },
-      });
-
-      blockState.blockList.push({
-        startCell: { i: 4, j: 4 },
-        endCell: { i: 5, j: 5 },
-      });
     };
 
     const onReleaseCell = (index: number, index2: number) => {
       handleEndPanResponder = true;
 
-      // Fill the border of selected cells back to original when finger
-      //                                            is released.
-      const animationList = [];
-
-      // TODO
-      // while (selectedCells.length > 0) {
-      //   const selectedCell = selectedCells.pop();
-      //   if (selectedCell)
-      //     animationList.push(
-      //       Animated.timing(selectedCell, {
-      //         toValue: 0,
-      //         duration: 200,
-      //         useNativeDriver: false,
-      //       }),
-      //     );
-      // }
-
-      // dispatch({
-      //   type: "SET_CHECK_ANIMATION_IN_PROGRESS",
-      //   payload: {
-      //     animation: true,
-      //   },
-      // });
-
-      // Animated.parallel(animationList).start(({ finished }) => {
-      //   if (finished) {
-      //     setLetters([]);
-      //     handleEndPanResponder = false;
-      //     if (
-      //       blockState.effects.destroyOneCell.status === null &&
-      //       !explosionGift &&
-      //       (!word || !blockState.words[word])
-      //     ) {
-      //       // if (settings.sound) {
-      //       //   SoundPlayer.playSoundFile(
-      //       //     SOUND_PLAYER.CONGRATULATIONS,
-      //       //     "wav",
-      //       //   );
-      //       // }
-      //       dispatch({
-      //         type: "HANDLE_WRONG_WORD",
-      //         payload: null,
-      //       });
-      //       selectedIndexes = [];
-      //       return;
-      //     }
-
-      //     if (
-      //       !(
-      //         selectedIndexes.length === 1 &&
-      //         blockState.cells[selectedIndexes[0].row][selectedIndexes[0].col]
-      //           .effect === WordSearchCellEffect.gift
-      //       )
-      //     ) {
-      //       // (1) TRIGGER ANIMATION
-      //       startAnimation(selectedIndexes, 10);
-      //       dispatch({
-      //         type: "SET_CHECK_ANIMATION_IN_PROGRESS",
-      //         payload: {
-      //           word,
-      //           animation: true,
-      //           countDoubleAffectedCells,
-      //         },
-      //       });
-      //     } else {
-      //       dispatch({
-      //         type: "SET_CHECK_ANIMATION_IN_PROGRESS",
-      //         payload: {
-      //           word,
-      //           animation: false,
-      //           countDoubleAffectedCells,
-      //         },
-      //       });
-      //     }
-      //     selectedIndexes = [];
-      //   }
-      // });
-      console.log("onRelase numCellX ", numCellX, "numCellY", numCellY);
       startAnimation(index2, index, numCellX, numCellY);
     };
 
@@ -656,42 +508,68 @@ const GameBoard = () => {
               onPanResponderRelease: () => {
                 if (handleEndPanResponder) return true;
                 onReleaseCell(index2, index);
+
+                handleEndPanResponder = false;
               },
             }),
           ),
       );
-  }, [blockState.cells]);
+  }, [test]);
 
-  return (
-    <View style={styles.boardContainer}>
-      {TABLE.map((row, indexRow) => (
-        <View key={indexRow} style={styles.row}>
-          {row.map((cell, indexCol) => {
-            let randomItem = randomNumber();
-            return (
-              <Animated.View
-                key={indexCol}
-                style={{
-                  ...styles.cell,
-                  backgroundColor: COLOR.YELLOW,
-                  // zIndex: blockState.zIndex[indexRow][indexCol],
-                  // rotation: state.rotation[indexRow][indexCol],
-                  transform: [
-                    { translateX: blockState.coordinate[indexRow][indexCol].x },
-                    { translateY: blockState.coordinate[indexRow][indexCol].y },
-                  ],
-                  //   animatedStyles.backgroundColor[indexRow][indexCol],
-                  // state.backgroundColor[indexRow][indexCol],
-                }}
-                {...panResponder[indexRow][indexCol].panHandlers}
-              >
-                <Image style={styles.imageInCell} source={Fire}></Image>
-              </Animated.View>
-            );
-          })}
-        </View>
-      ))}
-    </View>
+  return useMemo(
+    () => (
+      <View style={styles.boardContainer}>
+        {blockState.table.length > 0 ? (
+          blockState.table.map((row: any, indexRow: any) => (
+            <View key={indexRow} style={styles.row}>
+              {row.map((cell: any, indexCol: any) => {
+                let randomItem = randomNumber();
+                return (
+                  <Animated.View
+                    key={indexCol}
+                    style={{
+                      ...styles.cell,
+                      backgroundColor:
+                        state.backgroundColor[indexRow][indexCol],
+                      zIndex: initialState.zIndex[indexRow][indexCol],
+                      opacity: state.scoreOpacity[indexRow][indexCol],
+                      transform: [
+                        { scale: state.scale[indexRow][indexCol] },
+                        { rotate: state.rotation[indexRow][indexCol] },
+                        {
+                          translateX:
+                            initialState.coordinate[indexRow][indexCol].x,
+                        },
+                        {
+                          translateY:
+                            initialState.coordinate[indexRow][indexCol].y,
+                        },
+                      ],
+                    }}
+                    {...panResponder[indexRow][indexCol].panHandlers}
+                  >
+                    {cell == 0 ? (
+                      <Text>0</Text>
+                    ) : cell == 1 ? (
+                      <Text>1</Text>
+                    ) : cell == 2 ? (
+                      <Text>2</Text>
+                    ) : cell == 3 ? (
+                      <Text>3</Text>
+                    ) : (
+                      <Text>4</Text>
+                    )}
+                  </Animated.View>
+                );
+              })}
+            </View>
+          ))
+        ) : (
+          <></>
+        )}
+      </View>
+    ),
+    [blockStateTable, blockList],
   );
 };
 
@@ -771,6 +649,9 @@ const styles = StyleSheet.create({
     width: "auto",
     backgroundColor: COLOR.WHITE,
     alignContent: "center",
+    top: 100, // HERE IS THE BLOCKSTATE POSITION TOP (SLICE)
+    left: 15, // HERE IS THE BLOCKSTATE POSITION LEFT (SLICE)
+    position: "absolute",
   },
   row: {
     height: "auto",
