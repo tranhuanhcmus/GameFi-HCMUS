@@ -14,8 +14,8 @@ import { Animated } from "react-native";
  */
 const generateAnimatedValue = (
   value: number,
-  CELLS_IN_ROW = 10,
-  CELLS_IN_COLUMN = 10,
+  CELLS_IN_ROW = 8,
+  CELLS_IN_COLUMN = 8,
 ) => {
   const animation = Array(CELLS_IN_COLUMN);
   for (let i = 0; i < CELLS_IN_COLUMN; i++) {
@@ -27,15 +27,37 @@ const generateAnimatedValue = (
   return animation;
 };
 
+const generateAnimatedValueXY = (
+  // value: number,
+  CELLS_IN_ROW = 8,
+  CELLS_IN_COLUMN = 8,
+) => {
+  const animation = Array(CELLS_IN_COLUMN);
+  for (let i = 0; i < CELLS_IN_COLUMN; i++) {
+    animation[i] = new Array(CELLS_IN_ROW);
+    for (let j = 0; j < CELLS_IN_ROW; j++) {
+      animation[i][j] = new Animated.ValueXY();
+    }
+  }
+  return animation;
+};
+
+const SIZE_TABLE = 280;
 interface BoardState {
-  backgroundColor: any;
-  borderColor: any;
-  zIndex: any;
-  rotation: any;
-  scale: any;
+  backgroundColor: Animated.Value[][];
+  borderColor: Animated.Value[][];
+  zIndex: Animated.Value[][];
+  coordinate: Animated.ValueXY[][];
+  rotation: Animated.Value[][];
+  scale: Animated.Value[][];
   size: any;
+  scoreOpacity: Animated.Value[][];
   cells: any[];
   effects: any;
+  blockList: {
+    startCell: { i: number; j: number };
+    endCell: { i: number; j: number };
+  }[];
 }
 
 const initialState: BoardState = {
@@ -43,12 +65,25 @@ const initialState: BoardState = {
   borderColor: generateAnimatedValue(0),
   zIndex: generateAnimatedValue(0),
   rotation: generateAnimatedValue(0),
+  coordinate: generateAnimatedValueXY(),
   scale: generateAnimatedValue(0),
+  scoreOpacity: generateAnimatedValue(1),
   size: {
     CELLS_IN_ROW: 8,
     CELLS_IN_COLUMN: 8,
+    WIDTH_PER_CELL: SIZE_TABLE / 8,
+    MARGIN: 3,
   },
-  cells: [],
+  cells: [
+    [0, 1, 2, 3, 4, 5, 6, 7],
+    [8, 9, 10, 11, 12, 13, 14, 15],
+    [16, 17, 18, 19, 20, 21, 22, 23],
+    [24, 25, 26, 27, 28, 29, 30, 31],
+    [32, 33, 34, 35, 36, 37, 38, 39],
+    [40, 41, 42, 43, 44, 45, 46, 47],
+    [48, 49, 50, 51, 52, 53, 54, 55],
+    [56, 57, 58, 59, 60, 61, 62, 63],
+  ],
   effects: {
     doubleScore: {
       status: false,
@@ -65,6 +100,21 @@ const initialState: BoardState = {
       count: 0,
     },
   },
+  // THIS IS FOR TESTING
+  blockList: [
+    {
+      startCell: { i: 0, j: 0 },
+      endCell: { i: 1, j: 1 },
+    },
+    {
+      startCell: { i: 2, j: 2 },
+      endCell: { i: 3, j: 3 },
+    },
+    {
+      startCell: { i: 4, j: 4 },
+      endCell: { i: 5, j: 5 },
+    },
+  ],
 };
 
 const boardSlice = createSlice({

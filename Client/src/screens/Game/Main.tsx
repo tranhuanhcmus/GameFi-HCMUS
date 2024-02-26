@@ -20,6 +20,8 @@ import NormalButton from "../../components/Button/NormalButton";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import GameHeader from "../../components/Game/Header";
 import GameBoard from "../../components/Game/Board";
+import UpperLayer from "../../components/Game/UpperLayer";
+import { store } from "../../redux/store";
 
 /**
  * Size in pixel of table, please change if needed.
@@ -49,6 +51,7 @@ const randomNumber = () => {
 };
 
 const GameScreen = () => {
+  const blockState = store.getState().board;
   const INPUT_RANGE = [0, 1, 2];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
@@ -174,8 +177,18 @@ const GameScreen = () => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
+        {/* <GameHeader /> */}
 
-        <GameHeader />
+        {/* TODO MODIFY THIS LATER */}
+        {/* <UpperLayer
+          CELLS_IN_COLUMN={blockState.size.CELLS_IN_COLUMN}
+          CELLS_IN_ROW={blockState.size.CELLS_IN_ROW}
+          callbackFunction={() => {}}
+          blockList={blockState.blockList}
+          cells={blockState.cells}
+          blockLists={[]}
+          matrix={[2]}
+        /> */}
 
         <GameBoard />
         {/* TODO: Bottom nav */}
@@ -192,7 +205,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignContent: "center",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
 });
 
