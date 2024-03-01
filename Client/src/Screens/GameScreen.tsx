@@ -30,10 +30,11 @@ const randomNumber = () => {
 export default function GameScreen() {
   const navigate = useCustomNavigation();
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
+    <SafeAreaView className="h-screen w-screen bg-color_app">
+      <View style={styles.container} className="flex">
         {/* Character area */}
         <NormalButton
+          className=""
           onPress={() => {
             navigate.navigate("MainTab");
           }}

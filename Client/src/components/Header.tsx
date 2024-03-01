@@ -12,7 +12,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ name }) => {
   return (
-    <View className="relative flex h-full w-screen flex-row items-center justify-center ">
+    <View className="relative flex h-full w-screen flex-row items-center justify-center  ">
       <View className="flex h-[80%] w-[40%] flex-row items-center justify-between rounded-[20px] bg-gray-200 px-4 py-2">
         <View className="flex flex-row items-center gap-2">
           <Ellipse></Ellipse>

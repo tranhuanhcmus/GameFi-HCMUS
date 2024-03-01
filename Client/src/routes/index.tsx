@@ -157,18 +157,14 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="MainTab">
-      {/* <Stack.Screen
+    <Stack.Navigator initialRouteName="Connect">
+      <Stack.Screen
         name="Connect"
-        component={MainTab}
+        component={ConnectScreen}
         options={{
-          headerTitle: () => <Header name="Home" />,
-          headerStyle: {
-            backgroundColor: "#0C0113",
-          },
-          //headerTitle: () => <HeaderLeft></HeaderLeft>,
+          headerShown: false,
         }}
-      /> */}
+      />
       <Stack.Screen
         name="Breed"
         component={BreedScreen}
