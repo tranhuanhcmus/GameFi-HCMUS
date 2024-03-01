@@ -9,7 +9,6 @@ import {
 import { useDispatch } from "react-redux";
 import { showAlert } from "../../redux/alertSlice";
 import PetCard from "../../components/PetCard";
-import { NativeBaseProvider } from "native-base";
 import { ELEMENT } from "../../constants/types";
 
 type Props = {};
@@ -77,7 +76,6 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <NativeBaseProvider>
       <SafeAreaView className="h-full w-full bg-[#210035]">
         <View className="mt-4 h-[90%] w-full items-center justify-center bg-[#210035]">
           {/* <Text className="text-white">PlayScreen</Text>
@@ -104,7 +102,6 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
           />
         </View>
       </SafeAreaView>
-    </NativeBaseProvider>
   );
 };
 

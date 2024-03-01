@@ -8,7 +8,6 @@ import FIRE from "../../assets/SVGFire.svg";
 import Egg from "../../assets/SVGEgg.svg";
 import { ELEMENT } from "../constants/types";
 import { Image } from "react-native";
-import { Divider } from "native-base";
 import Pet from "../../assets/Pet.png";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 
@@ -50,16 +49,7 @@ const PetCard: React.FC<PetCardProps> = ({
           className="h-[150px] w-[150px] object-scale-down  "
           source={Pet}
         />
-        <View className="my-2 flex w-full items-center justify-center">
-          <Divider
-            className="mt-1"
-            bg="white"
-            thickness="2"
-            height="1px"
-            mx={2}
-            orientation="horizontal"
-          />
-        </View>
+       
 
         <Text className="mt-2 font-rexlia text-[20px] text-white"> Quirk</Text>
         <Text className=" text-right font-rexlia text-[20px] font-extralight text-white">
