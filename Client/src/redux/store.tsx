@@ -3,12 +3,16 @@ import userSlice from "./userSlice";
 import alertSlice from "./alertSlice";
 import loadingSlice from "./loadingSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import boardSlice from "./boardSlice";
+import upperLayerSlice from "./uppLayerSlice";
 
 export const store = configureStore({
   reducer: {
     users: userSlice,
     alert: alertSlice,
     loading: loadingSlice,
+    board: boardSlice,
+    upperLayer: upperLayerSlice,
   },
 });
 

@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { Button, Image, View } from "react-native";
 import { W3mAccountButton, useWeb3Modal } from "@web3modal/wagmi-react-native";
 import { useAccount, useDisconnect } from "wagmi"; // Import useDisconnect hook
-import NormalButton from "../components/Button/NormalButton";
+import NormalButton from "../../components/Button/NormalButton";
 import Moon from "../../assets/Moon.png";
 import { LinearGradient } from "expo-linear-gradient";
-import GradientButton from "../components/Button/GradientButton";
-import useCustomNavigation from "./../hooks/useCustomNavigation/index";
-import CustomText from "../components/CustomText";
+import GradientButton from "../../components/Button/GradientButton";
+import useCustomNavigation from "../../hooks/useCustomNavigation/index";
+import CustomText from "../../components/CustomText";
 
 export default function ConnectScreen() {
   const { open } = useWeb3Modal();

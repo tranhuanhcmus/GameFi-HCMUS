@@ -7,10 +7,10 @@ import {
   FlatList,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { showAlert } from "../redux/alertSlice";
-import PetCard from "../components/PetCard";
+import { showAlert } from "../../redux/alertSlice";
+import PetCard from "../../components/PetCard";
 import { NativeBaseProvider } from "native-base";
-import { ELEMENT } from "../constants/types";
+import { ELEMENT } from "../../constants/types";
 
 type Props = {};
 const petArray = [
