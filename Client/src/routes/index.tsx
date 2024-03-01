@@ -9,10 +9,10 @@ import SVGPlay from "../../assets/SVGPlay.svg";
 import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
 import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../screens/Connect/Main";
-import GameScreen from "../screens/Game/Main";
+import GameScreen from "../Screens/Game/Main";
 import { View } from "react-native";
-import PlayScreen from "../screens/Play/Main";
-import TestScreen from "../screens/Test/Main";
+import PlayScreen from "../Screens/Play/Main";
+import TestScreen from "../Screens/Test/Main";
 import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
@@ -20,10 +20,10 @@ import LoadingComponent from "../components/LoadingComponent";
 
 type Props = {};
 
-import { BreedScreen } from "../screens/Breed/Main";
-import DetailOfPet from "../screens/PetDetail/Main";
+import { BreedScreen } from "../Screens/Breed/Main";
+import DetailOfPet from "../Screens/PetDetail/Main";
 import HomeScreen from "../screens/Home/Main";
-import TrendMarketScreen from "../screens/TrendMarket/Main";
+import TrendMarketScreen from "../Screens/TrendMarket/Main";
 
 type LocalRootStackParamList = {
   Breed: undefined;
