@@ -15,6 +15,7 @@ import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
 import LoadingComponent from "../components/LoadingComponent";
+import HeaderRight from "../components/HeaderRight";
 
 type Props = {};
 
@@ -22,6 +23,7 @@ import { BreedScreen } from "../screens/Breed/Main";
 import DetailOfPet from "../screens/PetDetail/Main";
 import HomeScreen from "../screens/Home/Main";
 import TrendMarketScreen from "../screens/TrendMarket/Main";
+import HeaderLeft from "../components/HeaderLeft";
 
 type LocalRootStackParamList = {
   Breed: undefined;
@@ -82,6 +84,7 @@ const MainTab = () => (
         },
 
         headerTitle: () => <Header name="Home" />,
+        headerLeft: () => <HeaderLeft></HeaderLeft>,
         tabBarIcon: ({ focused }: any) => (
           <ComponentNavElement content="Event" focused={focused}>
             <SVGEvent
@@ -101,8 +104,9 @@ const MainTab = () => (
         headerStyle: {
           backgroundColor: "#210035",
         },
-
+        headerRight: () => <HeaderRight></HeaderRight>,
         headerTitle: () => <Header name="Home" />,
+        headerLeft: () => <HeaderLeft></HeaderLeft>,
         tabBarIcon: ({ focused }: any) => (
           <ComponentNavElement content="Play" focused={focused}>
             <SVGPlay

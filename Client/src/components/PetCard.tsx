@@ -16,7 +16,7 @@ interface PetCardProps {
   petImg: string;
   element: string;
   level: number;
-  namePet: string;
+  name: string;
   rarityPet: string;
 }
 
@@ -24,7 +24,7 @@ const PetCard: React.FC<PetCardProps> = ({
   petImg,
   element,
   level,
-  namePet,
+  name,
   rarityPet,
 }) => {
   const navigate = useCustomNavigation();
@@ -48,7 +48,7 @@ const PetCard: React.FC<PetCardProps> = ({
         </View>
         <Image
           className="h-[150px] w-[150px] object-scale-down  "
-          source={Pet}
+          source={petImg !== "" ? { uri: petImg } : Pet}
         />
         <View className="my-2 flex w-full items-center justify-center">
           <Divider
@@ -61,7 +61,7 @@ const PetCard: React.FC<PetCardProps> = ({
           />
         </View>
 
-        <Text className="mt-2 font-rexlia text-[20px] text-white"> Quirk</Text>
+        <Text className="mt-2 font-rexlia text-[20px] text-white"> {name}</Text>
         <Text className=" text-right font-rexlia text-[20px] font-extralight text-white">
           {rarityPet}
         </Text>
