@@ -82,7 +82,9 @@ const renderNavElement = (data: NavItem[]) => {
         headerStyle: {
           backgroundColor: "#210035",
         },
+        headerLeft: () => <HeaderLeft></HeaderLeft>,
         headerTitle: () => <Header name="Home" />,
+        headerRight: () => <HeaderRight></HeaderRight>,
         tabBarIcon: ({ focused }: any) => (
           <ComponentNavElement content={item.content} focused={focused}>
             {item.svg}
