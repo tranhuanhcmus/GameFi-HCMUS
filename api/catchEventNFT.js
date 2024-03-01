@@ -25,17 +25,17 @@ function catchEventNFT() {
 
 
     petContract.getPastEvents('Transfer', {
-            filter: {  },
-            fromBlock: 5223907 ,
-            toBlock: 'latest'
+            filter: {},
+            fromBlock: 5333315,
+            toBlock: 5333367
         })
         .then(function(events) {
             // Process the retrieved events
-            console.log("event: ", events.map(event=>event.returnValues));
+            console.log("event: ", events.map(event => event.returnValues));
         })
         .catch(function(error) {
             // Handle errors
-            console.error("error: ", error);
+            console.error("error when listen event: ", error);
         });
 
 }

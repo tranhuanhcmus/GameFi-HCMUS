@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-// const db = require('./config.js');
+const db = require('./config.js');
 const bodyParser = require('body-parser');
-// const userRouter = require('./routes/userRouter');
+const userRouter = require('./routes/userRouter');
 const {interact} = require('./interaction');
 const {catchEventNFT} = require('./catchEventNFT.js');
 
