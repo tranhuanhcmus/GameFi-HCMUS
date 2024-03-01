@@ -18,11 +18,14 @@ import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
 import LoadingComponent from "../components/LoadingComponent";
+import HeaderRight from "../components/HeaderRight";
+
 type Props = {};
 import { BreedScreen } from "../screens/Breed/Main";
 import DetailOfPet from "../screens/PetDetail/Main";
 import HomeScreen from "../screens/Home/Main";
 import TrendMarketScreen from "../screens/TrendMarket/Main";
+import HeaderLeft from "../components/HeaderLeft";
 
 const navArr: NavItem[] = [
   {

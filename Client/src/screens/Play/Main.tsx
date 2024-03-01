@@ -12,21 +12,37 @@ import PetCard from "../../components/PetCard";
 import { ELEMENT } from "../../constants/types";
 
 type Props = {};
+
 const petArray = [
   {
     id: "1",
-    petImg: "",
+    petImg:
+      "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
     element: ELEMENT.FIRE,
     level: 3,
-    namePet: "4",
+    name: "Harry's Pig",
     rarityPet: "special",
+  },
+  {
+    id: "100",
+    title: "Andres",
+    type: "NFT",
+    tokenId: "100",
+    element: ELEMENT.FIRE,
+    name: "Harry's Pig",
+    description: "This is a normal Pig",
+    attributes: {
+      type: "Pig",
+    },
+    image:
+      "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
   },
   {
     id: "2",
     petImg: "",
     element: ELEMENT.IRON,
     level: 3,
-    namePet: "4",
+    name: "4",
     rarityPet: "special",
   },
   {
@@ -34,7 +50,7 @@ const petArray = [
     petImg: "",
     element: ELEMENT.LEAF,
     level: 3,
-    namePet: "4",
+    name: "4",
     rarityPet: "special",
   },
   {
@@ -42,7 +58,7 @@ const petArray = [
     petImg: "",
     element: ELEMENT.STONE,
     level: 3,
-    namePet: "4",
+    name: "4",
     rarityPet: "special",
   },
   {
@@ -50,7 +66,7 @@ const petArray = [
     petImg: "",
     element: ELEMENT.STONE,
     level: 3,
-    namePet: "4",
+    name: "4",
     rarityPet: "special",
   },
   {
@@ -58,7 +74,7 @@ const petArray = [
     petImg: "",
     element: ELEMENT.STONE,
     level: 3,
-    namePet: "4",
+    name: "4",
     rarityPet: "special",
   },
 ];
@@ -91,10 +107,10 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
             renderItem={({ item }) => (
               <TouchableOpacity>
                 <PetCard
-                  petImg={""}
+                  petImg={item?.petImg ? item.petImg : ""}
                   element={item.element}
                   level={3}
-                  namePet="4"
+                  name={item.name}
                   rarityPet=" special"
                 ></PetCard>
               </TouchableOpacity>
