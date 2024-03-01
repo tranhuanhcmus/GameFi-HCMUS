@@ -1,5 +1,4 @@
 import React from "react";
-
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -10,7 +9,6 @@ import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
 import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../screens/Connect/Main";
 import GameScreen from "../screens/Game/Main";
-import { View } from "react-native";
 import PlayScreen from "../screens/Play/Main";
 import TestScreen from "../screens/Test/Main";
 import AlertComponent from "../components/AlertComponent";
@@ -64,7 +62,7 @@ const MainTab = () => (
       name="ShopScreen"
       component={PlayScreen}
       options={{
-        tabBarIcon: ({ focused }) => (
+        tabBarIcon: ({ focused }:any) => (
           <ComponentNavElement content="Shop" focused={focused}>
             <SVGStore
               width={`${focused ? "50" : "30"}`}
@@ -83,8 +81,8 @@ const MainTab = () => (
           backgroundColor: "#210035",
         },
 
-        headerTitle: (props) => <Header name="Home" />,
-        tabBarIcon: ({ focused }) => (
+        headerTitle: () => <Header name="Home" />,
+        tabBarIcon: ({ focused }:any) => (
           <ComponentNavElement content="Event" focused={focused}>
             <SVGEvent
               width={`${focused ? "50" : "30"}`}
@@ -104,8 +102,8 @@ const MainTab = () => (
           backgroundColor: "#210035",
         },
 
-        headerTitle: (props) => <Header name="Home" />,
-        tabBarIcon: ({ focused }) => (
+        headerTitle: () => <Header name="Home" />,
+        tabBarIcon: ({ focused }:any) => (
           <ComponentNavElement content="Play" focused={focused}>
             <SVGPlay
               width={`${focused ? "50" : "30"}`}
@@ -119,7 +117,7 @@ const MainTab = () => (
       name="TrophyScreen"
       component={BreedScreen}
       options={{
-        tabBarIcon: ({ focused }) => (
+        tabBarIcon: ({ focused }:any) => (
           <ComponentNavElement content="Trophy" focused={focused}>
             <SVGTrophy
               width={`${focused ? "50" : "30"}`}
@@ -143,7 +141,7 @@ const MainTab = () => (
         headerTitleStyle: {
           fontWeight: "bold",
         },
-        tabBarIcon: ({ focused }) => (
+        tabBarIcon: ({ focused }:any) => (
           <ComponentNavElement content="Pet" focused={focused}>
             <SVGBird
               width={`${focused ? "50" : "30"}`}
@@ -158,18 +156,11 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Game">
-      {/* <Stack.Screen
+    <Stack.Navigator initialRouteName="Connect">
+       <Stack.Screen
         name="Connect"
-        component={MainTab}
-        options={{
-          headerTitle: () => <Header name="Home" />,
-          headerStyle: {
-            backgroundColor: "#0C0113",
-          },
-          //headerTitle: () => <HeaderLeft></HeaderLeft>,
-        }}
-      /> */}
+        component={ConnectScreen}
+      />
       <Stack.Screen
         name="Breed"
         component={BreedScreen}
