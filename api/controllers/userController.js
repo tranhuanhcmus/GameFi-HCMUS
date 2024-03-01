@@ -1,29 +1,10 @@
-const userPromises = require('../promises/userPromises.js');
+const userServices = require('../services/userServices.js');
 
-const login = async (req, res) => {
-  const { userTel, userPass } = req.body;
-
-  // Check if userTel is empty
-  if (!userTel) {
-    return res.status(400).json({ error: 'Số điện thoại không được bỏ trống.' });
-  } else if (isNaN(userTel) || userTel.includes(' ')) {
-    // Check if userTel is invalid
-    return res.status(400).json({ error: 'Số điện thoại không hợp lệ.' });
-  }
-
+const userNFTs = async (req, res) => {
+  const owner = req.params.owner;
+  console.log(owner);
   try {
-    const result = await userPromises.authenticateUser(userTel, userPass);
-    return res.status(200).json({ result: result.message });
-  } catch (error) {
-    return res.status(500).json({ error: 'Đã xảy ra lỗi khi xác thực người dùng.' });
-  }
-};
-
-const userInfor = async (req, res) => {
-  const userAcc = req.params.user_acc;
-  console.log(userAcc);
-  try {
-    const user = await userPromises.getUser(userAcc);
+    const user = await userServices.getNFTbyOwner(owner);
     if (user.length === 0) {
       return res.status(404).json({ error: 'Không tìm thấy thông tin người dùng.' });
     }
@@ -33,31 +14,28 @@ const userInfor = async (req, res) => {
   }
 };
 
-const userAdd = async (req, res) => {
-  const { userMail, userTel, userPass, userName, userAva, userAcc } = req.body;
+// const userAdd = async (req, res) => {
+//   const { userMail, userTel, userPass, userName, userAva, userAcc } = req.body;
 
-  try {
-    const result = await userPromises.addUser(userMail, userTel, userPass, userName, userAva, userAcc);
-    return res.status(200).json({ message: result.message });
-  } catch (error) {
-    return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm user.' });
-  }
-};
+//   try {
+//     const result = await userServices.addUser(userMail, userTel, userPass, userName, userAva, userAcc);
+//     return res.status(200).json({ message: result.message });
+//   } catch (error) {
+//     return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm user.' });
+//   }
+// };
 
-const userInforUpdate = async (req, res) => {
-  const { userMail, userTel, userPass, userName, userAva, userAcc } = req.body;
+// const userInforUpdate = async (req, res) => {
+//   const { userMail, userTel, userPass, userName, userAva, userAcc } = req.body;
 
-  try {
-    const result = await userPromises.updateUser(userMail, userTel, userPass, userName, userAva, userAcc);
-    return res.status(200).json({ message: result.message });
-  } catch (error) {
-    return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật thông tin người dùng.' });
-  }
-};
+//   try {
+//     const result = await userServices.updateUser(userMail, userTel, userPass, userName, userAva, userAcc);
+//     return res.status(200).json({ message: result.message });
+//   } catch (error) {
+//     return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật thông tin người dùng.' });
+//   }
+// };
 
 module.exports = {
-  login,
-  userInfor,
-  userAdd,
-  userInforUpdate,
+  userNFTs,
 };
