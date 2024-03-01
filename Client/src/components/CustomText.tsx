@@ -38,11 +38,9 @@ const CustomText: React.FC<CustomTextProps> = ({
   }
 
   return (
-    <View>
-      <Text style={style} className={className}>
-        {children}
-      </Text>
-    </View>
+    <Text style={style} className={className}>
+      {children}
+    </Text>
   );
 };
 

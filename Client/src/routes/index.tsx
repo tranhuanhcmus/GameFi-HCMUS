@@ -26,40 +26,41 @@ import DetailOfPet from "../screens/PetDetail/Main";
 import HomeScreen from "../screens/Home/Main";
 import TrendMarketScreen from "../screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
+import { View } from "react-native";
 
 const navArr: NavItem[] = [
   {
     name: "ShopScreen",
     component: PlayScreen,
     content: "Shop",
-    svg: <SVGStore height="30" />,
+    svg: <SVGStore height="100%" width="100%" />,
   },
   {
     name: "EventScreen",
     component: TrendMarketScreen,
     content: "Event",
     header: true,
-    svg: <SVGEvent height="30" />,
+    svg: <SVGEvent height="100%" width="100%" />,
   },
   {
     name: "PlayScreen",
     component: HomeScreen,
     content: "Play",
     header: true,
-    svg: <SVGPlay height="30" />,
+    svg: <SVGPlay height="100%" width="100%" />,
   },
   {
     name: "TrophyScreen",
     component: BreedScreen,
     content: "Trophy",
-    svg: <SVGTrophy height="30" />,
+    svg: <SVGTrophy height="100%" width="100%" />,
   },
   {
     name: "PetScreen",
     component: PlayScreen,
     content: "Pet",
     header: true,
-    svg: <SVGBird height="30" />,
+    svg: <SVGBird height="100%" width="100%" />,
   },
 ];
 
@@ -87,7 +88,11 @@ const renderNavElement = (data: NavItem[]) => {
         headerRight: () => <HeaderRight></HeaderRight>,
         tabBarIcon: ({ focused }: any) => (
           <ComponentNavElement content={item.content} focused={focused}>
-            {item.svg}
+            <View
+              className={`${focused ? "h-[40px] w-[40px]" : "h-[30px] w-[30px]"}`}
+            >
+              {item.svg}
+            </View>
           </ComponentNavElement>
         ),
       }}
