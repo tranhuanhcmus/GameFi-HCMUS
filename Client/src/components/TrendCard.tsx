@@ -10,8 +10,7 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from "react-native-chart-kit";
-import { flare } from "viem/chains";
-import { position } from "native-base/lib/typescript/theme/styled-system";
+
 import TrendComponent from "./TrendComponent";
 
 interface Props {

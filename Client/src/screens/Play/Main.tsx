@@ -93,34 +93,32 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <NativeBaseProvider>
-      <SafeAreaView className="h-full w-full bg-[#210035]">
-        <View className="mt-4 h-[90%] w-full items-center justify-center bg-[#210035]">
-          {/* <Text className="text-white">PlayScreen</Text>
+    <SafeAreaView className="h-full w-full bg-[#210035]">
+      <View className="mt-4 h-[90%] w-full items-center justify-center bg-[#210035]">
+        {/* <Text className="text-white">PlayScreen</Text>
         <TouchableOpacity onPress={handleShowAlert}>
           <Text className="text-white">Show Alert</Text>
         </TouchableOpacity> */}
-          <FlatList
-            contentContainerStyle={{ gap: 20 }}
-            columnWrapperStyle={{ gap: 20 }}
-            data={petArray}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            renderItem={({ item }) => (
-              <TouchableOpacity>
-                <PetCard
-                  petImg={item?.petImg ? item.petImg : ""}
-                  element={item.element}
-                  level={3}
-                  name={item.name}
-                  rarityPet=" special"
-                ></PetCard>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
-      </SafeAreaView>
-    </NativeBaseProvider>
+        <FlatList
+          contentContainerStyle={{ gap: 20 }}
+          columnWrapperStyle={{ gap: 20 }}
+          data={petArray}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <TouchableOpacity>
+              <PetCard
+                petImg={item?.petImg ? item.petImg : ""}
+                element={item.element}
+                level={3}
+                name={item.name}
+                rarityPet=" special"
+              ></PetCard>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
