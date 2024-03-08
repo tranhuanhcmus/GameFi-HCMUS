@@ -5,37 +5,47 @@ const db = require('./config.js');
 const axios = require('axios');
 
 const createNFT = async (tokenid, from, to) => {
-  try {
-    const tokenURI = await getTokenURI(tokenid);
-    console.log(tokenURI, tokenid);
-    
-    if (tokenURI != null && tokenURI != "") {
-      const existingNFT = await db.query(
-        'SELECT COUNT(*) FROM K20_GameFi_DATN_HCMUS.NFT WHERE TOKENID = $1',
-        [tokenid]
-      );
+    try {
+        // Lấy TOKENURI từ tokenid
+        const tokenURI = await getTokenURI(tokenid);
+        console.log(tokenURI, tokenid);
 
-      const existingNFTCount = parseInt(existingNFT.rows[0].count);
+        // Kiểm tra xem TOKENURI có tồn tại và không rỗng không
+        if (tokenURI) {
+            // Kiểm tra xem NFT đã tồn tại trong cơ sở dữ liệu chưa
+            const existingNFTResult = await db.query(
+                'SELECT COUNT(*) FROM K20_GameFi_DATN_HCMUS.NFT WHERE TOKENID = $1',
+                [tokenid]
+            );
+            const existingNFTCount = parseInt(existingNFTResult.rows[0].count);
 
-      if (existingNFTCount === 0) {
-        await db.query(
-          'INSERT INTO K20_GameFi_DATN_HCMUS.NFT (TOKENID, TOKENURI, OWNER) VALUES ($1, $2, $3)',
-          [tokenid, tokenURI, to]
-        );
-        console.log('Tạo NFT thành công');
-        return { message: 'Tạo NFT thành công', apiCode: 200 };
-      } else {
-        console.log('NFT đã tồn tại trong cơ sở dữ liệu');
-        return { message: 'NFT đã tồn tại trong cơ sở dữ liệu', apiCode: 409 };
-      }
-    } else {
-      console.log('Không có hoặc lỗi khi lấy thông tin TOKENURI từ tokenid:', tokenid);
-      return { message: 'Không có hoặc lỗi khi lấy thông tin TOKENURI từ tokenid', apiCode: 404 };
+            if (existingNFTCount === 0) {
+                // Gọi hàm createTokenURI để tạo mới TOKENURI trước khi thêm mới NFT
+                const createTokenURIResult = await createTokenURI(tokenid);
+                if (createTokenURIResult.apiCode !== 200) {
+                    console.log('Lỗi khi tạo mới TOKENURI:', createTokenURIResult.message);
+                    return createTokenURIResult;
+                }
+
+                // Thêm mới NFT vào bảng NFT
+                await db.query(
+                    'INSERT INTO K20_GameFi_DATN_HCMUS.NFT (TOKENID, TOKENURI, OWNER) VALUES ($1, $2, $3)',
+                    [tokenid, tokenURI, to]
+                );
+                console.log('Tạo NFT thành công');
+                return { message: 'Tạo NFT thành công', apiCode: 200 };
+            } else {
+                console.log('NFT đã tồn tại trong cơ sở dữ liệu');
+                return { message: 'NFT đã tồn tại trong cơ sở dữ liệu', apiCode: 409 };
+            }
+        } else {
+            console.log('Không có hoặc lỗi khi lấy thông tin TOKENURI từ tokenid:', tokenid);
+            return { message: 'Không có hoặc lỗi khi lấy thông tin TOKENURI từ tokenid', apiCode: 404 };
+        }
+    } catch (error) {
+        console.log('Tạo mới NFT không thành công', error.message);
+        return { message: 'Lỗi khi tạo mới NFT', apiCode: 500 };
     }
-  } catch (error) {
-    console.log('Tạo mới NFT không thành công', error.message);
-    return { message: 'Lỗi khi tạo mới NFT', apiCode: 500 };
-  }
 };
 
 const updateNFT = async (tokenid, to) => {
@@ -57,7 +67,7 @@ const updateNFT = async (tokenid, to) => {
 async function getInfoFromTokenURI(url) {
     try {
         const response = await axios.get(url);
-        console.log(response);
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -131,7 +141,7 @@ const GetTokenURIData = async (tokenURI) => {
         );
         if (result.rows.length > 0) {
             const data = result.rows[0].data;
-            console.log('Lấy dữ liệu từ TOKENURI thành công', data);
+            console.log('Lấy dữ liệu từ TOKENURI thành công');
             return { data, message: 'Lấy dữ liệu từ TOKENURI thành công', apiCode: 200 };
         } else {
             console.log('Không tìm thấy dữ liệu cho TOKENURI:', tokenURI);
@@ -161,9 +171,10 @@ function catchEventNFT() {
     const petContract = new web3.eth.Contract(PetABI, PetAddress);
 
     const url = 'https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/104.json';
-    CreateTokenURI(url);
-    // UpdateTokenURI(url);
+    // CreateTokenURI(url);
+    UpdateTokenURI(url);
     // GetTokenURIData(url);
+
     // var evMitter = petContract.events.Transfer({
     //     filter: {},
     //     fromBlock: "latest"
