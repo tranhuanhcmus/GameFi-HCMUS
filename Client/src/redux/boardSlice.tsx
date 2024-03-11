@@ -45,6 +45,7 @@ const generateAnimatedValueXY = (
 const SIZE_TABLE = 280;
 interface BoardState {
   size: any;
+  // scoreOpacity: Animated.Value[][];
   cells: any[];
   effects: any;
   blockList: {

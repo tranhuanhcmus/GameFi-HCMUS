@@ -13,7 +13,7 @@ import { COLOR } from "../../utils/color";
 import AwesomeButton from "react-native-really-awesome-button";
 export function BreedScreen() {
   return (
-    <SafeAreaView className="h-screen w-screen bg-[#210035]">
+    <SafeAreaView className="h-full w-full bg-[#210035]">
       <View style={styles.container}>
         <CustomText style={styles.title}>Breed</CustomText>
         <Image source={Heart} alt="Heart" style={styles.imageContainer} />

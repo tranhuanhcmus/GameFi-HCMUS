@@ -1,7 +1,9 @@
 import React from "react";
-
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
+import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SVGBird from "../../assets/SVGBird.svg";
 import SVGEvent from "../../assets/SVGEvent.svg";
@@ -10,20 +12,93 @@ import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
 import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../screens/Connect/Main";
 import GameScreen from "../screens/Game/Main";
-import { View } from "react-native";
 import PlayScreen from "../screens/Play/Main";
 import TestScreen from "../screens/Test/Main";
 import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
 import LoadingComponent from "../components/LoadingComponent";
+import HeaderRight from "../components/HeaderRight";
 
 type Props = {};
-
 import { BreedScreen } from "../screens/Breed/Main";
 import DetailOfPet from "../screens/PetDetail/Main";
 import HomeScreen from "../screens/Home/Main";
 import TrendMarketScreen from "../screens/TrendMarket/Main";
+import HeaderLeft from "../components/HeaderLeft";
+import { View } from "react-native";
+
+const navArr: NavItem[] = [
+  {
+    name: "ShopScreen",
+    component: PlayScreen,
+    content: "Shop",
+    svg: <SVGStore height="100%" width="100%" />,
+  },
+  {
+    name: "EventScreen",
+    component: TrendMarketScreen,
+    content: "Event",
+    header: true,
+    svg: <SVGEvent height="100%" width="100%" />,
+  },
+  {
+    name: "PlayScreen",
+    component: HomeScreen,
+    content: "Play",
+    header: true,
+    svg: <SVGPlay height="100%" width="100%" />,
+  },
+  {
+    name: "TrophyScreen",
+    component: BreedScreen,
+    content: "Trophy",
+    svg: <SVGTrophy height="100%" width="100%" />,
+  },
+  {
+    name: "PetScreen",
+    component: PlayScreen,
+    content: "Pet",
+    header: true,
+    svg: <SVGBird height="100%" width="100%" />,
+  },
+];
+
+type NavItem = {
+  name: string;
+  component: any;
+  content: string;
+  svg: React.ReactNode;
+  header?: boolean;
+};
+
+const renderNavElement = (data: NavItem[]) => {
+  return data.map((item, index) => (
+    <Tab.Screen
+      key={index}
+      name={item.name}
+      component={item.component}
+      options={{
+        headerShown: item.header || false,
+        headerStyle: {
+          backgroundColor: "#210035",
+        },
+        headerLeft: () => <HeaderLeft></HeaderLeft>,
+        headerTitle: () => <Header name="Home" />,
+        headerRight: () => <HeaderRight></HeaderRight>,
+        tabBarIcon: ({ focused }: any) => (
+          <ComponentNavElement content={item.content} focused={focused}>
+            <View
+              className={`${focused ? "h-[40px] w-[40px]" : "h-[30px] w-[30px]"}`}
+            >
+              {item.svg}
+            </View>
+          </ComponentNavElement>
+        ),
+      }}
+    />
+  ));
+};
 
 type LocalRootStackParamList = {
   Breed: undefined;
@@ -40,136 +115,15 @@ const Tab = createBottomTabNavigator();
 
 // Bottom tab navigator.
 const MainTab = () => (
-  <Tab.Navigator
-    initialRouteName="PlayScreen"
-    screenOptions={{
-      headerShadowVisible: false, // applied here
-
-      headerShown: false,
-      tabBarShowLabel: false,
-      tabBarStyle: {
-        position: "absolute",
-        left: 20,
-        right: 20,
-        borderTopWidth: 0,
-        borderBottomWidth: 0,
-        shadowColor: "transparent",
-        elevation: 0,
-        backgroundColor: "rgba(0, 0, 0, 0)",
-        height: 90,
-      },
-    }}
-  >
-    <Tab.Screen
-      name="ShopScreen"
-      component={PlayScreen}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Shop" focused={focused}>
-            <SVGStore
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="EventScreen"
-      component={TrendMarketScreen}
-      options={{
-        headerShown: true,
-        headerStyle: {
-          backgroundColor: "#210035",
-        },
-
-        headerTitle: (props) => <Header name="Home" />,
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Event" focused={focused}>
-            <SVGEvent
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
-
-    <Tab.Screen
-      name="PlayScreen"
-      component={HomeScreen}
-      options={{
-        headerShown: true,
-        headerStyle: {
-          backgroundColor: "#210035",
-        },
-
-        headerTitle: (props) => <Header name="Home" />,
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Play" focused={focused}>
-            <SVGPlay
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="TrophyScreen"
-      component={BreedScreen}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Trophy" focused={focused}>
-            <SVGTrophy
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="PetScreen"
-      component={PlayScreen}
-      options={{
-        headerShown: true,
-        headerStyle: {
-          backgroundColor: "#210035",
-        },
-        headerTintColor: "#fff",
-        headerShadowVisible: false, // applied here
-
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        tabBarIcon: ({ focused }) => (
-          <ComponentNavElement content="Pet" focused={focused}>
-            <SVGBird
-              width={`${focused ? "50" : "30"}`}
-              height={`${focused ? "50" : "30"}`}
-            />
-          </ComponentNavElement>
-        ),
-      }}
-    />
+  <Tab.Navigator initialRouteName="PlayScreen" screenOptions={screenStyle}>
+    {renderNavElement(navArr)}
   </Tab.Navigator>
 );
 
 const Route = () => (
   <NavigationContainer independent={true}>
     <Stack.Navigator initialRouteName="Game">
-      {/* <Stack.Screen
-        name="Connect"
-        component={MainTab}
-        options={{
-          headerTitle: () => <Header name="Home" />,
-          headerStyle: {
-            backgroundColor: "#0C0113",
-          },
-          //headerTitle: () => <HeaderLeft></HeaderLeft>,
-        }}
-      /> */}
+      <Stack.Screen name="Connect" component={ConnectScreen} />
       <Stack.Screen
         name="Breed"
         component={BreedScreen}
@@ -206,3 +160,20 @@ const Route = () => (
 );
 
 export default Route;
+
+const screenStyle: BottomTabNavigationOptions = {
+  headerShadowVisible: false,
+  headerShown: false,
+  tabBarShowLabel: false,
+  tabBarStyle: {
+    position: "absolute",
+    left: 20,
+    right: 20,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    shadowColor: "transparent",
+    elevation: 0,
+    backgroundColor: "rgba(0, 0, 0, 0)",
+    height: 90,
+  },
+};
