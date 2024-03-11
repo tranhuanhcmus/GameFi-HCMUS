@@ -21,8 +21,8 @@ const createNFT = async (tokenid, from, to) => {
 
             if (existingNFTCount === 0) {
                 // Gọi hàm createTokenURI để tạo mới TOKENURI trước khi thêm mới NFT
-                const createTokenURIResult = await createTokenURI(tokenid);
-                if (createTokenURIResult.apiCode !== 200) {
+                const createTokenURIResult = await CreateTokenURI(tokenid);
+                if (createTokenURIResult.apiCode === 500 || createTokenURIResult.apiCode === 404) {
                     console.log('Lỗi khi tạo mới TOKENURI:', createTokenURIResult.message);
                     return createTokenURIResult;
                 }
