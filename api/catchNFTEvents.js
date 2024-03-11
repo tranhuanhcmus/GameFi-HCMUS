@@ -1,4 +1,4 @@
-const { PetABI, PetAddress } = require("./abis/Pet")
+const { PetABI, PetAddress } = require("./abis/Pet.js")
 const { Web3 } = require('web3');
 const rpc = "wss://eth-sepolia.api.onfinality.io/public";
 const db = require('./config.js');
@@ -171,8 +171,8 @@ function catchEventNFT() {
     const petContract = new web3.eth.Contract(PetABI, PetAddress);
 
     const url = 'https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/104.json';
-    // CreateTokenURI(url);
-    UpdateTokenURI(url);
+    CreateTokenURI(url);
+    // UpdateTokenURI(url);
     // GetTokenURIData(url);
 
     // var evMitter = petContract.events.Transfer({

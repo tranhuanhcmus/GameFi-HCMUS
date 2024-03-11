@@ -1,8 +1,8 @@
 const userServices = require('../services/userServices.js');
 
 const userNFTs = async (req, res) => {
-  const owner = req.params.owner;
-  console.log(owner);
+  const { owner } = req.params;
+  console.log("owner: ", owner);
   try {
     const user = await userServices.getNFTbyOwner(owner);
     if (user.length === 0) {
@@ -14,28 +14,47 @@ const userNFTs = async (req, res) => {
   }
 };
 
-// const userAdd = async (req, res) => {
-//   const { userMail, userTel, userPass, userName, userAva, userAcc } = req.body;
+const getTokenURI = async (req, res) => {
+  const { tokenURI } = req.body;
+  console.log(tokenURI);
+  try {
+    const user = await userServices.getTokenURIData(tokenURI);
+    // console.log(user);
+    if (user.length === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy thông tin Token URI.' });
+    }
+    return res.json(user);
+  } catch (error) {
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin Token URI.' });
+  }
+};
 
-//   try {
-//     const result = await userServices.addUser(userMail, userTel, userPass, userName, userAva, userAcc);
-//     return res.status(200).json({ message: result.message });
-//   } catch (error) {
-//     return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm user.' });
-//   }
-// };
+const createTokenURI = async (req, res) => {
+  const { tokenURI } = req.body;
+  console.log(tokenURI);
+  try {
+    const result = await userServices.createTokenURI(tokenURI);
+    return res.status(200).json({ message: result.message });
+  } catch (error) {
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm TokenURI.' });
+  }
+};
 
-// const userInforUpdate = async (req, res) => {
-//   const { userMail, userTel, userPass, userName, userAva, userAcc } = req.body;
-
-//   try {
-//     const result = await userServices.updateUser(userMail, userTel, userPass, userName, userAva, userAcc);
-//     return res.status(200).json({ message: result.message });
-//   } catch (error) {
-//     return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật thông tin người dùng.' });
-//   }
-// };
+const updateTokenURI = async (req, res) => {
+  const { tokenURI } = req.body;
+  console.log(tokenURI);
+  try {
+    const result = await userServices.updateTokenURI(tokenURI);
+    return res.status(200).json({ message: result.message });
+  } catch (error) {
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật TokenURI.' });
+  }
+};
 
 module.exports = {
   userNFTs,
+  getTokenURI,
+  createTokenURI,
+  updateTokenURI,
+
 };

@@ -3,19 +3,30 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 // Route để lấy thông tin khách hàng
-router.get('/user-nft/:owner', userController.userNFTs);       //
+router.get('/user-nft/:owner', userController.userNFTs);
+
+// Route để lấy thông tin của tokenURI
+// router.post('/uri/get', userController.getTokenURI);
 // {
-//     "TEL": "0234567890",
-//     "PASS": "Random_Password_2",
-//     "NAME": "Mia Garcia",
-//     "AVA": "U2.png",
-//     "VIP": 0
+//     "data": {
+//         "name": "Harry's Dragon",
+//         "type": "NFT",
+//         "image": "https://images.nightcafe.studio/jobs/ZmXUlD3BXhjV4i4wnWka/ZmXUlD3BXhjV4i4wnWka--1--zv5e8.jpg?tr=w-1600,c-at_max",
+//         "title": "Test",
+//         "tokenId": "104",
+//         "attributes": {
+//             "type": "Dragon"
+//         },
+//         "description": "This is a normal Dragon"
+//     },
+//     "message": "Lấy dữ liệu từ TOKENURI thành công",
+//     "apiCode": 200
 // }
 
-// Route để thêm khách hàng
-// router.post('/add-user', userController.userAdd);                   //  
+// Route để thêm tokenURI
+router.post('/uri/cre', userController.createTokenURI);
 
-// Route để cập nhật thông tin khách hàng
-// router.put('/user-info/update', userController.userInforUpdate);    //
+// Route để cập nhât tokenURI
+router.post('/uri/upd', userController.updateTokenURI);
 
 module.exports = router;
