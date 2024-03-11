@@ -171,7 +171,7 @@ function catchEventNFT() {
     const petContract = new web3.eth.Contract(PetABI, PetAddress);
 
     const url = 'https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/104.json';
-    CreateTokenURI(url);
+    // CreateTokenURI(url);
     // UpdateTokenURI(url);
     // GetTokenURIData(url);
 
