@@ -54,13 +54,10 @@ const UpperLayer = (props: any) => {
     coordinate: generateAnimatedValueXY(),
   });
 
-  // const initialState = useMemo(() => {
-  //   return {
-  //     coordinate: generateAnimatedValueXY(cloneMatrix.current),
-  //   };
-  // }, [cloneMatrix.current]);
+  const cnt = useRef(0);
 
   useEffect(() => {
+    cnt.current = blockList.length;
     startAnimation();
   }, [blockList]);
   /**
@@ -129,55 +126,8 @@ const UpperLayer = (props: any) => {
   const startAnimation = () => {
     if (blockList !== null && blockList.length > 0) {
       blockList.forEach((block: any) => {
-        const startCell = block.startCell;
-        const endCell = block.endCell;
-
-        const cells = [];
-        if (startCell.i == endCell.i) {
-          // IN A ROW
-          for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
-            cells.push({ row: startCell.i, col: cnt });
-        } else {
-          // IN A COLUMN
-          for (let cnt = startCell.i; cnt <= endCell.i; cnt++)
-            cells.push({ row: cnt, col: startCell.j });
-        }
-
-        for (let i = 0; i < initialState.coordinate.length; i++) {
-          for (let j = 0; j < initialState.coordinate[0].length; j++) {
-            Animated.timing(initialState.coordinate[i][j], {
-              toValue: { x: 2, y: 100 },
-              duration: 2000,
-              useNativeDriver: true,
-            }).start();
-          }
-        }
-      });
-
-      dispatch(updateTable(table.current));
-      dispatch(emptyBlockList([])); // TODO DOAN NAY
-    }
-  };
-
-  // TODO
-  // 1. Initialize blocklists
-  // 2. After pan responder then add to block list
-  // 3. Run animation move down those block
-  // 4. reFill zeros with for the upper layer.
-
-  return useMemo(() => {
-    return blockList === null || blockList.length === 0 ? (
-      <></>
-    ) : (
-      // state.stateList.length !== 0 && TODO UNCOMMENT LATER
-      // state.blocksValues.length !== 0 && TODO UNCOMMENT LATER
-      blockList.map((block: any, indexBlock: any) => {
-        console.log("block ", block);
-
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
-        const cells = generateCols(block);
-
-        console.log("table new ", table.current);
+        let cells: any[] = generateCols(block);
 
         const start = block.startCell;
         const end = block.endCell;
@@ -226,9 +176,125 @@ const UpperLayer = (props: any) => {
         // CALCULATE THE POSITION OF END OF BLOCK
         const endBlockPos = endCellPos;
 
-        console.log("startBlockPos ", startBlockPos);
-        console.log("endBlockPos ", endBlockPos);
-        console.log("countEmptyTop ", countEmptyTop);
+        // CALCULATE THE TOP POSITION OF BLOCK
+        const top = blockState.position.top;
+
+        // CALCULATE THE LEFt POSITION OF BLOCK
+        const left =
+          blockState.position.left +
+          start.j *
+            (blockState.size.WIDTH_PER_CELL + 2 * blockState.size.CELL_SPACING);
+
+        // CALCULATE THE WIDTH OF BLOCK
+        const blockWidth =
+          Math.abs(start.j - end.j + 1) *
+          (blockState.size.WIDTH_PER_CELL + 2 * blockState.size.CELL_SPACING);
+
+        // CALCULATE THE HEIGHT OF WIDTH
+        const blockHeight =
+          countEmptyTop *
+          (blockState.size.HEIGHT_PER_CELL + 2 * blockState.size.CELL_SPACING);
+
+        console.log("top  ", top);
+
+        console.log("left ", left);
+
+        console.log("blockWidth ", blockWidth);
+
+        console.log("blockHeight ", blockHeight);
+
+        console.log("===============================================");
+
+        const startCell = block.startCell;
+        const endCell = block.endCell;
+
+        cells = [];
+        if (startCell.i == endCell.i) {
+          // IN A ROW
+          for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
+            cells.push({ row: startCell.i, col: cnt });
+        } else {
+          // IN A COLUMN
+          for (let cnt = startCell.i; cnt <= endCell.i; cnt++)
+            cells.push({ row: cnt, col: startCell.j });
+        }
+
+        for (let i = 0; i < initialState.coordinate.length; i++) {
+          for (let j = 0; j < initialState.coordinate[0].length; j++) {
+            Animated.timing(initialState.coordinate[i][j], {
+              toValue: { x: 0, y: blockHeight }, // PROBLEM HERE!!!!
+              duration: 2000,
+              useNativeDriver: true,
+            }).start(() => {
+              // THIS RUN AFTER THE ANIMATION FINISHED
+              cnt.current--;
+              if (cnt.current == 0) {
+                dispatch(updateTable(table.current));
+                dispatch(emptyBlockList([]));
+              }
+            });
+          }
+        }
+      });
+    }
+  };
+
+  return useMemo(() => {
+    return blockList === null || blockList.length === 0 ? (
+      <></>
+    ) : (
+      blockList.map((block: any, indexBlock: any) => {
+        console.log("block ", block);
+
+        // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
+        const cells = generateCols(block);
+
+        const start = block.startCell;
+        const end = block.endCell;
+
+        // COUNT THE EMPTY ABOVE TO CALCULATE THE WIDTH AND HEIGHT OF BLOCK
+        let countEmptyTop = 0;
+
+        for (let k = 0; k <= end.i; k++) {
+          for (let h = start.j; h <= end.j; h++) {
+            countEmptyTop++;
+          }
+        }
+
+        // CALCULATE THE POSITION OF START CELL IN BLOCK
+        const startCellPos = {
+          x:
+            blockState.size.CELL_SPACING +
+            block.startCell.j *
+              (blockState.size.WIDTH_PER_CELL + blockState.size.CELL_SPACING),
+          y:
+            blockState.size.CELL_SPACING +
+            block.startCell.i *
+              (blockState.size.HEIGHT_PER_CELL + blockState.size.CELL_SPACING),
+        };
+
+        // CALCULATE THE POSITION OF END CELL IN BLOCK
+        const endCellPos = {
+          x:
+            blockState.size.CELL_SPACING +
+            block.endCell.j *
+              (blockState.size.WIDTH_PER_CELL + blockState.size.CELL_SPACING) +
+            blockState.size.WIDTH_PER_CELL,
+          y:
+            blockState.size.CELL_SPACING +
+            block.endCell.i *
+              (blockState.size.HEIGHT_PER_CELL + blockState.size.CELL_SPACING) +
+            blockState.size.HEIGHT_PER_CELL,
+        };
+
+        // CALCULATE THE POSITION OF START OF BLOCK
+        const startBlockPos = {
+          x: Math.min(startCellPos.x, endCellPos.x),
+          y: blockState.size.CELL_SPACING,
+        };
+
+        // CALCULATE THE POSITION OF END OF BLOCK
+        const endBlockPos = endCellPos;
 
         // CALCULATE THE TOP POSITION OF BLOCK
         const top = blockState.position.top;
@@ -267,10 +333,10 @@ const UpperLayer = (props: any) => {
               zIndex: 5,
               top: top,
               left: left,
-              height: blockHeight + 4,
+              height: blockHeight,
               width: blockWidth,
               overflow: "hidden",
-              // backgroundColor: COLOR.BLUE,
+              backgroundColor: COLOR.WHITE,
               borderColor: COLOR.PURPLE,
             }}
           >
@@ -280,12 +346,13 @@ const UpperLayer = (props: any) => {
                 <Animated.View
                   key={indexCol}
                   style={{
+                    top: top - blockHeight, // TODO HERE
                     margin: blockState.size.CELL_SPACING,
                     height: blockState.size.HEIGHT_PER_CELL,
                     width: blockState.size.WIDTH_PER_CELL,
                     flexDirection: "row",
                     flexWrap: "wrap",
-
+                    zIndex: 99,
                     backgroundColor: COLOR.RED,
                     borderRadius: 5,
 

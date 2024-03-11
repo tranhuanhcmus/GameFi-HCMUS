@@ -150,3 +150,5 @@ const isRowOfThree = (
     }
   }
 };
+
+class DiamondGame {}

@@ -79,18 +79,19 @@ const generateAnimatedValueXY = (
 };
 
 const GameBoard = (props: any) => {
-  const { blockList, setBlockList } = props;
+  const { setBlockList } = props;
   const dispatch = useDispatch();
   const blockState = store.getState().board;
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
   // const blockList = useSelector((state: any) => state.board.blockList);
-  // const blockList = useRef<any[]>([]);
+  const blockList = useRef<any[]>([]);
   const blockStateTable = useSelector((state: any) => state.board.table);
   const cells = useSelector((state: any) => state.board.cells);
   const [test, setTest] = useState(0);
 
   const table = useRef<any[]>(blockState.cells.map((row) => [...row]));
+  const cntCell = useRef(0);
 
   useEffect(() => {
     // console.error("===============================");
@@ -99,7 +100,7 @@ const GameBoard = (props: any) => {
   /**
    * Ininitial state of board
    */
-  const [initialState, setInitialState] = useState({
+  const initialState = useRef({
     backgroundColor: generateAnimatedValue(-1),
     borderColor: generateAnimatedValue(0),
     zIndex: generateAnimatedValue(0),
@@ -113,62 +114,62 @@ const GameBoard = (props: any) => {
    * State to interpolate
    */
   const state = useMemo(() => {
-    const rotateInterpolate = generateAnimatedValue(0).map((row: any[]) =>
-      row.map((item) =>
-        item.interpolate({
-          inputRange: [0, 360],
-          outputRange: ["0deg", "360deg"],
-        }),
-      ),
-    );
+    const coordinate: Animated.ValueXY[][] = initialState.current.coordinate;
 
-    const backgroundColorInterpolate = generateAnimatedValue(-1).map(
-      (row: any[]) =>
+    const rotateInterpolate: Animated.Value[][] =
+      initialState.current.rotation.map((row: any[]) =>
+        row.map((item) =>
+          item.interpolate({
+            inputRange: [0, 360],
+            outputRange: ["0deg", "360deg"],
+          }),
+        ),
+      );
+
+    const backgroundColorInterpolate: Animated.Value[][] =
+      initialState.current.backgroundColor.map((row: any[]) =>
         row.map((cell) =>
           cell.interpolate({
             inputRange: INPUT_RANGE,
             outputRange: OUTPUT_RANGE,
           }),
         ),
-    );
+      );
 
-    const scaleInterpolation = generateAnimatedValue(0).map((row: any[]) =>
-      row.map((cell) =>
-        cell.interpolate({
-          inputRange: [0, 0.8, 1],
-          outputRange: [1, 1.5, 1],
-        }),
-      ),
-    );
+    const scaleInterpolation: Animated.Value[][] =
+      initialState.current.scale.map((row: any[]) =>
+        row.map((cell) =>
+          cell.interpolate({
+            inputRange: [0, 0.8, 1],
+            outputRange: [1, 1.5, 1],
+          }),
+        ),
+      );
 
-    const scoreOpacity = generateAnimatedValue(1);
-    // console.error("Chay lai state memo ne scoreOpacity ", scoreOpacity);
-    // scoreOpacity[1][2].addListener(() => {
-    //   console.error("Chay lai state memo ne scoreOpacity ", scoreOpacity);
-    // });
+    // const scoreOpacity = generateAnimatedValue(1);
+    const scoreOpacity: Animated.Value[][] = initialState.current.scoreOpacity;
+
     return {
       scoreOpacity: scoreOpacity,
       rotation: rotateInterpolate,
       scale: scaleInterpolation,
-
+      coordinate: coordinate,
       backgroundColor: backgroundColorInterpolate,
-
-      zIndex: initialState.zIndex,
+      zIndex: initialState.current.zIndex,
     };
   }, [
-    initialState.rotation,
-    initialState.borderColor,
-    initialState.backgroundColor,
-    initialState.scoreOpacity,
-    initialState.scale,
-    initialState.zIndex,
+    initialState.current.rotation,
+    initialState.current.borderColor,
+    initialState.current.backgroundColor,
+    initialState.current.scoreOpacity,
+    initialState.current.scale,
+    initialState.current.zIndex,
     blockState.cells,
     test,
     blockStateTable,
   ]);
 
   const checkTable = () => {
-    console.log("check Table after swap ", table.current);
     const rows = blockState.size.CELLS_IN_ROW;
     const cols = blockState.size.CELLS_IN_COLUMN;
 
@@ -183,13 +184,7 @@ const GameBoard = (props: any) => {
           table.current[i][j + 1] === current &&
           table.current[i][j + 2] === current
         ) {
-          // dispatch(
-          //   updateBlockList({
-          //     startCell: { i: i, j: j },
-          //     endCell: { i: i, j: j + 2 },
-          //   }),
-          // );
-          blockList.push({
+          blockList.current.push({
             startCell: { i: i, j: j },
             endCell: { i: i, j: j + 2 },
           });
@@ -201,13 +196,7 @@ const GameBoard = (props: any) => {
           table.current[i + 1][j] === current &&
           table.current[i + 2][j] === current
         ) {
-          // dispatch(
-          //   updateBlockList({
-          //     startCell: { i: i, j: j },
-          //     endCell: { i: i + 2, j: j },
-          //   }),
-          // );
-          blockList.push({
+          blockList.current.push({
             startCell: { i: i, j: j },
             endCell: { i: i + 2, j: j },
           });
@@ -216,13 +205,12 @@ const GameBoard = (props: any) => {
     }
 
     console.log("blockList ", blockList);
-    if (blockList && blockList.length > 0) {
-      blockList.forEach((item: any) => {
+    if (blockList && blockList.current.length > 0) {
+      cntCell.current = blockList.current.length;
+      blockList.current.forEach((item: any) => {
         onDestroyOneCell(item);
       });
     }
-
-    // setBlockList(useRef<any[]>([]));
   };
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING
@@ -234,29 +222,50 @@ const GameBoard = (props: any) => {
   ) => {
     let temp: any;
     // Swap 2 animated value.
-    temp = initialState.backgroundColor[oldRow][oldCol];
-    initialState.backgroundColor[oldRow][oldCol] =
-      initialState.backgroundColor[newRow][newCol];
-    initialState.backgroundColor[newRow][newCol] = temp;
+    // temp = initialState.backgroundColor[oldRow][oldCol];
+    // initialState.backgroundColor[oldRow][oldCol] =
+    //   initialState.backgroundColor[newRow][newCol];
+    // initialState.backgroundColor[newRow][newCol] = temp;
 
-    temp = initialState.borderColor[oldRow][oldCol];
-    initialState.borderColor[oldRow][oldCol] =
-      initialState.borderColor[newRow][newCol];
-    initialState.borderColor[newRow][newCol] = temp;
+    // temp = initialState.borderColor[oldRow][oldCol];
+    // initialState.borderColor[oldRow][oldCol] =
+    //   initialState.borderColor[newRow][newCol];
+    // initialState.borderColor[newRow][newCol] = temp;
 
-    temp = initialState.rotation[oldRow][oldCol];
-    initialState.rotation[oldRow][oldCol] =
-      initialState.rotation[newRow][newCol];
-    initialState.rotation[newRow][newCol] = temp;
+    // temp = initialState.rotation[oldRow][oldCol];
+    // initialState.rotation[oldRow][oldCol] =
+    //   initialState.rotation[newRow][newCol];
+    // initialState.rotation[newRow][newCol] = temp;
 
-    temp = initialState.scale[oldRow][oldCol];
-    initialState.scale[oldRow][oldCol] = initialState.scale[newRow][newCol];
-    initialState.scale[newRow][newCol] = temp;
+    // temp = initialState.scale[oldRow][oldCol];
+    // initialState.scale[oldRow][oldCol] = initialState.scale[newRow][newCol];
+    // initialState.scale[newRow][newCol] = temp;
 
-    temp = initialState.scoreOpacity[oldRow][oldCol];
-    initialState.scoreOpacity[oldRow][oldCol] =
-      initialState.scoreOpacity[newRow][newCol];
-    initialState.scoreOpacity[newRow][newCol] = temp;
+    // temp = initialState.scoreOpacity[oldRow][oldCol];
+    // initialState.scoreOpacity[oldRow][oldCol] =
+    //   initialState.scoreOpacity[newRow][newCol];
+    // initialState.scoreOpacity[newRow][newCol] = temp;
+    temp = state.backgroundColor[oldRow][oldCol];
+    state.backgroundColor[oldRow][oldCol] =
+      state.backgroundColor[newRow][newCol];
+    state.backgroundColor[newRow][newCol] = temp;
+
+    // temp = state.borderColor[oldRow][oldCol];
+    // state.borderColor[oldRow][oldCol] =
+    // state.borderColor[newRow][newCol];
+    // state.borderColor[newRow][newCol] = temp;
+
+    temp = state.rotation[oldRow][oldCol];
+    state.rotation[oldRow][oldCol] = state.rotation[newRow][newCol];
+    state.rotation[newRow][newCol] = temp;
+
+    temp = state.scale[oldRow][oldCol];
+    state.scale[oldRow][oldCol] = state.scale[newRow][newCol];
+    state.scale[newRow][newCol] = temp;
+
+    temp = state.scoreOpacity[oldRow][oldCol];
+    state.scoreOpacity[oldRow][oldCol] = state.scoreOpacity[newRow][newCol];
+    state.scoreOpacity[newRow][newCol] = temp;
   };
 
   /**
@@ -301,20 +310,23 @@ const GameBoard = (props: any) => {
           : 0;
 
     Animated.parallel([
-      Animated.spring(initialState.coordinate[row][col], {
+      Animated.spring(initialState.current.coordinate[row][col], {
         toValue: {
           x: numCellX * blockState.size.WIDTH_PER_CELL + MARGIN_X * 2,
           y: numCellY * blockState.size.WIDTH_PER_CELL + MARGIN_Y * 2,
         },
         useNativeDriver: true,
       }),
-      Animated.spring(initialState.coordinate[row + numCellY][col + numCellX], {
-        toValue: {
-          x: -numCellX * blockState.size.WIDTH_PER_CELL - MARGIN_X * 2,
-          y: -numCellY * blockState.size.WIDTH_PER_CELL - MARGIN_Y * 2,
+      Animated.spring(
+        initialState.current.coordinate[row + numCellY][col + numCellX],
+        {
+          toValue: {
+            x: -numCellX * blockState.size.WIDTH_PER_CELL - MARGIN_X * 2,
+            y: -numCellY * blockState.size.WIDTH_PER_CELL - MARGIN_Y * 2,
+          },
+          useNativeDriver: true,
         },
-        useNativeDriver: true,
-      }),
+      ),
     ]).start();
 
     // swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
@@ -326,8 +338,6 @@ const GameBoard = (props: any) => {
     swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
 
     checkTable();
-
-    // dispatchrblockList.current = [];
   };
 
   /**
@@ -350,72 +360,80 @@ const GameBoard = (props: any) => {
       }
 
       cells.forEach((cell) => {
-        console.log(
-          "Debug cell will be destroyed ",
-          cell,
-          "talbe value ",
-          table.current[cell.row][cell.col],
-        );
         Animated.parallel([
           Animated.sequence([
-            Animated.timing(initialState.backgroundColor[cell.row][cell.col], {
-              toValue: 1,
-              useNativeDriver: true,
-              duration: 200,
-            }),
-            Animated.timing(initialState.backgroundColor[cell.row][cell.col], {
-              toValue: 0,
-              useNativeDriver: true,
-              duration: 200,
-              delay: 1000,
-            }),
+            Animated.timing(
+              initialState.current.backgroundColor[cell.row][cell.col],
+              {
+                toValue: 1,
+                useNativeDriver: true,
+                duration: 200,
+              },
+            ),
+            Animated.timing(
+              initialState.current.backgroundColor[cell.row][cell.col],
+              {
+                toValue: 0,
+                useNativeDriver: true,
+                duration: 200,
+                delay: 1000,
+              },
+            ),
           ]),
           Animated.sequence([
-            Animated.timing(initialState.zIndex[cell.row][cell.col], {
+            Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
               toValue: 1000,
               useNativeDriver: true,
               duration: 0,
             }),
-            Animated.timing(initialState.rotation[cell.row][cell.col], {
+            Animated.timing(initialState.current.rotation[cell.row][cell.col], {
               toValue: 10,
               duration: 200,
               useNativeDriver: true,
             }),
-            Animated.timing(initialState.rotation[cell.row][cell.col], {
+            Animated.timing(initialState.current.rotation[cell.row][cell.col], {
               toValue: -10,
               duration: 200,
               useNativeDriver: true,
             }),
-            Animated.timing(initialState.rotation[cell.row][cell.col], {
+            Animated.timing(initialState.current.rotation[cell.row][cell.col], {
               toValue: 0,
               duration: 200,
               useNativeDriver: true,
             }),
-            Animated.timing(initialState.scale[cell.row][cell.col], {
+            Animated.timing(initialState.current.scale[cell.row][cell.col], {
               toValue: 2,
               duration: 200,
               useNativeDriver: true,
             }),
-            Animated.timing(initialState.scale[cell.row][cell.col], {
+            Animated.timing(initialState.current.scale[cell.row][cell.col], {
               toValue: 1,
               duration: 100,
               useNativeDriver: true,
             }),
-            Animated.timing(initialState.zIndex[cell.row][cell.col], {
+            Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
               toValue: 1,
               useNativeDriver: true,
               duration: 0,
             }),
           ]),
-          Animated.timing(state.scoreOpacity[cell.row][cell.col], {
-            toValue: 0,
-            useNativeDriver: true,
-            duration: 2000,
-          }),
-        ]).start();
+          Animated.timing(
+            initialState.current.scoreOpacity[cell.row][cell.col],
+            {
+              toValue: 0,
+              useNativeDriver: true,
+              duration: 2000,
+            },
+          ),
+        ]).start(() => {
+          cntCell.current--;
+          if (cntCell.current == 0) {
+            dispatch(updateBlockList(blockList.current));
+          }
+        });
       });
     };
-  }, [blockList]);
+  }, []);
 
   /**
    * TODO Collapse animation
@@ -531,18 +549,20 @@ const GameBoard = (props: any) => {
                       ...styles.cell,
                       backgroundColor:
                         state.backgroundColor[indexRow][indexCol],
-                      zIndex: initialState.zIndex[indexRow][indexCol],
+                      zIndex: state.zIndex[indexRow][indexCol],
                       opacity: state.scoreOpacity[indexRow][indexCol],
                       transform: [
                         { scale: state.scale[indexRow][indexCol] },
                         { rotate: state.rotation[indexRow][indexCol] },
                         {
                           translateX:
-                            initialState.coordinate[indexRow][indexCol].x,
+                            initialState.current.coordinate[indexRow][indexCol]
+                              .x,
                         },
                         {
                           translateY:
-                            initialState.coordinate[indexRow][indexCol].y,
+                            initialState.current.coordinate[indexRow][indexCol]
+                              .y,
                         },
                       ],
                     }}
