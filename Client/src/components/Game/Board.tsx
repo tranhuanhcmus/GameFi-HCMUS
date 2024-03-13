@@ -14,96 +14,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateBlockList } from "../../redux/boardSlice";
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
-
-/**
- * Size in pixel of table, please change if needed.
- */
-const SIZE_TABLE = 280;
-
-/**
- * Table in diamond game
- */
-const TABLE = [
-  [1, 4, 3, 2, 0, 1, 3, 2],
-  [2, 3, 1, 4, 0, 2, 1, 3],
-  [0, 4, 1, 2, 3, 0, 2, 4],
-  [3, 2, 1, 0, 4, 3, 2, 1],
-  [0, 2, 4, 3, 1, 2, 3, 0],
-  [1, 3, 2, 0, 4, 1, 0, 3],
-  [4, 2, 3, 1, 0, 4, 2, 1],
-  [3, 1, 4, 0, 2, 3, 1, 4],
-];
-/**
- * This will create a brand new random element in diamond game.
- * @returns a random number
- */
-const randomNumber = () => {
-  return Math.floor(Math.random() * 4);
-};
-
-/**
- * Function to generate 2D Matrix Animated.Value
- * @param value
- * @param CELLS_IN_ROW
- * @param CELLS_IN_COLUMN
- * @returns
- */
-const generateAnimatedValue = (
-  value: number,
-  CELLS_IN_ROW = 8,
-  CELLS_IN_COLUMN = 8,
-) => {
-  const animation = Array(CELLS_IN_COLUMN);
-  for (let i = 0; i < CELLS_IN_COLUMN; i++) {
-    animation[i] = new Array(CELLS_IN_ROW);
-    for (let j = 0; j < CELLS_IN_ROW; j++) {
-      animation[i][j] = new Animated.Value(value);
-    }
-  }
-  return animation;
-};
-
-const generateAnimatedValueXY = (
-  // value: number,
-  CELLS_IN_ROW = 8,
-  CELLS_IN_COLUMN = 8,
-) => {
-  const animation = Array(CELLS_IN_COLUMN);
-  for (let i = 0; i < CELLS_IN_COLUMN; i++) {
-    animation[i] = new Array(CELLS_IN_ROW);
-    for (let j = 0; j < CELLS_IN_ROW; j++) {
-      animation[i][j] = new Animated.ValueXY();
-    }
-  }
-  return animation;
-};
+import GameLogic from "../../utils/game/game";
 
 const GameBoard = (props: any) => {
-//   const { setBlockList } = props;
+  const table = useSelector((state: any) => state.board.table);
+
   const dispatch = useDispatch();
   const blockState = store.getState().board;
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
-  // const blockList = useSelector((state: any) => state.board.blockList);
+
   const [blockList, setBlockList] = useState<any[]>([]);
   const blockStateTable = useSelector((state: any) => state.board.table);
-  const cells = useSelector((state: any) => state.board.cells);
   const [test, setTest] = useState(0);
+  const boardTable = useMemo(() => {
+    return table.map((row: any) => [...row]);
+  }, [table]);
 
-  const table = useRef<any[]>(blockState.cells.map((row) => [...row]));
   const cntCell = useRef(0);
 
   /**
    * Ininitial state of board
    */
   const initialState = useRef({
-    backgroundColor: generateAnimatedValue(-1),
-    borderColor: generateAnimatedValue(0),
-    zIndex: generateAnimatedValue(0),
-    rotation: generateAnimatedValue(0),
-    coordinate: generateAnimatedValueXY(),
-    scale: generateAnimatedValue(0),
-    scoreOpacity: generateAnimatedValue(1),
+    backgroundColor: GameLogic.generateAnimatedValue(-1),
+    borderColor: GameLogic.generateAnimatedValue(0),
+    zIndex: GameLogic.generateAnimatedValue(0),
+    rotation: GameLogic.generateAnimatedValue(0),
+    coordinate: GameLogic.generateAnimatedValueXY(),
+    scale: GameLogic.generateAnimatedValue(0),
+    scoreOpacity: GameLogic.generateAnimatedValue(1),
   });
 
   /**
@@ -142,7 +82,6 @@ const GameBoard = (props: any) => {
         ),
       );
 
-    // const scoreOpacity = generateAnimatedValue(1);
     const scoreOpacity: Animated.Value[][] = initialState.current.scoreOpacity;
 
     return {
@@ -160,7 +99,6 @@ const GameBoard = (props: any) => {
     initialState.current.scoreOpacity,
     initialState.current.scale,
     initialState.current.zIndex,
-    blockState.cells,
     test,
     blockStateTable,
   ]);
@@ -169,147 +107,146 @@ const GameBoard = (props: any) => {
    * This function check new table to push in the new blocklist then run animation to destroy 1 cell.
    */
   const checkTable = () => {
-        const matchedBlockList = []
-        const rows = blockState.size.CELLS_IN_ROW;
-        const cols = blockState.size.CELLS_IN_COLUMN;
-    
-        // Iterate through each cell in the matrix
-        for (let i = 0; i < rows; i++) {
-          for (let j = 0; j < cols; j++) {
-            
-            const current = table.current[i][j];
-    
-            // Check horizontally (to the right)
-            if (
-              j + 2 < cols && table.current[i][j + 1] === current && table.current[i][j + 2] === current
-            ) {
-                matchedBlockList.push({ startCell: { i: i, j: j }, endCell: { i: i, j: j + 2 }, });
-            }
-    
-            // Check vertically (below)
-            if (
-              i + 2 < rows && table.current[i + 1][j] === current && table.current[i + 2][j] === current
-            ) {
-                matchedBlockList.push({ startCell: { i: i, j: j }, endCell: { i: i + 2, j: j },
-              });
-            }
-          }
-        }
-    
-        
-        setBlockList([...matchedBlockList])
+    const matchedBlockList = [];
+    const rows = blockState.size.CELLS_IN_ROW;
+    const cols = blockState.size.CELLS_IN_COLUMN;
 
+    // Iterate through each cell in the matrix
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const current = boardTable[i][j];
+
+        // Check horizontally (to the right)
+        if (
+          j + 2 < cols &&
+          boardTable[i][j + 1] === boardTable &&
+          boardTable[i][j + 2] === current
+        ) {
+          matchedBlockList.push({
+            startCell: { i: i, j: j },
+            endCell: { i: i, j: j + 2 },
+          });
+        }
+
+        // Check vertically (below)
+        if (
+          i + 2 < rows &&
+          boardTable[i + 1][j] === current &&
+          boardTable[i + 2][j] === current
+        ) {
+          matchedBlockList.push({
+            startCell: { i: i, j: j },
+            endCell: { i: i + 2, j: j },
+          });
+        }
+      }
+    }
+
+    setBlockList([...matchedBlockList]);
   };
 
-   /** Function to destroy cell in blocklist */
-  const onDestroyCells = useMemo(() => { return () => {
-
-    
-    if (blockList && blockList.length > 0) {
+  /** Function to destroy cell in blocklist */
+  const onDestroyCells = useMemo(() => {
+    return () => {
+      if (blockList && blockList.length > 0) {
         cntCell.current = blockList.length;
         blockList.forEach((item: any) => {
           onDestroyOneCell(item);
         });
       }
-  }
+    };
+  }, [blockList]);
 
-  },[blockList]);
-
-    /**
+  /**
    * ANIMATION TO DESTROY 1 CELLS
    */
-    const onDestroyOneCell =  (block: any) => {
+  const onDestroyOneCell = (block: any) => {
+    const startCell = block.startCell;
+    const endCell = block.endCell;
 
-          const startCell = block.startCell;
-          const endCell = block.endCell;
-    
-          const cells = [];
-          if (startCell.i == endCell.i) {
-            // IN A ROW
-            for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
-              cells.push({ row: startCell.i, col: cnt });
-          } else {
-            // IN A COLUMN
-            for (let cnt = startCell.i; cnt <= endCell.i; cnt++)
-              cells.push({ row: cnt, col: startCell.j });
-          }
-    
-          cells.forEach((cell) => {
-            Animated.parallel([
-              Animated.sequence([
-                Animated.timing(
-                  initialState.current.backgroundColor[cell.row][cell.col],
-                  {
-                    toValue: 1,
-                    useNativeDriver: true,
-                    duration: 200,
-                  },
-                ),
-                Animated.timing(
-                  initialState.current.backgroundColor[cell.row][cell.col],
-                  {
-                    toValue: 0,
-                    useNativeDriver: true,
-                    duration: 200,
-                    delay: 1000,
-                  },
-                ),
-              ]),
-              Animated.sequence([
-                Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
-                  toValue: 1000,
-                  useNativeDriver: true,
-                  duration: 0,
-                }),
-                Animated.timing(initialState.current.rotation[cell.row][cell.col], {
-                  toValue: 10,
-                  duration: 200,
-                  useNativeDriver: true,
-                }),
-                Animated.timing(initialState.current.rotation[cell.row][cell.col], {
-                  toValue: -10,
-                  duration: 200,
-                  useNativeDriver: true,
-                }),
-                Animated.timing(initialState.current.rotation[cell.row][cell.col], {
-                  toValue: 0,
-                  duration: 200,
-                  useNativeDriver: true,
-                }),
-                Animated.timing(initialState.current.scale[cell.row][cell.col], {
-                  toValue: 2,
-                  duration: 200,
-                  useNativeDriver: true,
-                }),
-                Animated.timing(initialState.current.scale[cell.row][cell.col], {
-                  toValue: 1,
-                  duration: 100,
-                  useNativeDriver: true,
-                }),
-                Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
-                  toValue: 1,
-                  useNativeDriver: true,
-                  duration: 0,
-                }),
-              ]),
-              Animated.timing(
-                initialState.current.scoreOpacity[cell.row][cell.col],
-                {
-                  toValue: 0,
-                  useNativeDriver: true,
-                  duration: 2000,
-                },
-              ),
-            ]).start(() => {
-              cntCell.current--;
-              if (cntCell.current == 0) {
-                setBlockList([])          
-                dispatch(updateBlockList(blockList));
-              }
-            });
-          });
-        };
-      
+    const cells = [];
+    if (startCell.i == endCell.i) {
+      // IN A ROW
+      for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
+        cells.push({ row: startCell.i, col: cnt });
+    } else {
+      // IN A COLUMN
+      for (let cnt = startCell.i; cnt <= endCell.i; cnt++)
+        cells.push({ row: cnt, col: startCell.j });
+    }
+
+    cells.forEach((cell) => {
+      Animated.parallel([
+        Animated.sequence([
+          Animated.timing(
+            initialState.current.backgroundColor[cell.row][cell.col],
+            {
+              toValue: 1,
+              useNativeDriver: true,
+              duration: 200,
+            },
+          ),
+          Animated.timing(
+            initialState.current.backgroundColor[cell.row][cell.col],
+            {
+              toValue: 0,
+              useNativeDriver: true,
+              duration: 200,
+              delay: 1000,
+            },
+          ),
+        ]),
+        Animated.sequence([
+          Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
+            toValue: 1000,
+            useNativeDriver: true,
+            duration: 0,
+          }),
+          Animated.timing(initialState.current.rotation[cell.row][cell.col], {
+            toValue: 10,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(initialState.current.rotation[cell.row][cell.col], {
+            toValue: -10,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(initialState.current.rotation[cell.row][cell.col], {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(initialState.current.scale[cell.row][cell.col], {
+            toValue: 2,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(initialState.current.scale[cell.row][cell.col], {
+            toValue: 1,
+            duration: 100,
+            useNativeDriver: true,
+          }),
+          Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
+            toValue: 1,
+            useNativeDriver: true,
+            duration: 0,
+          }),
+        ]),
+        Animated.timing(initialState.current.scoreOpacity[cell.row][cell.col], {
+          toValue: 0,
+          useNativeDriver: true,
+          duration: 2000,
+        }),
+      ]).start(() => {
+        cntCell.current--;
+        if (cntCell.current == 0) {
+          setBlockList([]);
+          dispatch(updateBlockList(blockList));
+        }
+      });
+    });
+  };
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING
   const swap2CellsAnimatedProp = (
@@ -382,23 +319,43 @@ const GameBoard = (props: any) => {
   ) => {
     // CHECK CELL NEARE BORDER OF TABLE
     if (
-      row + numCellY < 0 || row + numCellY >= blockState.size.CELLS_IN_ROW ||
-      col + numCellX < 0 || col + numCellX >= blockState.size.CELLS_IN_COL ||
+      row + numCellY < 0 ||
+      row + numCellY >= blockState.size.CELLS_IN_ROW ||
+      col + numCellX < 0 ||
+      col + numCellX >= blockState.size.CELLS_IN_COL ||
       (numCellX == 0 && numCellY == 0)
     ) {
       return;
     }
 
     /** This code prevent exceed finger cross more than 1 cell on table */
-    numCellX > 0 ? numCellX = 1 : numCellX < 0 ? numCellX = -1 : numCellX = 0;
+    numCellX > 0
+      ? (numCellX = 1)
+      : numCellX < 0
+        ? (numCellX = -1)
+        : (numCellX = 0);
 
-    numCellY > 0 ? numCellY = 1 : numCellY < 0 ? numCellY = -1 : numCellY = 0;
+    numCellY > 0
+      ? (numCellY = 1)
+      : numCellY < 0
+        ? (numCellY = -1)
+        : (numCellY = 0);
 
     // EXTRA MARGIN ON CELL ON X_AXIS
-    const MARGIN_X = numCellX > 0  ? blockState.size.MARGIN : numCellX < 0 ? -blockState.size.MARGIN : 0;
+    const MARGIN_X =
+      numCellX > 0
+        ? blockState.size.MARGIN
+        : numCellX < 0
+          ? -blockState.size.MARGIN
+          : 0;
 
     // EXTRA MARGIN ON CELL ON Y_AXIS
-    const MARGIN_Y = numCellY > 0 ? blockState.size.MARGIN : numCellY < 0 ? -blockState.size.MARGIN : 0;
+    const MARGIN_Y =
+      numCellY > 0
+        ? blockState.size.MARGIN
+        : numCellY < 0
+          ? -blockState.size.MARGIN
+          : 0;
 
     /**
      * Run animation to swap 2 cell
@@ -421,20 +378,16 @@ const GameBoard = (props: any) => {
           useNativeDriver: true,
         },
       ),
-    ]).start(()=>
-        {
-            onSwap2CellTable(row, col, row + numCellY, col + numCellX);
-            swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
-            checkTable();
-        }
-    );
-
-
+    ]).start(() => {
+      onSwap2CellTable(row, col, row + numCellY, col + numCellX);
+      swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
+      checkTable();
+    });
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     onDestroyCells();
-  }, [blockList])
+  }, [blockList]);
   /**
    * This function swap 2 value (oldRow, oldCol) with (newRow, newCol) in table
    */
@@ -444,12 +397,19 @@ const GameBoard = (props: any) => {
     newRow: any,
     newCol: any,
   ) => {
-    let temp = table.current[oldRow][oldCol];
-    table.current[oldRow][oldCol] = table.current[newRow][newCol];
-    table.current[newRow][newCol] = temp;
+    // let newTable = table.map((row: any) => [...row]);
+    let temp = boardTable[oldRow][oldCol];
+    boardTable[oldRow][oldCol] = boardTable[newRow][newCol];
+    boardTable[newRow][newCol] = temp;
+    // console.log("new table after swap");
+    // printTable(boardTable)
   };
 
+  useEffect(() => {
+    console.log("new boardTable");
 
+    GameLogic.printTable(boardTable);
+  }, [table]);
 
   const selectedCells: Animated.Value[] = useMemo(() => [], [blockState]);
   let selectedIndexes: { row: number; col: number }[] = useMemo(
@@ -547,18 +507,17 @@ const GameBoard = (props: any) => {
       );
   }, [test]);
 
-
   /**
    * Frontend of component
    */
   return useMemo(
     () => (
       <View style={styles.boardContainer}>
-        {blockState.table.length > 0 ? (
-          blockState.table.map((row: any, indexRow: any) => (
+        {boardTable.length > 0 ? (
+          boardTable.map((row: any, indexRow: any) => (
             <View key={indexRow} style={styles.row}>
               {row.map((cell: any, indexCol: any) => {
-                let randomItem = randomNumber();
+                let randomItem = GameLogic.randomNumber();
                 return (
                   <Animated.View
                     key={indexCol}
@@ -606,7 +565,7 @@ const GameBoard = (props: any) => {
         )}
       </View>
     ),
-    [blockStateTable, blockList],
+    [table],
   );
 };
 
@@ -699,8 +658,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   cell: {
-    height: SIZE_TABLE / 8,
-    width: SIZE_TABLE / 8,
+    height: GameLogic.SIZE_TABLE / 8,
+    width: GameLogic.SIZE_TABLE / 8,
     margin: 3,
     borderRadius: 5,
     display: "flex",

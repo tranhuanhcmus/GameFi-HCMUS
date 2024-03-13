@@ -17,11 +17,7 @@ import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import { useDispatch, useSelector } from "react-redux";
 import { emptyBlockList, updateTable } from "../../redux/boardSlice";
-
-/**
- * Size in pixel of table, please change if needed.
- */
-const SIZE_TABLE = 280;
+import GameLogic from "../../utils/game/game";
 
 const generateAnimatedValueXY = (CELLS_IN_ROW = 8, CELLS_IN_COLUMN = 8) => {
   // if (!matrix) return [];
@@ -36,20 +32,11 @@ const generateAnimatedValueXY = (CELLS_IN_ROW = 8, CELLS_IN_COLUMN = 8) => {
   return animation;
 };
 
-/**
- * This will create a brand new random element in diamond game.
- * @returns a random number
- */
-const randomNumber = () => {
-  return Math.floor(Math.random() * 4);
-};
-const UpperLayer = (props: any) => {
+const UpperLayer = () => {
   const dispatch = useDispatch();
   const blockList = useSelector((state: any) => state.board.blockList);
-  const coordinate = new Animated.ValueXY();
   const blockState = store.getState().board;
-  const table = useRef<any[]>(blockState.cells.map((row) => [...row]));
-  const cloneMatrix = useRef<any[][]>([]);
+  const table = useRef<any[]>(blockState.table.map((row: any) => [...row]));
   const [initialState, setInitialState] = useState({
     coordinate: generateAnimatedValueXY(),
   });
@@ -57,43 +44,10 @@ const UpperLayer = (props: any) => {
   const cnt = useRef(0);
 
   useEffect(() => {
+    console.log("Upper layer ", blockList);
+
     cnt.current = blockList.length;
     startAnimation();
-  }, [blockList]);
-  /**
-   * THIS FUNCTION WILL GET THE COLLAPSE COLS NEED TO SLIDE DOWN
-   */
-  const getCollapseCols = useMemo<(blockLists: Block[][]) => number[]>(() => {
-    return (blockLists: Block[][]) => {
-      const triggerCols: number[] = new Array(
-        blockState.size.CELLS_IN_COLUMN,
-      ).fill(0);
-
-      blockLists.forEach((blockList) => {
-        blockList.forEach((block) => {
-          for (let i = block.startCell.j; i <= block.endCell.j; i++) {
-            triggerCols[i]++;
-          }
-        });
-      });
-
-      return triggerCols;
-    };
-  }, [blockState]);
-
-  /** COUNT THE CELL NEED TO DROP DOWN */
-  const collapseCols = useMemo<(block: Block) => number[]>(() => {
-    return (block: Block) => {
-      const triggerCols = new Array(table.current[0].length).fill(0);
-
-      blockList.forEach((block: any) => {
-        for (let i = block.startCell.j; i <= block.endCell.j; i++) {
-          triggerCols[i]++;
-        }
-      });
-
-      return triggerCols;
-    };
   }, [blockList]);
 
   /** Service: Generate columns to collapse */
@@ -113,13 +67,20 @@ const UpperLayer = (props: any) => {
 
       for (let i = startRow; i <= endRow; i++)
         for (let j = startCol; j <= endCol; j++) {
-          table.current[i][j] = randomNumber();
+          table.current[i][j] = GameLogic.randomNumber();
         }
 
       return cloneMatrix;
     };
   }, [blockList]);
 
+  /**
+   * Generate new table;
+   */
+  const generateTable = () => {
+    console.log("table when generate random collapse ");
+    GameLogic.printTable(table.current);
+  };
   /**
    * ANIMATION FOR UPPER LAYER TO COLLAPSE
    */
@@ -390,8 +351,8 @@ const UpperLayer = (props: any) => {
 };
 const styles = StyleSheet.create({
   boardContainer: {
-    height: SIZE_TABLE,
-    width: SIZE_TABLE,
+    height: GameLogic.SIZE_TABLE,
+    width: GameLogic.SIZE_TABLE,
     backgroundColor: COLOR.WHITE,
     alignContent: "center",
   },

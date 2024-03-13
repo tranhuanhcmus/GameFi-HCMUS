@@ -22,10 +22,14 @@ import GameHeader from "../../components/Game/Header";
 import GameBoard from "../../components/Game/Board";
 import UpperLayer from "../../components/Game/UpperLayer";
 import { store } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import Button from "react-native-really-awesome-button";
+import { increaseNumber } from "../../redux/boardSlice";
 
 const GameScreen = () => {
   const [blockList, setBlockList] = useState(useRef<any[]>([]));
-
+  const number = useSelector((state: any)=> state.board.number);
+  const dispatch = useDispatch();
   useEffect(() => {}, []);
   const navigate = useCustomNavigation();
 
@@ -34,18 +38,12 @@ const GameScreen = () => {
       <View style={styles.container}>
         {/* <GameHeader /> */}
 
-        <UpperLayer
-          CELLS_IN_COLUMN={10}
-          CELLS_IN_ROW={10}
-          callbackFunction={() => {}}
-          blockList={blockList.current}
-          cells={[]}
-          blockLists={[]}
-          matrix={[2]}
-        />
+        <UpperLayer />
 
-        <GameBoard blockList={blockList.current} setBlockList={setBlockList} />
+        <GameBoard  />
         {/* TODO: Bottom nav */}
+
+
       </View>
     </SafeAreaView>
   );

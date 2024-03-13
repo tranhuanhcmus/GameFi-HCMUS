@@ -1,154 +1,66 @@
-/** LOGIC TO CHECK IF A COLUMN OR ROW IS THE SAME ELEMENT */
-const isColumnOfFive = (
-  numCols: number,
-  grid: any[],
-  fomulaForColumnOfFive: number,
-) => {
-  for (let i = 0; i < fomulaForColumnOfFive; i++) {
-    const columnOfFive = [
-      i,
-      i + numCols,
-      i + numCols * 2,
-      i + numCols * 3,
-      i + numCols * 4,
-    ];
+import { Animated } from "react-native";
 
-    const decidedColor = grid[i].color;
-    const isBlank = grid[i].color === "";
+export default class GameLogic {
+  /**
+   * Size in pixel of table, please change if needed.
+   */
+  public static SIZE_TABLE = 280;
+  /**
+   * This will create a brand new random element in diamond game.
+   * @returns a random number
+   */
+  public static randomNumber = () => {
+    return Math.floor(Math.random() * 4);
+  };
 
-    if (
-      columnOfFive.every(
-        (cell) => grid[cell].color === decidedColor && !isBlank,
-      )
-    ) {
-      columnOfFive.forEach((cell) => (grid[cell].color = ""));
-      // setScore((score) => score + 5);
-      return true;
+  public static printTable = (table: any) => {
+    const CELLS_IN_ROW = 8;
+    const CELLS_IN_COLUMN = 8;
+
+    // Iterate through each cell in the matrix
+    for (let i = 0; i < CELLS_IN_ROW; i++) {
+      let row = "";
+      for (let j = 0; j < CELLS_IN_COLUMN; j++) {
+        row = row + table[i][j] + " ";
+      }
+      console.log(row, "\n");
     }
-  }
-};
+  };
 
-const isColumnOfFour = (
-  numCols: number,
-  grid: any[],
-  fomulaForColumnOfFour: number,
-) => {
-  for (let i = 0; i < fomulaForColumnOfFour; i++) {
-    const columnOfFour = [i, i + numCols, i + numCols * 2, i + numCols * 3];
-
-    const decidedColor = grid[i].color;
-    const isBlank = grid[i].color === "";
-
-    if (
-      columnOfFour.every(
-        (cell) => grid[cell].color === decidedColor && !isBlank,
-      )
-    ) {
-      columnOfFour.forEach((cell) => (grid[cell].color = ""));
-      // setScore((score) => score + 4);
-      return true;
-    }
-  }
-};
-
-const isColumnOfThree = (
-  numCols: number,
-  grid: any[],
-  fomulaForColumnOfThree: number,
-) => {
-  for (let i = 0; i < fomulaForColumnOfThree; i++) {
-    const columnOfThree = [i, i + numCols, i + numCols * 2];
-
-    const decidedColor = grid[i].color;
-    const isBlank = grid[i].color === "";
-
-    if (
-      columnOfThree.every(
-        (cell) => grid[cell].color === decidedColor && !isBlank,
-      )
-    ) {
-      columnOfThree.forEach((cell) => (grid[cell].color = ""));
-      // setScore((score) => score + 3);
-      return true;
-    }
-  }
-};
-
-const isRowOfFive = (
-  numCols: number,
-  numRows: number,
-  grid: any[],
-  invalidIndexes: number[],
-) => {
-  for (let i = 0; i < numCols * numRows; i++) {
-    const rowOfFive = [i, i + 1, i + 2, i + 3, i + 4];
-
-    const decidedColor = grid[i].color;
-    const isBlank = grid[i].color === "";
-
-    if (invalidIndexes.includes(i)) continue;
-    else {
-      if (
-        rowOfFive.every((cell) => grid[cell].color === decidedColor && !isBlank)
-      ) {
-        rowOfFive.forEach((cell) => (grid[cell].color = ""));
-        // setScore((score) => score + 5);
-        return true;
+  /**
+   * Function to generate 2D Matrix Animated.Value
+   * @param value
+   * @param CELLS_IN_ROW
+   * @param CELLS_IN_COLUMN
+   * @returns
+   */
+  public static generateAnimatedValue = (
+    value: number,
+    CELLS_IN_ROW = 8,
+    CELLS_IN_COLUMN = 8,
+  ) => {
+    const animation = Array(CELLS_IN_COLUMN);
+    for (let i = 0; i < CELLS_IN_COLUMN; i++) {
+      animation[i] = new Array(CELLS_IN_ROW);
+      for (let j = 0; j < CELLS_IN_ROW; j++) {
+        animation[i][j] = new Animated.Value(value);
       }
     }
-  }
-};
+    return animation;
+  };
 
-const isRowOfFour = (
-  numCols: number,
-  numRows: number,
-  grid: any[],
-  invalidIndexes: number[],
-) => {
-  for (let i = 0; i < numCols * numRows; i++) {
-    const rowOfFour = [i, i + 1, i + 2, i + 3];
-
-    const decidedColor = grid[i].color;
-    const isBlank = grid[i].color === "";
-
-    if (invalidIndexes.includes(i)) continue;
-    else {
-      if (
-        rowOfFour.every((cell) => grid[cell].color === decidedColor && !isBlank)
-      ) {
-        rowOfFour.forEach((cell) => (grid[cell].color = ""));
-        // setScore((score) => score + 4);
-        return true;
+  public static generateAnimatedValueXY = (
+    // value: number,
+    CELLS_IN_ROW = 8,
+    CELLS_IN_COLUMN = 8,
+  ) => {
+    const animation = Array(CELLS_IN_COLUMN);
+    for (let i = 0; i < CELLS_IN_COLUMN; i++) {
+      animation[i] = new Array(CELLS_IN_ROW);
+      for (let j = 0; j < CELLS_IN_ROW; j++) {
+        animation[i][j] = new Animated.ValueXY();
       }
     }
-  }
-};
-
-const isRowOfThree = (
-  numCols: number,
-  numRows: number,
-  grid: any[],
-  invalidIndexes: number[],
-) => {
-  for (let i = 0; i < numCols * numRows; i++) {
-    const rowOfThree = [i, i + 1, i + 2];
-
-    const decidedColor = grid[i].color;
-    const isBlank = grid[i].color === "";
-
-    if (invalidIndexes.includes(i)) continue;
-    else {
-      if (
-        rowOfThree.every(
-          (cell) => grid[cell].color === decidedColor && !isBlank,
-        )
-      ) {
-        rowOfThree.forEach((cell) => (grid[cell].color = ""));
-        // setScore((score) => score + 3);
-        return true;
-      }
-    }
-  }
-};
-
-class DiamondGame {}
+    return animation;
+  };
+}
