@@ -79,13 +79,13 @@ const generateAnimatedValueXY = (
 };
 
 const GameBoard = (props: any) => {
-  const { setBlockList } = props;
+//   const { setBlockList } = props;
   const dispatch = useDispatch();
   const blockState = store.getState().board;
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
   // const blockList = useSelector((state: any) => state.board.blockList);
-  const blockList = useRef<any[]>([]);
+  const [blockList, setBlockList] = useState<any[]>([]);
   const blockStateTable = useSelector((state: any) => state.board.table);
   const cells = useSelector((state: any) => state.board.cells);
   const [test, setTest] = useState(0);
@@ -93,10 +93,6 @@ const GameBoard = (props: any) => {
   const table = useRef<any[]>(blockState.cells.map((row) => [...row]));
   const cntCell = useRef(0);
 
-  useEffect(() => {
-    // console.error("===============================");
-    // console.error("Render the board");
-  }, [blockStateTable, blockList]);
   /**
    * Ininitial state of board
    */
@@ -169,49 +165,151 @@ const GameBoard = (props: any) => {
     blockStateTable,
   ]);
 
+  /**
+   * This function check new table to push in the new blocklist then run animation to destroy 1 cell.
+   */
   const checkTable = () => {
-    const rows = blockState.size.CELLS_IN_ROW;
-    const cols = blockState.size.CELLS_IN_COLUMN;
-
-    // Iterate through each cell in the matrix
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        const current = table.current[i][j];
-
-        // Check horizontally (to the right)
-        if (
-          j + 2 < cols &&
-          table.current[i][j + 1] === current &&
-          table.current[i][j + 2] === current
-        ) {
-          blockList.current.push({
-            startCell: { i: i, j: j },
-            endCell: { i: i, j: j + 2 },
-          });
+        const matchedBlockList = []
+        const rows = blockState.size.CELLS_IN_ROW;
+        const cols = blockState.size.CELLS_IN_COLUMN;
+    
+        // Iterate through each cell in the matrix
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            
+            const current = table.current[i][j];
+    
+            // Check horizontally (to the right)
+            if (
+              j + 2 < cols && table.current[i][j + 1] === current && table.current[i][j + 2] === current
+            ) {
+                matchedBlockList.push({ startCell: { i: i, j: j }, endCell: { i: i, j: j + 2 }, });
+            }
+    
+            // Check vertically (below)
+            if (
+              i + 2 < rows && table.current[i + 1][j] === current && table.current[i + 2][j] === current
+            ) {
+                matchedBlockList.push({ startCell: { i: i, j: j }, endCell: { i: i + 2, j: j },
+              });
+            }
+          }
         }
+    
+        
+        setBlockList([...matchedBlockList])
 
-        // Check vertically (below)
-        if (
-          i + 2 < rows &&
-          table.current[i + 1][j] === current &&
-          table.current[i + 2][j] === current
-        ) {
-          blockList.current.push({
-            startCell: { i: i, j: j },
-            endCell: { i: i + 2, j: j },
-          });
-        }
-      }
-    }
-
-    console.log("blockList ", blockList);
-    if (blockList && blockList.current.length > 0) {
-      cntCell.current = blockList.current.length;
-      blockList.current.forEach((item: any) => {
-        onDestroyOneCell(item);
-      });
-    }
   };
+
+   /** Function to destroy cell in blocklist */
+  const onDestroyCells = useMemo(() => { return () => {
+
+    
+    if (blockList && blockList.length > 0) {
+        cntCell.current = blockList.length;
+        blockList.forEach((item: any) => {
+          onDestroyOneCell(item);
+        });
+      }
+  }
+
+  },[blockList]);
+
+    /**
+   * ANIMATION TO DESTROY 1 CELLS
+   */
+    const onDestroyOneCell =  (block: any) => {
+
+          const startCell = block.startCell;
+          const endCell = block.endCell;
+    
+          const cells = [];
+          if (startCell.i == endCell.i) {
+            // IN A ROW
+            for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
+              cells.push({ row: startCell.i, col: cnt });
+          } else {
+            // IN A COLUMN
+            for (let cnt = startCell.i; cnt <= endCell.i; cnt++)
+              cells.push({ row: cnt, col: startCell.j });
+          }
+    
+          cells.forEach((cell) => {
+            Animated.parallel([
+              Animated.sequence([
+                Animated.timing(
+                  initialState.current.backgroundColor[cell.row][cell.col],
+                  {
+                    toValue: 1,
+                    useNativeDriver: true,
+                    duration: 200,
+                  },
+                ),
+                Animated.timing(
+                  initialState.current.backgroundColor[cell.row][cell.col],
+                  {
+                    toValue: 0,
+                    useNativeDriver: true,
+                    duration: 200,
+                    delay: 1000,
+                  },
+                ),
+              ]),
+              Animated.sequence([
+                Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
+                  toValue: 1000,
+                  useNativeDriver: true,
+                  duration: 0,
+                }),
+                Animated.timing(initialState.current.rotation[cell.row][cell.col], {
+                  toValue: 10,
+                  duration: 200,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(initialState.current.rotation[cell.row][cell.col], {
+                  toValue: -10,
+                  duration: 200,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(initialState.current.rotation[cell.row][cell.col], {
+                  toValue: 0,
+                  duration: 200,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(initialState.current.scale[cell.row][cell.col], {
+                  toValue: 2,
+                  duration: 200,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(initialState.current.scale[cell.row][cell.col], {
+                  toValue: 1,
+                  duration: 100,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
+                  toValue: 1,
+                  useNativeDriver: true,
+                  duration: 0,
+                }),
+              ]),
+              Animated.timing(
+                initialState.current.scoreOpacity[cell.row][cell.col],
+                {
+                  toValue: 0,
+                  useNativeDriver: true,
+                  duration: 2000,
+                },
+              ),
+            ]).start(() => {
+              cntCell.current--;
+              if (cntCell.current == 0) {
+                setBlockList([])          
+                dispatch(updateBlockList(blockList));
+              }
+            });
+          });
+        };
+      
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING
   const swap2CellsAnimatedProp = (
@@ -276,7 +374,7 @@ const GameBoard = (props: any) => {
    * @param numCellY
    * @returns
    */
-  const startAnimation = (
+  const swapAnimation = (
     row: any,
     col: any,
     numCellX: number,
@@ -284,31 +382,27 @@ const GameBoard = (props: any) => {
   ) => {
     // CHECK CELL NEARE BORDER OF TABLE
     if (
-      row + numCellY < 0 ||
-      row + numCellY >= blockState.size.CELLS_IN_ROW ||
-      col + numCellX < 0 ||
-      col + numCellX >= blockState.size.CELLS_IN_COL ||
+      row + numCellY < 0 || row + numCellY >= blockState.size.CELLS_IN_ROW ||
+      col + numCellX < 0 || col + numCellX >= blockState.size.CELLS_IN_COL ||
       (numCellX == 0 && numCellY == 0)
     ) {
       return;
     }
 
+    /** This code prevent exceed finger cross more than 1 cell on table */
+    numCellX > 0 ? numCellX = 1 : numCellX < 0 ? numCellX = -1 : numCellX = 0;
+
+    numCellY > 0 ? numCellY = 1 : numCellY < 0 ? numCellY = -1 : numCellY = 0;
+
     // EXTRA MARGIN ON CELL ON X_AXIS
-    const MARGIN_X =
-      numCellX > 0
-        ? blockState.size.MARGIN
-        : numCellX < 0
-          ? -blockState.size.MARGIN
-          : 0;
+    const MARGIN_X = numCellX > 0  ? blockState.size.MARGIN : numCellX < 0 ? -blockState.size.MARGIN : 0;
 
     // EXTRA MARGIN ON CELL ON Y_AXIS
-    const MARGIN_Y =
-      numCellY > 0
-        ? blockState.size.MARGIN
-        : numCellY < 0
-          ? -blockState.size.MARGIN
-          : 0;
+    const MARGIN_Y = numCellY > 0 ? blockState.size.MARGIN : numCellY < 0 ? -blockState.size.MARGIN : 0;
 
+    /**
+     * Run animation to swap 2 cell
+     */
     Animated.parallel([
       Animated.spring(initialState.current.coordinate[row][col], {
         toValue: {
@@ -327,117 +421,36 @@ const GameBoard = (props: any) => {
           useNativeDriver: true,
         },
       ),
-    ]).start();
+    ]).start(()=>
+        {
+            onSwap2CellTable(row, col, row + numCellY, col + numCellX);
+            swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
+            checkTable();
+        }
+    );
 
-    // swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
 
-    let temp = table.current[row][col];
-    table.current[row][col] = table.current[row + numCellY][col + numCellX];
-    table.current[row + numCellY][col + numCellX] = temp;
-
-    swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
-
-    checkTable();
   };
 
+  useEffect(()=> {
+    onDestroyCells();
+  }, [blockList])
   /**
-   * ANIMATION TO DESTROY 1 CELLS
+   * This function swap 2 value (oldRow, oldCol) with (newRow, newCol) in table
    */
-  const onDestroyOneCell = useMemo<(block: any) => void>(() => {
-    return (block: any) => {
-      const startCell = block.startCell;
-      const endCell = block.endCell;
+  const onSwap2CellTable = (
+    oldRow: any,
+    oldCol: any,
+    newRow: any,
+    newCol: any,
+  ) => {
+    let temp = table.current[oldRow][oldCol];
+    table.current[oldRow][oldCol] = table.current[newRow][newCol];
+    table.current[newRow][newCol] = temp;
+  };
 
-      const cells = [];
-      if (startCell.i == endCell.i) {
-        // IN A ROW
-        for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
-          cells.push({ row: startCell.i, col: cnt });
-      } else {
-        // IN A COLUMN
-        for (let cnt = startCell.i; cnt <= endCell.i; cnt++)
-          cells.push({ row: cnt, col: startCell.j });
-      }
 
-      cells.forEach((cell) => {
-        Animated.parallel([
-          Animated.sequence([
-            Animated.timing(
-              initialState.current.backgroundColor[cell.row][cell.col],
-              {
-                toValue: 1,
-                useNativeDriver: true,
-                duration: 200,
-              },
-            ),
-            Animated.timing(
-              initialState.current.backgroundColor[cell.row][cell.col],
-              {
-                toValue: 0,
-                useNativeDriver: true,
-                duration: 200,
-                delay: 1000,
-              },
-            ),
-          ]),
-          Animated.sequence([
-            Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
-              toValue: 1000,
-              useNativeDriver: true,
-              duration: 0,
-            }),
-            Animated.timing(initialState.current.rotation[cell.row][cell.col], {
-              toValue: 10,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-            Animated.timing(initialState.current.rotation[cell.row][cell.col], {
-              toValue: -10,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-            Animated.timing(initialState.current.rotation[cell.row][cell.col], {
-              toValue: 0,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-            Animated.timing(initialState.current.scale[cell.row][cell.col], {
-              toValue: 2,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-            Animated.timing(initialState.current.scale[cell.row][cell.col], {
-              toValue: 1,
-              duration: 100,
-              useNativeDriver: true,
-            }),
-            Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
-              toValue: 1,
-              useNativeDriver: true,
-              duration: 0,
-            }),
-          ]),
-          Animated.timing(
-            initialState.current.scoreOpacity[cell.row][cell.col],
-            {
-              toValue: 0,
-              useNativeDriver: true,
-              duration: 2000,
-            },
-          ),
-        ]).start(() => {
-          cntCell.current--;
-          if (cntCell.current == 0) {
-            dispatch(updateBlockList(blockList.current));
-          }
-        });
-      });
-    };
-  }, []);
 
-  /**
-   * TODO Collapse animation
-   */
   const selectedCells: Animated.Value[] = useMemo(() => [], [blockState]);
   let selectedIndexes: { row: number; col: number }[] = useMemo(
     () => [],
@@ -501,7 +514,7 @@ const GameBoard = (props: any) => {
     const onReleaseCell = (index: number, index2: number) => {
       handleEndPanResponder = true;
 
-      startAnimation(index2, index, numCellX, numCellY);
+      swapAnimation(index2, index, numCellX, numCellY);
     };
 
     return Array(blockState.size.CELLS_IN_ROW)
@@ -534,6 +547,10 @@ const GameBoard = (props: any) => {
       );
   }, [test]);
 
+
+  /**
+   * Frontend of component
+   */
   return useMemo(
     () => (
       <View style={styles.boardContainer}>

@@ -115,7 +115,10 @@ const boardSlice = createSlice({
   reducers: {
     // SET BLOCKLIST FOR STATE
     updateBlockList(state, action) {
-      state.blockList = action.payload; // Update blockList directly on state
+      console.log("updateBlockList action.payload", action.payload);
+      
+      state.blockList = action.payload; 
+      
       return state;
     },
 
