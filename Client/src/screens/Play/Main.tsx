@@ -9,8 +9,8 @@ import {
 import { useDispatch } from "react-redux";
 import { showAlert } from "../../redux/alertSlice";
 import PetCard from "../../components/PetCard";
-import { NativeBaseProvider } from "native-base";
 import { ELEMENT } from "../../constants/types";
+import { flare } from "viem/chains";
 
 type Props = {};
 
@@ -94,27 +94,28 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
 
   return (
     <SafeAreaView className="h-full w-full bg-[#210035]">
-      <View className="mt-4 h-[90%] w-full items-center justify-center bg-[#210035]">
-        {/* <Text className="text-white">PlayScreen</Text>
-        <TouchableOpacity onPress={handleShowAlert}>
-          <Text className="text-white">Show Alert</Text>
-        </TouchableOpacity> */}
+      <View className="mt-4 h-[90%] w-[100%] items-center justify-center bg-[#210035] ">
         <FlatList
-          contentContainerStyle={{ gap: 20 }}
-          columnWrapperStyle={{ gap: 20 }}
+          className="flex-1"
+          contentContainerStyle={{
+            gap: 20,
+          }}
+          columnWrapperStyle={{
+            gap: 20,
+            width: "100%",
+          }}
           data={petArray}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id}
           numColumns={2}
           renderItem={({ item }) => (
-            <TouchableOpacity>
-              <PetCard
-                petImg={item?.petImg ? item.petImg : ""}
-                element={item.element}
-                level={3}
-                name={item.name}
-                rarityPet=" special"
-              ></PetCard>
-            </TouchableOpacity>
+            <PetCard
+              petImg={item?.petImg ? item.petImg : ""}
+              element={item.element}
+              level={3}
+              name={item.name}
+              rarityPet=" special"
+            ></PetCard>
           )}
         />
       </View>

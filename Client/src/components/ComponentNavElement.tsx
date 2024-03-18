@@ -21,7 +21,7 @@ const ComponentNavElement: React.FC<ComponentNavElementProps> = ({
         style={{
           fontFamily: "rexlia",
           fontWeight: focused ? "900" : "400",
-          fontSize: focused ? 22 : 18,
+          fontSize: focused ? 20 : 18,
           color: "white",
         }}
       >

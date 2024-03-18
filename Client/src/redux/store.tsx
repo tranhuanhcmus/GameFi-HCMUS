@@ -14,6 +14,10 @@ export const store = configureStore({
     board: boardSlice,
     upperLayer: upperLayerSlice,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    immutableCheck: false,
+    serializableCheck: false,
+  })
 });
 
 export type RootState = ReturnType<typeof store.getState>;

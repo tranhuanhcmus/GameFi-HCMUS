@@ -16,7 +16,10 @@ export function BreedScreen() {
     <SafeAreaView className="h-screen w-screen bg-[#210035]">
       <View style={styles.container}>
         <CustomText style={styles.title}>Breed</CustomText>
-        <Image source={Heart} alt="Heart" style={styles.imageContainer} />
+        <View className="h-[50%] w-[90%] object-cover">
+          <Image source={Heart} alt="Heart" style={styles.imageContainer} />
+        </View>
+
         <View style={styles.addButtonContainer}>
           <RoundButton
             onPress={() => {
@@ -62,8 +65,8 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   imageContainer: {
-    width: 400,
-    height: 400,
+    width: "100%",
+    height: "100%",
   },
   addButtonContainer: {
     width: "80%",

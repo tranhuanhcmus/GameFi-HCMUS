@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+  Image,
+} from "react-native";
 import React from "react";
 import LEAF from "../../assets/SVGLeaf.svg";
 import IRON from "../../assets/SVGIron.svg";
@@ -6,10 +13,8 @@ import WATER from "../../assets/SVGWater.svg";
 import STONE from "../../assets/SVGStone.svg";
 import FIRE from "../../assets/SVGFire.svg";
 import Egg from "../../assets/SVGEgg.svg";
-import { ELEMENT } from "../constants/types";
-import { Image } from "react-native";
-import { Divider } from "native-base";
 import Pet from "../../assets/Pet.png";
+import { ELEMENT } from "../constants/types";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 
 interface PetCardProps {
@@ -34,7 +39,10 @@ const PetCard: React.FC<PetCardProps> = ({
         navigate.navigate("DetailOfPet");
       }}
     >
-      <View className="flex w-full flex-col  rounded-[20px] bg-[#2B2B2B] p-[15px]">
+      <View
+        style={styles.listContainer}
+        className="rounded-[20px] bg-[#2B2B2B] p-[10px] "
+      >
         <View className="mb-2 flex flex-row items-center justify-between">
           {ELEMENT.FIRE === element && <FIRE></FIRE>}
           {ELEMENT.IRON === element && <IRON></IRON>}
@@ -46,18 +54,26 @@ const PetCard: React.FC<PetCardProps> = ({
             <Text className="absolute mt-2 text-[16px] font-bold">{level}</Text>
           </View>
         </View>
-        <Image
-          className="h-[150px] w-[150px] object-scale-down  "
-          source={petImg !== "" ? { uri: petImg } : Pet}
-        />
+        <View className="overflow-hidden rounded-[10px]">
+          <Image
+            className=" aspect-square w-[100%]  "
+            source={petImg !== "" ? { uri: petImg } : { uri: Pet }}
+          />
+        </View>
 
         <Text className="mt-2 font-rexlia text-[20px] text-white"> {name}</Text>
-        <Text className=" text-right font-rexlia text-[20px] font-extralight text-white">
+        <Text className="text-right font-rexlia text-[20px] font-extralight text-white">
           {rarityPet}
         </Text>
       </View>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  listContainer: {
+    width: Dimensions.get("window").width / 2 - 20,
+  },
+});
 
 export default PetCard;
