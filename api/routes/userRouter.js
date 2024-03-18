@@ -6,7 +6,7 @@ const userController = require('../controllers/userController');
 router.get('/user-nft/:owner', userController.userNFTs);
 
 // Route để lấy thông tin của tokenURI
-// router.post('/uri/get', userController.getTokenURI);
+router.post('/uri/get', userController.getTokenURI);
 // {
 //     "data": {
 //         "name": "Harry's Dragon",
