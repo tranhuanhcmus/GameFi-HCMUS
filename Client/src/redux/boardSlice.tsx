@@ -85,16 +85,32 @@ const boardSlice = createSlice({
       state.table = action.payload; // BUG CAN NOT UPDATE STATE
       return state;
     },
+
     increaseNumber(state, action) {
       state.number++;
+      return state;
+    },
+    generateRandomMatrix(state) {
+      const matrix: number[][] = [];
+      for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
+        matrix.push([]);
+        for (let j = 0; j < GameLogic.CELLS_IN_COLUMN; j++) {
+          matrix[i].push(Math.floor(Math.random() * 5));
+        }
+      }
+      state.table = matrix;
       return state;
     },
   },
 });
 
 export { boardSlice };
-export const { updateBlockList, updateTable, emptyBlockList, increaseNumber } =
-  boardSlice.actions;
+export const {
+  updateBlockList,
+  updateTable,
+  emptyBlockList,
+  generateRandomMatrix,
+} = boardSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;
 

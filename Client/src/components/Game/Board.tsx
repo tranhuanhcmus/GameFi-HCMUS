@@ -11,22 +11,22 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { updateBlockList } from "../../redux/boardSlice";
+import { generateRandomMatrix, updateBlockList } from "../../redux/boardSlice";
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
 
 const GameBoard = (props: any) => {
-  const table = useSelector((state: any) => state.board.table);
-
   const dispatch = useDispatch();
   const blockState = store.getState().board;
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
   const [blockList, setBlockList] = useState<any[]>([]);
+
   const blockStateTable = useSelector((state: any) => state.board.table);
-  const [test, setTest] = useState(0);
+
+  const table = useSelector((state: any) => state.board.table);
   const boardTable = useMemo(() => {
     return table.map((row: any) => [...row]);
   }, [table]);
@@ -99,7 +99,6 @@ const GameBoard = (props: any) => {
     initialState.current.scoreOpacity,
     initialState.current.scale,
     initialState.current.zIndex,
-    test,
     blockStateTable,
   ]);
 
@@ -117,50 +116,18 @@ const GameBoard = (props: any) => {
       }
     }
   }, [boardTable]);
+
   /**
    * This function check new table to push in the new blocklist then
    * @return true false;
    *  run animation to destroy 1 cell.
    */
-  const checkTable = () => {
-    const matchedBlockList = [];
-    const rows = blockState.size.CELLS_IN_ROW;
-    const cols = blockState.size.CELLS_IN_COLUMN;
-
-    // Iterate through each cell in the matrix
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        const current = boardTable[i][j];
-
-        // Check horizontally (to the right)
-        if (
-          j + 2 < cols &&
-          boardTable[i][j + 1] === boardTable &&
-          boardTable[i][j + 2] === current
-        ) {
-          matchedBlockList.push({
-            startCell: { i: i, j: j },
-            endCell: { i: i, j: j + 2 },
-          });
-        }
-
-        // Check vertically (below)
-        if (
-          i + 2 < rows &&
-          boardTable[i + 1][j] === current &&
-          boardTable[i + 2][j] === current
-        ) {
-          matchedBlockList.push({
-            startCell: { i: i, j: j },
-            endCell: { i: i + 2, j: j },
-          });
-        }
-      }
-    }
-
-    setBlockList([...matchedBlockList]);
-    return matchedBlockList.length > 0;
-  };
+  const checkTable = useMemo(() => {
+    return (table: any) => {
+      const matchedBlockList = GameLogic.checkTable(table);
+      return matchedBlockList;
+    };
+  }, [table]);
 
   /** Function to destroy cell in blocklist */
   const onDestroyCells = useMemo(() => {
@@ -338,8 +305,10 @@ const GameBoard = (props: any) => {
     ]).start(() => {
       onSwap2CellTable(row, col, row + numCellY, col + numCellX);
 
-      if (checkTable()) {
+      const matchedBlockList = checkTable(boardTable);
+      if (matchedBlockList && matchedBlockList.length > 0) {
         swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
+        setBlockList([...matchedBlockList]);
       } else {
         // RUN BACK THE ANIMATION
         onSwap2CellTable(row, col, row + numCellY, col + numCellX);
@@ -370,6 +339,16 @@ const GameBoard = (props: any) => {
   };
 
   useEffect(() => {
+    const matchedBlocklist = checkTable(boardTable);
+    if (matchedBlocklist && matchedBlocklist.length > 0) {
+      setBlockList([...matchedBlocklist]);
+    } else {
+      console.log("No matched 3 cells found");
+      // dispatch(generateRandomMatrix());
+    }
+  }, [table]);
+
+  useEffect(() => {
     onDestroyCells();
   }, [blockList]);
 
@@ -387,7 +366,6 @@ const GameBoard = (props: any) => {
     boardTable[newRow][newCol] = temp;
   };
 
-  const selectedCells: Animated.Value[] = useMemo(() => [], [blockState]);
   let selectedIndexes: { row: number; col: number }[] = useMemo(
     () => [],
     [blockState],
@@ -449,7 +427,8 @@ const GameBoard = (props: any) => {
 
     const onReleaseCell = (index: number, index2: number) => {
       handleEndPanResponder = true;
-
+      console.log("================================");
+      GameLogic.printTable(boardTable);
       swapAnimation(index2, index, numCellX, numCellY);
     };
 
@@ -481,13 +460,13 @@ const GameBoard = (props: any) => {
             }),
           ),
       );
-  }, [test]);
+  }, [table]);
 
   /**
    * Frontend of component
    */
-  return useMemo(
-    () => (
+  return useMemo(() => {
+    return (
       <View style={styles.boardContainer}>
         {boardTable.length > 0 ? (
           boardTable.map((row: any, indexRow: any) => (
@@ -539,9 +518,8 @@ const GameBoard = (props: any) => {
           <></>
         )}
       </View>
-    ),
-    [table],
-  );
+    );
+  }, [table]);
 };
 
 const styles = StyleSheet.create({

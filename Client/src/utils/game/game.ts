@@ -140,8 +140,6 @@ export default class GameLogic {
 
   /** THIS FUNCTION HELP TO caculate the position of collapse cols. */
   public static calculateCollapseCols = (block: any) => {
-    console.log("block ", block);
-
     const start = block.startCell;
     const end = block.endCell;
 
@@ -208,5 +206,42 @@ export default class GameLogic {
       blockWidth: blockWidth,
       blockHeight: blockHeight,
     };
+  };
+
+  public static checkTable = (table: any) => {
+    const matchedBlockList = [];
+    const rows = this.CELLS_IN_ROW;
+    const cols = this.CELLS_IN_COLUMN;
+    // Iterate through each cell in the matrix
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const current = table[i][j];
+
+        // Check horizontally (to the right)
+        if (
+          j + 2 < cols &&
+          table[i][j + 1] === current &&
+          table[i][j + 2] === current
+        ) {
+          matchedBlockList.push({
+            startCell: { i: i, j: j },
+            endCell: { i: i, j: j + 2 },
+          });
+        }
+
+        // Check vertically (below)
+        if (
+          i + 2 < rows &&
+          table[i + 1][j] === current &&
+          table[i + 2][j] === current
+        ) {
+          matchedBlockList.push({
+            startCell: { i: i, j: j },
+            endCell: { i: i + 2, j: j },
+          });
+        }
+      }
+    }
+    return matchedBlockList;
   };
 }

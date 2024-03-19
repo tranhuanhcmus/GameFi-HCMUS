@@ -92,16 +92,13 @@ const UpperLayer = () => {
           for (let j = 0; j < initialState.coordinate[0].length; j++) {
             Animated.timing(initialState.coordinate[i][j], {
               toValue: { x: 0, y: blockHeight }, // PROBLEM HERE!!!!
-              duration: 2000,
+              duration: 200,
               useNativeDriver: true,
             }).start(() => {
               // THIS RUN AFTER THE ANIMATION FINISHED
               cnt.current--;
               if (cnt.current == 0) {
-                console.log("AFTER COLLAPSING THE COLUMNS");
-
-                GameLogic.printTable(boardTable);
-                dispatch(updateTable(boardTable)); // BUG
+                dispatch(updateTable(boardTable));
                 dispatch(emptyBlockList([]));
               }
             });
@@ -116,8 +113,6 @@ const UpperLayer = () => {
       <></>
     ) : (
       blockList.map((block: any, indexBlock: any) => {
-        console.log("block ", block);
-
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
         const cells = generateCols(block);
 
@@ -185,7 +180,7 @@ const UpperLayer = () => {
         );
       })
     );
-  }, [blockList, blockState.table]);
+  }, [blockList]);
 };
 const styles = StyleSheet.create({
   boardContainer: {
