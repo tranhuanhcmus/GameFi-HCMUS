@@ -28,6 +28,7 @@ const UpperLayer = () => {
   const [initialState, setInitialState] = useState({
     coordinate: GameLogic.generateAnimatedValueXY(),
   });
+  const [isReady, setIsReady] = useState(false);
 
   const boardTable = useMemo(() => {
     return table.map((row: any) => [...row]);
@@ -35,9 +36,16 @@ const UpperLayer = () => {
   const cnt = useRef(0);
 
   useEffect(() => {
-    cnt.current = blockList.length;
-    startCollapseAnimation();
+    if (blockList && blockList.length) setIsReady(true);
+    else setIsReady(false);
   }, [blockList]);
+  useEffect(() => {
+    if (isReady) {
+      console.log("Chay useEffect Animation");
+      cnt.current = blockList.length;
+      startCollapseAnimation();
+    }
+  }, [blockList, isReady]);
 
   /** Service: Generate columns to collapse */
   const generateCols = useMemo<(block: Block) => number[][]>(() => {
@@ -47,17 +55,21 @@ const UpperLayer = () => {
       let startCol = Math.min(block.startCell.j, block.endCell.j);
       let endCol = Math.max(block.startCell.j, block.endCell.j); // Last index is exclusive
 
-      const cells = boardTable.slice(startRow, endRow);
-
       const cloneMatrix = [];
-      for (let i = 0; i < cells.length; i++) {
-        cloneMatrix.push(cells[i].slice(startCol, endCol + 2));
-      }
 
-      for (let i = startRow; i <= endRow; i++)
+      let sliceRow = [];
+      // BUG HERE.
+      for (let i = startRow; i <= endRow; i++) {
+        sliceRow = [];
         for (let j = startCol; j <= endCol; j++) {
-          boardTable[i][j] = GameLogic.randomNumber();
+          if (i == block.startCell.i) {
+            boardTable[i][j] = GameLogic.randomNumber();
+          }
+          sliceRow.push(boardTable[i][j]);
         }
+
+        cloneMatrix.push(sliceRow);
+      }
 
       return cloneMatrix;
     };
@@ -69,32 +81,21 @@ const UpperLayer = () => {
   const startCollapseAnimation = () => {
     if (blockList !== null && blockList.length > 0) {
       blockList.forEach((block: any) => {
+        console.log("block: ", block);
+
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
-        let cells: any[];
 
         const { blockHeight } = GameLogic.calculateCollapseCols(block);
 
-        const startCell = block.startCell;
-        const endCell = block.endCell;
-
-        cells = [];
-        if (startCell.i == endCell.i) {
-          // IN A ROW
-          for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
-            cells.push({ row: startCell.i, col: cnt });
-        } else {
-          // IN A COLUMN
-          for (let cnt = startCell.i; cnt <= endCell.i; cnt++)
-            cells.push({ row: cnt, col: startCell.j });
-        }
-
+        initialState.coordinate;
         for (let i = 0; i < initialState.coordinate.length; i++) {
           for (let j = 0; j < initialState.coordinate[0].length; j++) {
             Animated.timing(initialState.coordinate[i][j], {
               toValue: { x: 0, y: blockHeight }, // PROBLEM HERE!!!!
-              duration: 200,
+              duration: 2000,
               useNativeDriver: true,
             }).start(() => {
+              // TODO
               // THIS RUN AFTER THE ANIMATION FINISHED
               cnt.current--;
               if (cnt.current == 0) {
@@ -114,10 +115,13 @@ const UpperLayer = () => {
     ) : (
       blockList.map((block: any, indexBlock: any) => {
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
+
         const cells = generateCols(block);
 
         const { top, left, blockWidth, blockHeight } =
           GameLogic.calculateCollapseCols(block);
+
+        console.log("cells ", cells);
 
         return (
           <View
@@ -131,51 +135,61 @@ const UpperLayer = () => {
               width: blockWidth,
               overflow: "hidden",
               backgroundColor: COLOR.WHITE,
+              // opacity: 0,
               borderColor: COLOR.PURPLE,
             }}
           >
             {/* cells in block here */}
-            {cells.map((row, indexRow) =>
-              row.map((cell, indexCol) => (
-                <Animated.View
-                  key={indexCol}
-                  style={{
-                    top: top - 2 * blockHeight, // TODO HERE
-                    margin: blockState.size.CELL_SPACING,
-                    height: blockState.size.HEIGHT_PER_CELL,
-                    width: blockState.size.WIDTH_PER_CELL,
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    zIndex: 99,
-                    backgroundColor: COLOR.RED,
-                    borderRadius: 5,
+            {cells.map((row, indexRow) => (
+              <View
+                key={indexRow}
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                {row.map((cell, indexCol) => (
+                  <Animated.View
+                    key={indexCol}
+                    style={{
+                      top:
+                        cells[0].length > 1
+                          ? top - blockHeight
+                          : top - 2 * blockHeight,
+                      margin: blockState.size.CELL_SPACING,
+                      height: blockState.size.HEIGHT_PER_CELL,
+                      width: blockState.size.WIDTH_PER_CELL,
+                      flexWrap: "wrap",
+                      zIndex: 99,
+                      backgroundColor: COLOR.RED,
+                      borderRadius: 5,
 
-                    transform: [
-                      {
-                        translateX:
-                          initialState.coordinate[indexRow][indexCol].x,
-                      },
-                      {
-                        translateY:
-                          initialState.coordinate[indexRow][indexCol].y,
-                      },
-                    ],
-                  }}
-                >
-                  {boardTable[indexRow][indexCol] == 0 ? (
-                    <Text>0</Text>
-                  ) : boardTable[indexRow][indexCol] == 1 ? (
-                    <Text>1</Text>
-                  ) : boardTable[indexRow][indexCol] == 2 ? (
-                    <Text>2</Text>
-                  ) : boardTable[indexRow][indexCol] == 3 ? (
-                    <Text>3</Text>
-                  ) : (
-                    <Text>4</Text>
-                  )}
-                </Animated.View>
-              )),
-            )}
+                      transform: [
+                        {
+                          translateX:
+                            initialState.coordinate[indexRow][indexCol].x,
+                        },
+                        {
+                          translateY:
+                            initialState.coordinate[indexRow][indexCol].y,
+                        },
+                      ],
+                    }}
+                  >
+                    {boardTable[indexRow][indexCol] == 0 ? (
+                      <Text>0</Text>
+                    ) : boardTable[indexRow][indexCol] == 1 ? (
+                      <Text>1</Text>
+                    ) : boardTable[indexRow][indexCol] == 2 ? (
+                      <Text>2</Text>
+                    ) : boardTable[indexRow][indexCol] == 3 ? (
+                      <Text>3</Text>
+                    ) : (
+                      <Text>4</Text>
+                    )}
+                  </Animated.View>
+                ))}
+              </View>
+            ))}
           </View>
         );
       })

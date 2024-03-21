@@ -338,15 +338,15 @@ const GameBoard = (props: any) => {
     });
   };
 
-  useEffect(() => {
-    const matchedBlocklist = checkTable(boardTable);
-    if (matchedBlocklist && matchedBlocklist.length > 0) {
-      setBlockList([...matchedBlocklist]);
-    } else {
-      console.log("No matched 3 cells found");
-      // dispatch(generateRandomMatrix());
-    }
-  }, [table]);
+  // useEffect(() => {
+  //   const matchedBlocklist = checkTable(boardTable);
+  //   if (matchedBlocklist && matchedBlocklist.length > 0) {
+  //     setBlockList([...matchedBlocklist]);
+  //   } else {
+  //     console.log("No matched 3 cells found");
+  //     // dispatch(generateRandomMatrix());
+  //   }
+  // }, [table]);
 
   useEffect(() => {
     onDestroyCells();

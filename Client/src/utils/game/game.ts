@@ -193,10 +193,11 @@ export default class GameLogic {
 
     // CALCULATE THE WIDTH OF BLOCK
     const blockWidth =
-      Math.abs(start.j - end.j + 1) *
+      (Math.abs(start.j - end.j) + 1) *
       (this.WIDTH_PER_CELL + 2 * this.CELL_SPACING);
 
     // CALCULATE THE HEIGHT OF WIDTH
+    // BUG HERE
     const blockHeight =
       countEmptyTop * (this.HEIGHT_PER_CELL + 2 * this.CELL_SPACING);
 
@@ -208,40 +209,95 @@ export default class GameLogic {
     };
   };
 
-  public static checkTable = (table: any) => {
-    const matchedBlockList = [];
+  // public static checkTable = (table: any) => {
+  //   const matchedBlockList = [];
+  //   const rows = this.CELLS_IN_ROW;
+  //   const cols = this.CELLS_IN_COLUMN;
+  //   // Iterate through each cell in the matrix
+  //   for (let i = 0; i < rows; i++) {
+  //     for (let j = 0; j < cols; j++) {
+  //       const current = table[i][j];
+
+  //       // Check horizontally (to the right)
+  //       if (
+  //         j + 2 < cols &&
+  //         table[i][j + 1] === current &&
+  //         table[i][j + 2] === current
+  //       ) {
+  //         matchedBlockList.push({
+  //           startCell: { i: i, j: j },
+  //           endCell: { i: i, j: j + 2 },
+  //         });
+  //       }
+
+  //       // Check vertically (below)
+  //       if (
+  //         i + 2 < rows &&
+  //         table[i + 1][j] === current &&
+  //         table[i + 2][j] === current
+  //       ) {
+  //         matchedBlockList.push({
+  //           startCell: { i: i, j: j },
+  //           endCell: { i: i + 2, j: j },
+  //         });
+  //       }
+  //     }
+  //   }
+  //   return matchedBlockList;
+  // };
+
+  public static checkTable(table: any) {
     const rows = this.CELLS_IN_ROW;
     const cols = this.CELLS_IN_COLUMN;
+    const matchedBlockList: any[] = [];
+
+    // Function to check for matches in a given direction
+    const checkDirection = (
+      startRow: number,
+      startCol: number,
+      dRow: number,
+      dCol: number,
+    ) => {
+      const currentValue = table[startRow][startCol];
+      let currentRow = startRow + dRow;
+      let currentCol = startCol + dCol;
+      let matchLength = 1;
+
+      while (
+        currentRow >= 0 &&
+        currentRow < rows &&
+        currentCol >= 0 &&
+        currentCol < cols &&
+        table[currentRow][currentCol] === currentValue
+      ) {
+        matchLength++;
+        currentRow += dRow;
+        currentCol += dCol;
+      }
+
+      if (matchLength >= 3) {
+        matchedBlockList.push({
+          startCell: { i: startRow, j: startCol },
+          endCell: { i: currentRow - dRow, j: currentCol - dCol },
+        });
+      }
+    };
+
     // Iterate through each cell in the matrix
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
-        const current = table[i][j];
-
         // Check horizontally (to the right)
-        if (
-          j + 2 < cols &&
-          table[i][j + 1] === current &&
-          table[i][j + 2] === current
-        ) {
-          matchedBlockList.push({
-            startCell: { i: i, j: j },
-            endCell: { i: i, j: j + 2 },
-          });
+        if (j + 1 < cols && table[i][j] === table[i][j + 1]) {
+          checkDirection(i, j, 0, 1);
         }
 
-        // Check vertically (below)
-        if (
-          i + 2 < rows &&
-          table[i + 1][j] === current &&
-          table[i + 2][j] === current
-        ) {
-          matchedBlockList.push({
-            startCell: { i: i, j: j },
-            endCell: { i: i + 2, j: j },
-          });
+        // Check vertically (downward)
+        if (i + 1 < rows && table[i][j] === table[i + 1][j]) {
+          checkDirection(i, j, 1, 0);
         }
       }
     }
+
     return matchedBlockList;
-  };
+  }
 }
