@@ -16,15 +16,19 @@ import {
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import { useDispatch, useSelector } from "react-redux";
-import { emptyBlockList, updateTable } from "../../redux/boardSlice";
+import {
+  emptyBlockList,
+  updateDamage,
+  updateTable,
+  updateTurn,
+} from "../../redux/boardSlice";
 import GameLogic from "../../utils/game/game";
 
 const UpperLayer = () => {
   const dispatch = useDispatch();
   const blockList = useSelector((state: any) => state.board.blockList);
   const blockState = store.getState().board;
-  // const table = useRef<any[]>(blockState.table.map((row: any) => [...row]));
-  const table = useSelector((state: any) => state.board.table);
+  const { turn, damage, table } = useSelector((state: any) => state.board);
   const [initialState, setInitialState] = useState({
     coordinate: GameLogic.generateAnimatedValueXY(),
   });
@@ -45,11 +49,19 @@ const UpperLayer = () => {
       cnt.current = blockList.length;
       startCollapseAnimation();
     }
+    // TODO DELETE LATER
+    if (turn == 1) {
+      dispatch(dispatch(updateTurn(2)));
+    } else if (turn == 2) {
+      dispatch(dispatch(updateTurn(1)));
+    }
   }, [blockList, isReady]);
 
   /** Service: Generate columns to collapse */
   const generateCols = useMemo<(block: Block) => number[][]>(() => {
     return (block: Block) => {
+      // dispatch(updateDamage(calcDamage())); // NG
+      calcDamage();
       let startRow = 0;
       let endRow = Math.max(block.startCell.i, block.endCell.i); // Last index is exclusive
       let startCol = Math.min(block.startCell.j, block.endCell.j);
@@ -75,6 +87,35 @@ const UpperLayer = () => {
     };
   }, [blockList]);
 
+  const calcDamage = useMemo<() => number>(() => {
+    return () => {
+      console.log("====================================calcDamage");
+      GameLogic.printTable(boardTable);
+      let damage = 0;
+      blockList.forEach((block: Block) => {
+        console.log(
+          "block.startCell ",
+          block.startCell,
+          "block.endCell",
+          block.endCell,
+        );
+
+        const value = boardTable[block.startCell.i][block.startCell.j];
+        console.log("value", value);
+        const times =
+          block.startCell.i == block.endCell.i
+            ? Math.abs(block.startCell.j - block.endCell.j) + 1
+            : Math.abs(block.startCell.i - block.endCell.i) + 1;
+        console.log("times ", times);
+
+        damage += value * times;
+      });
+
+      console.log("damage ", damage);
+
+      return damage;
+    };
+  }, [blockList]);
   /**
    * ANIMATION FOR UPPER LAYER TO COLLAPSE
    */
@@ -88,6 +129,7 @@ const UpperLayer = () => {
         const { blockHeight } = GameLogic.calculateCollapseCols(block);
 
         initialState.coordinate;
+
         for (let i = 0; i < initialState.coordinate.length; i++) {
           for (let j = 0; j < initialState.coordinate[0].length; j++) {
             Animated.timing(initialState.coordinate[i][j], {
@@ -95,12 +137,16 @@ const UpperLayer = () => {
               duration: 2000,
               useNativeDriver: true,
             }).start(() => {
-              // TODO
               // THIS RUN AFTER THE ANIMATION FINISHED
               cnt.current--;
               if (cnt.current == 0) {
                 dispatch(updateTable(boardTable));
                 dispatch(emptyBlockList([]));
+                if (turn == 1) {
+                  dispatch(dispatch(updateTurn(2)));
+                } else if (turn == 2) {
+                  dispatch(dispatch(updateTurn(1)));
+                }
               }
             });
           }

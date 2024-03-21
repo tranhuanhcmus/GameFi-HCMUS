@@ -9,7 +9,7 @@ import GameLogic from "../utils/game/game";
 interface BoardState {
   size: any;
   // scoreOpacity: Animated.Value[][];
-  effects: any;
+  // effects: any;
   blockList: {
     startCell: { i: number; j: number };
     endCell: { i: number; j: number };
@@ -17,6 +17,8 @@ interface BoardState {
   position: any;
   table: any;
   number: any;
+  turn: any;
+  damage: any;
 }
 
 const initialState: BoardState = {
@@ -42,23 +44,8 @@ const initialState: BoardState = {
     [4, 2, 3, 1, 0, 4, 2, 1],
     [3, 1, 4, 0, 2, 3, 1, 4],
   ],
-  effects: {
-    doubleScore: {
-      status: false,
-      count: 0,
-    },
-    destroyOneCell: {
-      status: null, // null - no, true - pending to choose 1 cell, 2 - { x: 0, y: 0 } - coords of cell to destroy
-      count: 0,
-    },
-    resetBoard: {
-      count: 0,
-    },
-    findWord: {
-      count: 0,
-    },
-  },
-
+  turn: 1,
+  damage: 0,
   blockList: [],
   number: 0,
 };
@@ -90,6 +77,7 @@ const boardSlice = createSlice({
       state.number++;
       return state;
     },
+
     generateRandomMatrix(state) {
       const matrix: number[][] = [];
       for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
@@ -101,6 +89,16 @@ const boardSlice = createSlice({
       state.table = matrix;
       return state;
     },
+
+    updateTurn(state, action) {
+      state.turn = action.payload;
+      return state;
+    },
+
+    updateDamage(state, action) {
+      state.damage = action.payload;
+      return state;
+    },
   },
 });
 
@@ -110,6 +108,8 @@ export const {
   updateTable,
   emptyBlockList,
   generateRandomMatrix,
+  updateTurn,
+  updateDamage,
 } = boardSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;

@@ -44,16 +44,10 @@ const GameHeader = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLOR.PURPLE,
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    alignContent: "center",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
   characterArea: {
+    position: "absolute",
+    top: 0,
+
     height: 200,
     width: "100%",
     display: "flex",

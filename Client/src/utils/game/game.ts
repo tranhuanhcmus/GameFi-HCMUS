@@ -24,7 +24,7 @@ export default class GameLogic {
 
   public static HEIGHT_PER_CELL = this.SIZE_TABLE / 8;
 
-  public static POSITION_TOP = 100;
+  public static POSITION_TOP = 200;
 
   public static POSITION_LEFT = 15;
 

@@ -11,7 +11,11 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { generateRandomMatrix, updateBlockList } from "../../redux/boardSlice";
+import {
+  generateRandomMatrix,
+  updateBlockList,
+  updateTurn,
+} from "../../redux/boardSlice";
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
@@ -523,83 +527,13 @@ const GameBoard = (props: any) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLOR.PURPLE,
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    alignContent: "center",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  characterArea: {
-    height: 200,
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  player: {
-    width: "50%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  petImage: {
-    width: 100,
-    height: 100,
-  },
-  avatarImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 100,
-  },
-  energyBar: {
-    width: 80,
-    height: 20,
-    backgroundColor: "#FF8C05",
-    borderTopRightRadius: 4,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 10,
-    marginBottom: 5,
-  },
-  damageBar: {
-    width: 80,
-    height: 20,
-    backgroundColor: "#70A2FF",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 4,
-  },
-  bar: {
-    height: "auto",
-    width: "auto",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
-    marginHorizontal: 10,
-  },
-  playerHeader: {
-    height: "auto",
-    width: "auto",
-    display: "flex",
-    flexDirection: "row",
-    alignContent: "center",
-    alignItems: "center",
-  },
   boardContainer: {
     height: "auto",
     width: "auto",
     backgroundColor: COLOR.WHITE,
     alignContent: "center",
-    top: 100, // HERE IS THE BLOCKSTATE POSITION TOP (SLICE)
-    left: 15, // HERE IS THE BLOCKSTATE POSITION LEFT (SLICE)
+    top: GameLogic.POSITION_TOP,
+    left: GameLogic.POSITION_LEFT,
     position: "absolute",
   },
   row: {
@@ -618,11 +552,6 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  },
-
-  imageInCell: {
-    width: "80%",
-    height: "80%",
   },
 });
 
