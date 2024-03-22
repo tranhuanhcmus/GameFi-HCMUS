@@ -49,19 +49,13 @@ const UpperLayer = () => {
       cnt.current = blockList.length;
       startCollapseAnimation();
     }
-    // TODO DELETE LATER
-    if (turn == 1) {
-      dispatch(dispatch(updateTurn(2)));
-    } else if (turn == 2) {
-      dispatch(dispatch(updateTurn(1)));
-    }
   }, [blockList, isReady]);
 
   /** Service: Generate columns to collapse */
   const generateCols = useMemo<(block: Block) => number[][]>(() => {
     return (block: Block) => {
-      // dispatch(updateDamage(calcDamage())); // NG
-      calcDamage();
+      dispatch(updateDamage(calcDamage())); // NG
+
       let startRow = 0;
       let endRow = Math.max(block.startCell.i, block.endCell.i); // Last index is exclusive
       let startCol = Math.min(block.startCell.j, block.endCell.j);
@@ -89,29 +83,23 @@ const UpperLayer = () => {
 
   const calcDamage = useMemo<() => number>(() => {
     return () => {
-      console.log("====================================calcDamage");
-      GameLogic.printTable(boardTable);
       let damage = 0;
       blockList.forEach((block: Block) => {
-        console.log(
-          "block.startCell ",
-          block.startCell,
-          "block.endCell",
-          block.endCell,
-        );
+        const value1 = boardTable[block.startCell.i][block.startCell.j];
+        const value2 = boardTable[block.endCell.i][block.endCell.j];
+        const value3 =
+          block.startCell.i == block.endCell.i
+            ? boardTable[block.startCell.i][block.startCell.j + 1]
+            : boardTable[block.startCell.i + 1][block.startCell.j];
+        const value = value1 == value2 || value1 == value3 ? value1 : value2;
 
-        const value = boardTable[block.startCell.i][block.startCell.j];
-        console.log("value", value);
         const times =
           block.startCell.i == block.endCell.i
             ? Math.abs(block.startCell.j - block.endCell.j) + 1
             : Math.abs(block.startCell.i - block.endCell.i) + 1;
-        console.log("times ", times);
 
         damage += value * times;
       });
-
-      console.log("damage ", damage);
 
       return damage;
     };
@@ -143,9 +131,9 @@ const UpperLayer = () => {
                 dispatch(updateTable(boardTable));
                 dispatch(emptyBlockList([]));
                 if (turn == 1) {
-                  dispatch(dispatch(updateTurn(2)));
+                  dispatch(updateTurn(2));
                 } else if (turn == 2) {
-                  dispatch(dispatch(updateTurn(1)));
+                  dispatch(updateTurn(1));
                 }
               }
             });

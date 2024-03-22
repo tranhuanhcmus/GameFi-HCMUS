@@ -61,15 +61,14 @@ const boardSlice = createSlice({
       return state;
     },
 
-    // SET BLOCKLIST FOR STATE
     emptyBlockList(state, action) {
-      state.blockList = []; // Update blockList directly on state
+      state.blockList = [];
       return state;
     },
 
     updateTable(state, action) {
       state.table = [];
-      state.table = action.payload; // BUG CAN NOT UPDATE STATE
+      state.table = action.payload;
       return state;
     },
 
