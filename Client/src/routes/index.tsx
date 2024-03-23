@@ -79,10 +79,11 @@ const renderNavElement = (data: NavItem[]) => {
       name={item.name}
       component={item.component}
       options={{
+        headerTransparent: true,
+        headerTintColor: "#fff",
+
         headerShown: item.header || false,
-        headerStyle: {
-          backgroundColor: "#210035",
-        },
+
         headerLeft: () => <HeaderLeft></HeaderLeft>,
         headerTitle: () => <Header name="Home" />,
         headerRight: () => <HeaderRight></HeaderRight>,
@@ -173,13 +174,13 @@ const screenStyle: BottomTabNavigationOptions = {
   tabBarShowLabel: false,
   tabBarStyle: {
     position: "absolute",
-    left: 20,
-    right: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    shadowColor: "transparent",
+    shadowColor: "#000000",
     elevation: 0,
-    backgroundColor: "rgba(0, 0, 0, 0)",
+    backgroundColor: "rgba(255, 255, 255, 0)",
     height: 90,
   },
 };

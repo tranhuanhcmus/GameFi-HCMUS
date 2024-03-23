@@ -4,85 +4,43 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { Animated } from "react-native";
+import GameLogic from "../utils/game/game";
 
-/**
- * Function to generate 2D Matrix Animated.Value
- * @param value
- * @param CELLS_IN_ROW
- * @param CELLS_IN_COLUMN
- * @returns
- */
-const generateAnimatedValue = (
-  value: number,
-  CELLS_IN_ROW = 8,
-  CELLS_IN_COLUMN = 8,
-) => {
-  const animation = Array(CELLS_IN_COLUMN);
-  for (let i = 0; i < CELLS_IN_COLUMN; i++) {
-    animation[i] = new Array(CELLS_IN_ROW);
-    for (let j = 0; j < CELLS_IN_ROW; j++) {
-      animation[i][j] = new Animated.Value(value);
-    }
-  }
-  return animation;
-};
-
-const generateAnimatedValueXY = (
-  // value: number,
-  CELLS_IN_ROW = 8,
-  CELLS_IN_COLUMN = 8,
-) => {
-  const animation = Array(CELLS_IN_COLUMN);
-  for (let i = 0; i < CELLS_IN_COLUMN; i++) {
-    animation[i] = new Array(CELLS_IN_ROW);
-    for (let j = 0; j < CELLS_IN_ROW; j++) {
-      animation[i][j] = new Animated.ValueXY();
-    }
-  }
-  return animation;
-};
-
-const SIZE_TABLE = 280;
 interface BoardState {
-  backgroundColor: Animated.Value[][];
-  borderColor: Animated.Value[][];
-  zIndex: Animated.Value[][];
-  coordinate: Animated.ValueXY[][];
-  rotation: Animated.Value[][];
-  scale: Animated.Value[][];
   size: any;
-  scoreOpacity: Animated.Value[][];
-  cells: any[];
+  // scoreOpacity: Animated.Value[][];
   effects: any;
   blockList: {
     startCell: { i: number; j: number };
     endCell: { i: number; j: number };
   }[];
+  position: any;
+  table: any;
+  number: any;
 }
 
 const initialState: BoardState = {
-  backgroundColor: generateAnimatedValue(-1),
-  borderColor: generateAnimatedValue(0),
-  zIndex: generateAnimatedValue(0),
-  rotation: generateAnimatedValue(0),
-  coordinate: generateAnimatedValueXY(),
-  scale: generateAnimatedValue(0),
-  scoreOpacity: generateAnimatedValue(1),
   size: {
     CELLS_IN_ROW: 8,
     CELLS_IN_COLUMN: 8,
-    WIDTH_PER_CELL: SIZE_TABLE / 8,
+    WIDTH_PER_CELL: GameLogic.SIZE_TABLE / 8,
+    HEIGHT_PER_CELL: GameLogic.SIZE_TABLE / 8,
     MARGIN: 3,
+    CELL_SPACING: 3,
   },
-  cells: [
-    [0, 1, 2, 3, 4, 5, 6, 7],
-    [8, 9, 10, 11, 12, 13, 14, 15],
-    [16, 17, 18, 19, 20, 21, 22, 23],
-    [24, 25, 26, 27, 28, 29, 30, 31],
-    [32, 33, 34, 35, 36, 37, 38, 39],
-    [40, 41, 42, 43, 44, 45, 46, 47],
-    [48, 49, 50, 51, 52, 53, 54, 55],
-    [56, 57, 58, 59, 60, 61, 62, 63],
+  position: {
+    top: 100,
+    left: 15,
+  },
+  table: [
+    [1, 4, 3, 2, 0, 1, 3, 2],
+    [2, 3, 1, 4, 0, 2, 1, 3],
+    [0, 4, 1, 2, 3, 0, 2, 4],
+    [3, 2, 3, 0, 4, 3, 2, 1],
+    [0, 2, 4, 3, 1, 2, 3, 0],
+    [1, 3, 2, 0, 4, 1, 0, 3],
+    [4, 2, 3, 1, 0, 4, 2, 1],
+    [3, 1, 4, 0, 2, 3, 1, 4],
   ],
   effects: {
     doubleScore: {
@@ -100,31 +58,43 @@ const initialState: BoardState = {
       count: 0,
     },
   },
-  // THIS IS FOR TESTING
-  blockList: [
-    {
-      startCell: { i: 0, j: 0 },
-      endCell: { i: 1, j: 1 },
-    },
-    {
-      startCell: { i: 2, j: 2 },
-      endCell: { i: 3, j: 3 },
-    },
-    {
-      startCell: { i: 4, j: 4 },
-      endCell: { i: 5, j: 5 },
-    },
-  ],
+
+  blockList: [],
+  number: 0,
 };
 
 const boardSlice = createSlice({
   name: "board",
   initialState,
-  reducers: {},
+  reducers: {
+    // SET BLOCKLIST FOR STATE
+    updateBlockList(state, action) {
+      state.blockList = action.payload;
+
+      return state;
+    },
+
+    // SET BLOCKLIST FOR STATE
+    emptyBlockList(state, action) {
+      state.blockList = []; // Update blockList directly on state
+      return state;
+    },
+
+    updateTable(state, action) {
+      state.table = [];
+      state.table = action.payload; // BUG CAN NOT UPDATE STATE
+      return state;
+    },
+    increaseNumber(state, action) {
+      state.number++;
+      return state;
+    },
+  },
 });
 
 export { boardSlice };
-export const {} = boardSlice.actions;
+export const { updateBlockList, updateTable, emptyBlockList, increaseNumber } =
+  boardSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;
 
