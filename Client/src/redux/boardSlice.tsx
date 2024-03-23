@@ -9,7 +9,7 @@ import GameLogic from "../utils/game/game";
 interface BoardState {
   size: any;
   // scoreOpacity: Animated.Value[][];
-  effects: any;
+  // effects: any;
   blockList: {
     startCell: { i: number; j: number };
     endCell: { i: number; j: number };
@@ -17,6 +17,8 @@ interface BoardState {
   position: any;
   table: any;
   number: any;
+  turn: any;
+  damage: any;
 }
 
 const initialState: BoardState = {
@@ -36,29 +38,14 @@ const initialState: BoardState = {
     [1, 4, 3, 2, 0, 1, 3, 2],
     [2, 3, 1, 4, 0, 2, 1, 3],
     [0, 4, 1, 2, 3, 0, 2, 4],
-    [3, 2, 3, 0, 4, 3, 2, 1],
-    [0, 2, 4, 3, 1, 2, 3, 0],
+    [3, 2, 2, 0, 4, 3, 2, 1],
+    [0, 2, 4, 2, 1, 2, 3, 0],
     [1, 3, 2, 0, 4, 1, 0, 3],
     [4, 2, 3, 1, 0, 4, 2, 1],
     [3, 1, 4, 0, 2, 3, 1, 4],
   ],
-  effects: {
-    doubleScore: {
-      status: false,
-      count: 0,
-    },
-    destroyOneCell: {
-      status: null, // null - no, true - pending to choose 1 cell, 2 - { x: 0, y: 0 } - coords of cell to destroy
-      count: 0,
-    },
-    resetBoard: {
-      count: 0,
-    },
-    findWord: {
-      count: 0,
-    },
-  },
-
+  turn: 1,
+  damage: 0,
   blockList: [],
   number: 0,
 };
@@ -74,27 +61,55 @@ const boardSlice = createSlice({
       return state;
     },
 
-    // SET BLOCKLIST FOR STATE
     emptyBlockList(state, action) {
-      state.blockList = []; // Update blockList directly on state
+      state.blockList = [];
       return state;
     },
 
     updateTable(state, action) {
       state.table = [];
-      state.table = action.payload; // BUG CAN NOT UPDATE STATE
+      state.table = action.payload;
       return state;
     },
+
     increaseNumber(state, action) {
       state.number++;
+      return state;
+    },
+
+    generateRandomMatrix(state) {
+      const matrix: number[][] = [];
+      for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
+        matrix.push([]);
+        for (let j = 0; j < GameLogic.CELLS_IN_COLUMN; j++) {
+          matrix[i].push(Math.floor(Math.random() * 5));
+        }
+      }
+      state.table = matrix;
+      return state;
+    },
+
+    updateTurn(state, action) {
+      state.turn = action.payload;
+      return state;
+    },
+
+    updateDamage(state, action) {
+      state.damage = action.payload;
       return state;
     },
   },
 });
 
 export { boardSlice };
-export const { updateBlockList, updateTable, emptyBlockList, increaseNumber } =
-  boardSlice.actions;
+export const {
+  updateBlockList,
+  updateTable,
+  emptyBlockList,
+  generateRandomMatrix,
+  updateTurn,
+  updateDamage,
+} = boardSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;
 

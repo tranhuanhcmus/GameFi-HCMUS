@@ -24,26 +24,33 @@ import UpperLayer from "../../components/Game/UpperLayer";
 import { store } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-native-really-awesome-button";
-import { increaseNumber } from "../../redux/boardSlice";
 
 const GameScreen = () => {
   const [blockList, setBlockList] = useState(useRef<any[]>([]));
-  const number = useSelector((state: any)=> state.board.number);
+  const number = useSelector((state: any) => state.board.number);
   const dispatch = useDispatch();
   useEffect(() => {}, []);
   const navigate = useCustomNavigation();
+  const { turn, damage } = useSelector((state: any) => state.board);
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        {/* <GameHeader /> */}
+        <GameHeader />
 
         <UpperLayer />
 
-        <GameBoard  />
+        <GameBoard />
+
+        <View
+          style={{
+            top: 300,
+          }}
+        >
+          <Text style={{ color: COLOR.WHITE }}>turn: {turn}</Text>
+          <Text style={{ color: COLOR.WHITE }}>damage: {damage}</Text>
+        </View>
         {/* TODO: Bottom nav */}
-
-
       </View>
     </SafeAreaView>
   );
@@ -54,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.PURPLE,
     width: "100%",
     height: "100%",
-    display: "flex",
+    // display: "flex",
     alignContent: "center",
     alignItems: "center",
     justifyContent: "center",
