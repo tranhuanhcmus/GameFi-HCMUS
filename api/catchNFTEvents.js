@@ -29,8 +29,8 @@ const createNFT = async (tokenid, from, to) => {
 
                 // Thêm mới NFT vào bảng NFT
                 await db.query(
-                    'INSERT INTO K20_GameFi_DATN_HCMUS.NFT (TOKENID, TOKENURI, OWNER) VALUES ($1, $2, $3)',
-                    [tokenid, tokenURI, to]
+                    'INSERT INTO K20_GameFi_DATN_HCMUS.NFT (TOKENID, TOKENURI, OWNER) VALUES ($1, $2, $3, $4)',
+                    [tokenid, tokenURI, to, 0]
                 );
                 console.log('Tạo NFT thành công');
                 return { message: 'Tạo NFT thành công', apiCode: 200 };
