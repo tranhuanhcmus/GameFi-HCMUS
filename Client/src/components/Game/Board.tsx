@@ -107,6 +107,7 @@ const GameBoard = (props: any) => {
   ]);
 
   useEffect(() => {
+    // Reset animated value
     for (let i = 0; i < blockState.size.CELLS_IN_ROW; i++) {
       for (let j = 0; j < blockState.size.CELLS_IN_COLUMN; j++) {
         initialState.current.backgroundColor[i][j].setValue(-1);
@@ -342,15 +343,18 @@ const GameBoard = (props: any) => {
     });
   };
 
-  // useEffect(() => {
-  //   const matchedBlocklist = checkTable(boardTable);
-  //   if (matchedBlocklist && matchedBlocklist.length > 0) {
-  //     setBlockList([...matchedBlocklist]);
-  //   } else {
-  //     console.log("No matched 3 cells found");
-  //     // dispatch(generateRandomMatrix());
-  //   }
-  // }, [table]);
+  useEffect(() => {
+    // Delay before exploding next
+    const delayExecution = setTimeout(() => {
+      const matchedBlocklist = checkTable(boardTable);
+      if (matchedBlocklist && matchedBlocklist.length > 0) {
+        setBlockList([...matchedBlocklist]);
+      } else {
+        console.log("No matched 3 cells found");
+      }
+    }, 500);
+    return () => clearTimeout(delayExecution);
+  }, [table]);
 
   useEffect(() => {
     onDestroyCells();

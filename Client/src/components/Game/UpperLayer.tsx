@@ -29,7 +29,7 @@ const UpperLayer = () => {
   const blockList = useSelector((state: any) => state.board.blockList);
   const blockState = store.getState().board;
   const { turn, damage, table } = useSelector((state: any) => state.board);
-  const [initialState, setInitialState] = useState({
+  const initialState = useRef({
     coordinate: GameLogic.generateAnimatedValueXY(),
   });
   const [isReady, setIsReady] = useState(false);
@@ -40,12 +40,19 @@ const UpperLayer = () => {
   const cnt = useRef(0);
 
   useEffect(() => {
-    if (blockList && blockList.length) setIsReady(true);
-    else setIsReady(false);
+    if (blockList && blockList.length) {
+      setIsReady(true);
+
+      for (let i = 0; i < blockState.size.CELLS_IN_ROW; i++) {
+        for (let j = 0; j < blockState.size.CELLS_IN_COLUMN; j++) {
+          initialState.current.coordinate[i][j].x.setValue(0);
+          initialState.current.coordinate[i][j].y.setValue(0);
+        }
+      }
+    } else setIsReady(false);
   }, [blockList]);
   useEffect(() => {
     if (isReady) {
-      console.log("Chay useEffect Animation");
       cnt.current = blockList.length;
       startCollapseAnimation();
     }
@@ -110,19 +117,15 @@ const UpperLayer = () => {
   const startCollapseAnimation = () => {
     if (blockList !== null && blockList.length > 0) {
       blockList.forEach((block: any) => {
-        console.log("block: ", block);
-
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
 
         const { blockHeight } = GameLogic.calculateCollapseCols(block);
 
-        initialState.coordinate;
-
-        for (let i = 0; i < initialState.coordinate.length; i++) {
-          for (let j = 0; j < initialState.coordinate[0].length; j++) {
-            Animated.timing(initialState.coordinate[i][j], {
-              toValue: { x: 0, y: blockHeight }, // PROBLEM HERE!!!!
-              duration: 2000,
+        for (let i = 0; i < initialState.current.coordinate.length; i++) {
+          for (let j = 0; j < initialState.current.coordinate[0].length; j++) {
+            Animated.spring(initialState.current.coordinate[i][j], {
+              toValue: { x: 0, y: blockHeight },
+              tension: 10,
               useNativeDriver: true,
             }).start(() => {
               // THIS RUN AFTER THE ANIMATION FINISHED
@@ -155,7 +158,11 @@ const UpperLayer = () => {
         const { top, left, blockWidth, blockHeight } =
           GameLogic.calculateCollapseCols(block);
 
-        console.log("cells ", cells);
+        console.log("blockHeight GameLogic ", blockHeight);
+        console.log(
+          "handy calculation ",
+          (blockState.size.HEIGHT_PER_CELL + blockState.size.CELL_SPACING) * 5,
+        );
 
         return (
           <View
@@ -169,7 +176,6 @@ const UpperLayer = () => {
               width: blockWidth,
               overflow: "hidden",
               backgroundColor: "transparent",
-              // opacity: 0,
               borderColor: COLOR.PURPLE,
             }}
           >
@@ -185,10 +191,7 @@ const UpperLayer = () => {
                   <Animated.View
                     key={indexCol}
                     style={{
-                      top:
-                        cells[0].length > 1
-                          ? top - blockHeight
-                          : top - 2 * blockHeight,
+                      top: top - 2 * blockHeight,
                       margin: blockState.size.CELL_SPACING,
                       height: blockState.size.HEIGHT_PER_CELL,
                       width: blockState.size.WIDTH_PER_CELL,
@@ -200,11 +203,13 @@ const UpperLayer = () => {
                       transform: [
                         {
                           translateX:
-                            initialState.coordinate[indexRow][indexCol].x,
+                            initialState.current.coordinate[indexRow][indexCol]
+                              .x,
                         },
                         {
                           translateY:
-                            initialState.coordinate[indexRow][indexCol].y,
+                            initialState.current.coordinate[indexRow][indexCol]
+                              .y,
                         },
                       ],
                     }}
