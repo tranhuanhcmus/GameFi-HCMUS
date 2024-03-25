@@ -168,7 +168,7 @@ const UpperLayer = () => {
               height: blockHeight,
               width: blockWidth,
               overflow: "hidden",
-              backgroundColor: COLOR.WHITE,
+              backgroundColor: "transparent",
               // opacity: 0,
               borderColor: COLOR.PURPLE,
             }}
