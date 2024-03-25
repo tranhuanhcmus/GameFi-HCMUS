@@ -43,8 +43,9 @@ const UpperLayer = () => {
     if (blockList && blockList.length) {
       setIsReady(true);
 
-      for (let i = 0; i < blockState.size.CELLS_IN_ROW; i++) {
-        for (let j = 0; j < blockState.size.CELLS_IN_COLUMN; j++) {
+      // Reset Animated.Value
+      for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
+        for (let j = 0; j < GameLogic.CELLS_IN_COLUMN; j++) {
           initialState.current.coordinate[i][j].x.setValue(0);
           initialState.current.coordinate[i][j].y.setValue(0);
         }
@@ -125,7 +126,7 @@ const UpperLayer = () => {
           for (let j = 0; j < initialState.current.coordinate[0].length; j++) {
             Animated.spring(initialState.current.coordinate[i][j], {
               toValue: { x: 0, y: blockHeight },
-              tension: 10,
+              tension: 300,
               useNativeDriver: true,
             }).start(() => {
               // THIS RUN AFTER THE ANIMATION FINISHED
@@ -158,12 +159,6 @@ const UpperLayer = () => {
         const { top, left, blockWidth, blockHeight } =
           GameLogic.calculateCollapseCols(block);
 
-        console.log("blockHeight GameLogic ", blockHeight);
-        console.log(
-          "handy calculation ",
-          (blockState.size.HEIGHT_PER_CELL + blockState.size.CELL_SPACING) * 5,
-        );
-
         return (
           <View
             key={indexBlock}
@@ -191,15 +186,17 @@ const UpperLayer = () => {
                   <Animated.View
                     key={indexCol}
                     style={{
-                      top: top - 2 * blockHeight,
-                      margin: blockState.size.CELL_SPACING,
-                      height: blockState.size.HEIGHT_PER_CELL,
-                      width: blockState.size.WIDTH_PER_CELL,
-                      flexWrap: "wrap",
+                      top: -blockHeight, // IMPORTANT
+                      margin: GameLogic.CELL_SPACING,
+                      height: GameLogic.HEIGHT_PER_CELL,
+                      width: GameLogic.WIDTH_PER_CELL,
                       zIndex: 99,
                       backgroundColor: COLOR.RED,
                       borderRadius: 5,
-
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      alignContent: "center",
                       transform: [
                         {
                           translateX:
@@ -214,17 +211,7 @@ const UpperLayer = () => {
                       ],
                     }}
                   >
-                    {boardTable[indexRow][indexCol] == 0 ? (
-                      <Text>0</Text>
-                    ) : boardTable[indexRow][indexCol] == 1 ? (
-                      <Text>1</Text>
-                    ) : boardTable[indexRow][indexCol] == 2 ? (
-                      <Text>2</Text>
-                    ) : boardTable[indexRow][indexCol] == 3 ? (
-                      <Text>3</Text>
-                    ) : (
-                      <Text>4</Text>
-                    )}
+                    <Text>{boardTable[indexRow][indexCol]}</Text>
                   </Animated.View>
                 ))}
               </View>
