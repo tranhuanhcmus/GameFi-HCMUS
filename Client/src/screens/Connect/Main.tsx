@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Image, View } from "react-native";
+import { Button, Image, SafeAreaView, View } from "react-native";
 import { W3mAccountButton, useWeb3Modal } from "@web3modal/wagmi-react-native";
 import { useAccount, useDisconnect } from "wagmi"; // Import useDisconnect hook
 import NormalButton from "../../components/Button/NormalButton";
@@ -21,7 +21,7 @@ export default function ConnectScreen() {
   }, [isConnected]);
 
   return (
-    <>
+    <SafeAreaView className="h-full w-full ">
       <View className="relative flex flex-1 bg-[#0C0113]">
         <Image className="absolute inset-0 z-0" source={Moon} />
 
@@ -55,9 +55,7 @@ export default function ConnectScreen() {
                   )}
                 </GradientButton>
               )}
-              {isConnected && (
-               <W3mAccountButton balance="show"/>
-              )}
+              {isConnected && <W3mAccountButton balance="show" />}
             </View>
           </View>
 
@@ -68,6 +66,6 @@ export default function ConnectScreen() {
           </View>
         </View>
       </View>
-    </>
+    </SafeAreaView>
   );
 }

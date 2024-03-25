@@ -136,8 +136,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   petImage: {
-    width: 200,
-    height: 300,
+    width: "70%",
+    height: undefined,
+    aspectRatio: 1,
   },
   button: {
     width: 60,
