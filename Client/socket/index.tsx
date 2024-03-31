@@ -2,8 +2,10 @@ import { Socket } from "socket.io-client";
 import io from "socket.io-client";
 import { SOCKET } from "./constants";
 
-// const server = 'http://192.168.2.29:3001';
-const server = "http://localhost:3001";
+// PLEASE, CHECK YOUR IP OF SERVER TO CHANGE HERE
+const SERVER_URL = "http://192.168.1.14:";
+const PORT = 3001;
+const server = `${SERVER_URL}${PORT}`;
 
 export class SocketIOClient {
   private static instance: SocketIOClient;
@@ -35,6 +37,7 @@ export class SocketIOClient {
       // Handle user creation here
       console.log("create_user");
     });
+    console.log("InitializeSocketIO");
   }
 
   connect() {

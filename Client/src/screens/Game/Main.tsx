@@ -24,14 +24,14 @@ import UpperLayer from "../../components/Game/UpperLayer";
 import { store } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-native-really-awesome-button";
+import { SocketIOClient } from "../../../socket";
 
 const GameScreen = () => {
-  const [blockList, setBlockList] = useState(useRef<any[]>([]));
-  const number = useSelector((state: any) => state.board.number);
-  const dispatch = useDispatch();
   useEffect(() => {}, []);
-  const navigate = useCustomNavigation();
   const { turn, damage } = useSelector((state: any) => state.board);
+  const socket = SocketIOClient.getInstance();
+
+  useEffect(() => {}, []);
 
   return (
     <SafeAreaView>
