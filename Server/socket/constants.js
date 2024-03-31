@@ -1,5 +1,6 @@
 module.exports = {
 	SOCKET: {
+		// OLD CONSTANT
 		JOIN_ROOM: 'join_room',
 		BOOKING: 'Booking Verhical',
 		SEND_DRIVERS_LOCATION: 'send_location_driver_sround',
@@ -21,5 +22,9 @@ module.exports = {
 			'send_notify_cancel_trip_from_customer',
 
 		SEND_NOTIFY_CANCEL_TRIP_TO_DRIVER: 'send_notify_cancel_trip_to_driver',
+
+		// NEW CONSTANTS
+		ATTACK: 'attack',
+		DEFEND: 'defend',
 	},
 };
