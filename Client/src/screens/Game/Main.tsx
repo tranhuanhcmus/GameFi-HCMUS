@@ -39,7 +39,11 @@ const GameScreen = () => {
   }, [damage]);
 
   useEffect(() => {
-    socket.onListenAttack((data) => console.log("TAKE ATTACK ", data));
+    socket.onListenAttack((data) => {
+      console.log("TAKE ATTACK ", data);
+      // HERE SHOULD BE DISPATCH ATTACK
+      // dispatch(...)
+    });
   });
   useEffect(() => {
     socket.emitJoinRoom(room);
