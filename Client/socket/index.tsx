@@ -92,4 +92,15 @@ export class SocketIOClient {
       callback(data);
     });
   }
+
+  emitAttack(data: any) {
+    this.socket.emit(SOCKET.ATTACK, data);
+  }
+  onListenAttack(callback: (data: any) => void) {
+    this.socket.on(SOCKET.ATTACK, (data) => {
+      console.log("TAKE ATTACK ", data);
+
+      callback(data);
+    });
+  }
 }

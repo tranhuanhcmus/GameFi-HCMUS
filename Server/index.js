@@ -15,12 +15,20 @@ const io = new Server(server, {
 	},
 });
 
+// STORE ID OF SOCKET.
+const sockets = [];
+
 io.on('connection', (socket) => {
 	console.log(`User Connected: ${socket.id}`);
 
 	socket.on(SOCKET.JOIN_ROOM, (data) => {
-		socket.join(data);
-		console.log(`User with ID: ${socket.id} joined room: ${data}`);
+		if (sockets.length < 2) {
+			// 1 ROOM ONLY HAVE 2 PLAYERS
+			sockets.push(socket.id);
+			socket.join(data);
+			console.log(`User with ID: ${socket.id} joined room: ${data}`);
+			console.log('sockets ', sockets);
+		}
 	});
 
 	socket.on(SOCKET.UPDATE_LOCATION_DRIVER, (data) => {
@@ -200,6 +208,12 @@ io.on('connection', (socket) => {
 		);
 		await Promise.all(messagePromises);
 		socket.emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, datatemp);
+	});
+
+	socket.on(SOCKET.ATTACK, (data) => {
+		console.log('socketId ', socket.id, ' attack: ', data);
+
+		socket.to(data.room).emit(SOCKET.ATTACK, data.damage);
 	});
 
 	socket.on('disconnect', () => {

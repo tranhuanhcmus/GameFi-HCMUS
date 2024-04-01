@@ -30,8 +30,20 @@ const GameScreen = () => {
   useEffect(() => {}, []);
   const { turn, damage } = useSelector((state: any) => state.board);
   const socket = SocketIOClient.getInstance();
+  const room = "room-101";
+  useEffect(() => {
+    // ATTACK
+    if (damage > 0) {
+      socket.emitAttack({ room, damage });
+    }
+  }, [damage]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    socket.onListenAttack((data) => console.log("TAKE ATTACK ", data));
+  });
+  useEffect(() => {
+    socket.emitJoinRoom(room);
+  }, []);
 
   return (
     <SafeAreaView>
