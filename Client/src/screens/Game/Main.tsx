@@ -28,15 +28,15 @@ import { SocketIOClient } from "../../../socket";
 
 const GameScreen = () => {
   useEffect(() => {}, []);
-  const { turn, damage, blockList } = useSelector((state: any) => state.board);
+  const { turn, damage, blockList, swapCells } = useSelector(
+    (state: any) => state.board,
+  );
   const socket = SocketIOClient.getInstance();
   const room = "room-101";
   useEffect(() => {
     // ATTACK
-    if (damage > 0) {
-      socket.emitAttack({ room, damage, blockList });
-    }
-  }, [damage]);
+    socket.emitAttack({ room, damage, blockList, swapCells });
+  }, [damage, blockList]);
 
   useEffect(() => {
     socket.onListenAttack((data) => {

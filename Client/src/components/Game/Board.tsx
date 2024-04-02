@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   generateRandomMatrix,
   updateBlockList,
+  updateCellsToSwap,
   updateTurn,
 } from "../../redux/boardSlice";
 import { store } from "../../redux/store";
@@ -312,6 +313,13 @@ const GameBoard = (props: any) => {
 
       const matchedBlockList = checkTable(boardTable);
       if (matchedBlockList && matchedBlockList.length > 0) {
+        // UPDATE SWAP 2 CELLS
+        dispatch(
+          updateCellsToSwap({
+            startCell: { i: row, j: col },
+            endCell: { i: row + numCellY, j: col + numCellX },
+          }),
+        );
         swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
         setBlockList([...matchedBlockList]);
       } else {

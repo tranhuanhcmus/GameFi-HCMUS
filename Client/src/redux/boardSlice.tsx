@@ -16,6 +16,10 @@ interface BoardState {
   number: any;
   turn: any;
   damage: any;
+  swapCells: {
+    startCell: { i: number; j: number };
+    endCell: { i: number; j: number };
+  };
 }
 
 const initialState: BoardState = {
@@ -37,6 +41,16 @@ const initialState: BoardState = {
   damage: 0,
   blockList: [],
   number: 0,
+  swapCells: {
+    startCell: {
+      i: 0,
+      j: 0,
+    },
+    endCell: {
+      i: 0,
+      j: 0,
+    },
+  },
 };
 
 const boardSlice = createSlice({
@@ -87,6 +101,11 @@ const boardSlice = createSlice({
       state.damage = action.payload;
       return state;
     },
+
+    updateCellsToSwap(state, action) {
+      state.swapCells = action.payload;
+      return state;
+    },
   },
 });
 
@@ -98,6 +117,7 @@ export const {
   generateRandomMatrix,
   updateTurn,
   updateDamage,
+  updateCellsToSwap,
 } = boardSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;
