@@ -11,7 +11,7 @@ interface PlayerState {
 }
 
 const initialState: PlayerState = {
-  hp: 20,
+  hp: 100,
 };
 
 const playerSlice = createSlice({

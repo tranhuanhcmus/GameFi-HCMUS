@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -11,8 +11,12 @@ import {
 } from "react-native";
 import Pet from "../../../assets/Pet.png";
 import { COLOR } from "../../utils/color";
-
+import GameLogic, { AnimatedValues } from "../../utils/game/game";
+import { HEADER } from "../../constants/header";
+import { useSelector } from "react-redux";
 const GameHeader = () => {
+  const { hp } = useSelector((state: any) => state.player);
+
   return (
     <View style={styles.characterArea}>
       {/* Player 1 - Left*/}
@@ -21,7 +25,15 @@ const GameHeader = () => {
           {/* Thay anh sau */}
           <Image style={styles.avatarImage} source={Pet}></Image>
           <View style={styles.bar}>
-            <View style={styles.energyBar}></View>
+            <View style={styles.energyBar}>
+              <View
+                style={{
+                  height: "100%",
+                  width: hp,
+                  backgroundColor: COLOR.LIGHT_PURPLE,
+                }}
+              ></View>
+            </View>
             <View style={styles.damageBar}></View>
           </View>
         </View>
@@ -70,10 +82,10 @@ const styles = StyleSheet.create({
   avatarImage: {
     width: 50,
     height: 50,
-    borderRadius: 100,
+    borderRadius: HEADER.BORDER_RADIUS,
   },
   energyBar: {
-    width: 80,
+    width: GameLogic.HEALTH_POINT,
     height: 20,
     backgroundColor: "#FF8C05",
     borderTopRightRadius: 4,
@@ -83,7 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   damageBar: {
-    width: 80,
+    width: GameLogic.HEALTH_POINT,
     height: 20,
     backgroundColor: "#70A2FF",
     borderTopRightRadius: 10,
