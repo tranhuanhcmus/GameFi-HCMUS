@@ -15,6 +15,7 @@ const GradientButton = ({
   colors,
   locations,
   start,
+  style,
   end,
   ...rest
 }: Props) => {
@@ -23,6 +24,7 @@ const GradientButton = ({
       colors={colors}
       locations={locations}
       start={start}
+      style={style}
       end={end}
       className={`my-2 rounded-[16px] bg-[#61dafb] px-2 py-3 ${className}`}
     >

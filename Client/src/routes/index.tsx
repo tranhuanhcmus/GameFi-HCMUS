@@ -14,6 +14,7 @@ import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../screens/Connect/Main";
 import GameScreen from "../screens/Game/Main";
 import PlayScreen from "../screens/Play/Main";
+import ShopScreen from "../screens/Shop/Main";
 import TestScreen from "../screens/Test/Main";
 import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
@@ -31,7 +32,8 @@ import HeaderLeft from "../components/HeaderLeft";
 const navArr: NavItem[] = [
   {
     name: "ShopScreen",
-    component: PlayScreen,
+    header: true,
+    component: ShopScreen,
     content: "Shop",
     svg: <SVGStore height="100%" width="100%" />,
   },
