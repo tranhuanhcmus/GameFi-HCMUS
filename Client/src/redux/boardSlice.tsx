@@ -7,9 +7,6 @@ import { Animated } from "react-native";
 import GameLogic from "../utils/game/game";
 
 interface BoardState {
-  size: any;
-  // scoreOpacity: Animated.Value[][];
-  // effects: any;
   blockList: {
     startCell: { i: number; j: number };
     endCell: { i: number; j: number };
@@ -19,24 +16,20 @@ interface BoardState {
   number: any;
   turn: any;
   damage: any;
+  swapCells: {
+    startCell: { i: number; j: number };
+    endCell: { i: number; j: number };
+  };
 }
 
 const initialState: BoardState = {
-  size: {
-    CELLS_IN_ROW: 8,
-    CELLS_IN_COLUMN: 8,
-    WIDTH_PER_CELL: GameLogic.SIZE_TABLE / 8,
-    HEIGHT_PER_CELL: GameLogic.SIZE_TABLE / 8,
-    MARGIN: 3,
-    CELL_SPACING: 3,
-  },
   position: {
     top: 100,
     left: 15,
   },
   table: [
-    [1, 4, 3, 2, 0, 1, 3, 2],
-    [2, 3, 1, 4, 0, 2, 1, 3],
+    [1, 2, 3, 2, 0, 1, 3, 2],
+    [2, 3, 2, 4, 0, 2, 1, 3],
     [0, 4, 1, 2, 3, 0, 2, 4],
     [3, 2, 2, 0, 4, 3, 2, 1],
     [0, 2, 4, 2, 1, 2, 3, 0],
@@ -48,6 +41,16 @@ const initialState: BoardState = {
   damage: 0,
   blockList: [],
   number: 0,
+  swapCells: {
+    startCell: {
+      i: 0,
+      j: 0,
+    },
+    endCell: {
+      i: 0,
+      j: 0,
+    },
+  },
 };
 
 const boardSlice = createSlice({
@@ -98,6 +101,11 @@ const boardSlice = createSlice({
       state.damage = action.payload;
       return state;
     },
+
+    updateCellsToSwap(state, action) {
+      state.swapCells = action.payload;
+      return state;
+    },
   },
 });
 
@@ -109,6 +117,7 @@ export const {
   generateRandomMatrix,
   updateTurn,
   updateDamage,
+  updateCellsToSwap,
 } = boardSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;

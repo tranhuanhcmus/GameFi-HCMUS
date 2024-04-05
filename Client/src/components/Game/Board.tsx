@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   generateRandomMatrix,
   updateBlockList,
+  updateCellsToSwap,
   updateTurn,
 } from "../../redux/boardSlice";
 import { store } from "../../redux/store";
@@ -107,8 +108,9 @@ const GameBoard = (props: any) => {
   ]);
 
   useEffect(() => {
-    for (let i = 0; i < blockState.size.CELLS_IN_ROW; i++) {
-      for (let j = 0; j < blockState.size.CELLS_IN_COLUMN; j++) {
+    // Reset animated value
+    for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
+      for (let j = 0; j < GameLogic.CELLS_IN_COLUMN; j++) {
         initialState.current.backgroundColor[i][j].setValue(-1);
         initialState.current.borderColor[i][j].setValue(0);
         initialState.current.zIndex[i][j].setValue(0);
@@ -272,9 +274,9 @@ const GameBoard = (props: any) => {
     // CHECK CELL NEARE BORDER OF TABLE
     if (
       row + numCellY < 0 ||
-      row + numCellY >= blockState.size.CELLS_IN_ROW ||
+      row + numCellY >= GameLogic.CELLS_IN_ROW ||
       col + numCellX < 0 ||
-      col + numCellX >= blockState.size.CELLS_IN_COL ||
+      col + numCellX >= GameLogic.CELLS_IN_COLUMN ||
       (numCellX == 0 && numCellY == 0)
     ) {
       return;
@@ -311,6 +313,13 @@ const GameBoard = (props: any) => {
 
       const matchedBlockList = checkTable(boardTable);
       if (matchedBlockList && matchedBlockList.length > 0) {
+        // UPDATE SWAP 2 CELLS
+        dispatch(
+          updateCellsToSwap({
+            startCell: { i: row, j: col },
+            endCell: { i: row + numCellY, j: col + numCellX },
+          }),
+        );
         swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
         setBlockList([...matchedBlockList]);
       } else {
@@ -342,15 +351,18 @@ const GameBoard = (props: any) => {
     });
   };
 
-  // useEffect(() => {
-  //   const matchedBlocklist = checkTable(boardTable);
-  //   if (matchedBlocklist && matchedBlocklist.length > 0) {
-  //     setBlockList([...matchedBlocklist]);
-  //   } else {
-  //     console.log("No matched 3 cells found");
-  //     // dispatch(generateRandomMatrix());
-  //   }
-  // }, [table]);
+  useEffect(() => {
+    // Delay before exploding next
+    const delayExecution = setTimeout(() => {
+      const matchedBlocklist = checkTable(boardTable);
+      if (matchedBlocklist && matchedBlocklist.length > 0) {
+        setBlockList([...matchedBlocklist]);
+      } else {
+        console.log("No matched 3 cells found");
+      }
+    }, 500);
+    return () => clearTimeout(delayExecution);
+  }, [table]);
 
   useEffect(() => {
     onDestroyCells();
@@ -396,7 +408,7 @@ const GameBoard = (props: any) => {
       index: number,
       index2: number,
     ) => {
-      const width = blockState.size.WIDTH_PER_CELL;
+      const width = GameLogic.WIDTH_PER_CELL;
       // Check if the user is sliding in the x-axis direction
       const xDirection = Math.abs(gesture.dx) > width / 2;
       // Check if the user is sliding in the y-axis direction
@@ -421,9 +433,9 @@ const GameBoard = (props: any) => {
         // Check if the user is sliding in the out of the board
         if (
           index2 + numCellY < 0 ||
-          index2 + numCellY > blockState.size.CELLS_IN_COLUMN - 1 ||
+          index2 + numCellY > GameLogic.CELLS_IN_COLUMN - 1 ||
           index + numCellX < 0 ||
-          index + numCellX > blockState.size.CELLS_IN_ROW - 1
+          index + numCellX > GameLogic.CELLS_IN_ROW - 1
         )
           return;
       }
@@ -436,10 +448,10 @@ const GameBoard = (props: any) => {
       swapAnimation(index2, index, numCellX, numCellY);
     };
 
-    return Array(blockState.size.CELLS_IN_ROW)
+    return Array(GameLogic.CELLS_IN_ROW)
       .fill(0)
       .map((_, index: number) =>
-        Array(blockState.size.CELLS_IN_COLUMN)
+        Array(GameLogic.CELLS_IN_COLUMN)
           .fill(0)
           .map((_, index2: number) =>
             PanResponder.create({
@@ -502,17 +514,7 @@ const GameBoard = (props: any) => {
                     }}
                     {...panResponder[indexRow][indexCol].panHandlers}
                   >
-                    {cell == 0 ? (
-                      <Text>0</Text>
-                    ) : cell == 1 ? (
-                      <Text>1</Text>
-                    ) : cell == 2 ? (
-                      <Text>2</Text>
-                    ) : cell == 3 ? (
-                      <Text>3</Text>
-                    ) : (
-                      <Text>4</Text>
-                    )}
+                    <Text>{cell}</Text>
                   </Animated.View>
                 );
               })}

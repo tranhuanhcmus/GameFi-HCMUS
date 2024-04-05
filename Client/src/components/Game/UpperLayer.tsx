@@ -29,7 +29,7 @@ const UpperLayer = () => {
   const blockList = useSelector((state: any) => state.board.blockList);
   const blockState = store.getState().board;
   const { turn, damage, table } = useSelector((state: any) => state.board);
-  const [initialState, setInitialState] = useState({
+  const initialState = useRef({
     coordinate: GameLogic.generateAnimatedValueXY(),
   });
   const [isReady, setIsReady] = useState(false);
@@ -40,12 +40,20 @@ const UpperLayer = () => {
   const cnt = useRef(0);
 
   useEffect(() => {
-    if (blockList && blockList.length) setIsReady(true);
-    else setIsReady(false);
+    if (blockList && blockList.length) {
+      setIsReady(true);
+
+      // Reset Animated.Value
+      for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
+        for (let j = 0; j < GameLogic.CELLS_IN_COLUMN; j++) {
+          initialState.current.coordinate[i][j].x.setValue(0);
+          initialState.current.coordinate[i][j].y.setValue(0);
+        }
+      }
+    } else setIsReady(false);
   }, [blockList]);
   useEffect(() => {
     if (isReady) {
-      console.log("Chay useEffect Animation");
       cnt.current = blockList.length;
       startCollapseAnimation();
     }
@@ -110,19 +118,15 @@ const UpperLayer = () => {
   const startCollapseAnimation = () => {
     if (blockList !== null && blockList.length > 0) {
       blockList.forEach((block: any) => {
-        console.log("block: ", block);
-
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
 
         const { blockHeight } = GameLogic.calculateCollapseCols(block);
 
-        initialState.coordinate;
-
-        for (let i = 0; i < initialState.coordinate.length; i++) {
-          for (let j = 0; j < initialState.coordinate[0].length; j++) {
-            Animated.timing(initialState.coordinate[i][j], {
-              toValue: { x: 0, y: blockHeight }, // PROBLEM HERE!!!!
-              duration: 2000,
+        for (let i = 0; i < initialState.current.coordinate.length; i++) {
+          for (let j = 0; j < initialState.current.coordinate[0].length; j++) {
+            Animated.spring(initialState.current.coordinate[i][j], {
+              toValue: { x: 0, y: blockHeight },
+              tension: 300,
               useNativeDriver: true,
             }).start(() => {
               // THIS RUN AFTER THE ANIMATION FINISHED
@@ -155,8 +159,6 @@ const UpperLayer = () => {
         const { top, left, blockWidth, blockHeight } =
           GameLogic.calculateCollapseCols(block);
 
-        console.log("cells ", cells);
-
         return (
           <View
             key={indexBlock}
@@ -168,8 +170,7 @@ const UpperLayer = () => {
               height: blockHeight,
               width: blockWidth,
               overflow: "hidden",
-              backgroundColor: COLOR.WHITE,
-              // opacity: 0,
+              backgroundColor: "transparent",
               borderColor: COLOR.PURPLE,
             }}
           >
@@ -185,41 +186,32 @@ const UpperLayer = () => {
                   <Animated.View
                     key={indexCol}
                     style={{
-                      top:
-                        cells[0].length > 1
-                          ? top - blockHeight
-                          : top - 2 * blockHeight,
-                      margin: blockState.size.CELL_SPACING,
-                      height: blockState.size.HEIGHT_PER_CELL,
-                      width: blockState.size.WIDTH_PER_CELL,
-                      flexWrap: "wrap",
+                      top: -blockHeight, // IMPORTANT
+                      margin: GameLogic.CELL_SPACING,
+                      height: GameLogic.HEIGHT_PER_CELL,
+                      width: GameLogic.WIDTH_PER_CELL,
                       zIndex: 99,
                       backgroundColor: COLOR.RED,
                       borderRadius: 5,
-
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      alignContent: "center",
                       transform: [
                         {
                           translateX:
-                            initialState.coordinate[indexRow][indexCol].x,
+                            initialState.current.coordinate[indexRow][indexCol]
+                              .x,
                         },
                         {
                           translateY:
-                            initialState.coordinate[indexRow][indexCol].y,
+                            initialState.current.coordinate[indexRow][indexCol]
+                              .y,
                         },
                       ],
                     }}
                   >
-                    {boardTable[indexRow][indexCol] == 0 ? (
-                      <Text>0</Text>
-                    ) : boardTable[indexRow][indexCol] == 1 ? (
-                      <Text>1</Text>
-                    ) : boardTable[indexRow][indexCol] == 2 ? (
-                      <Text>2</Text>
-                    ) : boardTable[indexRow][indexCol] == 3 ? (
-                      <Text>3</Text>
-                    ) : (
-                      <Text>4</Text>
-                    )}
+                    <Text>{boardTable[indexRow][indexCol]}</Text>
                   </Animated.View>
                 ))}
               </View>

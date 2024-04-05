@@ -7,6 +7,8 @@ export interface AnimatedValues {
   [key: string]: any[][];
 }
 export default class GameLogic {
+  public static HEALTH_POINT = 80;
+
   /**
    * Size in pixel of table, please change if needed.
    */
@@ -147,10 +149,10 @@ export default class GameLogic {
     let countEmptyTop = 0;
 
     for (let k = 0; k <= end.i; k++) {
-      for (let h = start.j; h <= end.j; h++) {
-        countEmptyTop++;
-      }
+      // for (let h = start.j; h <= end.j; h++) {
+      countEmptyTop++;
     }
+    // }
 
     // CALCULATE THE POSITION OF START CELL IN BLOCK
     const startCellPos = {
@@ -198,6 +200,8 @@ export default class GameLogic {
 
     // CALCULATE THE HEIGHT OF WIDTH
     // BUG HERE
+    console.log("countEmptyTop ", countEmptyTop);
+
     const blockHeight =
       countEmptyTop * (this.HEIGHT_PER_CELL + 2 * this.CELL_SPACING);
 
@@ -208,43 +212,6 @@ export default class GameLogic {
       blockHeight: blockHeight,
     };
   };
-
-  // public static checkTable = (table: any) => {
-  //   const matchedBlockList = [];
-  //   const rows = this.CELLS_IN_ROW;
-  //   const cols = this.CELLS_IN_COLUMN;
-  //   // Iterate through each cell in the matrix
-  //   for (let i = 0; i < rows; i++) {
-  //     for (let j = 0; j < cols; j++) {
-  //       const current = table[i][j];
-
-  //       // Check horizontally (to the right)
-  //       if (
-  //         j + 2 < cols &&
-  //         table[i][j + 1] === current &&
-  //         table[i][j + 2] === current
-  //       ) {
-  //         matchedBlockList.push({
-  //           startCell: { i: i, j: j },
-  //           endCell: { i: i, j: j + 2 },
-  //         });
-  //       }
-
-  //       // Check vertically (below)
-  //       if (
-  //         i + 2 < rows &&
-  //         table[i + 1][j] === current &&
-  //         table[i + 2][j] === current
-  //       ) {
-  //         matchedBlockList.push({
-  //           startCell: { i: i, j: j },
-  //           endCell: { i: i + 2, j: j },
-  //         });
-  //       }
-  //     }
-  //   }
-  //   return matchedBlockList;
-  // };
 
   public static checkTable(table: any) {
     const rows = this.CELLS_IN_ROW;

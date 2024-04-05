@@ -24,14 +24,39 @@ import UpperLayer from "../../components/Game/UpperLayer";
 import { store } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-native-really-awesome-button";
+import { SocketIOClient } from "../../../socket";
+import { updateHp } from "../../redux/playerSlice";
 
 const GameScreen = () => {
-  const [blockList, setBlockList] = useState(useRef<any[]>([]));
-  const number = useSelector((state: any) => state.board.number);
   const dispatch = useDispatch();
   useEffect(() => {}, []);
-  const navigate = useCustomNavigation();
-  const { turn, damage } = useSelector((state: any) => state.board);
+  const { turn, damage, blockList, swapCells } = useSelector(
+    (state: any) => state.board,
+  );
+
+  const { hp } = useSelector((state: any) => state.player);
+  const socket = SocketIOClient.getInstance();
+  const room = "room-101";
+  useEffect(() => {
+    // ATTACK
+    // socket.emitAttack({ room, damage, blockList, swapCells });
+  }, [damage, blockList]);
+
+  useEffect(() => {
+    console.log("hp ", hp);
+    if (hp <= 0) {
+      console.log("STOP GAME");
+    } else {
+      dispatch(updateHp(damage));
+      // socket.onListenAttack((data) => dispatch(updateHp({ data })));
+    }
+  }, [damage, blockList]);
+  useEffect(() => {
+    console.log("hp ", hp);
+  }, []);
+  // useEffect(() => {
+  //   socket.emitJoinRoom(room);
+  // }, []);
 
   return (
     <SafeAreaView>
@@ -69,3 +94,6 @@ const styles = StyleSheet.create({
 });
 
 export default GameScreen;
+function dispatch(arg0: { payload: any; type: "player/updateHp" }) {
+  throw new Error("Function not implemented.");
+}

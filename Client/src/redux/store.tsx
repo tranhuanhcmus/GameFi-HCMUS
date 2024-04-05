@@ -5,6 +5,7 @@ import loadingSlice from "./loadingSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import boardSlice from "./boardSlice";
 import upperLayerSlice from "./uppLayerSlice";
+import playerSlice from "./playerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,11 +14,13 @@ export const store = configureStore({
     loading: loadingSlice,
     board: boardSlice,
     upperLayer: upperLayerSlice,
+    player: playerSlice,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    immutableCheck: false,
-    serializableCheck: false,
-  })
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
