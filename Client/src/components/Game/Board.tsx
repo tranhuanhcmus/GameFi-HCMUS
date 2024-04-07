@@ -530,8 +530,8 @@ const GameBoard = (props: any) => {
 
 const styles = StyleSheet.create({
   boardContainer: {
-    height: "auto",
-    width: "auto",
+    height: GameLogic.TABLE_HEIGHT,
+    width: GameLogic.TABLE_WIDTH,
     backgroundColor: COLOR.WHITE,
     alignContent: "center",
     top: GameLogic.POSITION_TOP,

@@ -1,4 +1,5 @@
 import { Animated } from "react-native";
+import ConstantsResponsive from "../../constants/Constanst";
 export default interface AnimationPropertyType {
   [key: string]: string;
 }
@@ -26,9 +27,16 @@ export default class GameLogic {
 
   public static HEIGHT_PER_CELL = this.SIZE_TABLE / 8;
 
+  public static TABLE_HEIGHT =
+    this.CELLS_IN_COLUMN * (this.HEIGHT_PER_CELL + 2 * this.MARGIN);
+
+  public static TABLE_WIDTH =
+    this.CELLS_IN_COLUMN * (this.HEIGHT_PER_CELL + 2 * this.MARGIN);
+
   public static POSITION_TOP = 200;
 
-  public static POSITION_LEFT = 15;
+  public static POSITION_LEFT =
+    (ConstantsResponsive.MAX_WIDTH - this.TABLE_HEIGHT) / 2;
 
   /** Animation Property */
   public static AnimationProperty: AnimationPropertyType = {
