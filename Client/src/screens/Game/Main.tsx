@@ -9,12 +9,7 @@ import {
   TouchableOpacity,
   PanResponder,
 } from "react-native";
-import Pet from "../../../assets/Pet.png";
-import Fire from "../../../assets/fire.jpg";
-import LightNight from "../../../assets/lightnight.jpg";
-import Shield from "../../../assets/shield.jpg";
-import Sword from "../../../assets/sword.jpg";
-import YinYan from "../../../assets/batquai.jpg";
+import backGroundImage from "../../../assets/background3.png";
 import { COLOR } from "../../utils/color";
 import NormalButton from "../../components/Button/NormalButton";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
@@ -26,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "react-native-really-awesome-button";
 import { SocketIOClient } from "../../../socket";
 import { updateHp } from "../../redux/playerSlice";
+import ConstantsResponsive from "../../constants/Constanst";
 
 const GameScreen = () => {
   const dispatch = useDispatch();
@@ -61,6 +57,11 @@ const GameScreen = () => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
+        <Image
+          style={styles.backgroundImage}
+          resizeMode="stretch"
+          source={backGroundImage}
+        />
         <GameHeader />
 
         <UpperLayer />
@@ -90,6 +91,11 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     justifyContent: "center",
+  },
+  backgroundImage: {
+    width: ConstantsResponsive.MAX_WIDTH,
+    height: ConstantsResponsive.MAX_HEIGHT,
+    position: "absolute",
   },
 });
 

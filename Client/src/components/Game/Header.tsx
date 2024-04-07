@@ -10,6 +10,7 @@ import {
   PanResponder,
 } from "react-native";
 import Pet from "../../../assets/Pet.png";
+import Avatar from "../../../assets/avatar.png";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
 import { HEADER } from "../../constants/header";
@@ -23,7 +24,7 @@ const GameHeader = () => {
       <View style={styles.player}>
         <View style={styles.playerHeader}>
           {/* Thay anh sau */}
-          <Image style={styles.avatarImage} source={Pet}></Image>
+          <Image style={styles.avatarImage} source={Avatar}></Image>
           <View style={styles.bar}>
             <View style={styles.energyBar}>
               <View
@@ -47,7 +48,7 @@ const GameHeader = () => {
             <View style={styles.energyBar}></View>
             <View style={styles.damageBar}></View>
           </View>
-          <Image style={styles.avatarImage} source={Pet}></Image>
+          <Image style={styles.avatarImage} source={Avatar}></Image>
         </View>
         <Image style={styles.petImage} source={Pet} />
       </View>
