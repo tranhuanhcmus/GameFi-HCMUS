@@ -11,7 +11,7 @@ interface PlayerState {
 }
 
 const initialState: PlayerState = {
-  hp: 100,
+  hp: GameLogic.HEALTH_POINT,
 };
 
 const playerSlice = createSlice({
