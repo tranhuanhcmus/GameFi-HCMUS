@@ -208,8 +208,6 @@ export default class GameLogic {
 
     // CALCULATE THE HEIGHT OF WIDTH
     // BUG HERE
-    console.log("countEmptyTop ", countEmptyTop);
-
     const blockHeight =
       countEmptyTop * (this.HEIGHT_PER_CELL + 2 * this.CELL_SPACING);
 

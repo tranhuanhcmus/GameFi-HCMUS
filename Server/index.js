@@ -20,7 +20,7 @@ const sockets = [];
 
 io.on('connection', (socket) => {
 	console.log(`User Connected: ${socket.id}`);
-
+	console.log('Player in room: ', sockets.length);
 	socket.on(SOCKET.JOIN_ROOM, (data) => {
 		if (sockets.length < 2) {
 			// 1 ROOM ONLY HAVE 2 PLAYERS
@@ -212,12 +212,18 @@ io.on('connection', (socket) => {
 
 	socket.on(SOCKET.ATTACK, (data) => {
 		console.log('socketId ', socket.id, ' attack: ', data);
-
-		socket.to(data.room).emit(SOCKET.ATTACK, data.damage);
+		console.log(
+			'send to component ',
+			sockets.find((item) => item != socket.id)
+		);
+		socket
+			.to(sockets.find((item) => item != socket.id))
+			.emit(SOCKET.ATTACK, data.damage);
 	});
 
 	socket.on('disconnect', () => {
 		console.log('User Disconnected', socket.id);
+		sockets.pop();
 	});
 });
 const PORT = 3001;

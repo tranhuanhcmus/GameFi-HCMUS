@@ -20,8 +20,10 @@ import {
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
+import { updateComponentHp } from "../../redux/playerSlice";
 
 const GameBoard = (props: any) => {
+  const { socket } = props;
   const dispatch = useDispatch();
   const blockState = store.getState().board;
   const INPUT_RANGE = [-1, 0, 1];
@@ -32,6 +34,10 @@ const GameBoard = (props: any) => {
   const blockStateTable = useSelector((state: any) => state.board.table);
 
   const table = useSelector((state: any) => state.board.table);
+  const { damage } = useSelector((state: any) => state.board);
+
+  const { hp, componentHp } = useSelector((state: any) => state.player);
+
   const boardTable = useMemo(() => {
     return table.map((row: any) => [...row]);
   }, [table]);
@@ -233,9 +239,18 @@ const GameBoard = (props: any) => {
         if (cntCell.current == 0) {
           setBlockList([]);
           dispatch(updateBlockList(blockList));
+
+          attackComponent();
         }
       });
     });
+  };
+
+  const attackComponent = () => {
+    console.log("Tan cong no, cmn");
+
+    dispatch(updateComponentHp(10));
+    socket.emitAttack({ room: "room-101", damage: 10 });
   };
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING
@@ -358,7 +373,7 @@ const GameBoard = (props: any) => {
       if (matchedBlocklist && matchedBlocklist.length > 0) {
         setBlockList([...matchedBlocklist]);
       } else {
-        console.log("No matched 3 cells found");
+        // console.log("No matched 3 cells found");
       }
     }, 500);
     return () => clearTimeout(delayExecution);

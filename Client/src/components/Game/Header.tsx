@@ -20,19 +20,18 @@ interface props {
 }
 
 const GameHeader = () => {
-  const { hp } = useSelector((state: any) => state.player);
-
+  const { hp, componentHp } = useSelector((state: any) => state.player);
   return (
     <View style={styles.characterArea}>
-      <PlayerLeft hp={hp} />
+      <User hp={hp} />
 
-      <PlayerRight hp={hp} />
+      <Component hp={componentHp} />
     </View>
   );
 };
 
 // PLAYER ON THE LEFT <PLAYER 1>
-const PlayerLeft: React.FC<props> = ({ hp }) => {
+const User: React.FC<props> = ({ hp }) => {
   return (
     <View style={styles.player}>
       <View style={styles.playerHeader}>
@@ -45,7 +44,7 @@ const PlayerLeft: React.FC<props> = ({ hp }) => {
 };
 
 // PLAYER ON THE RIGHT <PLAYER 2>
-const PlayerRight: React.FC<props> = ({ hp }) => {
+const Component: React.FC<props> = ({ hp }) => {
   return (
     <View style={styles.player}>
       <View style={styles.playerHeader}>

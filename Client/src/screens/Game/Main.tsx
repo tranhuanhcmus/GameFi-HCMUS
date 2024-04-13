@@ -20,7 +20,7 @@ import { store } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-native-really-awesome-button";
 import { SocketIOClient } from "../../../socket";
-import { updateHp } from "../../redux/playerSlice";
+import { updateComponentHp, updateHp } from "../../redux/playerSlice";
 import ConstantsResponsive from "../../constants/Constanst";
 
 const GameScreen = () => {
@@ -30,29 +30,25 @@ const GameScreen = () => {
     (state: any) => state.board,
   );
 
-  const { hp } = useSelector((state: any) => state.player);
+  const { hp, componentHp } = useSelector((state: any) => state.player);
   const socket = SocketIOClient.getInstance();
   const room = "room-101";
-  useEffect(() => {
-    // ATTACK
-    // socket.emitAttack({ room, damage, blockList, swapCells });
-  }, [damage, blockList]);
 
   useEffect(() => {
-    console.log("hp ", hp);
+    console.log("Chay useEffect nay ");
     if (hp <= 0) {
       console.log("STOP GAME");
     } else {
-      dispatch(updateHp(damage));
-      // socket.onListenAttack((data) => dispatch(updateHp({ data })));
+      socket.onListenAttack((data) => {
+        console.log("Ah bi tan cong, cmn ", data);
+        dispatch(updateHp(data));
+      });
     }
-  }, [damage, blockList]);
+  }, []); // BUGGGGGGGG
+
   useEffect(() => {
-    console.log("hp ", hp);
+    socket.emitJoinRoom(room);
   }, []);
-  // useEffect(() => {
-  //   socket.emitJoinRoom(room);
-  // }, []);
 
   return (
     <SafeAreaView>
@@ -66,17 +62,20 @@ const GameScreen = () => {
 
         <UpperLayer />
 
-        <GameBoard />
+        <GameBoard socket={socket} />
 
         <View
           style={{
             top: 300,
           }}
         >
-          <Text style={{ color: COLOR.WHITE }}>turn: {turn}</Text>
-          <Text style={{ color: COLOR.WHITE }}>damage: {damage}</Text>
+          <Text style={{ color: COLOR.WHITE }}>
+            turn: {turn} damage: {damage}
+          </Text>
+          <Text style={{ color: COLOR.WHITE }}>
+            hp: {hp} componentHp: {componentHp}
+          </Text>
         </View>
-        {/* TODO: Bottom nav */}
       </View>
     </SafeAreaView>
   );

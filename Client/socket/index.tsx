@@ -98,8 +98,6 @@ export class SocketIOClient {
   }
   onListenAttack(callback: (data: any) => void) {
     this.socket.on(SOCKET.ATTACK, (data) => {
-      console.log("TAKE ATTACK ", data);
-
       callback(data);
     });
   }
