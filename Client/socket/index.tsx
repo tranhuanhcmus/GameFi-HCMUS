@@ -7,6 +7,18 @@ const SERVER_URL = "http://192.168.1.14:";
 const PORT = 3001;
 const server = `${SERVER_URL}${PORT}`;
 
+export type Cell = {
+  row: string;
+  column: string;
+};
+
+export type DataSocketTransfer = {
+  room: string;
+  damage: number;
+  move: { startCell: Cell; endCell: Cell };
+  // blockList: Cell[]
+};
+
 export class SocketIOClient {
   private static instance: SocketIOClient;
   private socket!: Socket; // Using "!" to indicate that it will be assigned later
@@ -96,8 +108,18 @@ export class SocketIOClient {
   emitAttack(data: any) {
     this.socket.emit(SOCKET.ATTACK, data);
   }
-  onListenAttack(callback: (data: any) => void) {
+  onListenAttack(callback: (data: DataSocketTransfer) => void) {
     this.socket.on(SOCKET.ATTACK, (data) => {
+      callback(data);
+    });
+  }
+
+  emitMove(data: any) {
+    this.socket.emit(SOCKET.MOVE, data);
+  }
+
+  onListenMove(callback: (data: any) => void) {
+    this.socket.on(SOCKET.MOVE, (data) => {
       callback(data);
     });
   }

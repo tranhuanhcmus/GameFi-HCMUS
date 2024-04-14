@@ -9,11 +9,13 @@ import GameLogic from "../utils/game/game";
 interface PlayerState {
   hp: any;
   componentHp: any;
+  move: any; // Store information about component move
 }
 
 const initialState: PlayerState = {
   hp: GameLogic.HEALTH_POINT,
   componentHp: GameLogic.HEALTH_POINT,
+  move: {},
 };
 
 const playerSlice = createSlice({
@@ -28,11 +30,16 @@ const playerSlice = createSlice({
       state.componentHp = state.componentHp - action.payload;
       return state;
     },
+
+    updateMove(state, action) {
+      state.move = action.payload;
+      return state;
+    },
   },
 });
 
 export { playerSlice };
-export const { updateHp, updateComponentHp } = playerSlice.actions;
+export const { updateHp, updateComponentHp, updateMove } = playerSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;
 

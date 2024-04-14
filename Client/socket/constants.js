@@ -14,4 +14,5 @@ export const SOCKET = {
 
   SEND_NOTIFY_CANCEL_TRIP_TO_DRIVER: "send_notify_cancel_trip_to_driver",
   ATTACK: "attack",
+  MOVE: "move",
 };

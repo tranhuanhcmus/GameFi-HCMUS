@@ -273,4 +273,13 @@ export default class GameLogic {
 
     return matchedBlockList;
   }
+
+  public static calculateMove(move: any) {
+    return {
+      row: move.startCell.row,
+      col: move.startCell.column,
+      numCellX: move.endCell.column - move.startCell.column,
+      numCellY: move.endCell.row - move.startCell.row,
+    };
+  }
 }

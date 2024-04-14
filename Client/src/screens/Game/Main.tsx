@@ -19,8 +19,12 @@ import UpperLayer from "../../components/Game/UpperLayer";
 import { store } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-native-really-awesome-button";
-import { SocketIOClient } from "../../../socket";
-import { updateComponentHp, updateHp } from "../../redux/playerSlice";
+import { DataSocketTransfer, SocketIOClient } from "../../../socket";
+import {
+  updateComponentHp,
+  updateHp,
+  updateMove,
+} from "../../redux/playerSlice";
 import ConstantsResponsive from "../../constants/Constanst";
 
 const GameScreen = () => {
@@ -33,18 +37,6 @@ const GameScreen = () => {
   const { hp, componentHp } = useSelector((state: any) => state.player);
   const socket = SocketIOClient.getInstance();
   const room = "room-101";
-
-  useEffect(() => {
-    console.log("Chay useEffect nay ");
-    if (hp <= 0) {
-      console.log("STOP GAME");
-    } else {
-      socket.onListenAttack((data) => {
-        console.log("Ah bi tan cong, cmn ", data);
-        dispatch(updateHp(data));
-      });
-    }
-  }, []); // BUGGGGGGGG
 
   useEffect(() => {
     socket.emitJoinRoom(room);

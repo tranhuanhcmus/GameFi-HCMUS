@@ -218,7 +218,18 @@ io.on('connection', (socket) => {
 		);
 		socket
 			.to(sockets.find((item) => item != socket.id))
-			.emit(SOCKET.ATTACK, data.damage);
+			.emit(SOCKET.ATTACK, data);
+	});
+
+	socket.on(SOCKET.MOVE, (data) => {
+		console.log('socketId ', socket.id, ' move: ', data);
+		console.log(
+			'send to component ',
+			sockets.find((item) => item != socket.id)
+		);
+		socket
+			.to(sockets.find((item) => item != socket.id))
+			.emit(SOCKET.MOVE, data);
 	});
 
 	socket.on('disconnect', () => {
