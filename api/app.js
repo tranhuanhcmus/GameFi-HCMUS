@@ -4,8 +4,7 @@ const db = require('./config.js');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRouter');
 const {interact} = require('./interaction');
-const {catchEventNFT} = require(
-  './catchEventNFT')
+const {catchEventNFT} = require('./catchNFTEvents.js')
 
 const app = express();
 const port = 4500 || process.env.PORT;
