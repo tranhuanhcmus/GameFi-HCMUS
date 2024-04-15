@@ -24,6 +24,8 @@ import PetCarousel from "../../components/Pets/PetCarousel";
 
 import NormalButton from "../../components/Button/NormalButton";
 import SpriteSheet from "rn-sprite-sheet";
+import AwesomeButton from "react-native-really-awesome-button";
+import { COLOR } from "../../utils/color";
 type Props = {};
 const HomeScreen = () => {
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
@@ -145,29 +147,31 @@ const HomeScreen = () => {
         className=" flex flex-row  justify-between "
         style={styles.labelButton}
       >
-        <NormalButton
-          className={"flex  items-center justify-center bg-[#FFE243] px-5 "}
+        <AwesomeButton
+          onPress={() => {
+            console.log("Press Line-Up build");
+          }}
+          backgroundDarker={COLOR.DARK_YELLOW}
+          backgroundColor={COLOR.BRIGHT_YELLOW}
+          width={150}
+          height={60}
+          borderRadius={15}
         >
-          <Text
-            className="text-center  font-semibold  text-black "
-            style={styles.textSize}
-          >
-            Line-Up build
-          </Text>
-        </NormalButton>
-        <NormalButton
+          <Text style={styles.textSize}>Line-Up build</Text>
+        </AwesomeButton>
+
+        <AwesomeButton
           onPress={() => {
             navigate.replace("Game");
           }}
-          className={" items-center justify-center bg-[#FFE243] px-5 "}
+          backgroundDarker={COLOR.DARK_YELLOW}
+          backgroundColor={COLOR.BRIGHT_YELLOW}
+          width={150}
+          height={60}
+          borderRadius={15}
         >
-          <Text
-            className=" text-center   font-semibold  text-black"
-            style={styles.textSize}
-          >
-            Normal play
-          </Text>
-        </NormalButton>
+          <Text style={styles.textSize}>Normal play</Text>
+        </AwesomeButton>
       </View>
     </View>
   );
@@ -192,6 +196,9 @@ const styles = StyleSheet.create({
   textSize: {
     fontSize: ConstantsResponsive.YR * 20,
     lineHeight: ConstantsResponsive.YR * 20,
+    fontWeight: "bold",
+    color: COLOR.BLACK,
+    textAlign: "center",
   },
 
   topPanel: {

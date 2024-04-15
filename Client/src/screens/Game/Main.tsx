@@ -36,7 +36,7 @@ const GameScreen = () => {
 
   const { hp, componentHp } = useSelector((state: any) => state.player);
   const socket = SocketIOClient.getInstance();
-  const room = "room-101";
+  const room = "room-101"; // HARD-CODE. PLEASE CHANGE THIS.
 
   useEffect(() => {
     socket.emitJoinRoom(room);
