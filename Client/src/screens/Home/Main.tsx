@@ -26,8 +26,12 @@ import NormalButton from "../../components/Button/NormalButton";
 import SpriteSheet from "rn-sprite-sheet";
 import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
+import LoadingModal from "../../components/Game/LoadingModal";
 type Props = {};
+
 const HomeScreen = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
   const userState = useSelector(selectUser);
   const health = 60;
@@ -97,6 +101,7 @@ const HomeScreen = () => {
         resizeMode="stretch"
         source={require("../../../assets/BackGround.png")}
       />
+      <LoadingModal isVisible={isVisible} setIsVisible={setIsVisible} />
       <View
         className="mt-20 flex w-full flex-row justify-center "
         style={{ marginTop: ConstantsResponsive.YR * 120 }}
@@ -162,7 +167,8 @@ const HomeScreen = () => {
 
         <AwesomeButton
           onPress={() => {
-            navigate.replace("Game");
+            if (!isVisible) setIsVisible(true);
+            // navigate.replace("Game"); TODO
           }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
