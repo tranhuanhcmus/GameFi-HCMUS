@@ -86,7 +86,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.PURPLE,
     width: "100%",
     height: "100%",
-    // display: "flex",
+
+    display: "flex",
+
     alignContent: "center",
     alignItems: "center",
     justifyContent: "center",
