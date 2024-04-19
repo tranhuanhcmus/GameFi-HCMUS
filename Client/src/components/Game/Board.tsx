@@ -40,6 +40,12 @@ const GameBoard = (props: any) => {
   const table = useSelector((state: any) => state.board.table);
   const { hp, gameRoom } = useSelector((state: any) => state.player);
 
+  useEffect(() => {
+    socket.onListenTakeDamage((data: any) => {
+      dispatch(updateHp(data));
+    });
+  }, []);
+
   // useState
   const [blockList, setBlockList] = useState<any[]>([]);
 
@@ -272,7 +278,7 @@ const GameBoard = (props: any) => {
           setBlockList([]);
           dispatch(updateBlockList(blockList));
 
-          // attackComponent();
+          attackComponent();
         }
       });
     });
@@ -281,8 +287,9 @@ const GameBoard = (props: any) => {
   // THIS FUNCTION USE SOCKET TO SEND TO SERVER.
   const attackComponent = () => {
     dispatch(updateComponentHp(10));
+    socket.emitEventGame({ gameRoom: gameRoom, damage: 10, move: {} });
 
-    socket.emitAttack({ room: "room-101", damage: 10, move: {} });
+    // socket.emitAttack({ room: "room-101", damage: 10, move: {} });
   };
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING

@@ -96,6 +96,12 @@ export class SocketIOClient {
     this.socket.emit(SOCKET.EVENT_DIAMOND, data);
   }
 
+  onListenTakeDamage(callback: (data: any) => void) {
+    this.socket.on(SOCKET.TAKE_DAMAGE, (data) => {
+      callback(data);
+    });
+  }
+
   onListenKeyRoom(callback: (data: any) => void) {
     this.socket.on(SOCKET.KEY_ROOM, (data) => {
       callback(data);

@@ -3,6 +3,7 @@ export const SOCKET = {
   FIND_MATCH: "find_matches",
   KEY_ROOM: "key_room",
   EVENT_DIAMOND: "event_diamond",
+  TAKE_DAMAGE: "take_damage",
 
   BOOKING: "Booking Verhical",
   SEND_DRIVERS_LOCATION: "send_location_driver_sround",
