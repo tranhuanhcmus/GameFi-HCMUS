@@ -26,5 +26,7 @@ module.exports = {
 		// NEW CONSTANTS
 		ATTACK: 'attack',
 		DEFEND: 'defend',
+
+		MOVE: 'move',
 	},
 };

@@ -2,10 +2,46 @@ import { Socket } from "socket.io-client";
 import io from "socket.io-client";
 import { SOCKET } from "./constants";
 
-// PLEASE, CHECK YOUR IP OF SERVER TO CHANGE HERE
-const SERVER_URL = "http://192.168.1.14:";
 const PORT = 3001;
-const server = `${SERVER_URL}${PORT}`;
+let server: string;
+server = `http://localhost:${PORT}`;
+// // Check if the environment is a browser and window.location is defined
+// const isBrowser =
+//   typeof window !== "undefined" &&
+//   typeof window.document !== "undefined" &&
+//   typeof window.location !== "undefined";
+
+// if (isBrowser) {
+//   // Check if the current hostname is "localhost" only if window.location is available
+//   const isLocalhost =
+//     window.location && window.location.hostname === "localhost";
+
+//   if (isLocalhost) {
+//     server = `http://localhost:${PORT}`;
+//   } else {
+//     // PLEASE, CHECK YOUR IP OF SERVER TO CHANGE HERE
+//     const SERVER_URL = "http://192.168.10.138:";
+//     server = `${SERVER_URL}${PORT}`;
+//   }
+// } else {
+//   // For React Native and other non-browser environments
+//   const SERVER_URL = "http://192.168.1.14:";
+//   server = `${SERVER_URL}${PORT}`;
+// }
+
+console.log(`Server URL: ${server}`);
+
+export type Cell = {
+  row: string;
+  column: string;
+};
+
+export type DataSocketTransfer = {
+  room: string;
+  damage: number;
+  move: { startCell: Cell; endCell: Cell };
+  // blockList: Cell[]
+};
 
 export class SocketIOClient {
   private static instance: SocketIOClient;
@@ -52,6 +88,20 @@ export class SocketIOClient {
     this.socket.emit(SOCKET.JOIN_ROOM, data);
   }
 
+  emitFindMatch() {
+    this.socket.emit(SOCKET.FIND_MATCH);
+  }
+
+  emitEventGame(data: any) {
+    this.socket.emit(SOCKET.EVENT_DIAMOND, data);
+  }
+
+  onListenKeyRoom(callback: (data: any) => void) {
+    this.socket.on(SOCKET.KEY_ROOM, (data) => {
+      callback(data);
+    });
+  }
+
   emitSendAcceptBooking(data: any) {
     this.socket.emit(SOCKET.SEND_ACCEPT_BOOKING, data);
   }
@@ -96,10 +146,18 @@ export class SocketIOClient {
   emitAttack(data: any) {
     this.socket.emit(SOCKET.ATTACK, data);
   }
-  onListenAttack(callback: (data: any) => void) {
+  onListenAttack(callback: (data: DataSocketTransfer) => void) {
     this.socket.on(SOCKET.ATTACK, (data) => {
-      console.log("TAKE ATTACK ", data);
+      callback(data);
+    });
+  }
 
+  emitMove(data: any) {
+    this.socket.emit(SOCKET.MOVE, data);
+  }
+
+  onListenMove(callback: (data: any) => void) {
+    this.socket.on(SOCKET.MOVE, (data) => {
       callback(data);
     });
   }

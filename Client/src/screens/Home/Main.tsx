@@ -21,11 +21,18 @@ import { selectUser, setAddress } from "../../redux/userSlice";
 import SVGPlay from "../../../assets/SVGPlay.svg";
 import { useSelector } from "react-redux";
 import PetCarousel from "../../components/Pets/PetCarousel";
+import { SocketIOClient } from "../../../socket";
 
 import NormalButton from "../../components/Button/NormalButton";
 import SpriteSheet from "rn-sprite-sheet";
+import AwesomeButton from "react-native-really-awesome-button";
+import { COLOR } from "../../utils/color";
+import LoadingModal from "../../components/Game/LoadingModal";
 type Props = {};
+
 const HomeScreen = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
   const userState = useSelector(selectUser);
   const health = 60;
@@ -36,6 +43,7 @@ const HomeScreen = () => {
   const { disconnect } = useDisconnect(); // Add useDisconnect hook
   const navigate = useCustomNavigation();
   const dispatch = useAppDispatch();
+  const socket = SocketIOClient.getInstance();
 
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
@@ -95,6 +103,7 @@ const HomeScreen = () => {
         resizeMode="stretch"
         source={require("../../../assets/BackGround.png")}
       />
+      <LoadingModal isVisible={isVisible} setIsVisible={setIsVisible} />
       <View
         className="mt-20 flex w-full flex-row justify-center "
         style={{ marginTop: ConstantsResponsive.YR * 120 }}
@@ -145,29 +154,35 @@ const HomeScreen = () => {
         className=" flex flex-row  justify-between "
         style={styles.labelButton}
       >
-        <NormalButton
-          className={"flex  items-center justify-center bg-[#FFE243] px-5 "}
-        >
-          <Text
-            className="text-center  font-semibold  text-black "
-            style={styles.textSize}
-          >
-            Line-Up build
-          </Text>
-        </NormalButton>
-        <NormalButton
+        <AwesomeButton
           onPress={() => {
-            navigate.replace("Game");
+            console.log("Press Line-Up build");
           }}
-          className={" items-center justify-center bg-[#FFE243] px-5 "}
+          backgroundDarker={COLOR.DARK_YELLOW}
+          backgroundColor={COLOR.BRIGHT_YELLOW}
+          width={150}
+          height={60}
+          borderRadius={15}
         >
-          <Text
-            className=" text-center   font-semibold  text-black"
-            style={styles.textSize}
-          >
-            Normal play
-          </Text>
-        </NormalButton>
+          <Text style={styles.textSize}>Line-Up build</Text>
+        </AwesomeButton>
+
+        <AwesomeButton
+          onPress={() => {
+            socket.connect();
+
+            if (!isVisible) setIsVisible(true);
+            socket.emitFindMatch();
+            // navigate.replace("Game"); TODO
+          }}
+          backgroundDarker={COLOR.DARK_YELLOW}
+          backgroundColor={COLOR.BRIGHT_YELLOW}
+          width={150}
+          height={60}
+          borderRadius={15}
+        >
+          <Text style={styles.textSize}>Normal play</Text>
+        </AwesomeButton>
       </View>
     </View>
   );
@@ -192,6 +207,9 @@ const styles = StyleSheet.create({
   textSize: {
     fontSize: ConstantsResponsive.YR * 20,
     lineHeight: ConstantsResponsive.YR * 20,
+    fontWeight: "bold",
+    color: COLOR.BLACK,
+    textAlign: "center",
   },
 
   topPanel: {

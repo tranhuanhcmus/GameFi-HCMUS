@@ -12,6 +12,7 @@ import {
   Text,
   TouchableHighlight,
   StyleSheet,
+  Image,
 } from "react-native";
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
@@ -23,6 +24,11 @@ import {
   updateTurn,
 } from "../../redux/boardSlice";
 import GameLogic from "../../utils/game/game";
+import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
+import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
+import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
+import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
+import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
 
 const UpperLayer = () => {
   const dispatch = useDispatch();
@@ -191,7 +197,7 @@ const UpperLayer = () => {
                       height: GameLogic.HEIGHT_PER_CELL,
                       width: GameLogic.WIDTH_PER_CELL,
                       zIndex: 99,
-                      backgroundColor: COLOR.RED,
+                      backgroundColor: "transparent",
                       borderRadius: 5,
                       display: "flex",
                       alignItems: "center",
@@ -211,7 +217,17 @@ const UpperLayer = () => {
                       ],
                     }}
                   >
-                    <Text>{boardTable[indexRow][indexCol]}</Text>
+                    {boardTable[indexRow][indexCol] == 0 ? (
+                      <Image style={styles.cell} source={Banana} />
+                    ) : boardTable[indexRow][indexCol] == 1 ? (
+                      <Image style={styles.cell} source={Chocolate} />
+                    ) : boardTable[indexRow][indexCol] == 2 ? (
+                      <Image style={styles.cell} source={Candy} />
+                    ) : boardTable[indexRow][indexCol] == 3 ? (
+                      <Image style={styles.cell} source={IceCube} />
+                    ) : (
+                      <Image style={styles.cell} source={IceCream} />
+                    )}
                   </Animated.View>
                 ))}
               </View>
@@ -228,6 +244,15 @@ const styles = StyleSheet.create({
     width: GameLogic.SIZE_TABLE,
     backgroundColor: COLOR.WHITE,
     alignContent: "center",
+  },
+  cell: {
+    height: GameLogic.SIZE_TABLE / 8,
+    width: GameLogic.SIZE_TABLE / 8,
+    margin: 3,
+    borderRadius: 5,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

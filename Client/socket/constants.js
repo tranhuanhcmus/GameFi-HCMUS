@@ -1,5 +1,9 @@
 export const SOCKET = {
   JOIN_ROOM: "join_room",
+  FIND_MATCH: "find_matches",
+  KEY_ROOM: "key_room",
+  EVENT_DIAMOND: "event_diamond",
+
   BOOKING: "Booking Verhical",
   SEND_DRIVERS_LOCATION: "send_location_driver_sround",
   SEND_ACCEPT_BOOKING: "send_accept_booking",
@@ -14,4 +18,5 @@ export const SOCKET = {
 
   SEND_NOTIFY_CANCEL_TRIP_TO_DRIVER: "send_notify_cancel_trip_to_driver",
   ATTACK: "attack",
+  MOVE: "move",
 };

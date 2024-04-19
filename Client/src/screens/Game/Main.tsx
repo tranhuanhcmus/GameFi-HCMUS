@@ -9,12 +9,7 @@ import {
   TouchableOpacity,
   PanResponder,
 } from "react-native";
-import Pet from "../../../assets/Pet.png";
-import Fire from "../../../assets/fire.jpg";
-import LightNight from "../../../assets/lightnight.jpg";
-import Shield from "../../../assets/shield.jpg";
-import Sword from "../../../assets/sword.jpg";
-import YinYan from "../../../assets/batquai.jpg";
+import backGroundImage from "../../../assets/background3.png";
 import { COLOR } from "../../utils/color";
 import NormalButton from "../../components/Button/NormalButton";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
@@ -24,8 +19,14 @@ import UpperLayer from "../../components/Game/UpperLayer";
 import { store } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-native-really-awesome-button";
-import { SocketIOClient } from "../../../socket";
-import { updateHp } from "../../redux/playerSlice";
+import { DataSocketTransfer, SocketIOClient } from "../../../socket";
+import {
+  updateComponentHp,
+  updateHp,
+  updateMove,
+} from "../../redux/playerSlice";
+
+import ConstantsResponsive from "../../constants/Constanst";
 
 const GameScreen = () => {
   const dispatch = useDispatch();
@@ -33,49 +34,38 @@ const GameScreen = () => {
   const { turn, damage, blockList, swapCells } = useSelector(
     (state: any) => state.board,
   );
-
-  const { hp } = useSelector((state: any) => state.player);
   const socket = SocketIOClient.getInstance();
-  const room = "room-101";
-  useEffect(() => {
-    // ATTACK
-    // socket.emitAttack({ room, damage, blockList, swapCells });
-  }, [damage, blockList]);
 
-  useEffect(() => {
-    console.log("hp ", hp);
-    if (hp <= 0) {
-      console.log("STOP GAME");
-    } else {
-      dispatch(updateHp(damage));
-      // socket.onListenAttack((data) => dispatch(updateHp({ data })));
-    }
-  }, [damage, blockList]);
-  useEffect(() => {
-    console.log("hp ", hp);
-  }, []);
-  // useEffect(() => {
-  //   socket.emitJoinRoom(room);
-  // }, []);
+  const { hp, componentHp, gameRoom } = useSelector(
+    (state: any) => state.player,
+  );
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
+        <Image
+          style={styles.backgroundImage}
+          resizeMode="stretch"
+          source={backGroundImage}
+        />
         <GameHeader />
 
         <UpperLayer />
 
-        <GameBoard />
+        <GameBoard socket={socket} />
 
         <View
           style={{
             top: 300,
           }}
         >
-          <Text style={{ color: COLOR.WHITE }}>turn: {turn}</Text>
-          <Text style={{ color: COLOR.WHITE }}>damage: {damage}</Text>
+          <Text style={{ color: COLOR.WHITE }}>
+            turn: {turn} damage: {damage}
+          </Text>
+          <Text style={{ color: COLOR.WHITE }}>
+            hp: {hp} componentHp: {componentHp}
+          </Text>
         </View>
-        {/* TODO: Bottom nav */}
       </View>
     </SafeAreaView>
   );
@@ -92,6 +82,11 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     justifyContent: "center",
+  },
+  backgroundImage: {
+    width: ConstantsResponsive.MAX_WIDTH,
+    height: ConstantsResponsive.MAX_HEIGHT,
+    position: "absolute",
   },
 });
 

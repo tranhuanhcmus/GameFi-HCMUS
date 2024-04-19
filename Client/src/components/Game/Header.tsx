@@ -13,154 +13,78 @@ import {
 import SpriteSheet from "rn-sprite-sheet";
 import Pet from "../../../assets/Pet.png";
 import ConstantsResponsive from "../../constants/Constanst";
+import Avatar from "../../../assets/avatar.png";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
 import { HEADER } from "../../constants/header";
 import { useSelector } from "react-redux";
+
+interface props {
+  hp: number;
+}
+
 const GameHeader = () => {
-  const { hp } = useSelector((state: any) => state.player);
-  const [loop, setLoop] = useState<boolean>(false);
-  const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [fps, setFps] = useState<string>("3");
-  const mummyRef = useRef<SpriteSheet>(null);
-  const mummyRef1 = useRef<SpriteSheet>(null);
-  const [offsetX, setOffsetX] = useState<number>(0);
-  const [offsetY, setOffsetY] = useState<number>(0);
-
-  const play = (type: string) => {
-    const parsedFps = Number(fps);
-
-    if (mummyRef.current) {
-      mummyRef.current.play({
-        type,
-        fps: isNaN(parsedFps) ? 16 : parsedFps,
-        loop,
-        resetAfterFinish,
-        onFinish: () => console.log("hi"),
-      });
-    }
-    setOffsetX(0);
-    setOffsetY(0);
-  };
-  const play1 = (type: string) => {
-    const parsedFps = Number(fps + 1);
-
-    if (mummyRef1.current) {
-      mummyRef1.current.play({
-        type,
-        fps: isNaN(parsedFps) ? 16 : parsedFps,
-        loop,
-        resetAfterFinish,
-        onFinish: () => console.log("hi"),
-      });
-    }
-  };
-  // useEffect(() => {
-  //   play("walk");
-  //   // const interval = setInterval(() => {
-  //   //   setOffsetX((prevOffsetX) => prevOffsetX + 10); // Update offsetX every interval
-  //   // }, 1000); // Change the interval as needed for desired animation speed
-  // }, []);
-
-  const stop = () => {
-    if (mummyRef.current) {
-      mummyRef.current.stop(() => console.log("stopped"));
-    }
-  };
+  const { hp, componentHp } = useSelector((state: any) => state.player);
   return (
     <View style={styles.characterArea}>
-      {/* Player 1 - Left*/}
-      <View style={styles.player}>
-        <View style={styles.playerHeader}>
-          {/* Thay anh sau */}
-          <View style={styles.bar}>
-            <View style={styles.energyBar}></View>
-            <View style={styles.damageBar}></View>
-          </View>
-        </View>
-        {/* <Image style={styles.petImage} source={Pet} /> */}
-        <TouchableNativeFeedback
-          onPress={() => {
-            play1("walk"), play("walk");
-          }}
-        >
-          <View
-            style={{
-              transform: [{ translateX: offsetX }, { translateY: offsetY }],
-            }}
-          >
-            <SpriteSheet
-              ref={mummyRef1}
-              source={require("../../../assets/spritesheet_6.png")}
-              columns={19}
-              rows={1}
-              height={ConstantsResponsive.YR * 150}
-              width={ConstantsResponsive.XR * 150}
-              animations={{
-                walk: [
-                  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                  18,
-                ],
-              }}
-            />
-          </View>
-        </TouchableNativeFeedback>
-      </View>
-      {/* Player 2 - Right */}
-      <View style={styles.player}>
-        <View style={styles.playerHeader}>
-          {/* Thay anh sau */}
-          <View style={styles.bar}>
-            <View style={styles.energyBar}></View>
-            <View style={styles.damageBar}></View>
-          </View>
-        </View>
-        {/* <Image style={styles.petImage} source={Pet} /> */}
-        <TouchableNativeFeedback onPress={() => play("walk")}>
-          <SpriteSheet
-            ref={mummyRef}
-            source={require("../../../assets/spritesheet_7.png")}
-            columns={19}
-            rows={1}
-            height={ConstantsResponsive.YR * 150}
-            width={ConstantsResponsive.XR * 150}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18,
-              ],
-            }}
-          />
-        </TouchableNativeFeedback>
-        <TouchableNativeFeedback onPress={() => play("walk")}>
-          <View
-            className="absolute bottom-0 "
-            style={{
-              transform: [{ translateX: offsetX }, { translateY: offsetY }],
-            }}
-          >
-            <SpriteSheet
-              ref={mummyRef}
-              source={require("../../../assets/skill.png")}
-              columns={12}
-              rows={1}
-              width={ConstantsResponsive.XR * 2 * 80}
-              animations={{
-                walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              }}
-            />
-          </View>
-        </TouchableNativeFeedback>
-      </View>
+      <User hp={hp} />
+
+      <Component hp={componentHp} />
     </View>
   );
 };
 
+// PLAYER ON THE LEFT <PLAYER 1>
+const User: React.FC<props> = ({ hp }) => {
+  return (
+    <View style={styles.player}>
+      <View style={styles.playerHeader}>
+        <Image style={styles.avatarImage} source={Avatar}></Image>
+        <Bar hp={hp} />
+      </View>
+      <Image style={styles.petImage} source={Pet} />
+    </View>
+  );
+};
+
+// PLAYER ON THE RIGHT <PLAYER 2>
+const Component: React.FC<props> = ({ hp }) => {
+  return (
+    <View style={styles.player}>
+      <View style={styles.playerHeader}>
+        <Bar hp={hp} />
+        <Image style={styles.avatarImage} source={Avatar}></Image>
+      </View>
+      <Image style={styles.petImage} source={Pet} />
+    </View>
+  );
+};
+//  HEALTH BAR AND DAMAGE BAR.
+const Bar: React.FC<props> = ({ hp }) => {
+  return (
+    <View style={styles.bar}>
+      <View style={styles.energyBar}>
+        <View
+          style={{
+            height: "100%",
+            width: hp,
+            backgroundColor: COLOR.LIGHT_PURPLE,
+            borderTopRightRadius: 4,
+            borderTopLeftRadius: 10,
+            borderBottomLeftRadius: 4,
+            borderBottomRightRadius: 10,
+            marginBottom: 5,
+          }}
+        ></View>
+      </View>
+      <View style={styles.damageBar}></View>
+    </View>
+  );
+};
 const styles = StyleSheet.create({
   characterArea: {
     position: "absolute",
     top: 0,
-
     height: 200,
     width: "100%",
     display: "flex",
@@ -189,7 +113,7 @@ const styles = StyleSheet.create({
   energyBar: {
     width: GameLogic.HEALTH_POINT,
     height: 20,
-    backgroundColor: "#FF8C05",
+    backgroundColor: "transparent",
     borderTopRightRadius: 4,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 4,
@@ -244,3 +168,139 @@ const styles = StyleSheet.create({
 });
 
 export default GameHeader;
+
+// const GameHeader = () => {
+//   const { hp } = useSelector((state: any) => state.player);
+//   const [loop, setLoop] = useState<boolean>(false);
+//   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
+//   const [fps, setFps] = useState<string>("3");
+//   const mummyRef = useRef<SpriteSheet>(null);
+//   const mummyRef1 = useRef<SpriteSheet>(null);
+//   const [offsetX, setOffsetX] = useState<number>(0);
+//   const [offsetY, setOffsetY] = useState<number>(0);
+
+//   const play = (type: string) => {
+//     const parsedFps = Number(fps);
+
+//     if (mummyRef.current) {
+//       mummyRef.current.play({
+//         type,
+//         fps: isNaN(parsedFps) ? 16 : parsedFps,
+//         loop,
+//         resetAfterFinish,
+//         onFinish: () => console.log("hi"),
+//       });
+//     }
+//     setOffsetX(0);
+//     setOffsetY(0);
+//   };
+//   const play1 = (type: string) => {
+//     const parsedFps = Number(fps + 1);
+
+//     if (mummyRef1.current) {
+//       mummyRef1.current.play({
+//         type,
+//         fps: isNaN(parsedFps) ? 16 : parsedFps,
+//         loop,
+//         resetAfterFinish,
+//         onFinish: () => console.log("hi"),
+//       });
+//     }
+//   };
+//   // useEffect(() => {
+//   //   play("walk");
+//   //   // const interval = setInterval(() => {
+//   //   //   setOffsetX((prevOffsetX) => prevOffsetX + 10); // Update offsetX every interval
+//   //   // }, 1000); // Change the interval as needed for desired animation speed
+//   // }, []);
+
+//   const stop = () => {
+//     if (mummyRef.current) {
+//       mummyRef.current.stop(() => console.log("stopped"));
+//     }
+//   };
+//   return (
+//     <View style={styles.characterArea}>
+//       {/* Player 1 - Left*/}
+//       <View style={styles.player}>
+//         <View style={styles.playerHeader}>
+//           {/* Thay anh sau */}
+//           <View style={styles.bar}>
+//             <View style={styles.energyBar}></View>
+//             <View style={styles.damageBar}></View>
+//           </View>
+//         </View>
+//         {/* <Image style={styles.petImage} source={Pet} /> */}
+//         <TouchableNativeFeedback
+//           onPress={() => {
+//             play1("walk"), play("walk");
+//           }}
+//         >
+//           <View
+//             style={{
+//               transform: [{ translateX: offsetX }, { translateY: offsetY }],
+//             }}
+//           >
+//             <SpriteSheet
+//               ref={mummyRef1}
+//               source={require("../../../assets/spritesheet_6.png")}
+//               columns={19}
+//               rows={1}
+//               height={ConstantsResponsive.YR * 150}
+//               width={ConstantsResponsive.XR * 150}
+//               animations={{
+//                 walk: [
+//                   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+//                   18,
+//                 ],
+//               }}
+//             />
+//           </View>
+//         </TouchableNativeFeedback>
+//       </View>
+//       {/* Player 2 - Right */}
+//       <View style={styles.player}>
+//         <View style={styles.playerHeader}>
+//           {/* Thay anh sau */}
+//           <View style={styles.bar}>
+//             <View style={styles.energyBar}></View>
+//             <View style={styles.damageBar}></View>
+//           </View>
+//         </View>
+//         {/* <Image style={styles.petImage} source={Pet} /> */}
+//         <TouchableNativeFeedback onPress={() => play("walk")}>
+//           <SpriteSheet
+//             ref={mummyRef}
+//             source={require("../../../assets/spritesheet_7.png")}
+//             columns={19}
+//             rows={1}
+//             height={ConstantsResponsive.YR * 150}
+//             width={ConstantsResponsive.XR * 150}
+//             animations={{
+//               walk: [
+//                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+//                 18,
+//               ],
+//             }}
+//           />
+//         </TouchableNativeFeedback>
+//         <TouchableNativeFeedback onPress={() => play("walk")}>
+//           <View
+//             className="absolute bottom-0 "
+//             style={{
+//               transform: [{ translateX: offsetX }, { translateY: offsetY }],
+//             }}
+//           >
+//             <SpriteSheet
+//               ref={mummyRef}
+//               source={require("../../../assets/skill.png")}
+//               columns={12}
+//               rows={1}
+//               width={ConstantsResponsive.XR * 2 * 80}
+//               animations={{
+//                 walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+//               }}
+//             />
+//           </View>
+//         </TouchableNativeFeedback>
+//       </View>

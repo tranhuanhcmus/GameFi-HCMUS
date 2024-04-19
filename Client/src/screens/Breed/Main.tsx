@@ -8,12 +8,19 @@ import {
 } from "react-native";
 import Heart from "../../../assets/heart.png";
 import { RoundButton } from "../../components/Button/RoundButton";
+import backGroundImage from "../../../assets/background3.png";
 import CustomText from "../../components/CustomText";
 import { COLOR } from "../../utils/color";
 import AwesomeButton from "react-native-really-awesome-button";
+import ConstantsResponsive from "../../constants/Constanst";
 export function BreedScreen() {
   return (
     <SafeAreaView className="h-screen w-screen bg-[#210035]">
+      <Image
+        style={styles.backgroundImage}
+        resizeMode="stretch"
+        source={backGroundImage}
+      />
       <View style={styles.container}>
         <CustomText style={styles.title}>Breed</CustomText>
         <View className="h-[50%] w-[90%] object-cover">
@@ -91,5 +98,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: COLOR.WHITE,
     fontSize: 28,
+  },
+  backgroundImage: {
+    width: ConstantsResponsive.MAX_WIDTH,
+    height: ConstantsResponsive.MAX_HEIGHT,
+    position: "absolute",
   },
 });

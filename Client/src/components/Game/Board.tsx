@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,22 +21,37 @@ import {
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
+import { updateComponentHp, updateHp } from "../../redux/playerSlice";
+import { DataSocketTransfer } from "../../../socket";
+import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
+import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
+import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
+import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
+import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
 
 const GameBoard = (props: any) => {
+  // Prop of component
+  const { socket } = props;
+
+  // Redux, state and dispatch
   const dispatch = useDispatch();
   const blockState = store.getState().board;
+  const blockStateTable = useSelector((state: any) => state.board.table);
+  const table = useSelector((state: any) => state.board.table);
+  const { hp, gameRoom } = useSelector((state: any) => state.player);
+
+  // useState
+  const [blockList, setBlockList] = useState<any[]>([]);
+
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
-  const [blockList, setBlockList] = useState<any[]>([]);
-
-  const blockStateTable = useSelector((state: any) => state.board.table);
-
-  const table = useSelector((state: any) => state.board.table);
+  // useMemo
   const boardTable = useMemo(() => {
     return table.map((row: any) => [...row]);
   }, [table]);
 
+  // useRef
   const cntCell = useRef(0);
 
   /**
@@ -123,6 +139,27 @@ const GameBoard = (props: any) => {
     }
   }, [boardTable]);
 
+  useEffect(() => {
+    if (hp <= 0) {
+      console.log("STOP GAME");
+    } else {
+      socket.onListenAttack((data: DataSocketTransfer) => {
+        dispatch(updateHp(data.damage));
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    socket.onListenMove((data: any) => {
+      console.log("on Listen move", data);
+      // Write logic here
+      const { row, col, numCellX, numCellY } = GameLogic.calculateMove(data);
+
+      // Show move of component on screen
+      swapAnimation(row, col, numCellX, numCellY, true);
+    });
+  }, []);
+
   /**
    * This function check new table to push in the new blocklist then
    * @return true false;
@@ -165,6 +202,7 @@ const GameBoard = (props: any) => {
         cells.push({ row: cnt, col: startCell.j });
     }
 
+    // Animation to destroy
     cells.forEach((cell) => {
       Animated.parallel([
         Animated.sequence([
@@ -233,9 +271,18 @@ const GameBoard = (props: any) => {
         if (cntCell.current == 0) {
           setBlockList([]);
           dispatch(updateBlockList(blockList));
+
+          // attackComponent();
         }
       });
     });
+  };
+
+  // THIS FUNCTION USE SOCKET TO SEND TO SERVER.
+  const attackComponent = () => {
+    dispatch(updateComponentHp(10));
+
+    socket.emitAttack({ room: "room-101", damage: 10, move: {} });
   };
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING
@@ -270,6 +317,7 @@ const GameBoard = (props: any) => {
     col: any,
     numCellX: number,
     numCellY: number,
+    isComponentTurn: boolean,
   ) => {
     // CHECK CELL NEARE BORDER OF TABLE
     if (
@@ -309,18 +357,20 @@ const GameBoard = (props: any) => {
         },
       ),
     ]).start(() => {
+      if (!isComponentTurn) {
+        socket.emitMove({
+          startCell: { row: row, column: col },
+          endCell: { row: row + numCellY, column: col + numCellX },
+        });
+      }
+
       onSwap2CellTable(row, col, row + numCellY, col + numCellX);
 
       const matchedBlockList = checkTable(boardTable);
       if (matchedBlockList && matchedBlockList.length > 0) {
         // UPDATE SWAP 2 CELLS
-        dispatch(
-          updateCellsToSwap({
-            startCell: { i: row, j: col },
-            endCell: { i: row + numCellY, j: col + numCellX },
-          }),
-        );
         swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
+
         setBlockList([...matchedBlockList]);
       } else {
         // RUN BACK THE ANIMATION
@@ -358,7 +408,6 @@ const GameBoard = (props: any) => {
       if (matchedBlocklist && matchedBlocklist.length > 0) {
         setBlockList([...matchedBlocklist]);
       } else {
-        console.log("No matched 3 cells found");
       }
     }, 500);
     return () => clearTimeout(delayExecution);
@@ -443,9 +492,8 @@ const GameBoard = (props: any) => {
 
     const onReleaseCell = (index: number, index2: number) => {
       handleEndPanResponder = true;
-      console.log("================================");
-      GameLogic.printTable(boardTable);
-      swapAnimation(index2, index, numCellX, numCellY);
+
+      swapAnimation(index2, index, numCellX, numCellY, false);
     };
 
     return Array(GameLogic.CELLS_IN_ROW)
@@ -493,8 +541,9 @@ const GameBoard = (props: any) => {
                     key={indexCol}
                     style={{
                       ...styles.cell,
-                      backgroundColor:
-                        state.backgroundColor[indexRow][indexCol],
+                      // backgroundColor:
+                      //   state.backgroundColor[indexRow][indexCol],
+                      backgroundColor: "transparent",
                       zIndex: state.zIndex[indexRow][indexCol],
                       opacity: state.scoreOpacity[indexRow][indexCol],
                       transform: [
@@ -514,7 +563,17 @@ const GameBoard = (props: any) => {
                     }}
                     {...panResponder[indexRow][indexCol].panHandlers}
                   >
-                    <Text>{cell}</Text>
+                    {cell == 0 ? (
+                      <Image style={styles.cell} source={Banana} />
+                    ) : cell == 1 ? (
+                      <Image style={styles.cell} source={Chocolate} />
+                    ) : cell == 2 ? (
+                      <Image style={styles.cell} source={Candy} />
+                    ) : cell == 3 ? (
+                      <Image style={styles.cell} source={IceCube} />
+                    ) : (
+                      <Image style={styles.cell} source={IceCream} />
+                    )}
                   </Animated.View>
                 );
               })}
@@ -530,8 +589,8 @@ const GameBoard = (props: any) => {
 
 const styles = StyleSheet.create({
   boardContainer: {
-    height: "auto",
-    width: "auto",
+    height: GameLogic.TABLE_HEIGHT,
+    width: GameLogic.TABLE_WIDTH,
     backgroundColor: COLOR.WHITE,
     alignContent: "center",
     top: GameLogic.POSITION_TOP,
