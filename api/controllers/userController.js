@@ -4,13 +4,20 @@ const userNFTs = async (req, res) => {
   const { owner } = req.params;
   console.log("owner: ", owner);
   try {
-    const user = await userServices.getNFTbyOwner(owner);
-    if (user.length === 0) {
+    const nfts = await userServices.getNFTbyOwner(owner);
+    if (nfts.length === 0) {
       return res.status(404).json({ error: 'Không tìm thấy thông tin người dùng.' });
     }
-    return res.json(user);
+    let result = [];
+    for (let i = 0; i < nfts.length; i++) {
+      let uri = nfts[i].tokenuri;
+      console.log("uri: ", uri);
+      let JSONdata = await userServices.getTokenURIData(uri);
+      result.push({...nfts[i], JSONdata: JSONdata.data})
+    }
+    return res.json(result);
   } catch (error) {
-    return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin người dùng.' });
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin người dùng.' + error});
   }
 };
 
