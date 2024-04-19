@@ -54,7 +54,7 @@ const navArr: NavItem[] = [
   {
     name: "TrophyScreen",
     component: BreedScreen,
-    content: "Trophy",
+    content: "Breed",
     svg: <SVGTrophy height="100%" width="100%" />,
   },
   {

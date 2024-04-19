@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -16,7 +16,16 @@ import { flare } from "viem/chains";
 
 type Props = {};
 
-const petArray = [
+type NFTData = {
+  id: string;
+  petImg: string;
+  element: string;
+  level: number;
+  name: string;
+  rarityPet: string;
+};
+
+const petArray: NFTData[] = [
   {
     id: "1",
     petImg:
@@ -26,69 +35,44 @@ const petArray = [
     name: "Harry's Pig",
     rarityPet: "special",
   },
-  {
-    id: "100",
-    title: "Andres",
-    type: "NFT",
-    tokenId: "100",
-    element: ELEMENT.FIRE,
-    name: "Harry's Pig",
-    description: "This is a normal Pig",
-    attributes: {
-      type: "Pig",
-    },
-    image:
-      "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
-  },
-  {
-    id: "2",
-    petImg: "",
-    element: ELEMENT.IRON,
-    level: 3,
-    name: "4",
-    rarityPet: "special",
-  },
-  {
-    id: "3",
-    petImg: "",
-    element: ELEMENT.LEAF,
-    level: 3,
-    name: "4",
-    rarityPet: "special",
-  },
-  {
-    id: "4",
-    petImg: "",
-    element: ELEMENT.STONE,
-    level: 3,
-    name: "4",
-    rarityPet: "special",
-  },
-  {
-    id: "5",
-    petImg: "",
-    element: ELEMENT.STONE,
-    level: 3,
-    name: "4",
-    rarityPet: "special",
-  },
-  {
-    id: "6",
-    petImg: "",
-    element: ELEMENT.STONE,
-    level: 3,
-    name: "4",
-    rarityPet: "special",
-  },
 ];
+
 const PlayScreen: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const [data, setData] = useState<NFTData[]>(petArray);
 
   useEffect(() => {
     // Example: Dispatch an alert when the PlayScreen component mounts
     dispatch(showAlert("This is an alert from PlayScreen"));
   }, [dispatch]);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const res: NFT[] = await UserService.getNFTsByOwner(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
+
+      const mappedData: NFTData[] = res.map((nft: NFT) => {
+        return {
+          id: nft.tokenid,
+          element: ELEMENT.FIRE,
+          level: 1,
+          petImg:
+            "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
+          name: "Harry's Pig",
+          rarityPet: "special",
+        };
+      });
+
+      setData(mappedData);
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+    }
+  };
   const handleShowAlert = () => {
     // Example: Dispatch an alert when a button is pressed
     dispatch(showAlert("Test Alert!"));
