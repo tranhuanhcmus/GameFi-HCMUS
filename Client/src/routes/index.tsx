@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -13,6 +14,7 @@ import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../screens/Connect/Main";
 import GameScreen from "../screens/Game/Main";
 import PlayScreen from "../screens/Play/Main";
+import ShopScreen from "../screens/Shop/Main";
 import TestScreen from "../screens/Test/Main";
 import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
@@ -26,12 +28,12 @@ import DetailOfPet from "../screens/PetDetail/Main";
 import HomeScreen from "../screens/Home/Main";
 import TrendMarketScreen from "../screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
-import { View } from "react-native";
 
 const navArr: NavItem[] = [
   {
     name: "ShopScreen",
-    component: PlayScreen,
+    header: true,
+    component: ShopScreen,
     content: "Shop",
     svg: <SVGStore height="100%" width="100%" />,
   },
@@ -79,17 +81,18 @@ const renderNavElement = (data: NavItem[]) => {
       name={item.name}
       component={item.component}
       options={{
+        headerTransparent: true,
+        headerTintColor: "#fff",
+
         headerShown: item.header || false,
-        headerStyle: {
-          backgroundColor: "#210035",
-        },
+
         headerLeft: () => <HeaderLeft></HeaderLeft>,
         headerTitle: () => <Header name="Home" />,
         headerRight: () => <HeaderRight></HeaderRight>,
         tabBarIcon: ({ focused }: any) => (
           <ComponentNavElement content={item.content} focused={focused}>
             <View
-              className={`${focused ? "h-[40px] w-[40px]" : "h-[30px] w-[30px]"}`}
+              className={`${focused ? "h-[45px] w-[45px]" : "h-[30px] w-[30px]"}`}
             >
               {item.svg}
             </View>
@@ -122,8 +125,14 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Connect">
-      <Stack.Screen name="Connect" component={ConnectScreen} />
+    <Stack.Navigator initialRouteName="MainTab">
+      <Stack.Screen
+        name="Connect"
+        component={ConnectScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="Breed"
         component={BreedScreen}
@@ -167,13 +176,13 @@ const screenStyle: BottomTabNavigationOptions = {
   tabBarShowLabel: false,
   tabBarStyle: {
     position: "absolute",
-    left: 20,
-    right: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    shadowColor: "transparent",
+    shadowColor: "#000000",
     elevation: 0,
-    backgroundColor: "rgba(0, 0, 0, 0)",
+    backgroundColor: "rgba(255, 255, 255, 0)",
     height: 90,
   },
 };

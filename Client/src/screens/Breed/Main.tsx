@@ -8,15 +8,25 @@ import {
 } from "react-native";
 import Heart from "../../../assets/heart.png";
 import { RoundButton } from "../../components/Button/RoundButton";
+import backGroundImage from "../../../assets/background3.png";
 import CustomText from "../../components/CustomText";
 import { COLOR } from "../../utils/color";
 import AwesomeButton from "react-native-really-awesome-button";
+import ConstantsResponsive from "../../constants/Constanst";
 export function BreedScreen() {
   return (
-    <SafeAreaView className="h-full w-full bg-[#210035]">
+    <SafeAreaView className="h-screen w-screen bg-[#210035]">
+      <Image
+        style={styles.backgroundImage}
+        resizeMode="stretch"
+        source={backGroundImage}
+      />
       <View style={styles.container}>
         <CustomText style={styles.title}>Breed</CustomText>
-        <Image source={Heart} alt="Heart" style={styles.imageContainer} />
+        <View className="h-[50%] w-[90%] object-cover">
+          <Image source={Heart} alt="Heart" style={styles.imageContainer} />
+        </View>
+
         <View style={styles.addButtonContainer}>
           <RoundButton
             onPress={() => {
@@ -62,8 +72,8 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   imageContainer: {
-    width: 400,
-    height: 400,
+    width: "100%",
+    height: "100%",
   },
   addButtonContainer: {
     width: "80%",
@@ -88,5 +98,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: COLOR.WHITE,
     fontSize: 28,
+  },
+  backgroundImage: {
+    width: ConstantsResponsive.MAX_WIDTH,
+    height: ConstantsResponsive.MAX_HEIGHT,
+    position: "absolute",
   },
 });

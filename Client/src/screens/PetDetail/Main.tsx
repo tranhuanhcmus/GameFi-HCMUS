@@ -12,9 +12,16 @@ import { COLOR } from "../../utils/color";
 import CustomText from "../../components/CustomText";
 import Pet from "../../../assets/Pet.png"; // TODO: CHANGE LATER
 import { RoundButton } from "../../components/Button/RoundButton";
+import ConstantsResponsive from "../../constants/Constanst";
+import backGroundImage from "../../../assets/background3.png";
 export default function DetailOfPet() {
   return (
     <View style={styles.container}>
+      <Image
+        style={styles.backgroundImage}
+        resizeMode="stretch"
+        source={backGroundImage}
+      />
       {/* Information of pet */}
       <View style={styles.informationOfPetContainer}>
         <CustomText style={styles.petNameTitle}>Pet name</CustomText>
@@ -136,8 +143,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   petImage: {
-    width: 200,
-    height: 300,
+    width: "70%",
+    height: undefined,
+    aspectRatio: 1,
   },
   button: {
     width: 60,
@@ -157,5 +165,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: COLOR.GRAY,
     fontFamily: "mrt-mid",
+  },
+  backgroundImage: {
+    width: ConstantsResponsive.MAX_WIDTH,
+    height: ConstantsResponsive.MAX_HEIGHT,
+    position: "absolute",
   },
 });
