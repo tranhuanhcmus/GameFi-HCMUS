@@ -7,26 +7,35 @@
 /*==============================================================*/
 
 -- Create schema
-DROP SCHEMA IF EXISTS K20_GameFi_DATN_HCMUS;
-CREATE SCHEMA K20_GameFi_DATN_HCMUS;
+--DROP SCHEMA IF EXISTS K20_GameFi_DATN_HCMUS;
+--CREATE SCHEMA K20_GameFi_DATN_HCMUS;
 
--- Set search path to the TAXI schema
-SET search_path = K20_GameFi_DATN_HCMUS;
+-- Set search path to the K20_GameFi_DATN_HCMUS schema
+--SET search_path = K20_GameFi_DATN_HCMUS;
 
--- Create ACCOUNT table
-CREATE TABLE ACCOUNT
+
+-- Create NFT table
+--DROP TABLE NFT;
+--CREATE TABLE NFT
+--(
+--	TOKENID TEXT NOT NULL,
+--	TOKENURI TEXT NOT NULL,
+--	OWNER TEXT NOT NULL,
+--	PRIMARY KEY (TOKENID)
+--);
+
+-- Create TOKENURI table
+--DROP TABLE TOKENURI;
+CREATE TABLE TOKENURI
 (
-   MAIL                 CHAR(50) NOT NULL,
-   TEL                  CHAR(15) NOT NULL,
-   PASS                 TEXT NOT NULL,
-   IGNAME               CHAR(30) NOT NULL,
-   AVA                  CHAR(30) NOT NULL,
-   ACC                  CHAR(30) NOT NULL,
-   PRIMARY KEY (MAIL)
+	TOKENURI TEXT NOT NULL,
+	DATA JSONB,
+	PRIMARY KEY (TOKENURI)
 );
 
-
-
-
-
+-- Thêm khóa ngoại vào bảng NFT để tham chiếu đến trường TOKENURI trong bảng TOKENURI
+--ALTER TABLE NFT
+--ADD CONSTRAINT FK_NFT_TOKENURI
+--FOREIGN KEY (TOKENURI)
+--REFERENCES TOKENURI(TOKENURI);
 
