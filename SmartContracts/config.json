@@ -1,0 +1,23 @@
+{
+  "dev": {},
+  "arbitrumSepolia": {
+    "Floppy": "0xd11875cE6854da3518273cF16Ab2FC399224Bed9",
+    "Vault": "0xe0e651d4B298C8c654A4F4C83CBE1E13f071Eac0",
+    "Pet": "0x7C35F8b75C98B89C4f9955E1f950a129BC07dcc8",
+    "MarketPlace": "0x934C726049B9e0b846B6BD0690489EBCb4457783"
+  },
+  "main": {},
+  "thirdweb": {
+    "clientId": "bb069f0cd1c8ebfa80c6e64868cf1241",
+    "secretKey": "gE1bxJSkGGfG9zZ_CQeEnAGiJ0HcgA6_M-GKuyuK2EsNgKpX4ENnIPGUtPnqL4IIOy9FNeTBLKQc53P3chCj0w",
+    "gateway": "https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/"
+  },
+  "openzeppelin": {
+    "API Key": "ALgQ6f3k7SSwDhV4TaJxDK4a9eB7JxhR",
+    "secretKey": "SeAiBK4GnGgg8JL3u6BMEmf96AcJJdtfeMaHFY6DRFLdZ67887WY8W7aSY6fGiAV-GKuyuK2EsNgKpX4ENnIPGUtPnqL4IIOy9FNeTBLKQc53P3chCj0w"
+  },
+  "localhost": {
+    "Pet": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "Floppy": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  }
+}

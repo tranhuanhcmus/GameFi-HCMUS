@@ -1,14 +1,23 @@
 {
   "name": "hardhat-project",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.ts --network",
+    "test": "hardhat test",
+    "verify": "hardhat verify --network"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "hardhat": "^2.19.2"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@openzeppelin/contracts": "^5.0.1",
+    "axios": "^1.6.7",
     "dotenv": "^16.3.1",
     "ethers": "^6.9.0",
     "hardhat-deploy": "^0.11.44",
-    "hardhat-deploy-ethers": "^0.4.1"
+    "hardhat-deploy-ethers": "^0.4.1",
+    "web3": "^4.4.0"
   }
 }
