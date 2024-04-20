@@ -1,36 +1,49 @@
 const express = require('express');
 const cors = require('cors');
-const db = require('./config.js');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRouter');
-const {interact} = require('./interaction');
-const {catchEventNFT} = require('./catchNFTEvents.js')
+const {catchEventNFT} = require('./catchNFTEvents.js');
+const models = require('./database/models');
+const { formatResponse } = require('./middlewares');
+const { nftRouter, tokenUriRouter } = require('./routes');
 
 const app = express();
-const port = 4500 || process.env.PORT;
+const port = process.env.PORT|| 4500;
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
+app.use(formatResponse)
 
 // Routes
 app.use('/user', userRouter);
+app.use('/nfts', nftRouter);
+app.use('/tokenUris', tokenUriRouter);
 
-// Check the database connection
-db.connect((err, connection) => {
-  if (err) {
-    console.error('Error connecting to database:', err);
-    return;
+
+async function connectDB() {
+  try {
+    
+    await models.sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+
+    await models.sequelize.sync({ alter: true });
+    console.log('All models are sync successfully.');
+    return true;
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+    return false;
   }
+}
 
-  console.log('Connected to the database successfully');
+connectDB().then((connected) => {
+  if (connected) {
 
-  // Release the connection back to the pool
-  connection.release();
-
-  // Start the server
-  app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-    catchEventNFT();
-  });
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+      //====================================Events====================================//
+      // Catch Events
+      catchEventNFT();
+    });
+  }
 });
