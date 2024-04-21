@@ -5,7 +5,7 @@ const userRouter = require('./routes/userRouter');
 const {catchEventNFT} = require('./catchNFTEvents.js');
 const models = require('./database/models');
 const { formatResponse } = require('./middlewares');
-const { nftRouter, tokenUriRouter } = require('./routes');
+const { nftRouter, tokenUriRouter, itemGameRouter } = require('./routes');
 
 const app = express();
 const port = process.env.PORT|| 4500;
@@ -19,6 +19,7 @@ app.use(formatResponse)
 app.use('/user', userRouter);
 app.use('/nfts', nftRouter);
 app.use('/tokenUris', tokenUriRouter);
+app.use('/itemGames', itemGameRouter);
 
 
 async function connectDB() {
