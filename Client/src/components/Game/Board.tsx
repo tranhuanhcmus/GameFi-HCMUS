@@ -28,7 +28,7 @@ import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
 import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
 import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
 import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
-
+import log from "../../logger/index.js";
 const GameBoard = (props: any) => {
   // Prop of component
   const { socket } = props;
@@ -144,6 +144,13 @@ const GameBoard = (props: any) => {
       }
     }
   }, [boardTable]);
+
+  useEffect(() => {
+    log.debug("This is a Debug log for GameScreen");
+    log.info("This is an Info log for GameScreen");
+    log.warn("This is a Warning log for GameScreen");
+    log.error("This is an Error log for GameScreen");
+  }, []);
 
   useEffect(() => {
     if (hp <= 0) {
