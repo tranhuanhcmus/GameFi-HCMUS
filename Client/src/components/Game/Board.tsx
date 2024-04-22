@@ -73,6 +73,10 @@ const GameBoard = (props: any) => {
     scoreOpacity: GameLogic.generateAnimatedValue(1),
   });
 
+  useEffect(() => {
+    console.clear();
+  }, []);
+
   /**
    * State to interpolate
    */
@@ -146,13 +150,6 @@ const GameBoard = (props: any) => {
   }, [boardTable]);
 
   useEffect(() => {
-    log.debug("This is a Debug log for GameScreen");
-    log.info("This is an Info log for GameScreen");
-    log.warn("This is a Warning log for GameScreen");
-    log.error("This is an Error log for GameScreen");
-  }, []);
-
-  useEffect(() => {
     if (hp <= 0) {
       console.log("STOP GAME");
     } else {
@@ -164,7 +161,6 @@ const GameBoard = (props: any) => {
 
   useEffect(() => {
     socket.onListenMove((data: any) => {
-      console.log("on Listen move", data);
       // Write logic here
       const { row, col, numCellX, numCellY } = GameLogic.calculateMove(data);
 
@@ -295,8 +291,6 @@ const GameBoard = (props: any) => {
   const attackComponent = () => {
     dispatch(updateComponentHp(10));
     socket.emitEventGame({ gameRoom: gameRoom, damage: 10, move: {} });
-
-    // socket.emitAttack({ room: "room-101", damage: 10, move: {} });
   };
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING
@@ -468,8 +462,8 @@ const GameBoard = (props: any) => {
 
     const onMoveCell = (
       gesture: PanResponderGestureState,
-      index: number,
-      index2: number,
+      col: number,
+      row: number,
     ) => {
       const width = GameLogic.WIDTH_PER_CELL;
       // Check if the user is sliding in the x-axis direction
@@ -495,19 +489,29 @@ const GameBoard = (props: any) => {
 
         // Check if the user is sliding in the out of the board
         if (
-          index2 + numCellY < 0 ||
-          index2 + numCellY > GameLogic.CELLS_IN_COLUMN - 1 ||
-          index + numCellX < 0 ||
-          index + numCellX > GameLogic.CELLS_IN_ROW - 1
+          col + numCellY < 0 ||
+          col + numCellY > GameLogic.CELLS_IN_COLUMN - 1 ||
+          row + numCellX < 0 ||
+          row + numCellX > GameLogic.CELLS_IN_ROW - 1
         )
           return;
       }
     };
 
-    const onReleaseCell = (index: number, index2: number) => {
+    const onReleaseCell = (col: number, row: number) => {
       handleEndPanResponder = true;
 
-      swapAnimation(index2, index, numCellX, numCellY, false);
+      // numCellX, numCellY -> min: -1, max: 1
+      while (numCellX < -1 || numCellX > 1) {
+        numCellX =
+          numCellX > 1 ? numCellX - 1 : numCellX < -1 ? numCellX + 1 : numCellX;
+      }
+      while (numCellY < -1 || numCellY > 1) {
+        numCellY =
+          numCellY > 1 ? numCellY - 1 : numCellY < -1 ? numCellY + 1 : numCellY;
+      }
+
+      swapAnimation(row, col, numCellX, numCellY, false);
     };
 
     return Array(GameLogic.CELLS_IN_ROW)
