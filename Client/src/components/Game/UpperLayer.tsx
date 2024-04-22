@@ -29,7 +29,7 @@ import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
 import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
 import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
 import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
-
+import log from "../../logger/index.js";
 const UpperLayer = () => {
   const dispatch = useDispatch();
   const blockList = useSelector((state: any) => state.board.blockList);
@@ -70,15 +70,14 @@ const UpperLayer = () => {
     return (block: Block) => {
       dispatch(updateDamage(calcDamage())); // NG
 
-      let startRow = 0;
-      let endRow = Math.max(block.startCell.i, block.endCell.i); // Last index is exclusive
-      let startCol = Math.min(block.startCell.j, block.endCell.j);
-      let endCol = Math.max(block.startCell.j, block.endCell.j); // Last index is exclusive
+      let startRow = block.startCell.i;
+      let endRow = block.endCell.i;
+      let startCol = block.startCell.j;
+      let endCol = block.endCell.j;
 
       const cloneMatrix = [];
 
       let sliceRow = [];
-      // BUG HERE.
       for (let i = startRow; i <= endRow; i++) {
         sliceRow = [];
         for (let j = startCol; j <= endCol; j++) {
@@ -90,7 +89,7 @@ const UpperLayer = () => {
 
         cloneMatrix.push(sliceRow);
       }
-
+      log.error(`cloneMatrix: ${cloneMatrix}`);
       return cloneMatrix;
     };
   }, [blockList]);
@@ -125,9 +124,9 @@ const UpperLayer = () => {
     if (blockList !== null && blockList.length > 0) {
       blockList.forEach((block: any) => {
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
-
         const { blockHeight } = GameLogic.calculateCollapseCols(block);
 
+        // TODO
         for (let i = 0; i < initialState.current.coordinate.length; i++) {
           for (let j = 0; j < initialState.current.coordinate[0].length; j++) {
             Animated.spring(initialState.current.coordinate[i][j], {

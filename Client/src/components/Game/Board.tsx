@@ -48,7 +48,7 @@ const GameBoard = (props: any) => {
 
   // useState
   const [blockList, setBlockList] = useState<any[]>([]);
-
+  const [upperBlockList, setUpperBlockList] = useState<any[]>([]); // THIS IS USE FOR UPPER CELLS TO DROP DOWN.
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
@@ -185,24 +185,69 @@ const GameBoard = (props: any) => {
   const onDestroyCells = useMemo(() => {
     return () => {
       if (blockList && blockList.length > 0) {
+        log.debug("Run onDestroyCells");
+        const upperBlockList = GameLogic.calcUpperBlockList(blockList);
         cntCell.current = blockList.length;
-        blockList.forEach((item: any) => {
-          onDestroyOneCell(item);
-        });
+        for (let i = 0; i < cntCell.current; i++) {
+          onDestroyOneCell(blockList[i], upperBlockList[i]);
+        }
       }
     };
   }, [blockList]);
 
   /**
-   * ANIMATION TO DESTROY 1 CELLS
+   * ANIMATION TO COLLAPSE UPPER LAYER
    */
-  const onDestroyOneCell = (block: any) => {
+  const onCollapseUpperLayer = (block: any, isMatchedInRows: boolean) => {
+    log.error("Run onCollapseUpperLayer");
     const startCell = block.startCell;
     const endCell = block.endCell;
+    log.debug(
+      `startCell: {i: ${startCell.i}, j: ${startCell.i}}, endCell: {i: ${endCell.i}, j : ${endCell.j}}`,
+    );
+    const cells = [];
+    for (let i = startCell.i; i <= endCell.i; i++) {
+      for (let j = startCell.j; j <= endCell.j; j++) {
+        cells.push({ row: i, col: j });
+      }
+    }
 
+    // Animation to destroy
+    cells.forEach((cell) => {
+      Animated.spring(initialState.current.coordinate[cell.row][cell.col], {
+        toValue: {
+          x: 0, // STAY IN THE x-axis
+          y: isMatchedInRows
+            ? GameLogic.HEIGHT_PER_CELL + GameLogic.MARGIN
+            : (GameLogic.HEIGHT_PER_CELL + GameLogic.MARGIN) * cells.length, // TODO
+        },
+        useNativeDriver: true,
+        tension: 100,
+      }).start(() => {
+        cntCell.current--;
+        if (cntCell.current == 0) {
+          log.error("set invisible block here");
+          setBlockList([]);
+          dispatch(updateBlockList(blockList));
+
+          attackComponent();
+        }
+      });
+    });
+  };
+
+  /**
+   * ANIMATION TO DESTROY 1 CELLS
+   */
+  const onDestroyOneCell = (block: any, upperBlockList: any) => {
+    log.debug("onDestroyOneCell ");
+    const startCell = block.startCell;
+    const endCell = block.endCell;
+    let isMatchedInRows = false;
     const cells = [];
     if (startCell.i == endCell.i) {
       // IN A ROW
+      isMatchedInRows = true;
       for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
         cells.push({ row: startCell.i, col: cnt });
     } else {
@@ -211,6 +256,7 @@ const GameBoard = (props: any) => {
         cells.push({ row: cnt, col: startCell.j });
     }
 
+    let cellCnt = cells.length;
     // Animation to destroy
     cells.forEach((cell) => {
       Animated.parallel([
@@ -276,13 +322,8 @@ const GameBoard = (props: any) => {
           duration: 2000,
         }),
       ]).start(() => {
-        cntCell.current--;
-        if (cntCell.current == 0) {
-          setBlockList([]);
-          dispatch(updateBlockList(blockList));
-
-          attackComponent();
-        }
+        if (cellCnt > 1) cellCnt = cellCnt - 1;
+        else onCollapseUpperLayer(upperBlockList, isMatchedInRows);
       });
     });
   };
@@ -327,6 +368,7 @@ const GameBoard = (props: any) => {
     numCellY: number,
     isComponentTurn: boolean,
   ) => {
+    log.debug("Run swapAnimation");
     // CHECK CELL NEARE BORDER OF TABLE
     if (
       row + numCellY < 0 ||
@@ -366,6 +408,7 @@ const GameBoard = (props: any) => {
       ),
     ]).start(() => {
       if (!isComponentTurn) {
+        log.debug("Run swap 2 cells");
         socket.emitMove({
           startCell: { row: row, column: col },
           endCell: { row: row + numCellY, column: col + numCellX },
@@ -500,7 +543,7 @@ const GameBoard = (props: any) => {
 
     const onReleaseCell = (col: number, row: number) => {
       handleEndPanResponder = true;
-
+      log.debug("After onReleaseCell");
       // numCellX, numCellY -> min: -1, max: 1
       while (numCellX < -1 || numCellX > 1) {
         numCellX =

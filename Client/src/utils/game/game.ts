@@ -1,5 +1,6 @@
 import { Animated } from "react-native";
 import ConstantsResponsive from "../../constants/Constanst";
+import log from "../../logger/index.js";
 export default interface AnimationPropertyType {
   [key: string]: string;
 }
@@ -281,5 +282,34 @@ export default class GameLogic {
       numCellX: move.endCell.column - move.startCell.column,
       numCellY: move.endCell.row - move.startCell.row,
     };
+  }
+
+  public static calcUpperBlockList(matchedBlockList: any[]) {
+    log.error("Run calcUpperBlockList");
+    const upperBlockList: any[] = [];
+    for (let blockList of matchedBlockList) {
+      let startCell = blockList.startCell;
+      let endCell = blockList.endCell;
+
+      // Matched in a row
+      if (startCell.i == endCell.i) {
+        upperBlockList.push({
+          startCell: { i: 0, j: startCell.j },
+          endCell: { i: endCell.i - 1, j: endCell.j },
+        });
+      } else if (startCell.j == endCell.j) {
+        // Matched in a column
+        upperBlockList.push({
+          startCell: { i: 0, j: startCell.j },
+          endCell: { i: startCell.i - 1, j: endCell.j },
+        });
+      }
+
+      upperBlockList.push({
+        startCell: { i: 0, j: startCell.j },
+        endCell: { i: endCell.i - 1, j: endCell.j },
+      });
+    }
+    return upperBlockList;
   }
 }
