@@ -89,7 +89,6 @@ const UpperLayer = () => {
 
         cloneMatrix.push(sliceRow);
       }
-      log.error(`cloneMatrix: ${cloneMatrix}`);
       return cloneMatrix;
     };
   }, [blockList]);

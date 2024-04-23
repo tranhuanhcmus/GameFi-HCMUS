@@ -285,7 +285,6 @@ export default class GameLogic {
   }
 
   public static calcUpperBlockList(matchedBlockList: any[]) {
-    log.error("Run calcUpperBlockList");
     const upperBlockList: any[] = [];
     for (let blockList of matchedBlockList) {
       let startCell = blockList.startCell;

@@ -16,6 +16,7 @@ import {
   generateRandomMatrix,
   updateBlockList,
   updateCellsToSwap,
+  updateTable,
   updateTurn,
 } from "../../redux/boardSlice";
 import { store } from "../../redux/store";
@@ -29,6 +30,7 @@ import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
 import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
 import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
 import log from "../../logger/index.js";
+import FinishModal from "./FinishModal";
 const GameBoard = (props: any) => {
   // Prop of component
   const { socket } = props;
@@ -38,17 +40,21 @@ const GameBoard = (props: any) => {
   const blockState = store.getState().board;
   const blockStateTable = useSelector((state: any) => state.board.table);
   const table = useSelector((state: any) => state.board.table);
-  const { hp, gameRoom } = useSelector((state: any) => state.player);
+  const { hp, gameRoom, componentHp } = useSelector(
+    (state: any) => state.player,
+  );
 
   useEffect(() => {
     socket.onListenTakeDamage((data: any) => {
       dispatch(updateHp(data));
+      dispatch(updateTable(data.table));
     });
   }, []);
 
   // useState
   const [blockList, setBlockList] = useState<any[]>([]);
   const [upperBlockList, setUpperBlockList] = useState<any[]>([]); // THIS IS USE FOR UPPER CELLS TO DROP DOWN.
+  const [isVisible, setIsVisible] = useState(false);
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
@@ -59,6 +65,7 @@ const GameBoard = (props: any) => {
 
   // useRef
   const cntCell = useRef(0);
+  const isWinner = useRef(false);
 
   /**
    * Ininitial state of board
@@ -150,14 +157,18 @@ const GameBoard = (props: any) => {
   }, [boardTable]);
 
   useEffect(() => {
-    if (hp <= 0) {
+    log.debug("Chay useEffect nay");
+    if (hp <= 0 || componentHp <= 0) {
+      hp <= 0 ? (isWinner.current = false) : (isWinner.current = true);
       console.log("STOP GAME");
+      setIsVisible(true);
     } else {
       socket.onListenAttack((data: DataSocketTransfer) => {
         dispatch(updateHp(data.damage));
+        dispatch(updateTable(data.table));
       });
     }
-  }, []);
+  }, [hp, componentHp]);
 
   useEffect(() => {
     socket.onListenMove((data: any) => {
@@ -185,7 +196,6 @@ const GameBoard = (props: any) => {
   const onDestroyCells = useMemo(() => {
     return () => {
       if (blockList && blockList.length > 0) {
-        log.debug("Run onDestroyCells");
         const upperBlockList = GameLogic.calcUpperBlockList(blockList);
         cntCell.current = blockList.length;
         for (let i = 0; i < cntCell.current; i++) {
@@ -199,12 +209,9 @@ const GameBoard = (props: any) => {
    * ANIMATION TO COLLAPSE UPPER LAYER
    */
   const onCollapseUpperLayer = (block: any, isMatchedInRows: boolean) => {
-    log.error("Run onCollapseUpperLayer");
     const startCell = block.startCell;
     const endCell = block.endCell;
-    log.debug(
-      `startCell: {i: ${startCell.i}, j: ${startCell.i}}, endCell: {i: ${endCell.i}, j : ${endCell.j}}`,
-    );
+
     const cells = [];
     for (let i = startCell.i; i <= endCell.i; i++) {
       for (let j = startCell.j; j <= endCell.j; j++) {
@@ -226,7 +233,6 @@ const GameBoard = (props: any) => {
       }).start(() => {
         cntCell.current--;
         if (cntCell.current == 0) {
-          log.error("set invisible block here");
           setBlockList([]);
           dispatch(updateBlockList(blockList));
 
@@ -240,7 +246,6 @@ const GameBoard = (props: any) => {
    * ANIMATION TO DESTROY 1 CELLS
    */
   const onDestroyOneCell = (block: any, upperBlockList: any) => {
-    log.debug("onDestroyOneCell ");
     const startCell = block.startCell;
     const endCell = block.endCell;
     let isMatchedInRows = false;
@@ -331,7 +336,12 @@ const GameBoard = (props: any) => {
   // THIS FUNCTION USE SOCKET TO SEND TO SERVER.
   const attackComponent = () => {
     dispatch(updateComponentHp(10));
-    socket.emitEventGame({ gameRoom: gameRoom, damage: 10, move: {} });
+    socket.emitEventGame({
+      gameRoom: gameRoom,
+      damage: 10,
+      move: {},
+      table: boardTable,
+    });
   };
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING
@@ -368,7 +378,6 @@ const GameBoard = (props: any) => {
     numCellY: number,
     isComponentTurn: boolean,
   ) => {
-    log.debug("Run swapAnimation");
     // CHECK CELL NEARE BORDER OF TABLE
     if (
       row + numCellY < 0 ||
@@ -408,7 +417,6 @@ const GameBoard = (props: any) => {
       ),
     ]).start(() => {
       if (!isComponentTurn) {
-        log.debug("Run swap 2 cells");
         socket.emitMove({
           startCell: { row: row, column: col },
           endCell: { row: row + numCellY, column: col + numCellX },
@@ -543,7 +551,6 @@ const GameBoard = (props: any) => {
 
     const onReleaseCell = (col: number, row: number) => {
       handleEndPanResponder = true;
-      log.debug("After onReleaseCell");
       // numCellX, numCellY -> min: -1, max: 1
       while (numCellX < -1 || numCellX > 1) {
         numCellX =
@@ -593,6 +600,11 @@ const GameBoard = (props: any) => {
   return useMemo(() => {
     return (
       <View style={styles.boardContainer}>
+        <FinishModal
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          isWinner={isWinner.current}
+        />
         {boardTable.length > 0 ? (
           boardTable.map((row: any, indexRow: any) => (
             <View key={indexRow} style={styles.row}>
