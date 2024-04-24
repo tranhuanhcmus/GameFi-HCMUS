@@ -46,7 +46,8 @@ const GameBoard = (props: any) => {
 
   useEffect(() => {
     socket.onListenTakeDamage((data: any) => {
-      dispatch(updateHp(data));
+      dispatch(updateHp(data.damage));
+      log.error("data.table ", data.table);
       dispatch(updateTable(data.table));
     });
   }, []);
@@ -165,6 +166,7 @@ const GameBoard = (props: any) => {
     } else {
       socket.onListenAttack((data: DataSocketTransfer) => {
         dispatch(updateHp(data.damage));
+        log.error("data.table ", data.table);
         dispatch(updateTable(data.table));
       });
     }

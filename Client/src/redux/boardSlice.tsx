@@ -5,7 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { Animated } from "react-native";
 import GameLogic from "../utils/game/game";
-
+import log from "../logger/index.js";
 interface BoardState {
   blockList: {
     startCell: { i: number; j: number };
@@ -70,6 +70,7 @@ const boardSlice = createSlice({
     },
 
     updateTable(state, action) {
+      log.error("action.paylod ", action.payload);
       state.table = [];
       state.table = action.payload;
       return state;

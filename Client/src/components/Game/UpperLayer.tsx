@@ -46,6 +46,9 @@ const UpperLayer = () => {
   const cnt = useRef(0);
 
   useEffect(() => {
+    log.debug("boardTable ", boardTable);
+  }, []);
+  useEffect(() => {
     if (blockList && blockList.length) {
       setIsReady(true);
 
