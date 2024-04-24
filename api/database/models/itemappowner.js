@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class ItemGame extends Model {
+  class ItemAppOwner extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  ItemGame.init({
+  ItemAppOwner.init({
     id: {
       type:DataTypes.UUID,
       allowNull:false,
@@ -22,46 +22,22 @@ module.exports = (sequelize, DataTypes) => {
       validate:{
         notNull:{
           args:true,
-          msg:"ItemGame id is not null"
+          msg:"ItemAppOwner id is not null"
         }
       }
     },
-    name: {
+    owner: {
       type:DataTypes.TEXT,
-      allowNull:false
-    },
-    description: {
-      type:DataTypes.TEXT,
-      allowNull:true
-    },
-    category: {
-      type:DataTypes.TEXT,
-      allowNull:true
-    },
-    quality: {
-      type:DataTypes.TEXT,
-      allowNull:true
+      allowNull:false,
+      primaryKey:true,
     },
     quantity: {
       type:DataTypes.INTEGER,
       allowNull:false
-    },
-    gemcost: {
-      type:DataTypes.INTEGER,
-      defaultValue:0
-    },
-    goldcost: {
-      type:DataTypes.INTEGER,
-      defaultValue:0
-    },
-    image: {
-      type:DataTypes.TEXT,
-      allowNull:true
-    },
-
+    }
   }, {
     sequelize,
-    modelName: 'ItemGame',
+    modelName: 'ItemAppOwner',
   });
-  return ItemGame;
+  return ItemAppOwner;
 };

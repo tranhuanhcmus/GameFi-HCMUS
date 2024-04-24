@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class ItemGame extends Model {
+  class ItemApp extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  ItemGame.init({
+  ItemApp.init({
     id: {
       type:DataTypes.UUID,
       allowNull:false,
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       validate:{
         notNull:{
           args:true,
-          msg:"ItemGame id is not null"
+          msg:"ItemApp id is not null"
         }
       }
     },
@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
 
   }, {
     sequelize,
-    modelName: 'ItemGame',
+    modelName: 'ItemApp',
   });
-  return ItemGame;
+  return ItemApp;
 };
