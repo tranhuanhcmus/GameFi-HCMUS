@@ -1,4 +1,5 @@
 module.exports={
+	viewController:require("./ViewController"),
 	nftController:require("./nftController"),
 	tokenUriController:require("./tokenUriController"),
 	itemGameController:require("./itemGameController"),

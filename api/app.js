@@ -5,16 +5,17 @@ const userRouter = require('./routes/userRouter');
 const {catchEventNFT} = require('./catchNFTEvents.js');
 const models = require('./database/models');
 const { formatResponse } = require('./middlewares');
-const { nftRouter, tokenUriRouter, itemGameRouter, itemAppRouter, itemGameOwnerRouter, itemAppOwnerRouter } = require('./routes');
+const { nftRouter, tokenUriRouter, itemGameRouter, itemAppRouter, itemGameOwnerRouter, itemAppOwnerRouter, adminRouter } = require('./routes');
 
 const app = express();
+app.set('view engine', 'ejs');
 const port = process.env.PORT|| 4500;
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
 app.use(formatResponse)
-
+app.use(express.static('public'));
 // Routes
 app.use('/user', userRouter);
 app.use('/nfts', nftRouter);
@@ -24,6 +25,9 @@ app.use('/itemApps', itemAppRouter);
 app.use('/itemGameOwners', itemGameOwnerRouter);
 app.use('/itemAppOwners', itemAppOwnerRouter);
 
+// Web admin
+app.use("/admin",adminRouter)
+app.get("*",(req,res)=>res.render("error"))
 
 async function connectDB() {
   try {
