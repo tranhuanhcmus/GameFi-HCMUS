@@ -40,9 +40,11 @@ const GameScreen = () => {
     (state: any) => state.player,
   );
 
+  /** Init socket */
   useEffect(() => {
     dispatch(initSocket());
   }, []);
+
   return (
     <SafeAreaView>
       <View style={styles.container}>

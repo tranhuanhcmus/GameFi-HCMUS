@@ -30,21 +30,35 @@ import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
 import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
 import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
 import log from "../../logger/index.js";
+import { updateComponentHp } from "../../redux/playerSlice";
 const UpperLayer = () => {
+  /** Redux, state and dispatch */
   const dispatch = useDispatch();
-  const blockList = useSelector((state: any) => state.board.blockList);
-  const blockState = store.getState().board;
-  const { turn, damage, table } = useSelector((state: any) => state.board);
+  const { socket } = useSelector((state: any) => state.socket);
+  const { gameRoom } = useSelector((state: any) => state.player);
+  const { turn, damage, table, blockList } = useSelector(
+    (state: any) => state.board,
+  );
+
+  /** ====================================================== */
+  /** useRef */
   const initialState = useRef({
     coordinate: GameLogic.generateAnimatedValueXY(),
   });
+  const cnt = useRef(0);
+
+  /** ====================================================== */
+  /** useState */
   const [isReady, setIsReady] = useState(false);
 
+  /** ====================================================== */
+  /** useMemo  */
   const boardTable = useMemo(() => {
     return table.map((row: any) => [...row]);
   }, [table]);
-  const cnt = useRef(0);
 
+  /** ====================================================== */
+  /** useEffect */
   useEffect(() => {
     if (blockList && blockList.length) {
       setIsReady(true);
@@ -58,6 +72,7 @@ const UpperLayer = () => {
       }
     } else setIsReady(false);
   }, [blockList]);
+
   useEffect(() => {
     if (isReady) {
       cnt.current = blockList.length;
@@ -65,6 +80,7 @@ const UpperLayer = () => {
     }
   }, [blockList, isReady]);
 
+  /** ====================================================== */
   /** Service: Generate columns to collapse */
   const generateCols = useMemo<(block: Block) => number[][]>(() => {
     return (block: Block) => {
@@ -116,6 +132,18 @@ const UpperLayer = () => {
       return damage;
     };
   }, [blockList]);
+
+  /** THIS FUNCTION USE SOCKET TO SEND TO SERVER. */
+  const attackComponent = () => {
+    dispatch(updateComponentHp(10));
+    socket?.emitEventGame({
+      gameRoom: gameRoom,
+      damage: 10,
+      move: {},
+      table: boardTable,
+    });
+  };
+
   /**
    * ANIMATION FOR UPPER LAYER TO COLLAPSE
    */
@@ -138,6 +166,8 @@ const UpperLayer = () => {
               if (cnt.current == 0) {
                 dispatch(updateTable(boardTable));
                 dispatch(emptyBlockList([]));
+                attackComponent();
+
                 if (turn == 1) {
                   dispatch(updateTurn(2));
                 } else if (turn == 2) {

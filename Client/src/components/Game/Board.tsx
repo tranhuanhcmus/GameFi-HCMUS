@@ -36,11 +36,9 @@ import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
 import log from "../../logger/index.js";
 import FinishModal from "./FinishModal";
 const GameBoard = () => {
-  // Prop of component
-  const { socket } = useSelector((state: any) => state.socket);
-
-  // Redux, state and dispatch
+  /** Redux, state and dispatch */
   const dispatch = useDispatch();
+  const { socket } = useSelector((state: any) => state.socket);
   const blockState = store.getState().board;
   const blockStateTable = useSelector((state: any) => state.board.table);
   const table = useSelector((state: any) => state.board.table);
@@ -48,19 +46,16 @@ const GameBoard = () => {
     (state: any) => state.player,
   );
 
-  // useState
+  /** ====================================================== */
+  /** useState */
   const [blockList, setBlockList] = useState<any[]>([]);
   const [upperBlockList, setUpperBlockList] = useState<any[]>([]); // THIS IS USE FOR UPPER CELLS TO DROP DOWN.
   const [isVisible, setIsVisible] = useState(false);
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
-  // useMemo
-  const boardTable = useMemo(() => {
-    return table.map((row: any) => [...row]);
-  }, [table]);
-
-  // useRef
+  /** ====================================================== */
+  /** useRef */
   const cntCell = useRef(0);
   const isWinner = useRef(false);
 
@@ -76,6 +71,12 @@ const GameBoard = () => {
     scale: GameLogic.generateAnimatedValue(0),
     scoreOpacity: GameLogic.generateAnimatedValue(1),
   });
+
+  /** ====================================================== */
+  /** useMemo */
+  const boardTable = useMemo(() => {
+    return table.map((row: any) => [...row]);
+  }, [table]);
 
   /**
    * State to interpolate
@@ -133,6 +134,8 @@ const GameBoard = () => {
     blockStateTable,
   ]);
 
+  /** ====================================================== */
+  /** useEffect */
   useEffect(() => {
     // Reset animated value
     for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
@@ -165,10 +168,6 @@ const GameBoard = () => {
   }, [socket]);
 
   useEffect(() => {
-    log.warn("socket", socket);
-  }, [socket]);
-
-  useEffect(() => {
     // Delay before exploding next
     const delayExecution = setTimeout(() => {
       const matchedBlocklist = checkTable(boardTable);
@@ -186,7 +185,6 @@ const GameBoard = () => {
     }
   }, [blockList]);
 
-  /** Dispatch componen turn */
   useEffect(() => {
     socket?.onListenFirstTurn((data: any) => {
       if (socket.id == data) {
@@ -197,9 +195,7 @@ const GameBoard = () => {
     });
   }, []);
 
-  useEffect(() => {
-    log.debug("TABLE CHANGE");
-  }, [table]);
+  /** ====================================================== */
   /**
    * This function check new table to push in the new blocklist then
    * @return true false;
@@ -256,7 +252,7 @@ const GameBoard = () => {
           setBlockList([]);
           dispatch(updateBlockList(blockList));
 
-          attackComponent();
+          // attackComponent();
         }
       });
     });
@@ -350,17 +346,6 @@ const GameBoard = () => {
         if (cellCnt > 1) cellCnt = cellCnt - 1;
         else onCollapseUpperLayer(upperBlockList, isMatchedInRows);
       });
-    });
-  };
-
-  // THIS FUNCTION USE SOCKET TO SEND TO SERVER.
-  const attackComponent = () => {
-    dispatch(updateComponentHp(10));
-    socket?.emitEventGame({
-      gameRoom: gameRoom,
-      damage: 10,
-      move: {},
-      table: boardTable,
     });
   };
 

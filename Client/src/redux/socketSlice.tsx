@@ -24,9 +24,7 @@ const socketSlice = createSlice({
       return state;
     },
 
-    attack(state) {
-      state.socket?.emitAttack({});
-    },
+    attack(state, action) {},
 
     onListenTakeDamage(state, action) {},
   },
