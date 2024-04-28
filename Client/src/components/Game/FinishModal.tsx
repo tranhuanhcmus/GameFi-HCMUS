@@ -13,9 +13,7 @@ const FinishModal = ({
   setIsVisible: (value: boolean) => void;
   isWinner: boolean;
 }) => {
-  useEffect(() => {
-    log.debug("isVisble ", isVisible);
-  }, [isVisible]);
+  useEffect(() => {}, [isVisible]);
 
   return isVisible ? (
     <View style={styles.container}>

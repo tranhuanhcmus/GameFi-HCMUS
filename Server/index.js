@@ -41,8 +41,11 @@ function findMatch(socket) {
 				[socket.id]: socket.id,
 				[key]: key,
 			});
+
+			console.log('matchPairs.gameRoom', matchPairs.get(gameRoom));
 			// Notify both clients that the game is starting
 			io.to(gameRoom).emit(SOCKET.KEY_ROOM, `${gameRoom}`);
+			io.to(gameRoom).emit(SOCKET.FIRST_TURN, key);
 			foundMatch = true;
 		}
 	});

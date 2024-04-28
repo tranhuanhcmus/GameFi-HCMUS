@@ -70,7 +70,6 @@ const boardSlice = createSlice({
     },
 
     updateTable(state, action) {
-      log.error("action.paylod ", action.payload);
       state.table = [];
       state.table = action.payload;
       return state;

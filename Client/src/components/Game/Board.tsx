@@ -22,7 +22,11 @@ import {
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
-import { updateComponentHp, updateHp } from "../../redux/playerSlice";
+import {
+  updateComponentHp,
+  updateComponentTurn,
+  updateHp,
+} from "../../redux/playerSlice";
 import { DataSocketTransfer } from "../../../socket";
 import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
 import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
@@ -40,17 +44,9 @@ const GameBoard = (props: any) => {
   const blockState = store.getState().board;
   const blockStateTable = useSelector((state: any) => state.board.table);
   const table = useSelector((state: any) => state.board.table);
-  const { hp, gameRoom, componentHp } = useSelector(
+  const { hp, gameRoom, componentHp, isComponentTurn } = useSelector(
     (state: any) => state.player,
   );
-
-  useEffect(() => {
-    socket.onListenTakeDamage((data: any) => {
-      dispatch(updateHp(data.damage));
-      log.error("data.table ", data.table);
-      dispatch(updateTable(data.table));
-    });
-  }, []);
 
   // useState
   const [blockList, setBlockList] = useState<any[]>([]);
@@ -80,10 +76,6 @@ const GameBoard = (props: any) => {
     scale: GameLogic.generateAnimatedValue(0),
     scoreOpacity: GameLogic.generateAnimatedValue(1),
   });
-
-  useEffect(() => {
-    console.clear();
-  }, []);
 
   /**
    * State to interpolate
@@ -158,30 +150,48 @@ const GameBoard = (props: any) => {
   }, [boardTable]);
 
   useEffect(() => {
-    log.debug("Chay useEffect nay");
     if (hp <= 0 || componentHp <= 0) {
       hp <= 0 ? (isWinner.current = false) : (isWinner.current = true);
       console.log("STOP GAME");
       setIsVisible(true);
     } else {
-      socket.onListenAttack((data: DataSocketTransfer) => {
+      socket.onListenTakeDamage((data: DataSocketTransfer) => {
+        log.warn("ATTACKED. HELP");
+        dispatch(updateComponentTurn(true));
         dispatch(updateHp(data.damage));
-        log.error("data.table ", data.table);
         dispatch(updateTable(data.table));
       });
     }
-  }, [hp, componentHp]);
+  }, [socket]);
 
   useEffect(() => {
-    socket.onListenMove((data: any) => {
-      // Write logic here
-      const { row, col, numCellX, numCellY } = GameLogic.calculateMove(data);
+    // Delay before exploding next
+    const delayExecution = setTimeout(() => {
+      const matchedBlocklist = checkTable(boardTable);
+      if (matchedBlocklist && matchedBlocklist.length > 0) {
+        setBlockList([...matchedBlocklist]);
+      } else {
+      }
+    }, 500);
+    return () => clearTimeout(delayExecution);
+  }, [table]);
 
-      // Show move of component on screen
-      swapAnimation(row, col, numCellX, numCellY, true);
+  useEffect(() => {
+    if (!isComponentTurn) {
+      onDestroyCells();
+    }
+  }, [blockList]);
+
+  /* Dispatch componenturn */
+  useEffect(() => {
+    socket.onListenFirstTurn((data: any) => {
+      if (socket.id == data) {
+        dispatch(updateComponentTurn(false));
+      } else {
+        dispatch(updateComponentTurn(true));
+      }
     });
   }, []);
-
   /**
    * This function check new table to push in the new blocklist then
    * @return true false;
@@ -337,6 +347,7 @@ const GameBoard = (props: any) => {
 
   // THIS FUNCTION USE SOCKET TO SEND TO SERVER.
   const attackComponent = () => {
+    log.info("ATTACK COMPONENT");
     dispatch(updateComponentHp(10));
     socket.emitEventGame({
       gameRoom: gameRoom,
@@ -418,12 +429,12 @@ const GameBoard = (props: any) => {
         },
       ),
     ]).start(() => {
-      if (!isComponentTurn) {
-        socket.emitMove({
-          startCell: { row: row, column: col },
-          endCell: { row: row + numCellY, column: col + numCellX },
-        });
-      }
+      // if (!isComponentTurn) {
+      //   socket.emitMove({
+      //     startCell: { row: row, column: col },
+      //     endCell: { row: row + numCellY, column: col + numCellX },
+      //   });
+      // }
 
       onSwap2CellTable(row, col, row + numCellY, col + numCellX);
 
@@ -461,22 +472,6 @@ const GameBoard = (props: any) => {
       }
     });
   };
-
-  useEffect(() => {
-    // Delay before exploding next
-    const delayExecution = setTimeout(() => {
-      const matchedBlocklist = checkTable(boardTable);
-      if (matchedBlocklist && matchedBlocklist.length > 0) {
-        setBlockList([...matchedBlocklist]);
-      } else {
-      }
-    }, 500);
-    return () => clearTimeout(delayExecution);
-  }, [table]);
-
-  useEffect(() => {
-    onDestroyCells();
-  }, [blockList]);
 
   /**
    * This function swap 2 value (oldRow, oldCol) with (newRow, newCol) in table
@@ -563,6 +558,7 @@ const GameBoard = (props: any) => {
           numCellY > 1 ? numCellY - 1 : numCellY < -1 ? numCellY + 1 : numCellY;
       }
 
+      dispatch(updateComponentTurn(false));
       swapAnimation(row, col, numCellX, numCellY, false);
     };
 
