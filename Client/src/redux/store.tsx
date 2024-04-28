@@ -6,6 +6,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import boardSlice from "./boardSlice";
 import upperLayerSlice from "./uppLayerSlice";
 import playerSlice from "./playerSlice";
+import socketSlice from "./socketSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     board: boardSlice,
     upperLayer: upperLayerSlice,
     player: playerSlice,
+    socket: socketSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -35,9 +35,9 @@ import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
 import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
 import log from "../../logger/index.js";
 import FinishModal from "./FinishModal";
-const GameBoard = (props: any) => {
+const GameBoard = () => {
   // Prop of component
-  const { socket } = props;
+  const { socket } = useSelector((state: any) => state.socket);
 
   // Redux, state and dispatch
   const dispatch = useDispatch();
@@ -149,19 +149,23 @@ const GameBoard = (props: any) => {
     }
   }, [boardTable]);
 
+  /** THIS USEEFFECT HANDLE SOCKET EVENT */
   useEffect(() => {
     if (hp <= 0 || componentHp <= 0) {
       hp <= 0 ? (isWinner.current = false) : (isWinner.current = true);
       console.log("STOP GAME");
       setIsVisible(true);
     } else {
-      socket.onListenTakeDamage((data: DataSocketTransfer) => {
-        log.warn("ATTACKED. HELP");
+      socket?.onListenTakeDamage((data: DataSocketTransfer) => {
         dispatch(updateComponentTurn(true));
         dispatch(updateHp(data.damage));
         dispatch(updateTable(data.table));
       });
     }
+  }, [socket]);
+
+  useEffect(() => {
+    log.warn("socket", socket);
   }, [socket]);
 
   useEffect(() => {
@@ -182,9 +186,9 @@ const GameBoard = (props: any) => {
     }
   }, [blockList]);
 
-  /* Dispatch componenturn */
+  /** Dispatch componen turn */
   useEffect(() => {
-    socket.onListenFirstTurn((data: any) => {
+    socket?.onListenFirstTurn((data: any) => {
       if (socket.id == data) {
         dispatch(updateComponentTurn(false));
       } else {
@@ -192,6 +196,10 @@ const GameBoard = (props: any) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    log.debug("TABLE CHANGE");
+  }, [table]);
   /**
    * This function check new table to push in the new blocklist then
    * @return true false;
@@ -347,9 +355,8 @@ const GameBoard = (props: any) => {
 
   // THIS FUNCTION USE SOCKET TO SEND TO SERVER.
   const attackComponent = () => {
-    log.info("ATTACK COMPONENT");
     dispatch(updateComponentHp(10));
-    socket.emitEventGame({
+    socket?.emitEventGame({
       gameRoom: gameRoom,
       damage: 10,
       move: {},
@@ -429,13 +436,6 @@ const GameBoard = (props: any) => {
         },
       ),
     ]).start(() => {
-      // if (!isComponentTurn) {
-      //   socket.emitMove({
-      //     startCell: { row: row, column: col },
-      //     endCell: { row: row + numCellY, column: col + numCellX },
-      //   });
-      // }
-
       onSwap2CellTable(row, col, row + numCellY, col + numCellX);
 
       const matchedBlockList = checkTable(boardTable);

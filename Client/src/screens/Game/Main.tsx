@@ -27,19 +27,22 @@ import {
 } from "../../redux/playerSlice";
 
 import ConstantsResponsive from "../../constants/Constanst";
+import { initSocket } from "../../redux/socketSlice";
 
 const GameScreen = () => {
   const dispatch = useDispatch();
-  useEffect(() => {}, []);
+
   const { turn, damage, blockList, swapCells } = useSelector(
     (state: any) => state.board,
   );
-  const socket = SocketIOClient.getInstance();
 
   const { hp, componentHp, gameRoom } = useSelector(
     (state: any) => state.player,
   );
 
+  useEffect(() => {
+    dispatch(initSocket());
+  }, []);
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -52,7 +55,7 @@ const GameScreen = () => {
 
         <UpperLayer />
 
-        <GameBoard socket={socket} />
+        <GameBoard />
 
         <View
           style={{
