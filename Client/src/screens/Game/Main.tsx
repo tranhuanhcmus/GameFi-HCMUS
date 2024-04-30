@@ -1,30 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-  Animated,
-  TouchableOpacity,
-  PanResponder,
-} from "react-native";
-import backGroundImage from "../../../assets/background3.png";
-import { COLOR } from "../../utils/color";
-import NormalButton from "../../components/Button/NormalButton";
-import useCustomNavigation from "../../hooks/useCustomNavigation";
-import GameHeader from "../../components/Game/Header";
-import GameBoard from "../../components/Game/Board";
-import UpperLayer from "../../components/Game/UpperLayer";
-import { store } from "../../redux/store";
+import React, { useEffect } from "react";
+import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "react-native-really-awesome-button";
-import { DataSocketTransfer, SocketIOClient } from "../../../socket";
-import {
-  updateComponentHp,
-  updateHp,
-  updateMove,
-} from "../../redux/playerSlice";
+import backGroundImage from "../../../assets/background3.png";
+import GameBoard from "../../components/Game/Board";
+import GameHeader from "../../components/Game/Header";
+import UpperLayer from "../../components/Game/UpperLayer";
+import { COLOR } from "../../utils/color";
 
 import ConstantsResponsive from "../../constants/Constanst";
 import { initSocket } from "../../redux/socketSlice";

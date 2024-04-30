@@ -14,6 +14,8 @@ export default class GameLogic {
   /**
    * Size in pixel of table, please change if needed.
    */
+  public static TYPE_OF_DIAMOND = 5;
+
   public static SIZE_TABLE = 280;
 
   public static CELL_SPACING = 3;
@@ -311,4 +313,33 @@ export default class GameLogic {
     }
     return upperBlockList;
   }
+
+  /** Service: Generate columns to collapse */
+  public static generateCols = (block: Block, boardTable: any) => {
+    let startRow = block.startCell.i;
+    let endRow = block.endCell.i;
+    let startCol = block.startCell.j;
+    let endCol = block.endCell.j;
+    log.warn(
+      `startRow: ${startRow}, endRow: ${endRow}, startCol: ${startCol}, endCol: ${endCol}`,
+    );
+
+    const cloneMatrix: any[] = [];
+
+    let sliceRow = [];
+    for (let i = startRow; i <= endRow; i++) {
+      sliceRow = [];
+      for (let j = startCol; j <= endCol; j++) {
+        if (i == block.startCell.i) {
+          // boardTable[i][j] = isComponentTurn ? tableSocket[i][j] : 1;
+          boardTable[i][j] = this.randomNumber();
+        }
+        sliceRow.push(boardTable[i][j]);
+      }
+
+      cloneMatrix.push(sliceRow);
+    }
+
+    return cloneMatrix;
+  };
 }

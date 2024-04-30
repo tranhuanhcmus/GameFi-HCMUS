@@ -4,37 +4,33 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
+  Image,
   PanResponder,
   PanResponderGestureState,
   StyleSheet,
-  Text,
   View,
-  Image,
+  Text,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
+import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
+import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
+import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
+import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
+import { DataSocketTransfer } from "../../../socket";
 import {
-  generateRandomMatrix,
   updateBlockList,
   updateCellsToSwap,
   updateTable,
-  updateTurn,
 } from "../../redux/boardSlice";
+import { updateComponentTurn, updateHp } from "../../redux/playerSlice";
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
-import {
-  updateComponentHp,
-  updateComponentTurn,
-  updateHp,
-} from "../../redux/playerSlice";
-import { DataSocketTransfer } from "../../../socket";
-import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
-import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
-import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
-import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
-import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
-import log from "../../logger/index.js";
 import FinishModal from "./FinishModal";
+import log from "../../logger/index.js";
+import { updateMove, updateTableSocket } from "../../redux/socketSlice";
+
 const GameBoard = () => {
   /** Redux, state and dispatch */
   const dispatch = useDispatch();
@@ -42,14 +38,13 @@ const GameBoard = () => {
   const blockState = store.getState().board;
   const blockStateTable = useSelector((state: any) => state.board.table);
   const table = useSelector((state: any) => state.board.table);
-  const { hp, gameRoom, componentHp, isComponentTurn } = useSelector(
+  const { hp, componentHp, isComponentTurn } = useSelector(
     (state: any) => state.player,
   );
 
   /** ====================================================== */
   /** useState */
   const [blockList, setBlockList] = useState<any[]>([]);
-  const [upperBlockList, setUpperBlockList] = useState<any[]>([]); // THIS IS USE FOR UPPER CELLS TO DROP DOWN.
   const [isVisible, setIsVisible] = useState(false);
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
@@ -160,9 +155,17 @@ const GameBoard = () => {
       setIsVisible(true);
     } else {
       socket?.onListenTakeDamage((data: DataSocketTransfer) => {
+        swapAnimation(
+          data.move.startCell.row,
+          data.move.startCell.column,
+          parseInt(data.move.endCell.column) -
+            parseInt(data.move.startCell.column), // numbCellX
+          parseInt(data.move.endCell.row) - parseInt(data.move.startCell.row), // numbCellY
+        );
         dispatch(updateComponentTurn(true));
         dispatch(updateHp(data.damage));
-        dispatch(updateTable(data.table));
+        // dispatch(updateTable(data.table));
+        dispatch(updateTableSocket(data.table));
       });
     }
   }, [socket]);
@@ -180,9 +183,7 @@ const GameBoard = () => {
   }, [table]);
 
   useEffect(() => {
-    if (!isComponentTurn) {
-      onDestroyCells();
-    }
+    onDestroyCells();
   }, [blockList]);
 
   useEffect(() => {
@@ -223,10 +224,17 @@ const GameBoard = () => {
 
   /**
    * ANIMATION TO COLLAPSE UPPER LAYER
+   * @param upperBlockList
+   * @param blockLength Length of block
+   * @param isMatchedInRows
    */
-  const onCollapseUpperLayer = (block: any, isMatchedInRows: boolean) => {
-    const startCell = block.startCell;
-    const endCell = block.endCell;
+  const onCollapseUpperLayer = (
+    upperBlockList: any,
+    blockLength: any,
+    isMatchedInRows: boolean,
+  ) => {
+    const startCell = upperBlockList.startCell;
+    const endCell = upperBlockList.endCell;
 
     const cells = [];
     for (let i = startCell.i; i <= endCell.i; i++) {
@@ -242,7 +250,7 @@ const GameBoard = () => {
           x: 0, // STAY IN THE x-axis
           y: isMatchedInRows
             ? GameLogic.HEIGHT_PER_CELL + GameLogic.MARGIN
-            : (GameLogic.HEIGHT_PER_CELL + GameLogic.MARGIN) * cells.length, // TODO
+            : (GameLogic.HEIGHT_PER_CELL + GameLogic.MARGIN * 2) * blockLength,
         },
         useNativeDriver: true,
         tension: 100,
@@ -251,8 +259,6 @@ const GameBoard = () => {
         if (cntCell.current == 0) {
           setBlockList([]);
           dispatch(updateBlockList(blockList));
-
-          // attackComponent();
         }
       });
     });
@@ -344,7 +350,8 @@ const GameBoard = () => {
         }),
       ]).start(() => {
         if (cellCnt > 1) cellCnt = cellCnt - 1;
-        else onCollapseUpperLayer(upperBlockList, isMatchedInRows);
+        else
+          onCollapseUpperLayer(upperBlockList, cells.length, isMatchedInRows);
       });
     });
   };
@@ -378,30 +385,39 @@ const GameBoard = () => {
    */
   const swapAnimation = (
     row: any,
-    col: any,
+    column: any,
     numCellX: number,
     numCellY: number,
-    isComponentTurn: boolean,
   ) => {
     // CHECK CELL NEARE BORDER OF TABLE
     if (
       row + numCellY < 0 ||
       row + numCellY >= GameLogic.CELLS_IN_ROW ||
-      col + numCellX < 0 ||
-      col + numCellX >= GameLogic.CELLS_IN_COLUMN ||
+      column + numCellX < 0 ||
+      column + numCellX >= GameLogic.CELLS_IN_COLUMN ||
       (numCellX == 0 && numCellY == 0)
     ) {
       return;
     }
 
+    // Here is my move
+    if (!isComponentTurn) {
+      dispatch(
+        updateMove({
+          startCell: { row: row, column: column },
+          endCell: { row: row + numCellY, column: column + numCellX },
+        }),
+      );
+    }
+
     const { horizontalDistance, verticalDistance } =
-      GameLogic.calculateDistanceToSwap(row, col, numCellX, numCellY);
+      GameLogic.calculateDistanceToSwap(row, column, numCellX, numCellY);
 
     /**
      * Run animation to swap 2 cell
      */
     Animated.parallel([
-      Animated.spring(initialState.current.coordinate[row][col], {
+      Animated.spring(initialState.current.coordinate[row][column], {
         toValue: {
           x: horizontalDistance,
           y: verticalDistance,
@@ -410,7 +426,7 @@ const GameBoard = () => {
         tension: 100,
       }),
       Animated.spring(
-        initialState.current.coordinate[row + numCellY][col + numCellX],
+        initialState.current.coordinate[row + numCellY][column + numCellX],
         {
           toValue: {
             x: -horizontalDistance,
@@ -421,20 +437,27 @@ const GameBoard = () => {
         },
       ),
     ]).start(() => {
-      onSwap2CellTable(row, col, row + numCellY, col + numCellX);
+      onSwap2CellTable(row, column, row + numCellY, column + numCellX);
 
       const matchedBlockList = checkTable(boardTable);
       if (matchedBlockList && matchedBlockList.length > 0) {
         // UPDATE SWAP 2 CELLS
-        swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
+        swap2CellsAnimatedProp(row, column, row + numCellY, column + numCellX);
 
         setBlockList([...matchedBlockList]);
+
+        dispatch(
+          updateCellsToSwap({
+            startCell: { row: row, column: column },
+            endCell: { row: row + numCellY, column: column + numCellX },
+          }),
+        );
       } else {
         // RUN BACK THE ANIMATION
-        onSwap2CellTable(row, col, row + numCellY, col + numCellX);
+        onSwap2CellTable(row, column, row + numCellY, column + numCellX);
 
         Animated.parallel([
-          Animated.spring(initialState.current.coordinate[row][col], {
+          Animated.spring(initialState.current.coordinate[row][column], {
             toValue: {
               x: 0,
               y: 0,
@@ -443,7 +466,7 @@ const GameBoard = () => {
             tension: 100,
           }),
           Animated.spring(
-            initialState.current.coordinate[row + numCellY][col + numCellX],
+            initialState.current.coordinate[row + numCellY][column + numCellX],
             {
               toValue: {
                 x: 0,
@@ -460,6 +483,10 @@ const GameBoard = () => {
 
   /**
    * This function swap 2 value (oldRow, oldCol) with (newRow, newCol) in table
+   * @param oldRow
+   * @param oldCol
+   * @param newRow
+   * @param newCol
    */
   const onSwap2CellTable = (
     oldRow: any,
@@ -472,6 +499,9 @@ const GameBoard = () => {
     boardTable[newRow][newCol] = temp;
   };
 
+  /**
+   * selectedIndexes
+   */
   let selectedIndexes: { row: number; col: number }[] = useMemo(
     () => [],
     [blockState],
@@ -495,7 +525,7 @@ const GameBoard = () => {
 
     const onMoveCell = (
       gesture: PanResponderGestureState,
-      col: number,
+      column: number,
       row: number,
     ) => {
       const width = GameLogic.WIDTH_PER_CELL;
@@ -522,8 +552,8 @@ const GameBoard = () => {
 
         // Check if the user is sliding in the out of the board
         if (
-          col + numCellY < 0 ||
-          col + numCellY > GameLogic.CELLS_IN_COLUMN - 1 ||
+          column + numCellY < 0 ||
+          column + numCellY > GameLogic.CELLS_IN_COLUMN - 1 ||
           row + numCellX < 0 ||
           row + numCellX > GameLogic.CELLS_IN_ROW - 1
         )
@@ -531,7 +561,7 @@ const GameBoard = () => {
       }
     };
 
-    const onReleaseCell = (col: number, row: number) => {
+    const onReleaseCell = (column: number, row: number) => {
       handleEndPanResponder = true;
       // numCellX, numCellY -> min: -1, max: 1
       while (numCellX < -1 || numCellX > 1) {
@@ -543,8 +573,11 @@ const GameBoard = () => {
           numCellY > 1 ? numCellY - 1 : numCellY < -1 ? numCellY + 1 : numCellY;
       }
 
+      // Now it's my turn to play
       dispatch(updateComponentTurn(false));
-      swapAnimation(row, col, numCellX, numCellY, false);
+
+      // Let's play some animation for swap
+      swapAnimation(row, column, numCellX, numCellY);
     };
 
     return Array(GameLogic.CELLS_IN_ROW)
@@ -630,6 +663,7 @@ const GameBoard = () => {
                     ) : (
                       <Image style={styles.cell} source={IceCream} />
                     )}
+                    {/* <Text>{cell}</Text> */}
                   </Animated.View>
                 );
               })}

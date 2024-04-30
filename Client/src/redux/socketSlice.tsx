@@ -9,10 +9,14 @@ import { SocketIOClient } from "../../socket";
 import log from "../logger/index";
 interface SocketState {
   socket: SocketIOClient | null;
+  move: any;
+  tableSocket: any[];
 }
 
 const initialState: SocketState = {
   socket: null,
+  move: {},
+  tableSocket: [],
 };
 
 const socketSlice = createSlice({
@@ -24,14 +28,21 @@ const socketSlice = createSlice({
       return state;
     },
 
-    attack(state, action) {},
+    updateMove(state, action) {
+      state.move = action.payload;
+      return state;
+    },
 
-    onListenTakeDamage(state, action) {},
+    updateTableSocket(state, action) {
+      state.tableSocket = action.payload;
+      return state;
+    },
   },
 });
 
 export { socketSlice };
-export const { initSocket } = socketSlice.actions;
+export const { initSocket, updateMove, updateTableSocket } =
+  socketSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;
 

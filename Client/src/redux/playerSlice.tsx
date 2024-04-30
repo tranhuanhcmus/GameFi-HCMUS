@@ -10,7 +10,6 @@ interface PlayerState {
   hp: any;
   componentHp: any;
   gameRoom: any;
-  move: any; // Store information about component move
   isComponentTurn: any;
 }
 
@@ -18,7 +17,6 @@ const initialState: PlayerState = {
   hp: GameLogic.HEALTH_POINT,
   componentHp: GameLogic.HEALTH_POINT,
   gameRoom: "",
-  move: {},
   isComponentTurn: false,
 };
 
@@ -40,11 +38,6 @@ const playerSlice = createSlice({
       return state;
     },
 
-    updateMove(state, action) {
-      state.move = action.payload;
-      return state;
-    },
-
     updateComponentTurn(state, action) {
       state.isComponentTurn = action.payload;
       return state;
@@ -53,13 +46,8 @@ const playerSlice = createSlice({
 });
 
 export { playerSlice };
-export const {
-  updateHp,
-  updateComponentHp,
-  updateMove,
-  setGameRoom,
-  updateComponentTurn,
-} = playerSlice.actions;
+export const { updateHp, updateComponentHp, setGameRoom, updateComponentTurn } =
+  playerSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;
 
