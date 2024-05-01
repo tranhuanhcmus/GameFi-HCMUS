@@ -4,7 +4,7 @@ import { SOCKET } from "./constants";
 
 const PORT = 3001;
 let server: string;
-server = `http://localhost:${PORT}`;
+server = `http://192.168.1.14:${PORT}`; // TODO CHANGE LATER
 // // Check if the environment is a browser and window.location is defined
 // const isBrowser =
 //   typeof window !== "undefined" &&
@@ -40,6 +40,7 @@ export type DataSocketTransfer = {
   room: string;
   damage: number;
   move: { startCell: Cell; endCell: Cell };
+  table: any;
   // blockList: Cell[]
 };
 
@@ -84,6 +85,7 @@ export class SocketIOClient {
     this.socket.disconnect();
   }
 
+  /* Emit event */
   emitJoinRoom(data: string) {
     this.socket.emit(SOCKET.JOIN_ROOM, data);
   }
@@ -96,18 +98,6 @@ export class SocketIOClient {
     this.socket.emit(SOCKET.EVENT_DIAMOND, data);
   }
 
-  onListenTakeDamage(callback: (data: any) => void) {
-    this.socket.on(SOCKET.TAKE_DAMAGE, (data) => {
-      callback(data);
-    });
-  }
-
-  onListenKeyRoom(callback: (data: any) => void) {
-    this.socket.on(SOCKET.KEY_ROOM, (data) => {
-      callback(data);
-    });
-  }
-
   emitSendAcceptBooking(data: any) {
     this.socket.emit(SOCKET.SEND_ACCEPT_BOOKING, data);
   }
@@ -116,19 +106,8 @@ export class SocketIOClient {
     this.socket.emit(SOCKET.UPDATE_LOCATION_DRIVER, data);
   }
 
-  onListenCustomerLocation(callback: (data: any) => void) {
-    this.socket.on(SOCKET.SEND_CUSTOMER_LOCATION, (data) => {
-      callback(data);
-    });
-  }
-
   emitGetCustomerLocation(data: any) {
     this.socket.emit(SOCKET.GET_LOCATION_CUSTOMER, data);
-  }
-  onListenCustomerLocationRequest(callback: (data: any) => void) {
-    this.socket.on(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, (data) => {
-      callback(data);
-    });
   }
 
   emitPickCustomer(data: any) {
@@ -143,27 +122,52 @@ export class SocketIOClient {
     this.socket.emit(SOCKET.SEND_NOTIFY_CANCEL_TRIP, data);
   }
 
+  emitAttack(data: any) {
+    this.socket.emit(SOCKET.ATTACK, data);
+  }
+
+  emitMove(data: any) {
+    this.socket.emit(SOCKET.MOVE, data);
+  }
+  /* on listen event */
+  onListenKeyRoom(callback: (data: any) => void) {
+    this.socket.on(SOCKET.KEY_ROOM, (data) => {
+      callback(data);
+    });
+  }
+
+  onListenCustomerLocation(callback: (data: any) => void) {
+    this.socket.on(SOCKET.SEND_CUSTOMER_LOCATION, (data) => {
+      callback(data);
+    });
+  }
+
+  onListenCustomerLocationRequest(callback: (data: any) => void) {
+    this.socket.on(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, (data) => {
+      callback(data);
+    });
+  }
+
   onListenCancelFromCustomer(callback: (data: any) => void) {
     this.socket.on(SOCKET.SEND_NOTIFY_CANCEL_TRIP_TO_DRIVER, (data) => {
       callback(data);
     });
   }
 
-  emitAttack(data: any) {
-    this.socket.emit(SOCKET.ATTACK, data);
-  }
-  onListenAttack(callback: (data: DataSocketTransfer) => void) {
-    this.socket.on(SOCKET.ATTACK, (data) => {
+  onListenTakeDamage(callback: (data: DataSocketTransfer) => void) {
+    this.socket.on(SOCKET.TAKE_DAMAGE, (data) => {
       callback(data);
     });
   }
 
-  emitMove(data: any) {
-    this.socket.emit(SOCKET.MOVE, data);
-  }
-
   onListenMove(callback: (data: any) => void) {
     this.socket.on(SOCKET.MOVE, (data) => {
+      callback(data);
+    });
+  }
+
+  onListenFirstTurn(callback: (data: any) => void) {
+    this.socket.on(SOCKET.FIRST_TURN, (data: any) => {
       callback(data);
     });
   }

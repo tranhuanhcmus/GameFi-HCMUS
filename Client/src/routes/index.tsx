@@ -54,7 +54,7 @@ const navArr: NavItem[] = [
   {
     name: "TrophyScreen",
     component: BreedScreen,
-    content: "Trophy",
+    content: "Breed",
     svg: <SVGTrophy height="100%" width="100%" />,
   },
   {
@@ -125,7 +125,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="MainTab">
+    <Stack.Navigator initialRouteName="Game">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}

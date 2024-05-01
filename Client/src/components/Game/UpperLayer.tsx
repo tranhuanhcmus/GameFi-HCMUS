@@ -19,6 +19,7 @@ import { COLOR } from "../../utils/color";
 import { useDispatch, useSelector } from "react-redux";
 import {
   emptyBlockList,
+  updateCellsToSwap,
   updateDamage,
   updateTable,
   updateTurn,
@@ -29,22 +30,40 @@ import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
 import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
 import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
 import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
-
+import log from "../../logger/index.js";
+import { updateComponentHp } from "../../redux/playerSlice";
 const UpperLayer = () => {
+  /** Redux, state and dispatch */
   const dispatch = useDispatch();
-  const blockList = useSelector((state: any) => state.board.blockList);
-  const blockState = store.getState().board;
-  const { turn, damage, table } = useSelector((state: any) => state.board);
+  const { socket, move, tableSocket } = useSelector(
+    (state: any) => state.socket,
+  );
+  const { gameRoom, isComponentTurn } = useSelector(
+    (state: any) => state.player,
+  );
+  const { table, blockList, swapCells } = useSelector(
+    (state: any) => state.board,
+  );
+
+  /** ====================================================== */
+  /** useRef */
   const initialState = useRef({
     coordinate: GameLogic.generateAnimatedValueXY(),
   });
+  const cnt = useRef(0);
+
+  /** ====================================================== */
+  /** useState */
   const [isReady, setIsReady] = useState(false);
 
+  /** ====================================================== */
+  /** useMemo  */
   const boardTable = useMemo(() => {
     return table.map((row: any) => [...row]);
   }, [table]);
-  const cnt = useRef(0);
 
+  /** ====================================================== */
+  /** useEffect */
   useEffect(() => {
     if (blockList && blockList.length) {
       setIsReady(true);
@@ -58,6 +77,7 @@ const UpperLayer = () => {
       }
     } else setIsReady(false);
   }, [blockList]);
+
   useEffect(() => {
     if (isReady) {
       cnt.current = blockList.length;
@@ -65,35 +85,7 @@ const UpperLayer = () => {
     }
   }, [blockList, isReady]);
 
-  /** Service: Generate columns to collapse */
-  const generateCols = useMemo<(block: Block) => number[][]>(() => {
-    return (block: Block) => {
-      dispatch(updateDamage(calcDamage())); // NG
-
-      let startRow = 0;
-      let endRow = Math.max(block.startCell.i, block.endCell.i); // Last index is exclusive
-      let startCol = Math.min(block.startCell.j, block.endCell.j);
-      let endCol = Math.max(block.startCell.j, block.endCell.j); // Last index is exclusive
-
-      const cloneMatrix = [];
-
-      let sliceRow = [];
-      // BUG HERE.
-      for (let i = startRow; i <= endRow; i++) {
-        sliceRow = [];
-        for (let j = startCol; j <= endCol; j++) {
-          if (i == block.startCell.i) {
-            boardTable[i][j] = GameLogic.randomNumber();
-          }
-          sliceRow.push(boardTable[i][j]);
-        }
-
-        cloneMatrix.push(sliceRow);
-      }
-
-      return cloneMatrix;
-    };
-  }, [blockList]);
+  /** ====================================================== */
 
   const calcDamage = useMemo<() => number>(() => {
     return () => {
@@ -118,6 +110,18 @@ const UpperLayer = () => {
       return damage;
     };
   }, [blockList]);
+
+  /** THIS FUNCTION USE SOCKET TO SEND TO SERVER. */
+  const attackComponent = () => {
+    dispatch(updateComponentHp(10));
+    socket?.emitEventGame({
+      gameRoom: gameRoom,
+      damage: 10,
+      move: move,
+      table: boardTable,
+    });
+  };
+
   /**
    * ANIMATION FOR UPPER LAYER TO COLLAPSE
    */
@@ -125,25 +129,28 @@ const UpperLayer = () => {
     if (blockList !== null && blockList.length > 0) {
       blockList.forEach((block: any) => {
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
-
         const { blockHeight } = GameLogic.calculateCollapseCols(block);
 
         for (let i = 0; i < initialState.current.coordinate.length; i++) {
           for (let j = 0; j < initialState.current.coordinate[0].length; j++) {
             Animated.spring(initialState.current.coordinate[i][j], {
               toValue: { x: 0, y: blockHeight },
-              tension: 300,
+              tension: 100,
               useNativeDriver: true,
             }).start(() => {
               // THIS RUN AFTER THE ANIMATION FINISHED
               cnt.current--;
               if (cnt.current == 0) {
-                dispatch(updateTable(boardTable));
+                if (!isComponentTurn) {
+                  dispatch(updateTable(boardTable));
+                } else {
+                  dispatch(updateTable(tableSocket));
+                }
+
                 dispatch(emptyBlockList([]));
-                if (turn == 1) {
-                  dispatch(updateTurn(2));
-                } else if (turn == 2) {
-                  dispatch(updateTurn(1));
+
+                if (!isComponentTurn) {
+                  attackComponent();
                 }
               }
             });
@@ -151,6 +158,59 @@ const UpperLayer = () => {
         }
       });
     }
+  };
+
+  /**
+   * THIS GENERATE COLUMNS FOR COLLAPSE COLUMN
+   * @param block
+   * @returns
+   */
+  const generateCols = (block: Block) => {
+    let startRow = block.startCell.i;
+    let endRow = block.endCell.i;
+    let startCol = block.startCell.j;
+    let endCol = block.endCell.j;
+
+    /** Doi 2 o sau khi swap */
+    if (swapCells) {
+      let temp =
+        boardTable[swapCells.startCell.row][swapCells.startCell.column];
+      boardTable[swapCells.startCell.row][swapCells.startCell.column] =
+        boardTable[swapCells.endCell.row][swapCells.endCell.column];
+      boardTable[swapCells.endCell.row][swapCells.endCell.column] = temp;
+    }
+
+    const cloneMatrix: any[] = [];
+
+    let sliceRow = [];
+
+    const distance = endRow - startRow + 1;
+
+    // Tinh tien xuong
+    for (let i = startRow; i <= endRow; i++) {
+      for (let j = startCol; j <= endCol; j++) {
+        if (i - distance >= 0) {
+          boardTable[i][j] = boardTable[i - distance][j];
+        }
+      }
+    }
+
+    // Set vao cho block duoc dien vao
+    for (let i = 0; i <= endRow; i++) {
+      sliceRow = [];
+      for (let j = startCol; j <= endCol; j++) {
+        let randomNumber = GameLogic.randomNumber();
+        if (i - distance < 0) {
+          boardTable[i][j] = randomNumber;
+        }
+        sliceRow.push(boardTable[i][j]);
+      }
+
+      cloneMatrix.push(sliceRow);
+    }
+
+    dispatch(updateCellsToSwap(null));
+    return cloneMatrix;
   };
 
   return useMemo(() => {
@@ -161,7 +221,7 @@ const UpperLayer = () => {
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
 
         const cells = generateCols(block);
-
+        log.warn("cells ", cells);
         const { top, left, blockWidth, blockHeight } =
           GameLogic.calculateCollapseCols(block);
 
@@ -188,7 +248,7 @@ const UpperLayer = () => {
                   flexDirection: "row",
                 }}
               >
-                {row.map((cell, indexCol) => (
+                {row.map((cell: any, indexCol: any) => (
                   <Animated.View
                     key={indexCol}
                     style={{
@@ -197,7 +257,7 @@ const UpperLayer = () => {
                       height: GameLogic.HEIGHT_PER_CELL,
                       width: GameLogic.WIDTH_PER_CELL,
                       zIndex: 99,
-                      backgroundColor: "transparent",
+                      backgroundColor: COLOR.WHITE,
                       borderRadius: 5,
                       display: "flex",
                       alignItems: "center",
@@ -217,17 +277,18 @@ const UpperLayer = () => {
                       ],
                     }}
                   >
-                    {boardTable[indexRow][indexCol] == 0 ? (
+                    {cell == 0 ? (
                       <Image style={styles.cell} source={Banana} />
-                    ) : boardTable[indexRow][indexCol] == 1 ? (
+                    ) : cell == 1 ? (
                       <Image style={styles.cell} source={Chocolate} />
-                    ) : boardTable[indexRow][indexCol] == 2 ? (
+                    ) : cell == 2 ? (
                       <Image style={styles.cell} source={Candy} />
-                    ) : boardTable[indexRow][indexCol] == 3 ? (
+                    ) : cell == 3 ? (
                       <Image style={styles.cell} source={IceCube} />
                     ) : (
                       <Image style={styles.cell} source={IceCream} />
                     )}
+                    {/* <Text>{cell}</Text> */}
                   </Animated.View>
                 ))}
               </View>

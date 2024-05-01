@@ -81,14 +81,14 @@ const HomeScreen = () => {
       mummyRef.current.stop(() => console.log("stopped"));
     }
   };
-  useEffect(() => {
-    if (!isConnected) {
-      navigate.replace("Connect");
-      dispatch(setAddress(undefined));
-    } else {
-      dispatch(setAddress(address));
-    }
-  }, [isConnected]);
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     navigate.replace("Connect");
+  //     dispatch(setAddress(undefined));
+  //   } else {
+  //     dispatch(setAddress(address));
+  //   }
+  // }, [isConnected]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -151,7 +151,7 @@ const HomeScreen = () => {
         </View>
       </View>
       <View
-        className=" flex flex-row  justify-between "
+        className=" flex flex-row  justify-between"
         style={styles.labelButton}
       >
         <AwesomeButton
@@ -173,7 +173,6 @@ const HomeScreen = () => {
 
             if (!isVisible) setIsVisible(true);
             socket.emitFindMatch();
-            // navigate.replace("Game"); TODO
           }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
@@ -203,6 +202,7 @@ const styles = StyleSheet.create({
   labelButton: {
     height: ConstantsResponsive.YR * 80,
     width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 100,
+    top: -30,
   },
   textSize: {
     fontSize: ConstantsResponsive.YR * 20,

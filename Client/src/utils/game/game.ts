@@ -1,5 +1,6 @@
 import { Animated } from "react-native";
 import ConstantsResponsive from "../../constants/Constanst";
+import log from "../../logger/index.js";
 export default interface AnimationPropertyType {
   [key: string]: string;
 }
@@ -13,6 +14,8 @@ export default class GameLogic {
   /**
    * Size in pixel of table, please change if needed.
    */
+  public static TYPE_OF_DIAMOND = 5;
+
   public static SIZE_TABLE = 280;
 
   public static CELL_SPACING = 3;
@@ -45,6 +48,7 @@ export default class GameLogic {
     ROTATION: "rotation",
     SCALE: "scale",
     SCORE_OPACITY: "scoreOpacity",
+    COORDINATE: "coordinate",
   };
 
   /**
@@ -282,4 +286,61 @@ export default class GameLogic {
       numCellY: move.endCell.row - move.startCell.row,
     };
   }
+
+  public static calcUpperBlockList(matchedBlockList: any[]) {
+    const upperBlockList: any[] = [];
+    for (let blockList of matchedBlockList) {
+      let startCell = blockList.startCell;
+      let endCell = blockList.endCell;
+
+      // Matched in a row
+      if (startCell.i == endCell.i) {
+        upperBlockList.push({
+          startCell: { i: 0, j: startCell.j },
+          endCell: { i: endCell.i - 1, j: endCell.j },
+        });
+      } else if (startCell.j == endCell.j) {
+        // Matched in a column
+        upperBlockList.push({
+          startCell: { i: 0, j: startCell.j },
+          endCell: { i: startCell.i - 1, j: endCell.j },
+        });
+      }
+
+      upperBlockList.push({
+        startCell: { i: 0, j: startCell.j },
+        endCell: { i: endCell.i - 1, j: endCell.j },
+      });
+    }
+    return upperBlockList;
+  }
+
+  /** Service: Generate columns to collapse */
+  public static generateCols = (block: Block, boardTable: any) => {
+    let startRow = block.startCell.i;
+    let endRow = block.endCell.i;
+    let startCol = block.startCell.j;
+    let endCol = block.endCell.j;
+    log.warn(
+      `startRow: ${startRow}, endRow: ${endRow}, startCol: ${startCol}, endCol: ${endCol}`,
+    );
+
+    const cloneMatrix: any[] = [];
+
+    let sliceRow = [];
+    for (let i = startRow; i <= endRow; i++) {
+      sliceRow = [];
+      for (let j = startCol; j <= endCol; j++) {
+        if (i == block.startCell.i) {
+          // boardTable[i][j] = isComponentTurn ? tableSocket[i][j] : 1;
+          boardTable[i][j] = this.randomNumber();
+        }
+        sliceRow.push(boardTable[i][j]);
+      }
+
+      cloneMatrix.push(sliceRow);
+    }
+
+    return cloneMatrix;
+  };
 }
