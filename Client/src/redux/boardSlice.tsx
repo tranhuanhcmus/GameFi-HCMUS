@@ -11,7 +11,7 @@ interface BoardState {
     startCell: { i: number; j: number };
     endCell: { i: number; j: number };
   }[];
-  position: any;
+
   table: any;
   number: any;
   turn: any;
@@ -23,10 +23,6 @@ interface BoardState {
 }
 
 const initialState: BoardState = {
-  position: {
-    top: 100,
-    left: 15,
-  },
   table: [
     [1, 2, 3, 2, 0, 1, 3, 2],
     [2, 3, 2, 4, 0, 2, 1, 3],
@@ -40,6 +36,7 @@ const initialState: BoardState = {
   turn: 1,
   damage: 0,
   blockList: [],
+
   number: 0,
   swapCells: {
     startCell: {

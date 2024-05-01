@@ -150,24 +150,24 @@ const GameBoard = () => {
   useEffect(() => {
     if (hp <= 0 || componentHp <= 0) {
       hp <= 0 ? (isWinner.current = false) : (isWinner.current = true);
-      console.log("STOP GAME");
+      log.error("STOP GAME");
       setIsVisible(true);
     } else {
       socket?.onListenTakeDamage((data: DataSocketTransfer) => {
-        swapAnimation(
-          data.move.startCell.row,
-          data.move.startCell.column,
-          parseInt(data.move.endCell.column) -
-            parseInt(data.move.startCell.column), // numbCellX
-          parseInt(data.move.endCell.row) - parseInt(data.move.startCell.row), // numbCellY
-        );
+        // swapAnimation(
+        //   data.move.startCell.row,
+        //   data.move.startCell.column,
+        //   parseInt(data.move.endCell.column) -
+        //     parseInt(data.move.startCell.column), // numbCellX
+        //   parseInt(data.move.endCell.row) - parseInt(data.move.startCell.row), // numbCellY
+        // );
         dispatch(updateComponentTurn(true));
         dispatch(updateHp(data.damage));
-        // dispatch(updateTable(data.table));
-        dispatch(updateTableSocket(data.table));
+        dispatch(updateTable(data.table));
+        // dispatch(updateTableSocket(data.table));
       });
     }
-  }, [socket]);
+  }, [socket, hp, componentHp]);
 
   useEffect(() => {
     // Delay before exploding next
@@ -424,6 +424,8 @@ const GameBoard = () => {
             endCell: { row: row + numCellY, column: column + numCellX },
           }),
         );
+
+        onDestroyCells();
       } else {
         // RUN BACK THE ANIMATION
         onSwap2CellTable(row, column, row + numCellY, column + numCellX);
@@ -636,7 +638,7 @@ const GameBoard = () => {
         )}
       </View>
     );
-  }, [table]);
+  }, [table, isVisible]);
 };
 
 const styles = StyleSheet.create({
