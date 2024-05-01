@@ -147,6 +147,7 @@ const UpperLayer = () => {
                   dispatch(updateTable(tableSocket));
                 }
 
+                dispatch(updateTable(boardTable));
                 dispatch(emptyBlockList([]));
 
                 if (!isComponentTurn) {
