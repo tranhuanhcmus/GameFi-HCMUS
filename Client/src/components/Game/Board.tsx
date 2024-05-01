@@ -148,26 +148,29 @@ const GameBoard = () => {
 
   /** THIS USEEFFECT HANDLE SOCKET EVENT */
   useEffect(() => {
+    socket?.onListenTakeDamage((data: DataSocketTransfer) => {
+      log.warn("Bi tan cong");
+      // swapAnimation(
+      //   data.move.startCell.row,
+      //   data.move.startCell.column,
+      //   parseInt(data.move.endCell.column) -
+      //     parseInt(data.move.startCell.column), // numbCellX
+      //   parseInt(data.move.endCell.row) - parseInt(data.move.startCell.row), // numbCellY
+      // );
+      dispatch(updateComponentTurn(true));
+      dispatch(updateHp(data.damage));
+      dispatch(updateTable(data.table));
+      // dispatch(updateTableSocket(data.table));
+    });
+  }, [socket]);
+
+  useEffect(() => {
     if (hp <= 0 || componentHp <= 0) {
       hp <= 0 ? (isWinner.current = false) : (isWinner.current = true);
       log.error("STOP GAME");
       setIsVisible(true);
-    } else {
-      socket?.onListenTakeDamage((data: DataSocketTransfer) => {
-        // swapAnimation(
-        //   data.move.startCell.row,
-        //   data.move.startCell.column,
-        //   parseInt(data.move.endCell.column) -
-        //     parseInt(data.move.startCell.column), // numbCellX
-        //   parseInt(data.move.endCell.row) - parseInt(data.move.startCell.row), // numbCellY
-        // );
-        dispatch(updateComponentTurn(true));
-        dispatch(updateHp(data.damage));
-        dispatch(updateTable(data.table));
-        // dispatch(updateTableSocket(data.table));
-      });
     }
-  }, [socket, hp, componentHp]);
+  }, [hp, componentHp]);
 
   useEffect(() => {
     // Delay before exploding next
@@ -196,17 +199,7 @@ const GameBoard = () => {
   }, []);
 
   /** ====================================================== */
-  const resetAnimated = () => {
-    // Reset animated value
-    for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
-      for (let j = 0; j < GameLogic.CELLS_IN_COLUMN; j++) {
-        // initialState.current.coordinate[i][j].x.setValue(0);
-        // initialState.current.coordinate[i][j].y.setValue(0);
 
-        initialState.current.coordinate[i][j] = new Animated.ValueXY();
-      }
-    }
-  };
   /**
    * This function check new table to push in the new blocklist then
    * @return true false;
