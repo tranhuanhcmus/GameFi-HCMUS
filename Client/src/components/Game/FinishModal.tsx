@@ -4,6 +4,7 @@ import { COLOR } from "../../utils/color";
 import ConstantsResponsive from "../../constants/Constanst";
 import AwesomeButton from "react-native-really-awesome-button";
 import log from "../../logger/index.js";
+import useCustomNavigation from "../../hooks/useCustomNavigation";
 const FinishModal = ({
   isVisible,
   setIsVisible,
@@ -13,6 +14,7 @@ const FinishModal = ({
   setIsVisible: (value: boolean) => void;
   isWinner: boolean;
 }) => {
+  const navigate = useCustomNavigation();
   useEffect(() => {}, [isVisible]);
 
   return isVisible ? (
@@ -21,6 +23,7 @@ const FinishModal = ({
       <AwesomeButton
         onPress={() => {
           setIsVisible(false);
+          navigate.navigate("MainTab");
         }}
         backgroundColor={COLOR.BRIGHT_YELLOW}
         backgroundDarker={COLOR.DARK_YELLOW}
@@ -32,7 +35,7 @@ const FinishModal = ({
 };
 const styles = StyleSheet.create({
   container: {
-    width: ConstantsResponsive.MAX_WIDTH,
+    width: "100%",
     height: 200,
     backgroundColor: COLOR.LIGHT_PURPLE,
     top: ConstantsResponsive.MAX_HEIGHT / 10,

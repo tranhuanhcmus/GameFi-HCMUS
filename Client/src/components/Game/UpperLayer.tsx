@@ -221,7 +221,7 @@ const UpperLayer = () => {
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
 
         const cells = generateCols(block);
-        log.warn("cells ", cells);
+
         const { top, left, blockWidth, blockHeight } =
           GameLogic.calculateCollapseCols(block);
 

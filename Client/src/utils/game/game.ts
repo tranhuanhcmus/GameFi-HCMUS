@@ -63,6 +63,7 @@ export default class GameLogic {
     const CELLS_IN_ROW = 8;
     const CELLS_IN_COLUMN = 8;
 
+    console.log("===========================");
     // Iterate through each cell in the matrix
     for (let i = 0; i < CELLS_IN_ROW; i++) {
       let row = "";
