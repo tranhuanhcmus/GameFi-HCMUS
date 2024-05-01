@@ -48,6 +48,7 @@ export default class GameLogic {
     ROTATION: "rotation",
     SCALE: "scale",
     SCORE_OPACITY: "scoreOpacity",
+    COORDINATE: "coordinate",
   };
 
   /**

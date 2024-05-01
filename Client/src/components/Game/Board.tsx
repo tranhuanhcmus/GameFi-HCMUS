@@ -35,7 +35,6 @@ const GameBoard = () => {
   /** Redux, state and dispatch */
   const dispatch = useDispatch();
   const { socket } = useSelector((state: any) => state.socket);
-  const blockState = store.getState().board;
   const blockStateTable = useSelector((state: any) => state.board.table);
   const table = useSelector((state: any) => state.board.table);
   const { hp, componentHp, isComponentTurn } = useSelector(
@@ -197,6 +196,17 @@ const GameBoard = () => {
   }, []);
 
   /** ====================================================== */
+  const resetAnimated = () => {
+    // Reset animated value
+    for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
+      for (let j = 0; j < GameLogic.CELLS_IN_COLUMN; j++) {
+        // initialState.current.coordinate[i][j].x.setValue(0);
+        // initialState.current.coordinate[i][j].y.setValue(0);
+
+        initialState.current.coordinate[i][j] = new Animated.ValueXY();
+      }
+    }
+  };
   /**
    * This function check new table to push in the new blocklist then
    * @return true false;
@@ -223,48 +233,6 @@ const GameBoard = () => {
   }, [blockList]);
 
   /**
-   * ANIMATION TO COLLAPSE UPPER LAYER
-   * @param upperBlockList
-   * @param blockLength Length of block
-   * @param isMatchedInRows
-   */
-  const onCollapseUpperLayer = (
-    upperBlockList: any,
-    blockLength: any,
-    isMatchedInRows: boolean,
-  ) => {
-    const startCell = upperBlockList.startCell;
-    const endCell = upperBlockList.endCell;
-
-    const cells = [];
-    for (let i = startCell.i; i <= endCell.i; i++) {
-      for (let j = startCell.j; j <= endCell.j; j++) {
-        cells.push({ row: i, col: j });
-      }
-    }
-
-    // Animation to destroy
-    cells.forEach((cell) => {
-      Animated.spring(initialState.current.coordinate[cell.row][cell.col], {
-        toValue: {
-          x: 0, // STAY IN THE x-axis
-          y: isMatchedInRows
-            ? GameLogic.HEIGHT_PER_CELL + GameLogic.MARGIN
-            : (GameLogic.HEIGHT_PER_CELL + GameLogic.MARGIN * 2) * blockLength,
-        },
-        useNativeDriver: true,
-        tension: 100,
-      }).start(() => {
-        cntCell.current--;
-        if (cntCell.current == 0) {
-          setBlockList([]);
-          dispatch(updateBlockList(blockList));
-        }
-      });
-    });
-  };
-
-  /**
    * ANIMATION TO DESTROY 1 CELLS
    */
   const onDestroyOneCell = (block: any, upperBlockList: any) => {
@@ -272,6 +240,7 @@ const GameBoard = () => {
     const endCell = block.endCell;
     let isMatchedInRows = false;
     const cells = [];
+
     if (startCell.i == endCell.i) {
       // IN A ROW
       isMatchedInRows = true;
@@ -350,8 +319,10 @@ const GameBoard = () => {
         }),
       ]).start(() => {
         if (cellCnt > 1) cellCnt = cellCnt - 1;
-        else
-          onCollapseUpperLayer(upperBlockList, cells.length, isMatchedInRows);
+        else {
+          setBlockList([]);
+          dispatch(updateBlockList(blockList));
+        }
       });
     });
   };
@@ -441,6 +412,7 @@ const GameBoard = () => {
 
       const matchedBlockList = checkTable(boardTable);
       if (matchedBlockList && matchedBlockList.length > 0) {
+        // resetAnimated();
         // UPDATE SWAP 2 CELLS
         swap2CellsAnimatedProp(row, column, row + numCellY, column + numCellX);
 
@@ -500,14 +472,6 @@ const GameBoard = () => {
   };
 
   /**
-   * selectedIndexes
-   */
-  let selectedIndexes: { row: number; col: number }[] = useMemo(
-    () => [],
-    [blockState],
-  );
-
-  /**
    * PAN RESPONDER TO HANDLE HAND GESTURE (SWIPING)
    */
   const panResponder = useMemo(() => {
@@ -519,9 +483,7 @@ const GameBoard = () => {
     // Number of selected cells in y-axis
     let numCellY = 0;
 
-    const onPressCell = (row: number, col: number) => {
-      selectedIndexes.push({ row, col });
-    };
+    const onPressCell = (row: number, col: number) => {};
 
     const onMoveCell = (
       gesture: PanResponderGestureState,

@@ -131,7 +131,6 @@ const UpperLayer = () => {
         // THIS WILL STORE THE VALUE OF CELL NEED TO DROP DOWN
         const { blockHeight } = GameLogic.calculateCollapseCols(block);
 
-        // TODO
         for (let i = 0; i < initialState.current.coordinate.length; i++) {
           for (let j = 0; j < initialState.current.coordinate[0].length; j++) {
             Animated.spring(initialState.current.coordinate[i][j], {
@@ -185,7 +184,6 @@ const UpperLayer = () => {
 
     let sliceRow = [];
 
-    // TODO
     const distance = endRow - startRow + 1;
 
     // Tinh tien xuong
@@ -204,8 +202,8 @@ const UpperLayer = () => {
         let randomNumber = GameLogic.randomNumber();
         if (i - distance < 0) {
           boardTable[i][j] = randomNumber;
-          sliceRow.push(randomNumber);
         }
+        sliceRow.push(boardTable[i][j]);
       }
 
       cloneMatrix.push(sliceRow);
@@ -259,7 +257,7 @@ const UpperLayer = () => {
                       height: GameLogic.HEIGHT_PER_CELL,
                       width: GameLogic.WIDTH_PER_CELL,
                       zIndex: 99,
-                      backgroundColor: "transparent",
+                      backgroundColor: COLOR.WHITE,
                       borderRadius: 5,
                       display: "flex",
                       alignItems: "center",
