@@ -14,6 +14,10 @@ import { ELEMENT } from "../../constants/types";
 import ConstantsResponsive from "../../constants/Constanst";
 import { flare } from "viem/chains";
 
+import { NFT, UserService } from "../../services/UserService";
+import axios from "axios";
+import { getLevel } from "../../utils/pet";
+
 type Props = {};
 
 type NFTData = {
@@ -55,15 +59,16 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
       const res: NFT[] = await UserService.getNFTsByOwner(
         "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
       );
-
+      console.log(res.length);
+      
       const mappedData: NFTData[] = res.map((nft: NFT) => {
         return {
           id: nft.tokenid,
           element: ELEMENT.FIRE,
-          level: 1,
+          level: getLevel(nft.exp),
           petImg:
-            "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
-          name: "Harry's Pig",
+            nft.JSONdata.image||"",
+          name: nft.JSONdata.name,
           rarityPet: "special",
         };
       });
@@ -93,17 +98,17 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
             gap: 20,
             width: "100%",
           }}
-          data={petArray}
+          data={data}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id}
           numColumns={2}
           renderItem={({ item }) => (
             <PetCard
-              petImg={item?.petImg ? item.petImg : ""}
+              petImg={item.petImg}
               element={item.element}
-              level={3}
+              level={item.level}
               name={item.name}
-              rarityPet=" special"
+              rarityPet={item.rarityPet}
             ></PetCard>
           )}
         />
