@@ -1,14 +1,28 @@
 @import 'common.scss';
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400..800&family=Inter:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+.hide-scrollbar {
+	/* For webkit-based browsers */
+	&::-webkit-scrollbar {
+	  display: none;
+	}
+  
+	/* For Firefox */
+	/* Note: Firefox doesn't support hiding the scrollbar completely, it will only be invisible */
+	/* So, the following code will make it as small as possible */
+	/* It won't completely hide the scrollbar */
+	* {
+	  scrollbar-width: none;
+	}
+  }
 
-body{
+body {
 	font-family: "Poppins", sans-serif;
 	font-size: 14px;
 	line-height: 14px;
 }
 
-header{
+header {
 	position: sticky;
 	top: 0;
 	left: 0;
@@ -18,15 +32,16 @@ header{
 	align-items: center;
 	justify-content: center;
 	background-color: #000;
-	
-	.navsWrapper{
+
+	.navsWrapper {
 		width: 100%;
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		height: 100%;
 		max-width: 1440px;
-		.nav{
+
+		.nav {
 			position: relative;
 			height: 100%;
 			display: flex;
@@ -37,7 +52,8 @@ header{
 			flex: 1;
 			transition: all .3s ease;
 			color: #fff;
-			&::after{
+
+			&::after {
 				content: "";
 				position: absolute;
 				bottom: 0;
@@ -47,9 +63,11 @@ header{
 				background-color: #fff;
 				transition: all .3s ease-in-out;
 			}
-			&:hover{
+
+			&:hover {
 				color: #fff;
-				&::after{
+
+				&::after {
 					width: 100%;
 					transform-origin: 50%;
 				}
@@ -58,17 +76,210 @@ header{
 	}
 }
 
-.page{
-	--headerHeight: #{$headerHeight};  
+.page {
+	--headerHeight: #{$headerHeight};
 	height: calc(100vh - var(--headerHeight));
 	width: 100vw;
 	display: none;
 	box-sizing: border-box;
 	padding: 20px;
 }
-.page--itemGame{
+
+.page--itemGame {
 	background-color: $bg_base;
 }
-.page--itemApp{
+
+.page--itemApp {
 	background-color: $bg_base2;
+}
+
+.button {
+	padding: 10px 20px;
+	border-radius: 6px;
+	cursor: pointer;
+	border: 2px solid transparent;
+	width: fit-content;
+	background-color: $green;
+	font-size: 20px;
+	transition: all .2s ease-in;
+	color: #333;
+
+	&--red {
+		background-color: $red;
+
+		&:hover {
+			background-color: #fff;
+			color: $brown;
+			border: 2px solid $red;
+		}
+	}
+
+	&--green {
+		background-color: $green;
+
+		&:hover {
+			background-color: #fff;
+			color: $brown;
+			border: 2px solid $green;
+		}
+	}
+
+	&--yellow {
+		background-color: $yellow;
+
+		&:hover {
+			background-color: #fff;
+			color: $brown;
+			border: 2px solid $yellow;
+		}
+	}
+
+	&--blue {
+		background-color: $blue;
+
+		&:hover {
+			background-color: #fff;
+			color: $brown;
+			border: 2px solid $blue;
+		}
+	}
+}
+
+.itemPageWrapper {
+	display: flex;
+	gap: 40px;
+	min-height: 100%;
+}
+
+.itemList {
+	--gap: 20px;
+	flex: 1;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gap);
+	max-height: calc(100vh - 80px);
+	overflow: auto;
+	@extend .hide-scrollbar;
+	.card {
+		position: relative;
+		height: 260px;
+		width: calc(30% - (var(--gap) / 2));
+		box-sizing: border-box;
+		border-radius: 20px;
+		border: 1px solid $brown;
+		overflow: hidden;
+		background-color: #fff;
+		cursor: pointer;
+		transition: all .2s ease-in-out;
+
+		&:hover {
+			.card__info {
+				opacity: 1;
+				visibility: visible;
+				transform: translateY(0px);
+			bottom: 0px;
+
+			}
+
+			.card__img {
+				img {
+					transform: scale(1.05);
+				}
+			}
+		}
+
+		.card__info {
+			position: absolute;
+			padding-top: 10px;
+			width: 100%;
+			margin: auto;
+			height: 30px;
+			left: 0;
+			bottom: -5px;
+			opacity: 0;
+			visibility: hidden;
+			transition: all .3s ease-in;
+			background-color: $bg_base2;
+			.card__description {
+				display: none;
+			}
+
+			.card__name {
+				font-size: 24px;
+				color: $brown;
+				text-align: center;
+				font-weight: bold;
+			}
+		}
+
+		.card__img {
+			height: 100%;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			img {
+				width:  100%;
+				object-fit: contain;
+				transition: all .5s ease-in-out;
+			}
+		}
+	}
+}
+
+.itemDetail {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	opacity: 0;
+	transform: scale(0);
+	transition: all .2s ease;
+	.itemImg {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		img {
+			height: 200px;
+			object-fit: contain;
+		}
+	}
+
+	.controls {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.infoWrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+
+		.rowWrapper {
+			display: flex;
+			flex-direction: row;
+			gap: 5px;
+			align-items: center;
+			height: 28px;
+
+			.label {
+				text-transform: capitalize;
+				flex: 1;
+				min-width: 30%;
+				font-size: 20px;
+				font-weight: 600;
+				color: #333;
+			}
+
+			.content {
+				word-wrap: break-word;
+				width: 100%;
+				font-size: 18px;
+				color: #666;
+				line-height: 24px;
+			}
+		}
+	}
 }
