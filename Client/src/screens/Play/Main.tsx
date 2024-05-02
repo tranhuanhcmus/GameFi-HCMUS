@@ -13,10 +13,10 @@ import PetCard from "../../components/PetCard";
 import { ELEMENT } from "../../constants/types";
 import ConstantsResponsive from "../../constants/Constanst";
 import { flare } from "viem/chains";
+
 import { NFT, UserService } from "../../services/UserService";
 import axios from "axios";
 import { getLevel } from "../../utils/pet";
-
 
 type Props = {};
 
@@ -56,7 +56,7 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
 
   const fetchData = async () => {
     try {
-      const res:NFT[] = await UserService.getNFTsByOwner(
+      const res: NFT[] = await UserService.getNFTsByOwner(
         "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
       );
       console.log(res.length);
@@ -84,7 +84,6 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
   };
 
   return (
-
     <View style={styles.backgroundImage} className="bg-[#210035]">
       <View
         style={styles.playArea}
@@ -115,7 +114,6 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
         />
       </View>
     </View>
-
   );
 };
 

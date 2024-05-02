@@ -5,34 +5,30 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { Animated } from "react-native";
 import GameLogic from "../utils/game/game";
-
+import log from "../logger/index.js";
 interface BoardState {
   blockList: {
     startCell: { i: number; j: number };
     endCell: { i: number; j: number };
   }[];
-  position: any;
+
   table: any;
   number: any;
   turn: any;
   damage: any;
   swapCells: {
-    startCell: { i: number; j: number };
-    endCell: { i: number; j: number };
+    startCell: { row: number; column: number };
+    endCell: { row: number; column: number };
   };
 }
 
 const initialState: BoardState = {
-  position: {
-    top: 100,
-    left: 15,
-  },
   table: [
     [1, 2, 3, 2, 0, 1, 3, 2],
     [2, 3, 2, 4, 0, 2, 1, 3],
     [0, 4, 1, 2, 3, 0, 2, 4],
     [3, 2, 2, 0, 4, 3, 2, 1],
-    [0, 2, 4, 2, 1, 2, 3, 0],
+    [0, 2, 4, 2, 1, 2, 4, 0],
     [1, 3, 2, 0, 4, 1, 0, 3],
     [4, 2, 3, 1, 0, 4, 2, 1],
     [3, 1, 4, 0, 2, 3, 1, 4],
@@ -40,15 +36,16 @@ const initialState: BoardState = {
   turn: 1,
   damage: 0,
   blockList: [],
+
   number: 0,
   swapCells: {
     startCell: {
-      i: 0,
-      j: 0,
+      row: 0,
+      column: 0,
     },
     endCell: {
-      i: 0,
-      j: 0,
+      row: 0,
+      column: 0,
     },
   },
 };

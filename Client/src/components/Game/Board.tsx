@@ -4,61 +4,54 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
+  Image,
   PanResponder,
   PanResponderGestureState,
   StyleSheet,
-  Text,
   View,
-  Image,
+  Text,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
+import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
+import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
+import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
+import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
+import { DataSocketTransfer } from "../../../socket";
 import {
-  generateRandomMatrix,
   updateBlockList,
   updateCellsToSwap,
-  updateTurn,
+  updateTable,
 } from "../../redux/boardSlice";
+import { updateComponentTurn, updateHp } from "../../redux/playerSlice";
 import { store } from "../../redux/store";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
-import { updateComponentHp, updateHp } from "../../redux/playerSlice";
-import { DataSocketTransfer } from "../../../socket";
-import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
-import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
-import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
-import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
-import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
+import FinishModal from "./FinishModal";
+import log from "../../logger/index.js";
+import { updateMove, updateTableSocket } from "../../redux/socketSlice";
 
-const GameBoard = (props: any) => {
-  // Prop of component
-  const { socket } = props;
-
-  // Redux, state and dispatch
+const GameBoard = () => {
+  /** Redux, state and dispatch */
   const dispatch = useDispatch();
-  const blockState = store.getState().board;
+  const { socket } = useSelector((state: any) => state.socket);
   const blockStateTable = useSelector((state: any) => state.board.table);
   const table = useSelector((state: any) => state.board.table);
-  const { hp, gameRoom } = useSelector((state: any) => state.player);
+  const { hp, componentHp, isComponentTurn } = useSelector(
+    (state: any) => state.player,
+  );
 
-  useEffect(() => {
-    socket.onListenTakeDamage((data: any) => {
-      dispatch(updateHp(data));
-    });
-  }, []);
-
-  // useState
+  /** ====================================================== */
+  /** useState */
   const [blockList, setBlockList] = useState<any[]>([]);
-
+  const [isVisible, setIsVisible] = useState(false);
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
-  // useMemo
-  const boardTable = useMemo(() => {
-    return table.map((row: any) => [...row]);
-  }, [table]);
-
-  // useRef
+  /** ====================================================== */
+  /** useRef */
   const cntCell = useRef(0);
+  const isWinner = useRef(false);
 
   /**
    * Ininitial state of board
@@ -72,6 +65,12 @@ const GameBoard = (props: any) => {
     scale: GameLogic.generateAnimatedValue(0),
     scoreOpacity: GameLogic.generateAnimatedValue(1),
   });
+
+  /** ====================================================== */
+  /** useMemo */
+  const boardTable = useMemo(() => {
+    return table.map((row: any) => [...row]);
+  }, [table]);
 
   /**
    * State to interpolate
@@ -129,6 +128,8 @@ const GameBoard = (props: any) => {
     blockStateTable,
   ]);
 
+  /** ====================================================== */
+  /** useEffect */
   useEffect(() => {
     // Reset animated value
     for (let i = 0; i < GameLogic.CELLS_IN_ROW; i++) {
@@ -145,26 +146,59 @@ const GameBoard = (props: any) => {
     }
   }, [boardTable]);
 
+  /** THIS USEEFFECT HANDLE SOCKET EVENT */
   useEffect(() => {
-    if (hp <= 0) {
-      console.log("STOP GAME");
-    } else {
-      socket.onListenAttack((data: DataSocketTransfer) => {
-        dispatch(updateHp(data.damage));
-      });
+    socket?.onListenTakeDamage((data: DataSocketTransfer) => {
+      log.warn("Bi tan cong");
+      // swapAnimation(
+      //   data.move.startCell.row,
+      //   data.move.startCell.column,
+      //   parseInt(data.move.endCell.column) -
+      //     parseInt(data.move.startCell.column), // numbCellX
+      //   parseInt(data.move.endCell.row) - parseInt(data.move.startCell.row), // numbCellY
+      // );
+      dispatch(updateComponentTurn(true));
+      dispatch(updateHp(data.damage));
+      dispatch(updateTable(data.table));
+      // dispatch(updateTableSocket(data.table));
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    if (hp <= 0 || componentHp <= 0) {
+      hp <= 0 ? (isWinner.current = false) : (isWinner.current = true);
+      log.error("STOP GAME");
+      setIsVisible(true);
     }
-  }, []);
+  }, [hp, componentHp]);
 
   useEffect(() => {
-    socket.onListenMove((data: any) => {
-      console.log("on Listen move", data);
-      // Write logic here
-      const { row, col, numCellX, numCellY } = GameLogic.calculateMove(data);
+    // Delay before exploding next
+    const delayExecution = setTimeout(() => {
+      const matchedBlocklist = checkTable(boardTable);
+      if (matchedBlocklist && matchedBlocklist.length > 0) {
+        setBlockList([...matchedBlocklist]);
+      } else {
+      }
+    }, 500);
+    return () => clearTimeout(delayExecution);
+  }, [table]);
 
-      // Show move of component on screen
-      swapAnimation(row, col, numCellX, numCellY, true);
+  useEffect(() => {
+    onDestroyCells();
+  }, [blockList]);
+
+  useEffect(() => {
+    socket?.onListenFirstTurn((data: any) => {
+      if (socket.id == data) {
+        dispatch(updateComponentTurn(false));
+      } else {
+        dispatch(updateComponentTurn(true));
+      }
     });
   }, []);
+
+  /** ====================================================== */
 
   /**
    * This function check new table to push in the new blocklist then
@@ -182,10 +216,11 @@ const GameBoard = (props: any) => {
   const onDestroyCells = useMemo(() => {
     return () => {
       if (blockList && blockList.length > 0) {
+        const upperBlockList = GameLogic.calcUpperBlockList(blockList);
         cntCell.current = blockList.length;
-        blockList.forEach((item: any) => {
-          onDestroyOneCell(item);
-        });
+        for (let i = 0; i < cntCell.current; i++) {
+          onDestroyOneCell(blockList[i], upperBlockList[i]);
+        }
       }
     };
   }, [blockList]);
@@ -193,13 +228,15 @@ const GameBoard = (props: any) => {
   /**
    * ANIMATION TO DESTROY 1 CELLS
    */
-  const onDestroyOneCell = (block: any) => {
+  const onDestroyOneCell = (block: any, upperBlockList: any) => {
     const startCell = block.startCell;
     const endCell = block.endCell;
-
+    let isMatchedInRows = false;
     const cells = [];
+
     if (startCell.i == endCell.i) {
       // IN A ROW
+      isMatchedInRows = true;
       for (let cnt = startCell.j; cnt <= endCell.j; cnt++)
         cells.push({ row: startCell.i, col: cnt });
     } else {
@@ -208,6 +245,7 @@ const GameBoard = (props: any) => {
         cells.push({ row: cnt, col: startCell.j });
     }
 
+    let cellCnt = cells.length;
     // Animation to destroy
     cells.forEach((cell) => {
       Animated.parallel([
@@ -273,23 +311,13 @@ const GameBoard = (props: any) => {
           duration: 2000,
         }),
       ]).start(() => {
-        cntCell.current--;
-        if (cntCell.current == 0) {
+        if (cellCnt > 1) cellCnt = cellCnt - 1;
+        else {
           setBlockList([]);
           dispatch(updateBlockList(blockList));
-
-          attackComponent();
         }
       });
     });
-  };
-
-  // THIS FUNCTION USE SOCKET TO SEND TO SERVER.
-  const attackComponent = () => {
-    dispatch(updateComponentHp(10));
-    socket.emitEventGame({ gameRoom: gameRoom, damage: 10, move: {} });
-
-    // socket.emitAttack({ room: "room-101", damage: 10, move: {} });
   };
 
   // SWAP 2 CELLS AND THE PROP CORRESPONDING
@@ -321,30 +349,39 @@ const GameBoard = (props: any) => {
    */
   const swapAnimation = (
     row: any,
-    col: any,
+    column: any,
     numCellX: number,
     numCellY: number,
-    isComponentTurn: boolean,
   ) => {
     // CHECK CELL NEARE BORDER OF TABLE
     if (
       row + numCellY < 0 ||
       row + numCellY >= GameLogic.CELLS_IN_ROW ||
-      col + numCellX < 0 ||
-      col + numCellX >= GameLogic.CELLS_IN_COLUMN ||
+      column + numCellX < 0 ||
+      column + numCellX >= GameLogic.CELLS_IN_COLUMN ||
       (numCellX == 0 && numCellY == 0)
     ) {
       return;
     }
 
+    // Here is my move
+    if (!isComponentTurn) {
+      dispatch(
+        updateMove({
+          startCell: { row: row, column: column },
+          endCell: { row: row + numCellY, column: column + numCellX },
+        }),
+      );
+    }
+
     const { horizontalDistance, verticalDistance } =
-      GameLogic.calculateDistanceToSwap(row, col, numCellX, numCellY);
+      GameLogic.calculateDistanceToSwap(row, column, numCellX, numCellY);
 
     /**
      * Run animation to swap 2 cell
      */
     Animated.parallel([
-      Animated.spring(initialState.current.coordinate[row][col], {
+      Animated.spring(initialState.current.coordinate[row][column], {
         toValue: {
           x: horizontalDistance,
           y: verticalDistance,
@@ -353,7 +390,7 @@ const GameBoard = (props: any) => {
         tension: 100,
       }),
       Animated.spring(
-        initialState.current.coordinate[row + numCellY][col + numCellX],
+        initialState.current.coordinate[row + numCellY][column + numCellX],
         {
           toValue: {
             x: -horizontalDistance,
@@ -364,27 +401,30 @@ const GameBoard = (props: any) => {
         },
       ),
     ]).start(() => {
-      if (!isComponentTurn) {
-        socket.emitMove({
-          startCell: { row: row, column: col },
-          endCell: { row: row + numCellY, column: col + numCellX },
-        });
-      }
-
-      onSwap2CellTable(row, col, row + numCellY, col + numCellX);
+      onSwap2CellTable(row, column, row + numCellY, column + numCellX);
 
       const matchedBlockList = checkTable(boardTable);
       if (matchedBlockList && matchedBlockList.length > 0) {
+        // resetAnimated();
         // UPDATE SWAP 2 CELLS
-        swap2CellsAnimatedProp(row, col, row + numCellY, col + numCellX);
+        swap2CellsAnimatedProp(row, column, row + numCellY, column + numCellX);
 
         setBlockList([...matchedBlockList]);
+
+        dispatch(
+          updateCellsToSwap({
+            startCell: { row: row, column: column },
+            endCell: { row: row + numCellY, column: column + numCellX },
+          }),
+        );
+
+        onDestroyCells();
       } else {
         // RUN BACK THE ANIMATION
-        onSwap2CellTable(row, col, row + numCellY, col + numCellX);
+        onSwap2CellTable(row, column, row + numCellY, column + numCellX);
 
         Animated.parallel([
-          Animated.spring(initialState.current.coordinate[row][col], {
+          Animated.spring(initialState.current.coordinate[row][column], {
             toValue: {
               x: 0,
               y: 0,
@@ -393,7 +433,7 @@ const GameBoard = (props: any) => {
             tension: 100,
           }),
           Animated.spring(
-            initialState.current.coordinate[row + numCellY][col + numCellX],
+            initialState.current.coordinate[row + numCellY][column + numCellX],
             {
               toValue: {
                 x: 0,
@@ -408,24 +448,12 @@ const GameBoard = (props: any) => {
     });
   };
 
-  useEffect(() => {
-    // Delay before exploding next
-    const delayExecution = setTimeout(() => {
-      const matchedBlocklist = checkTable(boardTable);
-      if (matchedBlocklist && matchedBlocklist.length > 0) {
-        setBlockList([...matchedBlocklist]);
-      } else {
-      }
-    }, 500);
-    return () => clearTimeout(delayExecution);
-  }, [table]);
-
-  useEffect(() => {
-    onDestroyCells();
-  }, [blockList]);
-
   /**
    * This function swap 2 value (oldRow, oldCol) with (newRow, newCol) in table
+   * @param oldRow
+   * @param oldCol
+   * @param newRow
+   * @param newCol
    */
   const onSwap2CellTable = (
     oldRow: any,
@@ -437,11 +465,6 @@ const GameBoard = (props: any) => {
     boardTable[oldRow][oldCol] = boardTable[newRow][newCol];
     boardTable[newRow][newCol] = temp;
   };
-
-  let selectedIndexes: { row: number; col: number }[] = useMemo(
-    () => [],
-    [blockState],
-  );
 
   /**
    * PAN RESPONDER TO HANDLE HAND GESTURE (SWIPING)
@@ -455,14 +478,12 @@ const GameBoard = (props: any) => {
     // Number of selected cells in y-axis
     let numCellY = 0;
 
-    const onPressCell = (row: number, col: number) => {
-      selectedIndexes.push({ row, col });
-    };
+    const onPressCell = (row: number, col: number) => {};
 
     const onMoveCell = (
       gesture: PanResponderGestureState,
-      index: number,
-      index2: number,
+      column: number,
+      row: number,
     ) => {
       const width = GameLogic.WIDTH_PER_CELL;
       // Check if the user is sliding in the x-axis direction
@@ -488,19 +509,32 @@ const GameBoard = (props: any) => {
 
         // Check if the user is sliding in the out of the board
         if (
-          index2 + numCellY < 0 ||
-          index2 + numCellY > GameLogic.CELLS_IN_COLUMN - 1 ||
-          index + numCellX < 0 ||
-          index + numCellX > GameLogic.CELLS_IN_ROW - 1
+          column + numCellY < 0 ||
+          column + numCellY > GameLogic.CELLS_IN_COLUMN - 1 ||
+          row + numCellX < 0 ||
+          row + numCellX > GameLogic.CELLS_IN_ROW - 1
         )
           return;
       }
     };
 
-    const onReleaseCell = (index: number, index2: number) => {
+    const onReleaseCell = (column: number, row: number) => {
       handleEndPanResponder = true;
+      // numCellX, numCellY -> min: -1, max: 1
+      while (numCellX < -1 || numCellX > 1) {
+        numCellX =
+          numCellX > 1 ? numCellX - 1 : numCellX < -1 ? numCellX + 1 : numCellX;
+      }
+      while (numCellY < -1 || numCellY > 1) {
+        numCellY =
+          numCellY > 1 ? numCellY - 1 : numCellY < -1 ? numCellY + 1 : numCellY;
+      }
 
-      swapAnimation(index2, index, numCellX, numCellY, false);
+      // Now it's my turn to play
+      dispatch(updateComponentTurn(false));
+
+      // Let's play some animation for swap
+      swapAnimation(row, column, numCellX, numCellY);
     };
 
     return Array(GameLogic.CELLS_IN_ROW)
@@ -539,6 +573,11 @@ const GameBoard = (props: any) => {
   return useMemo(() => {
     return (
       <View style={styles.boardContainer}>
+        <FinishModal
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          isWinner={isWinner.current}
+        />
         {boardTable.length > 0 ? (
           boardTable.map((row: any, indexRow: any) => (
             <View key={indexRow} style={styles.row}>
@@ -581,6 +620,7 @@ const GameBoard = (props: any) => {
                     ) : (
                       <Image style={styles.cell} source={IceCream} />
                     )}
+                    {/* <Text>{cell}</Text> */}
                   </Animated.View>
                 );
               })}
@@ -591,7 +631,7 @@ const GameBoard = (props: any) => {
         )}
       </View>
     );
-  }, [table]);
+  }, [table, isVisible]);
 };
 
 const styles = StyleSheet.create({
