@@ -28,7 +28,6 @@ const GameHeader = () => {
   return (
     <View style={styles.characterArea}>
       <User hp={hp} />
-
       <Component hp={componentHp} />
     </View>
   );
@@ -36,26 +35,269 @@ const GameHeader = () => {
 
 // PLAYER ON THE LEFT <PLAYER 1>
 const User: React.FC<props> = ({ hp }) => {
+  const [loop, setLoop] = useState<boolean>(false);
+  const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
+  const [fps, setFps] = useState<string>("3");
+  const mummyRef = useRef<SpriteSheet>(null);
+  const mummyRef1 = useRef<SpriteSheet>(null);
+  const [offsetX, setOffsetX] = useState<number>(0);
+  const [offsetY, setOffsetY] = useState<number>(0);
+
+  const floatingTextAnim = useRef(new Animated.Value(0)).current;
+
+  // Call this function when the character receives damage
+  const receiveDamage = (damageAmount: number) => {
+    // Trigger other damage effects like red flash or shake if you have
+
+    // Start animation for floating damage text
+    floatingTextAnim.setValue(0); // Reset animation
+    Animated.sequence([
+      Animated.timing(floatingTextAnim, {
+        toValue: 1,
+        duration: 1000, // The duration can be adjusted
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  // ...rest of the component...
+
+  // Floating text style that will animate
+  const floatingTextStyle = {
+    transform: [
+      {
+        translateY: floatingTextAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -50], // starts at 0 and ends at -50 on y-axis. Adjust if needed.
+        }),
+      },
+    ],
+    opacity: floatingTextAnim.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, 1, 0], // Starts from transparent, becomes solid, then fades
+    }),
+  };
+
+  const play = (type: string) => {
+    const parsedFps = Number(fps);
+
+    if (mummyRef.current) {
+      mummyRef.current.play({
+        type,
+        fps: isNaN(parsedFps) ? 16 : parsedFps,
+        loop,
+        resetAfterFinish,
+        onFinish: () => console.log("hi"),
+      });
+    }
+    setOffsetX(0);
+    setOffsetY(0);
+  };
+  const play1 = (type: string) => {
+    const parsedFps = Number(fps + 1);
+
+    if (mummyRef1.current) {
+      mummyRef1.current.play({
+        type,
+        fps: isNaN(parsedFps) ? 16 : parsedFps,
+        loop,
+        resetAfterFinish,
+        onFinish: () => console.log("hi"),
+      });
+    }
+  };
+  // useEffect(() => {
+  //   play("walk");
+  //   // const interval = setInterval(() => {
+  //   //   setOffsetX((prevOffsetX) => prevOffsetX + 10); // Update offsetX every interval
+  //   // }, 1000); // Change the interval as needed for desired animation speed
+  // }, []);
+
+  const stop = () => {
+    if (mummyRef.current) {
+      mummyRef.current.stop(() => console.log("stopped"));
+    }
+  };
+
+  useEffect(() => {
+    play("walk");
+    setTimeout(() => {
+      receiveDamage(10);
+    }, 1000);
+  }, [hp]);
+
   return (
     <View style={styles.player}>
       <View style={styles.playerHeader}>
         <Image style={styles.avatarImage} source={Avatar}></Image>
         <Bar hp={hp} />
       </View>
-      <Image style={styles.petImage} source={Pet} />
+      <TouchableNativeFeedback onPress={() => receiveDamage(10)}>
+        <View>
+          <SpriteSheet
+            ref={mummyRef1}
+            source={require("../../../assets/spritesheet_6.png")}
+            columns={19}
+            rows={1}
+            height={ConstantsResponsive.YR * 150}
+            width={ConstantsResponsive.XR * 150}
+            animations={{
+              walk: [
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18,
+              ],
+            }}
+          />
+          {/* Your Animated Text for displaying damage */}
+          <Animated.Text style={[styles.damageText, floatingTextStyle]}>
+            -10
+          </Animated.Text>
+        </View>
+      </TouchableNativeFeedback>
+      <View
+        className="absolute bottom-0 "
+        style={{
+          transform: [{ translateX: offsetX }, { translateY: offsetY }],
+        }}
+      >
+        <SpriteSheet
+          ref={mummyRef}
+          source={require("../../../assets/skill.png")}
+          columns={12}
+          rows={1}
+          width={ConstantsResponsive.XR * 2 * 80}
+          animations={{
+            walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+          }}
+        />
+      </View>
     </View>
   );
 };
 
 // PLAYER ON THE RIGHT <PLAYER 2>
 const Component: React.FC<props> = ({ hp }) => {
+  const [loop, setLoop] = useState<boolean>(false);
+  const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
+  const [fps, setFps] = useState<string>("3");
+  const mummyRef = useRef<SpriteSheet>(null);
+  const mummyRef1 = useRef<SpriteSheet>(null);
+  const [offsetX, setOffsetX] = useState<number>(0);
+  const [offsetY, setOffsetY] = useState<number>(0);
+
+  const play = (type: string) => {
+    const parsedFps = Number(fps);
+
+    if (mummyRef.current) {
+      mummyRef.current.play({
+        type,
+        fps: isNaN(parsedFps) ? 16 : parsedFps,
+        loop,
+        resetAfterFinish,
+        onFinish: () => console.log("hi"),
+      });
+    }
+    setOffsetX(0);
+    setOffsetY(0);
+  };
+  const play1 = (type: string) => {
+    const parsedFps = Number(fps + 1);
+
+    if (mummyRef1.current) {
+      mummyRef1.current.play({
+        type,
+        fps: isNaN(parsedFps) ? 16 : parsedFps,
+        loop,
+        resetAfterFinish,
+        onFinish: () => console.log("hi"),
+      });
+    }
+  };
+
+  const floatingTextAnim = useRef(new Animated.Value(0)).current;
+  const floatingTextStyle = {
+    transform: [
+      {
+        translateY: floatingTextAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -50], // starts at 0 and ends at -50 on y-axis. Adjust if needed.
+        }),
+      },
+    ],
+    opacity: floatingTextAnim.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, 1, 0], // Starts from transparent, becomes solid, then fades
+    }),
+  };
+
+  // Call this function when the character receives damage
+  const receiveDamage = (damageAmount: number) => {
+    // Trigger other damage effects like red flash or shake if you have
+
+    // Start animation for floating damage text
+    floatingTextAnim.setValue(0); // Reset animation
+    Animated.sequence([
+      Animated.timing(floatingTextAnim, {
+        toValue: 1,
+        duration: 1000, // The duration can be adjusted
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  useEffect(() => {
+    play("walk");
+    setTimeout(() => {
+      receiveDamage(10);
+    }, 1000);
+  }, [hp]);
+
   return (
     <View style={styles.player}>
       <View style={styles.playerHeader}>
         <Bar hp={hp} />
         <Image style={styles.avatarImage} source={Avatar}></Image>
       </View>
-      <Image style={styles.petImage} source={Pet} />
+      <TouchableNativeFeedback onPress={() => receiveDamage(10)}>
+        <View>
+          <SpriteSheet
+            ref={mummyRef1}
+            source={require("../../../assets/spritesheet_7.png")}
+            columns={19}
+            rows={1}
+            height={ConstantsResponsive.YR * 150}
+            width={ConstantsResponsive.XR * 150}
+            animations={{
+              walk: [
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18,
+              ],
+            }}
+          />
+          {/* Your Animated Text for displaying damage */}
+          <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
+            -10
+          </Animated.Text>
+        </View>
+      </TouchableNativeFeedback>
+
+      <View
+        className="absolute bottom-0 "
+        style={{
+          transform: [{ translateX: offsetX }, { translateY: offsetY }],
+        }}
+      >
+        <SpriteSheet
+          ref={mummyRef}
+          source={require("../../../assets/skill.png")}
+          columns={12}
+          rows={1}
+          width={ConstantsResponsive.XR * 2 * 80}
+          animations={{
+            walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -92,6 +334,26 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+
+  damageText: {
+    color: "red",
+    position: "absolute",
+    fontSize: 24,
+    fontWeight: "bold",
+    // You may need to adjust these values to position the damage text correctly
+    bottom: 50,
+    right: 0,
+  },
+  damageText2: {
+    color: "red",
+    position: "absolute",
+    fontSize: 24,
+    fontWeight: "bold",
+    // You may need to adjust these values to position the damage text correctly
+    bottom: 50,
+    left: 0,
+  },
+
   player: {
     position: "relative",
     width: "50%",
@@ -168,139 +430,3 @@ const styles = StyleSheet.create({
 });
 
 export default GameHeader;
-
-// const GameHeader = () => {
-//   const { hp } = useSelector((state: any) => state.player);
-//   const [loop, setLoop] = useState<boolean>(false);
-//   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-//   const [fps, setFps] = useState<string>("3");
-//   const mummyRef = useRef<SpriteSheet>(null);
-//   const mummyRef1 = useRef<SpriteSheet>(null);
-//   const [offsetX, setOffsetX] = useState<number>(0);
-//   const [offsetY, setOffsetY] = useState<number>(0);
-
-//   const play = (type: string) => {
-//     const parsedFps = Number(fps);
-
-//     if (mummyRef.current) {
-//       mummyRef.current.play({
-//         type,
-//         fps: isNaN(parsedFps) ? 16 : parsedFps,
-//         loop,
-//         resetAfterFinish,
-//         onFinish: () => console.log("hi"),
-//       });
-//     }
-//     setOffsetX(0);
-//     setOffsetY(0);
-//   };
-//   const play1 = (type: string) => {
-//     const parsedFps = Number(fps + 1);
-
-//     if (mummyRef1.current) {
-//       mummyRef1.current.play({
-//         type,
-//         fps: isNaN(parsedFps) ? 16 : parsedFps,
-//         loop,
-//         resetAfterFinish,
-//         onFinish: () => console.log("hi"),
-//       });
-//     }
-//   };
-//   // useEffect(() => {
-//   //   play("walk");
-//   //   // const interval = setInterval(() => {
-//   //   //   setOffsetX((prevOffsetX) => prevOffsetX + 10); // Update offsetX every interval
-//   //   // }, 1000); // Change the interval as needed for desired animation speed
-//   // }, []);
-
-//   const stop = () => {
-//     if (mummyRef.current) {
-//       mummyRef.current.stop(() => console.log("stopped"));
-//     }
-//   };
-//   return (
-//     <View style={styles.characterArea}>
-//       {/* Player 1 - Left*/}
-//       <View style={styles.player}>
-//         <View style={styles.playerHeader}>
-//           {/* Thay anh sau */}
-//           <View style={styles.bar}>
-//             <View style={styles.energyBar}></View>
-//             <View style={styles.damageBar}></View>
-//           </View>
-//         </View>
-//         {/* <Image style={styles.petImage} source={Pet} /> */}
-//         <TouchableNativeFeedback
-//           onPress={() => {
-//             play1("walk"), play("walk");
-//           }}
-//         >
-//           <View
-//             style={{
-//               transform: [{ translateX: offsetX }, { translateY: offsetY }],
-//             }}
-//           >
-//             <SpriteSheet
-//               ref={mummyRef1}
-//               source={require("../../../assets/spritesheet_6.png")}
-//               columns={19}
-//               rows={1}
-//               height={ConstantsResponsive.YR * 150}
-//               width={ConstantsResponsive.XR * 150}
-//               animations={{
-//                 walk: [
-//                   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-//                   18,
-//                 ],
-//               }}
-//             />
-//           </View>
-//         </TouchableNativeFeedback>
-//       </View>
-//       {/* Player 2 - Right */}
-//       <View style={styles.player}>
-//         <View style={styles.playerHeader}>
-//           {/* Thay anh sau */}
-//           <View style={styles.bar}>
-//             <View style={styles.energyBar}></View>
-//             <View style={styles.damageBar}></View>
-//           </View>
-//         </View>
-//         {/* <Image style={styles.petImage} source={Pet} /> */}
-//         <TouchableNativeFeedback onPress={() => play("walk")}>
-//           <SpriteSheet
-//             ref={mummyRef}
-//             source={require("../../../assets/spritesheet_7.png")}
-//             columns={19}
-//             rows={1}
-//             height={ConstantsResponsive.YR * 150}
-//             width={ConstantsResponsive.XR * 150}
-//             animations={{
-//               walk: [
-//                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-//                 18,
-//               ],
-//             }}
-//           />
-//         </TouchableNativeFeedback>
-//         <TouchableNativeFeedback onPress={() => play("walk")}>
-//           <View
-//             className="absolute bottom-0 "
-//             style={{
-//               transform: [{ translateX: offsetX }, { translateY: offsetY }],
-//             }}
-//           >
-//             <SpriteSheet
-//               ref={mummyRef}
-//               source={require("../../../assets/skill.png")}
-//               columns={12}
-//               rows={1}
-//               width={ConstantsResponsive.XR * 2 * 80}
-//               animations={{
-//                 walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-//               }}
-//             />
-//           </View>
-//         </TouchableNativeFeedback>
-//       </View>
