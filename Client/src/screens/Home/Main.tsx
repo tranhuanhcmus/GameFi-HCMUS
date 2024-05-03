@@ -81,14 +81,14 @@ const HomeScreen = () => {
       mummyRef.current.stop(() => console.log("stopped"));
     }
   };
-  useEffect(() => {
-    if (!isConnected) {
-      navigate.replace("Connect");
-      dispatch(setAddress(undefined));
-    } else {
-      dispatch(setAddress(address));
-    }
-  }, [isConnected]);
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     navigate.replace("Connect");
+  //     dispatch(setAddress(undefined));
+  //   } else {
+  //     dispatch(setAddress(address));
+  //   }
+  // }, [isConnected]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
