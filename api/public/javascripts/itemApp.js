@@ -36,6 +36,9 @@ function renderItemApp(data) {
 		opacity:1,
 		transform:'scale(1)'
 	})
+
+    $(".itemForm").fadeOut(200)
+    $(".itemDetail").delay(200).fadeIn(200)
 }
 
 function fetchItemAppList() {
@@ -72,3 +75,54 @@ $(document).on("click", ".page--itemApp .card", function() {
 		fetchItemApp(id)
 	}, 200);
 })
+$(document).on("click", ".page--itemApp .newItem .openFormAdd", function() {
+    $(".itemDetail").fadeOut(200)
+    $(".itemForm").delay(200).fadeIn(200)
+})
+
+$(document).on("change", '.itemForm .inputWrapper input[type="file"]', function() {
+    var input = this;
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      
+      reader.onload = function(e) {
+       $(".preview").attr('src', e.target.result);
+       $(".preview").fadeIn()
+      }
+      
+      reader.readAsDataURL(input.files[0]);
+    }
+})
+$(document).on("submit", '.itemForm', function(e) {
+    e.preventDefault(); 
+
+    // Collect form data
+    let formData = new FormData();
+    formData.append('name', $('input[name="name"]').val());
+    formData.append('description', $('input[name="description"]').val());
+    formData.append('category', $('input[name="category"]').val());
+    formData.append('quality', $('input[name="quality"]').val());
+    formData.append('quantity', $('input[name="quantity"]').val());
+    formData.append('gemcost', $('input[name="gemcost"]').val());
+    formData.append('goldcost', $('input[name="goldcost"]').val());
+    formData.append('image', $('input[name="imageFile"]')[0].files[0]);
+
+    postItemApp(formData);
+});
+
+function postItemApp(formData) {
+    let url = BE + `/itemApps`;
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: formData,
+        processData: false, // Don't process the FormData object
+        contentType: false, // Don't set content type
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX request failed:", status, error);
+        }
+    });
+}
