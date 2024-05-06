@@ -23,7 +23,7 @@ function renderItemApp(data) {
     let item = data.data
     let detail = $(".page--itemApp .itemDetail")
 
-	
+	detail.data("id",item.id)
 
     detail.find(".itemImg img").attr("src", item.image)
 
@@ -105,10 +105,23 @@ $(document).on("submit", '.itemForm', function(e) {
     formData.append('quantity', $('input[name="quantity"]').val());
     formData.append('gemcost', $('input[name="gemcost"]').val());
     formData.append('goldcost', $('input[name="goldcost"]').val());
-    formData.append('image', $('input[name="imageFile"]')[0].files[0]);
+    formData.append('imageName', $('input[name="imageName"]').val());
+    formData.append('imageFile', $('input[name="imageFile"]')[0].files[0]);
 
     postItemApp(formData);
 });
+
+$(document).on("click",'.controls .deleteButton',function(){
+    $(".page--itemApp .itemDetail").css({
+		opacity:0,
+		transform:'scale(0)'
+	})
+    const id=$(".page--itemApp .itemDetail").data("id")
+    if(id){
+        deleteItemApp(id)
+    }
+
+})
 
 function postItemApp(formData) {
     let url = BE + `/itemApps`;
@@ -116,10 +129,25 @@ function postItemApp(formData) {
         url: url,
         method: "POST",
         data: formData,
-        processData: false, // Don't process the FormData object
-        contentType: false, // Don't set content type
+        processData: false,
+        contentType: false,
         success: function(data) {
             console.log(data);
+            fetchItemAppList()
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX request failed:", status, error);
+        }
+    });
+}
+function deleteItemApp(id) {
+    let url = BE + `/itemApps/`+id;
+    $.ajax({
+        url: url,
+        method: "DELETE",
+        success: function(data) {
+            console.log(data);
+            fetchItemAppList()
         },
         error: function(xhr, status, error) {
             console.error("AJAX request failed:", status, error);

@@ -1,21 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const multer = require('multer');
 const userRouter = require('./routes/userRouter');
 const {catchEventNFT} = require('./catchNFTEvents.js');
 const models = require('./database/models');
 const { formatResponse } = require('./middlewares');
 const { nftRouter, tokenUriRouter, itemGameRouter, itemAppRouter, itemGameOwnerRouter, itemAppOwnerRouter, adminRouter } = require('./routes');
 
-var upload = multer();
 const app = express();
 app.set('view engine', 'ejs');
 const port = process.env.PORT|| 4500;
 
+
 // Middleware
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
-app.use(upload.array('files')); 
 app.use(cors());
 app.use(formatResponse)
 app.use(express.static('public'));
