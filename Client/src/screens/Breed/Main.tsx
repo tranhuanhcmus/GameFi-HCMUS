@@ -1,19 +1,50 @@
-import {
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  SafeAreaView,
-  SafeAreaViewBase,
-} from "react-native";
+import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import AwesomeButton from "react-native-really-awesome-button";
+import backGroundImage from "../../../assets/background3.png";
 import Heart from "../../../assets/heart.png";
 import { RoundButton } from "../../components/Button/RoundButton";
-import backGroundImage from "../../../assets/background3.png";
 import CustomText from "../../components/CustomText";
-import { COLOR } from "../../utils/color";
-import AwesomeButton from "react-native-really-awesome-button";
 import ConstantsResponsive from "../../constants/Constanst";
+import { COLOR } from "../../utils/color";
+import React from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import PetAvatar from "../../../assets/Pet.png";
+import useCustomNavigation from "../../hooks/useCustomNavigation";
+const Pet = () => {
+  return (
+    <View
+      style={{
+        display: "flex",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+      }}
+    >
+      <View style={styles.avatar}>
+        <Image
+          source={PetAvatar}
+          alt=""
+          style={{ width: "100%", height: "100%" }}
+        />
+      </View>
+      <View style={styles.idInputBox}>
+        <CustomText
+          style={{
+            color: COLOR.BLACK,
+            fontSize: 18,
+            fontWeight: "bold",
+            paddingHorizontal: 10,
+          }}
+        >
+          1234
+        </CustomText>
+      </View>
+    </View>
+  );
+};
+
 export function BreedScreen() {
+  const navigate = useCustomNavigation();
   return (
     <SafeAreaView className="h-screen w-screen bg-[#210035]">
       <Image
@@ -23,11 +54,11 @@ export function BreedScreen() {
       />
       <View style={styles.container}>
         <CustomText style={styles.title}>Breed</CustomText>
-        <View className="h-[50%] w-[90%] object-cover">
+        {/* <View className="h-[50%] w-[90%] object-cover">
           <Image source={Heart} alt="Heart" style={styles.imageContainer} />
-        </View>
+        </View> */}
 
-        <View style={styles.addButtonContainer}>
+        {/* <View style={styles.addButtonContainer}>
           <RoundButton
             onPress={() => {
               console.log("Pressed");
@@ -38,11 +69,24 @@ export function BreedScreen() {
               console.log("Pressed");
             }}
           />
+        </View> */}
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            height: "70%",
+          }}
+        >
+          <Pet></Pet>
+          <FontAwesomeIcon icon={faPlus} size={40} color={COLOR.RED} />
+          <Pet></Pet>
         </View>
         <AwesomeButton
           style={styles.breedButton}
           onPress={() => {
             console.log("Pressed");
+            navigate.navigate("DetailOfPet");
           }}
           width={225}
           height={65}
@@ -57,13 +101,27 @@ export function BreedScreen() {
 }
 
 const styles = StyleSheet.create({
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 100,
+    backgroundColor: COLOR.WHITE,
+    marginBottom: 10,
+  },
+  idInputBox: {
+    width: 231,
+    height: 52,
+    backgroundColor: COLOR.GRAY,
+    justifyContent: "center",
+  },
   container: {
     width: "100%",
     height: "100%",
     backgroundColor: COLOR.PURPLE,
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
+    paddingBottom: 30,
   },
   title: {
     fontSize: 40,
