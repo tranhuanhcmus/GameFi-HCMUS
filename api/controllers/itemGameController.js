@@ -45,8 +45,8 @@ const deleteById = async(req, res, next) => {
 
 const add = async(req, res, next) => {
     try {
-
-        const newRow = await models.ItemGame.create(req.body)
+        let formData = { ...req.body, image: '/uploads/'+req.body?.imageName + ".jpg" };
+        const newRow = await models.ItemGame.create(formData)
 
         return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
 

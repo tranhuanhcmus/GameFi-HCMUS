@@ -36,60 +36,64 @@
         </div>
       </div>
       <div class="controls">
-        <div class="button button--yellow editButton">Edit</div>
         <div class="button button--red deleteButton">Delete</div>
-
-        <div class="button button--green saveButton">Save</div>
       </div>
     </div>
-    <form class="itemForm" style="display: none">
+    <div class="itemForm" style="display: none">
       <div class="itemForm_title">Add new item</div>
-      <div class="inputWrapper" >
+      <div class="inputWrapper">
         <div class="label">name</div>
-        <input type="text" name="name"/>
+        <input type="text" name="name" />
       </div>
-      <div class="inputWrapper" >
+      <div class="inputWrapper">
         <div class="label">description</div>
-        <input type="text" name="description"/>
+        <input type="text" name="description" />
       </div>
       <div style="display: flex; gap: 10px">
-        <div class="inputWrapper" >
+        <div class="inputWrapper">
           <div class="label">category</div>
-          <input type="text" name="category"/>
+          <input type="text" name="category" />
         </div>
 
-        <div class="inputWrapper" >
+        <div class="inputWrapper">
           <div class="label">quality</div>
-          <input type="text" name="quality"/>
+          <input type="text" name="quality" />
         </div>
       </div>
       <div style="display: flex; gap: 10px">
-        <div class="inputWrapper" >
+        <div class="inputWrapper">
           <div class="label">quantity</div>
-          <input type="number" name="quantity"/>
+          <input type="number" name="quantity" />
         </div>
-        <div class="inputWrapper" >
+        <div class="inputWrapper">
           <div class="label">gemcost</div>
-          <input type="number" name="gemcost"/>
+          <input type="number" name="gemcost" />
         </div>
-        <div class="inputWrapper" >
+        <div class="inputWrapper">
           <div class="label">goldcost</div>
-          <input type="number" name="goldcost"/>
+          <input type="number" name="goldcost" />
         </div>
       </div>
 
-      <div class="inputWrapper"  data-field="image">
-        <div class="label">image</div>
-        <input type="file" multiple="false" name="imageFile" accept="image/*"/>
-        <input type="text" multiple="false" name="imageName" />
-		<img class="preview" src="#" alt="Preview" style="display: none;">
-      </div>
       <div class="inputWrapper" data-field="image">
-        <button class="button button--blue" type="submit">Submit</button>
+        <div class="label">image</div>
+        <input type="file" multiple="false" name="imageFile" accept="image/*" />
+        <input type="text" multiple="false" name="imageName" />
+        <img class="preview" src="#" alt="Preview" style="display: none" />
       </div>
-    </form>
-    <div class="newItem">
+      <div class="inputWrapper">
+        <button class="button button--blue itemForm__button--add">Add</button>
+        <button class="button button--blue itemForm__button--edit">Edit</button>
+      </div>
+      <div class="itemForm__message" >
+          Edit success
+      </div>
+    </div>
+    <div class="controllers">
       <div class="button button--blue openFormAdd">Add</div>
+      <div class="button button--blue openFormEdit" style="display: none">
+        Edit
+      </div>
     </div>
   </div>
 </div>

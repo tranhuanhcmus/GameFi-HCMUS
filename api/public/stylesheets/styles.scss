@@ -313,4 +313,15 @@ header {
 		max-height: 100px;
 		object-fit: contain;
 	}
+	.itemForm__message{
+		width: 100%;
+		text-align: center;
+		font-size: 24px;
+		display: none;
+	}
+}
+.controllers{
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }

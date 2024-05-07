@@ -16,6 +16,9 @@ function showPage(page){
 		case pages.itemApp:
 			fetchItemAppList()
 			break;
+		case pages.itemGame:
+			fetchItemGameList()
+			break;
 	
 		default:
 			break;
