@@ -36,7 +36,9 @@ const PetCard: React.FC<PetCardProps> = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        navigate.navigate("DetailOfPet");
+        navigate.navigate("DetailOfPet", {
+          data: { petImg, element, level, name, rarityPet },
+        });
       }}
     >
       <View
