@@ -64,6 +64,33 @@ class BearFactory {
         }
         return pool;
     }
+    crossover (mother, father) {
+        let son = new Bear();
+        let daughter = new Bear();
+
+        function crossOver(attr) {
+            son[attr] = father[attr];
+            daughter[attr] = mother[attr];
+
+            let random = Math.random();
+
+            if (random < 0.5) {
+                // swap
+                let temp = son[attr];
+                son[attr] = daughter[attr];
+                daughter[attr] = temp;
+            }
+        }
+
+        for (let attr of new Bear().getAttrs()) {
+            crossOver(attr);
+        }
+
+        return [son, daughter];
+    }
+    getChild (bears) {
+        
+    }
 }
 
 class Bear {
