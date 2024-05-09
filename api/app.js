@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 const userRouter = require('./routes/userRouter');
 const {catchEventNFT} = require('./catchNFTEvents.js');
 const models = require('./database/models');
@@ -18,6 +20,13 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(formatResponse)
 app.use(express.static('public'));
+
+// Swagger configuration
+const swaggerOptions = require('./swaggerOptions');
+const specs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
+
 // Routes
 app.use('/user', userRouter);
 app.use('/nfts', nftRouter);
@@ -33,7 +42,6 @@ app.get("*",(req,res)=>res.render("error"))
 
 async function connectDB() {
   try {
-    
     await models.sequelize.authenticate();
     console.log('Connection has been established successfully.');
 
