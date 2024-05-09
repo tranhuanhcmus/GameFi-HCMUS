@@ -6,11 +6,15 @@ import { RoundButton } from "../../components/Button/RoundButton";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import { COLOR } from "../../utils/color";
-import React from "react";
+import React, { useEffect } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import PetAvatar from "../../../assets/Pet.png";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
+import axios from "axios";
+
+const URL = "http://192.168.1.14:4500"; // YOU CAN CHANGE THIS.
+
 const Pet = () => {
   return (
     <View
@@ -45,6 +49,33 @@ const Pet = () => {
 
 export function BreedScreen() {
   const navigate = useCustomNavigation();
+
+  /**
+   *
+   * @param father
+   * @param mother
+   */
+
+  const breedFunction = async (father: any, mother: any) => {
+    father = { id: 1 };
+    mother = { id: 1 };
+    try {
+      const response = await axios.post(`${URL}/tokenUris/breed`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        params: {
+          fatherId: father.id,
+          motherId: mother.id,
+        },
+      });
+
+      console.log("GET request successful:", response.data);
+    } catch (postError: any) {
+      console.error("Error making GET request:", postError);
+    }
+  };
+
   return (
     <SafeAreaView className="h-screen w-screen bg-[#210035]">
       <Image
@@ -85,15 +116,19 @@ export function BreedScreen() {
         <AwesomeButton
           style={styles.breedButton}
           onPress={() => {
-            console.log("Pressed");
-            navigate.navigate("DetailOfPet");
+            breedFunction(null, null);
+            // navigate.navigate("DetailOfPet");
           }}
           width={225}
           height={65}
           borderRadius={20}
           backgroundColor={COLOR.RED}
         >
-          <CustomText style={styles.breedText}>Breed</CustomText>
+          <CustomText
+            style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
+          >
+            See my baby bear
+          </CustomText>
         </AwesomeButton>
       </View>
     </SafeAreaView>

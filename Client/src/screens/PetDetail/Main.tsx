@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -14,7 +14,9 @@ import Pet from "../../../assets/Pet.png"; // TODO: CHANGE LATER
 import { RoundButton } from "../../components/Button/RoundButton";
 import ConstantsResponsive from "../../constants/Constanst";
 import backGroundImage from "../../../assets/background3.png";
-export default function DetailOfPet() {
+export default function DetailOfPet(props: any) {
+  const [data, setData] = useState({ ...props.route.params.data });
+
   return (
     <View style={styles.container}>
       <Image
@@ -24,7 +26,7 @@ export default function DetailOfPet() {
       />
       {/* Information of pet */}
       <View style={styles.informationOfPetContainer}>
-        <CustomText style={styles.petNameTitle}>Pet name</CustomText>
+        <CustomText style={styles.petNameTitle}>{data.name}</CustomText>
         <View style={styles.hpContainer}>
           <CustomText style={styles.hpTitle}>HP</CustomText>
           <View style={styles.hpBar}></View>
@@ -36,7 +38,12 @@ export default function DetailOfPet() {
       </View>
       {/* Image of pet */}
       <View style={styles.petContainer}>
-        <Image source={Pet} alt="" style={styles.petImage} />
+        <Image
+          source={data.petImg !== "" ? { uri: data.petImg } : { uri: Pet }}
+          alt=""
+          style={styles.petImage}
+        />
+
         <View style={styles.equipmentContainer}>
           <RoundButton
             onPress={() => {
@@ -59,7 +66,7 @@ export default function DetailOfPet() {
       {/* Level */}
       <View style={styles.levelContainer}>
         <CustomText style={styles.levelTitle}>Level</CustomText>
-        <CustomText style={styles.levelTitle}>10</CustomText>
+        <CustomText style={styles.levelTitle}>{data.level}</CustomText>
       </View>
     </View>
   );
@@ -144,8 +151,9 @@ const styles = StyleSheet.create({
   },
   petImage: {
     width: "70%",
-    height: undefined,
+    height: "auto",
     aspectRatio: 1,
+    borderRadius: 20,
   },
   button: {
     width: 60,

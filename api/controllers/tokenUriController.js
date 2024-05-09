@@ -1,81 +1,113 @@
-const { STATUS_CODES } = require("../constants")
-const models = require("../database/models")
-const getAll = async(req, res, next) => {
-    try {
-        const list = await models.TokenUri.findAll()
+const { STATUS_CODES } = require('../constants');
+const models = require('../database/models');
+const getAll = async (req, res, next) => {
+	try {
+		const list = await models.TokenUri.findAll();
 
-        return res.sendResponse(list, "Get All Success", STATUS_CODES.OK)
-    } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
-    }
-}
-const getById = async(req, res, next) => {
-    try {
+		return res.sendResponse(list, 'Get All Success', STATUS_CODES.OK);
+	} catch (error) {
+		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+	}
+};
+const getById = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const result = await models.TokenUri.findOne({ where: { id: id } });
 
-        const { id } = req.params
-        const result = await models.TokenUri.findOne({ where: { id: id } })
+		if (!result) {
+			return res.sendResponse(
+				null,
+				`Not Found ID ${id} `,
+				STATUS_CODES.NOT_FOUND
+			);
+		}
 
-        if (!result) {
-            return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
-        }
+		return res.sendResponse(result, `Get ID ${id}  Success`, STATUS_CODES.OK);
+	} catch (error) {
+		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+	}
+};
+const deleteById = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const row = await models.TokenUri.findOne({ where: { id: id } });
 
-        return res.sendResponse(result, `Get ID ${id}  Success`, STATUS_CODES.OK)
-    } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
-    }
-}
-const deleteById = async(req, res, next) => {
-    try {
+		if (!row) {
+			return res.sendResponse(
+				null,
+				`Not Found ID ${id} `,
+				STATUS_CODES.NOT_FOUND
+			);
+		} else {
+			await row.destroy();
 
-        const { id } = req.params
-        const row = await models.TokenUri.findOne({ where: { id: id } })
+			return res.sendResponse(null, `Delete ID ${id} success`, STATUS_CODES.OK);
+		}
+	} catch (error) {
+		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+	}
+};
 
-        if (!row) {
-            return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
-        } else {
-            await row.destroy()
+const add = async (req, res, next) => {
+	try {
+		const newRow = await models.TokenUri.create(req.body);
 
-            return res.sendResponse(null, `Delete ID ${id} success`, STATUS_CODES.OK)
-        }
+		return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK);
+	} catch (error) {
+		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+	}
+};
+const updateById = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const row = await models.TokenUri.findOne({ where: { id: id } });
 
-    } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
-    }
-}
+		if (!row) {
+			return res.sendResponse(
+				null,
+				`Not Found ID ${id} `,
+				STATUS_CODES.NOT_FOUND
+			);
+		} else {
+			const updateData = req.body;
+			await row.update(updateData);
+			await row.reload();
 
-const add = async(req, res, next) => {
-    try {
+			return res.sendResponse(row, `Update ID ${id}  Success`, STATUS_CODES.OK);
+		}
+	} catch (error) {
+		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+	}
+};
 
-        const newRow = await models.TokenUri.create(req.body)
+const breed = async (req, res, next) => {
+	console.log('req ', req.body.params);
+	const { fatherId, motherId } = req.body.params;
 
-        return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
+	const fatherRecord = await models.TokenUri.findOne({
+		where: { id: fatherId },
+	});
+	const motherRecord = await models.TokenUri.findOne({
+		where: { id: motherId },
+	});
 
+	if (!fatherRecord || !motherRecord) {
+		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+	}
 
-    } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
-    }
-}
-const updateById = async(req, res, next) => {
-    try {
+	console.log('father ', fatherRecord);
+	console.log('mother ', motherRecord);
 
-        const { id } = req.params
-        const row = await models.TokenUri.findOne({ where: { id: id } })
+	// genetic.crossover
+	return res.sendResponse(`Add success`, STATUS_CODES.OK);
+	// const row = await models.TokenUri.findOne({ where: { id: id } });
+};
 
-        if (!row) {
-            return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
-        } else {
-            const updateData = req.body
-            await row.update(updateData)
-            await row.reload()
-
-            return res.sendResponse(row, `Update ID ${id}  Success`, STATUS_CODES.OK)
-        }
-
-    } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
-    }
-}
-
-module.exports={
-	getAll,getById,add,deleteById,updateById
-}
+module.exports = {
+	getAll,
+	getById,
+	add,
+	deleteById,
+	updateById,
+	breed,
+};
