@@ -1,6 +1,6 @@
 module.exports={
 	adminRouter:require("./adminRouter"),
-
+	bearRouter:require("./bearRouter"), 
 	nftRouter:require("./nftRouter"),
 	tokenUriRouter:require("./tokenUriRouter"),
 	itemGameRouter:require("./itemGameRouter"),

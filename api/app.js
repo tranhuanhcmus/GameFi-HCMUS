@@ -7,7 +7,7 @@ const userRouter = require('./routes/userRouter');
 const {catchEventNFT} = require('./catchNFTEvents.js');
 const models = require('./database/models');
 const { formatResponse } = require('./middlewares');
-const { nftRouter, tokenUriRouter, itemGameRouter, itemAppRouter, itemGameOwnerRouter, itemAppOwnerRouter, adminRouter } = require('./routes');
+const { nftRouter, tokenUriRouter, itemGameRouter, itemAppRouter, itemGameOwnerRouter, itemAppOwnerRouter, adminRouter, bearRouter } = require('./routes');
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -29,6 +29,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Routes
 app.use('/user', userRouter);
+app.use('/bears', bearRouter);
 app.use('/nfts', nftRouter);
 app.use('/tokenUris', tokenUriRouter);
 app.use('/itemGames', itemGameRouter);

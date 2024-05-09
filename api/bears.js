@@ -35,7 +35,7 @@ class BearFactory {
         }
 
         mutateBear[mutateAttrName] = newValue;
-
+        console.log(mutateBear,"atr\n" + mutateAttrName);
         return {
             mutateBear,
             mutateAttrName,
@@ -88,9 +88,6 @@ class BearFactory {
 
         return [son, daughter];
     }
-    getChild (bears) {
-        
-    }
 }
 
 class Bear {
@@ -122,6 +119,15 @@ class Bear {
             image: this.__image,
         };
     }
+    importBear(bear) {
+        this.__eye = bear.eye;
+        this.__fur = bear.fur;
+        this.__element = bear.element;
+        this.__item = bear.item;
+        this.__name = bear.name;
+        this.__rarity = bear.rarity;
+        this.__image = bear.image;
+    }
     getAttrs() {
         // return Object.keys(this);
         return [ '__eye', '__fur', '__element', '__item' ]
@@ -130,5 +136,5 @@ class Bear {
 const factory = new BearFactory()
 const bear = factory.getRandomBear()
 
-console.log(bear.getAttrs());
+console.log(bear);
 module.exports = { BearFactory, Bear };
