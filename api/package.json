@@ -34,6 +34,8 @@
         "pg-hstore": "^2.3.4",
         "sequelize": "^6.37.3",
         "sequelize-cli": "^6.6.2",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.0",
         "uuid": "^9.0.0",
         "web3": "^4.4.0"
     }
