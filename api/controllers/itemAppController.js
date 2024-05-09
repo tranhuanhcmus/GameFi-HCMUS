@@ -50,7 +50,7 @@ const deleteById = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   try {
-    let formData = { ...req.body, image: '/uploads/'+req.body?.imageName + ".jpg" };
+    let formData = { ...req.body, image: '/uploads/'+req.body?.imageName };
 
     const newRow = await models.ItemApp.create(formData);
 
