@@ -42,7 +42,7 @@ function renderItemApp(data) {
 }
 
 function fetchItemAppList() {
-    let url = BE + '/itemApps'
+    let url = '/itemApps'
     $.ajax({
         url: url,
         method: "GET",
@@ -54,7 +54,7 @@ function fetchItemAppList() {
 }
 
 function fetchItemApp(id) {
-    let url = BE + `/itemApps/${id}`
+    let url = `/itemApps/${id}`
     $.ajax({
         url: url,
         method: "GET",
@@ -128,7 +128,7 @@ $(document).on("click", '.page--itemApp .itemForm .itemForm__button--add', funct
     formData.append('quantity', $('.page--itemApp input[name="quantity"]').val());
     formData.append('gemcost', $('.page--itemApp input[name="gemcost"]').val());
     formData.append('goldcost', $('.page--itemApp input[name="goldcost"]').val());
-    formData.append('imageName', `itemApp-`+$('.page--itemApp input[name="imageName"]').val());
+    formData.append('imageName', $('.page--itemApp input[name="imageName"]').val());
     formData.append('imageFile', $('.page--itemApp input[name="imageFile"]')[0].files[0]);
 
     postItemApp(formData, function(data) {
@@ -171,7 +171,7 @@ function editItemApp(formData, id, callback) {
         alert("There is no id Item")
         return
     }
-    let url = BE + `/itemApps` + `/${id}`;
+    let url = `/itemApps` + `/${id}`;
     $.ajax({
         url: url,
         method: "PUT",
@@ -194,7 +194,7 @@ function editItemApp(formData, id, callback) {
 }
 
 function postItemApp(formData, callback) {
-    let url = BE + `/itemApps`;
+    let url = `/itemApps`;
     $.ajax({
         url: url,
         method: "POST",
@@ -219,7 +219,7 @@ function postItemApp(formData, callback) {
 }
 
 function deleteItemApp(id, callback) {
-    let url = BE + `/itemApps/` + id;
+    let url = `/itemApps/` + id;
     $.ajax({
         url: url,
         method: "DELETE",

@@ -42,7 +42,7 @@ function renderItemGame(data) {
 }
 
 function fetchItemGameList() {
-    let url = BE + '/ItemGames'
+    let url =  '/ItemGames'
     $.ajax({
         url: url,
         method: "GET",
@@ -54,7 +54,7 @@ function fetchItemGameList() {
 }
 
 function fetchItemGame(id) {
-    let url = BE + `/ItemGames/${id}`
+    let url =  `/ItemGames/${id}`
     $.ajax({
         url: url,
         method: "GET",
@@ -128,7 +128,7 @@ $(document).on("click", '.page--itemGame .itemForm .itemForm__button--add', func
     formData.append('quantity', $('.page--itemGame input[name="quantity"]').val());
     formData.append('gemcost', $('.page--itemGame input[name="gemcost"]').val());
     formData.append('goldcost', $('.page--itemGame input[name="goldcost"]').val());
-    formData.append('imageName', `itemGame-`+$('.page--itemGame input[name="imageName"]').val());
+    formData.append('imageName', $('.page--itemGame input[name="imageName"]').val());
     formData.append('imageFile', $('.page--itemGame input[name="imageFile"]')[0].files[0]);
 
     postItemGame(formData, function(data) {
@@ -171,7 +171,7 @@ function editItemGame(formData, id, callback) {
         alert("There is no id Item")
         return
     }
-    let url = BE + `/ItemGames` + `/${id}`;
+    let url =  `/ItemGames` + `/${id}`;
     $.ajax({
         url: url,
         method: "PUT",
@@ -194,7 +194,7 @@ function editItemGame(formData, id, callback) {
 }
 
 function postItemGame(formData, callback) {
-    let url = BE + `/ItemGames`;
+    let url =  `/ItemGames`;
     $.ajax({
         url: url,
         method: "POST",
@@ -219,7 +219,7 @@ function postItemGame(formData, callback) {
 }
 
 function deleteItemGame(id, callback) {
-    let url = BE + `/ItemGames/` + id;
+    let url =  `/ItemGames/` + id;
     $.ajax({
         url: url,
         method: "DELETE",
