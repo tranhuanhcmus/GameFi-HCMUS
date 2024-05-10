@@ -1,50 +1,72 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  Button,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-import { COLOR } from "../../utils/color";
-import CustomText from "../../components/CustomText";
+import React, { useState } from "react";
+import { Image, StyleSheet, View } from "react-native";
+import AwesomeButton from "react-native-really-awesome-button";
+import Healthpoint from "../../../assets/Healthpoint.svg";
 import Pet from "../../../assets/Pet.png"; // TODO: CHANGE LATER
-import { RoundButton } from "../../components/Button/RoundButton";
+import Damage from "../../../assets/damage.svg";
+import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
-import backGroundImage from "../../../assets/background3.png";
+import { COLOR } from "../../utils/color";
+import useCustomNavigation from "../../hooks/useCustomNavigation";
 export default function DetailOfPet(props: any) {
-  const [data, setData] = useState({ ...props.route.params.data });
-
+  const [data, setData] = useState({ ...props.route.params });
+  const navigate = useCustomNavigation();
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.backgroundImage}
-        resizeMode="stretch"
-        source={backGroundImage}
-      />
-      {/* Information of pet */}
       <View style={styles.informationOfPetContainer}>
         <CustomText style={styles.petNameTitle}>{data.name}</CustomText>
-        <View style={styles.hpContainer}>
-          <CustomText style={styles.hpTitle}>HP</CustomText>
-          <View style={styles.hpBar}></View>
+        <View
+          style={{
+            width: "100%",
+            height: "30%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginVertical: 10,
+          }}
+        >
+          <Healthpoint width={100} height={40} />
+          <View
+            style={{
+              flex: 1,
+              height: 25,
+              backgroundColor: COLOR.RED,
+              borderRadius: 5,
+              marginEnd: 30,
+            }}
+          ></View>
         </View>
-        <View style={styles.damageContainer}>
-          <CustomText style={styles.damgeTitle}>DMG</CustomText>
-          <View style={styles.damageBar}></View>
+        <View
+          style={{
+            width: "100%",
+            height: "30%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginEnd: 30,
+          }}
+        >
+          <Damage width={100} height={40} />
+          <View
+            style={{
+              flex: 1,
+              height: 25,
+              backgroundColor: COLOR.CYAN,
+              borderRadius: 5,
+              marginVertical: 10,
+            }}
+          ></View>
         </View>
       </View>
-      {/* Image of pet */}
-      <View style={styles.petContainer}>
+
+      <View style={[styles.petContainer, { marginBottom: 0 }]}>
         <Image
           source={data.petImg !== "" ? { uri: data.petImg } : { uri: Pet }}
           alt=""
           style={styles.petImage}
         />
 
-        <View style={styles.equipmentContainer}>
+        {/* <View style={styles.equipmentContainer}>
           <RoundButton
             onPress={() => {
               console.log("press");
@@ -60,14 +82,38 @@ export default function DetailOfPet(props: any) {
               console.log("press");
             }}
           />
-        </View>
+        </View> */}
       </View>
 
       {/* Level */}
-      <View style={styles.levelContainer}>
+      <View
+        style={[
+          styles.levelContainer,
+          {
+            marginBottom: 10,
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            paddingHorizontal: 100,
+          },
+        ]}
+      >
         <CustomText style={styles.levelTitle}>Level</CustomText>
         <CustomText style={styles.levelTitle}>{data.level}</CustomText>
       </View>
+      <AwesomeButton
+        onPress={() => {
+          navigate.navigate("Play");
+        }}
+        backgroundDarker={COLOR.DARK_YELLOW}
+        backgroundColor={COLOR.YELLOW}
+        width={80}
+        height={30}
+        borderRadius={40}
+        style={{ marginTop: 10, marginStart: 50 }}
+      >
+        Back
+      </AwesomeButton>
     </View>
   );
 }
@@ -78,8 +124,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    // justifyContent: "flex-start",
+    // alignItems: "center",
   },
   informationOfPetContainer: {
     width: "100%",
@@ -87,8 +133,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 60,
-    marginBottom: 60,
+    marginTop: 20,
+    marginBottom: 20,
   },
   petNameTitle: {
     fontSize: 40,
@@ -162,7 +208,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.YELLOW,
   },
   levelContainer: {
-    width: "60%",
+    width: "100%",
     height: 30,
     display: "flex",
     alignItems: "center",
@@ -171,7 +217,7 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     fontSize: 30,
-    color: COLOR.GRAY,
+    color: COLOR.WHITE,
     fontFamily: "mrt-mid",
   },
   backgroundImage: {

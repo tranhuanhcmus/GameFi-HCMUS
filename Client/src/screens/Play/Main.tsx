@@ -30,15 +30,15 @@ type NFTData = {
 };
 
 const petArray: NFTData[] = [
-  {
-    id: "1",
-    petImg:
-      "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
-    element: ELEMENT.FIRE,
-    level: 3,
-    name: "Harry's Pig",
-    rarityPet: "special",
-  },
+  // {
+  //   id: "1",
+  //   petImg:
+  //     "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
+  //   element: ELEMENT.FIRE,
+  //   level: 3,
+  //   name: "Harry's Pig",
+  //   rarityPet: "special",
+  // },
 ];
 
 const PlayScreen: React.FC<Props> = (props: Props) => {

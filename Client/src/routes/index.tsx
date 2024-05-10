@@ -112,6 +112,7 @@ type LocalRootStackParamList = {
   TrendMarket: undefined;
   Home: undefined;
   Shop: undefined;
+  Play: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -176,6 +177,13 @@ const Route = () => (
           headerShown: false,
         }}
         component={TrendMarketScreen}
+      />
+      <Stack.Screen
+        name="Play"
+        options={{
+          headerShown: false,
+        }}
+        component={PlayScreen}
       />
     </Stack.Navigator>
     <AlertComponent />
