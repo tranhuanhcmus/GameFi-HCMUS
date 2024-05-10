@@ -76,7 +76,7 @@ connectDB().then((connected) => {
   if (connected) {
 
     app.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`);
+      console.log(`Server is running on ${process.env.SERVER_URL}:${port}`);
       //====================================Events====================================//
       // Catch Events
       catchEventNFT();

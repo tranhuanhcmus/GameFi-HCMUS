@@ -1,9 +1,9 @@
 class BearFactory {
     constructor() {
-        this.eyePool = [0, 1, 2];
-        this.furPool = [0, 1, 2];
-        this.elementPool = [0, 1, 2];
-        this.itemPool = [0, 1, 2];
+        this.eyePool = [1,2,3];
+        this.furPool = [1,2,3];
+        this.elementPool = [1,2,3];
+        this.itemPool = [1,2,3];
     }
 
     getAttrs() {
