@@ -1,9 +1,9 @@
 class BearFactory {
     constructor() {
-        this.eyePool = [0, 1, 2, 3, 4, 5];
-        this.furPool = [0, 1, 2, 3, 4, 5];
-        this.elementPool = [0, 1, 2, 3, 4, 5];
-        this.itemPool = [0, 1, 2, 3, 4, 5];
+        this.eyePool = [0, 1, 2];
+        this.furPool = [0, 1, 2];
+        this.elementPool = [0, 1, 2];
+        this.itemPool = [0, 1, 2];
     }
 
     getAttrs() {
@@ -48,7 +48,11 @@ class BearFactory {
         const randomElement = this.getRandomIndex(this.elementPool);
         const randomItem = this.getRandomIndex(this.itemPool);
 
-        return new Bear(randomEye, randomFur, randomElement, randomItem);
+        const name='RandomBear'
+        const imageID=[randomEye,randomFur, randomElement,randomItem].join("")
+        const image='bear'+`_${imageID}`+`.png`;
+
+        return new Bear(randomEye, randomFur, randomElement, randomItem,name,'Normal',image);
     }
     getPoolBear() {
         const pool = [];
@@ -64,7 +68,7 @@ class BearFactory {
         }
         return pool;
     }
-    crossover (mother, father) {
+    crossover(mother, father) {
         let son = new Bear();
         let daughter = new Bear();
 
@@ -88,8 +92,8 @@ class BearFactory {
 
         return [son, daughter];
     }
-    getChild (bears) {
-        
+    getChild(bears) {
+
     }
 }
 
@@ -101,7 +105,7 @@ class Bear {
         item = undefined,
         name = undefined,
         rarity = undefined,
-        image=undefined
+        image = undefined
     ) {
         this.__eye = eye;
         this.__fur = fur;
@@ -124,11 +128,12 @@ class Bear {
     }
     getAttrs() {
         // return Object.keys(this);
-        return [ '__eye', '__fur', '__element', '__item' ]
+        return ['__eye', '__fur', '__element', '__item']
     }
 }
 const factory = new BearFactory()
 const bear = factory.getRandomBear()
 
-console.log(bear.getAttrs());
+console.log(bear);
+
 module.exports = { BearFactory, Bear };

@@ -1,4 +1,4 @@
-const BE='http://localhost:4500'
+const BE='/'
 
 $(document).ready(function(){
 	showPage(pages.itemApp)
