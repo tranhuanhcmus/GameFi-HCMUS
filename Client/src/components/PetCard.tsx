@@ -16,6 +16,8 @@ import Egg from "../../assets/SVGEgg.svg";
 import Pet from "../../assets/Pet.png";
 import { ELEMENT } from "../constants/types";
 import useCustomNavigation from "../hooks/useCustomNavigation";
+import CustomText from "./CustomText";
+import { COLOR } from "../utils/color";
 
 interface PetCardProps {
   petImg: string;
@@ -33,11 +35,17 @@ const PetCard: React.FC<PetCardProps> = ({
   rarityPet,
 }) => {
   const navigate = useCustomNavigation();
+
+  console.log("prop ", petImg, element, level, name, rarityPet);
   return (
     <TouchableOpacity
       onPress={() => {
         navigate.navigate("DetailOfPet", {
-          data: { petImg, element, level, name, rarityPet },
+          petImg,
+          element,
+          level,
+          name,
+          rarityPet,
         });
       }}
     >
@@ -51,9 +59,24 @@ const PetCard: React.FC<PetCardProps> = ({
           {ELEMENT.LEAF === element && <LEAF></LEAF>}
           {ELEMENT.STONE === element && <STONE></STONE>}
           {ELEMENT.WATER === element && <WATER></WATER>}
-          <View className="jutify-center relative items-center">
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+            }}
+          >
             <Egg></Egg>
-            <Text className="absolute mt-2 text-[16px] font-bold">{level}</Text>
+            <CustomText
+              style={{
+                fontFamily: "mt-2",
+                position: "absolute",
+                fontWeight: "bold",
+                fontSize: 16,
+              }}
+            >
+              {level}
+            </CustomText>
           </View>
         </View>
         <View className="overflow-hidden rounded-[10px]">
@@ -63,10 +86,27 @@ const PetCard: React.FC<PetCardProps> = ({
           />
         </View>
 
-        <Text className="mt-2 font-rexlia text-[20px] text-white"> {name}</Text>
-        <Text className="text-right font-rexlia text-[20px] font-extralight text-white">
+        <CustomText
+          style={{
+            fontFamily: "mrt-mid",
+            color: COLOR.WHITE,
+            fontSize: 18,
+            marginTop: 5,
+          }}
+        >
+          {name}
+        </CustomText>
+        <CustomText
+          style={{
+            fontFamily: "mrt-mid ",
+            color: COLOR.WHITE,
+            fontSize: 14,
+            fontWeight: "100",
+            textAlign: "right",
+          }}
+        >
           {rarityPet}
-        </Text>
+        </CustomText>
       </View>
     </TouchableOpacity>
   );
