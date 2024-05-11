@@ -46,7 +46,7 @@ export default function DetailOfPet(props: any) {
             marginEnd: 30,
           }}
         >
-          <Damage width={100} height={40} />
+          {/* <Damage width={100} height={40} /> */}
           <View
             style={{
               flex: 1,

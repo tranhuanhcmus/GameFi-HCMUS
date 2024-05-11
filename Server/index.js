@@ -324,8 +324,12 @@ io.on('connection', (socket) => {
 	//     .emit(SOCKET.MOVE, data);
 	// });
 
-	socket.on('disconnect', () => {
-		console.log(`User Disconnected: ${socket.id}`);
+  socket.on("success", (data) => {
+    console.log(`User Disconnected: ${socket.id}`);
+    matchPairs.delete(data);
+    handleDisconnection(socket);
+    console.log(matchPairs, socketPairs);
+  });
 
 		handleDisconnection(socket);
 	});
