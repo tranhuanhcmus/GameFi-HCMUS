@@ -1,9 +1,22 @@
 import { api } from "../apis";
 import { API } from "../apis/constants";
+
+export type NFT_JSONdata={
+	name:string,
+	image:string,
+	type:string,
+	title?:string,
+	tokenId:string,
+	attributes:object,
+	description:string
+}
+
 export type NFT={
 	owner:string,
 	tokenid:string,
 	tokenuri:string,
+	exp:number,
+	JSONdata:NFT_JSONdata
   }
 export class UserService{
 	static async getNFTsByOwner(address:string) {

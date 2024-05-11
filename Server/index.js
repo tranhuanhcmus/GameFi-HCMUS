@@ -21,13 +21,18 @@ const matchPairs = new Map(); // Map to store
 
 // Example usage within a socket disconnect event:
 
-function findMatch(socket) {
+function findMatch(socket, data) {
   let foundMatch = false;
 
   // Iterate through the map to find an available match
   socketPairs.forEach((value, key) => {
     // If a match is found and it's not the same socket
-    if (!foundMatch && value.available && key !== socket.id) {
+    if (
+      !foundMatch &&
+      value.available &&
+      key !== socket.id &&
+      value.gameName == data
+    ) {
       const gameRoom = `game_${socket.id}_${key}`;
       // Join the sockets to the same game room
       console.log(gameRoom);
@@ -35,21 +40,42 @@ function findMatch(socket) {
       value.socket.join(gameRoom);
 
       // Set availability to false as they are now in a game
-      socketPairs.set(socket.id, { socket: socket, available: false });
-      socketPairs.set(key, { socket: value.socket, available: false });
+      socketPairs.set(socket.id, {
+        socket: socket,
+        available: false,
+        gameName: data,
+      });
+      socketPairs.set(key, {
+        socket: value.socket,
+        available: false,
+        gameName: value.gameName,
+      });
       matchPairs.set(gameRoom, {
         [socket.id]: socket.id,
         [key]: key,
       });
+
+      console.log("matchPairs.gameRoom", matchPairs.get(gameRoom));
       // Notify both clients that the game is starting
       io.to(gameRoom).emit(SOCKET.KEY_ROOM, `${gameRoom}`);
+
+      // randomly first turn for any player
+      const values = Object.values(matchPairs.get(gameRoom));
+      const randomIndex = Math.floor(Math.random() * values.length);
+      const randomValue = values[randomIndex];
+      io.to(randomValue).emit(SOCKET.FIRST_TURN, true);
+
       foundMatch = true;
     }
   });
 
   if (!foundMatch) {
     // If no match found, ensure the socket is marked available for matchmaking
-    socketPairs.set(socket.id, { socket: socket, available: true });
+    socketPairs.set(socket.id, {
+      socket: socket,
+      available: true,
+      gameName: data,
+    });
     console.log("waiting_for_opponent", "Waiting for an opponent...");
     socket.emit("waiting_for_opponent", "Waiting for an opponent...");
   }
@@ -74,7 +100,7 @@ function sendEvent(socket, event) {
     console.log("No other player key found or the game room does not exist.");
   }
   // io.to(event.room).emit("update_data_table", event.table);
-  io.to(otherPlayerKey).emit(SOCKET.TAKE_DAMAGE, event.damage);
+  io.to(otherPlayerKey).emit(SOCKET.TAKE_DAMAGE, event);
 }
 
 function handleDisconnection(disconnectedSocket) {
@@ -109,10 +135,15 @@ function handleDisconnection(disconnectedSocket) {
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
-  socket.on(SOCKET.FIND_MATCH, () => {
-    socketPairs.set(socket.id, { socket: socket, available: true });
+  socket.on(SOCKET.FIND_MATCH, (data) => {
+    console.log(data);
+    socketPairs.set(socket.id, {
+      socket: socket,
+      available: true,
+      gameName: data,
+    });
 
-    findMatch(socket);
+    findMatch(socket, data);
   });
 
   socket.on(SOCKET.EVENT_DIAMOND, (data) => {
@@ -320,6 +351,13 @@ io.on("connection", (socket) => {
   //     .to(sockets.find((item) => item != socket.id))
   //     .emit(SOCKET.MOVE, data);
   // });
+
+  socket.on("success", (data) => {
+    console.log(`User Disconnected: ${socket.id}`);
+    matchPairs.delete(data);
+    // handleDisconnection(socket);
+    console.log(matchPairs, socketPairs);
+  });
 
   socket.on("disconnect", () => {
     console.log(`User Disconnected: ${socket.id}`);

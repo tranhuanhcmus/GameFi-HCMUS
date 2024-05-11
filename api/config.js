@@ -1,3 +1,4 @@
+//will not use any more //
 const { Pool } = require('pg');
 
 const db = new Pool({

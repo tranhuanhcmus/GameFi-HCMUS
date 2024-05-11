@@ -1,7 +1,7 @@
 import axios from "axios";
 export const api = axios.create({
 	//baseURL: process.env.BE_API,
-	baseURL: "http://192.168.2.29:4500",
+	baseURL: "https://gamefi-hcmus.onrender.com",
 	timeout: 30000,
   });
 

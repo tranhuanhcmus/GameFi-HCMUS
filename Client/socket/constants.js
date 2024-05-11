@@ -4,6 +4,7 @@ export const SOCKET = {
   KEY_ROOM: "key_room",
   EVENT_DIAMOND: "event_diamond",
   TAKE_DAMAGE: "take_damage",
+  FIRST_TURN: "first_turn",
 
   BOOKING: "Booking Verhical",
   SEND_DRIVERS_LOCATION: "send_location_driver_sround",

@@ -21,6 +21,7 @@ import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
 import LoadingComponent from "../components/LoadingComponent";
 import HeaderRight from "../components/HeaderRight";
+import HangManGame from "../screens/HangManGame/index";
 
 type Props = {};
 import { BreedScreen } from "../screens/Breed/Main";
@@ -54,9 +55,10 @@ const navArr: NavItem[] = [
   {
     name: "TrophyScreen",
     component: BreedScreen,
-    content: "Trophy",
+    content: "Breed",
     svg: <SVGTrophy height="100%" width="100%" />,
   },
+
   {
     name: "PetScreen",
     component: PlayScreen,
@@ -109,6 +111,7 @@ type LocalRootStackParamList = {
   Connect: undefined;
   MainTab: undefined;
   Game: undefined;
+  HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
 };
@@ -144,6 +147,14 @@ const Route = () => (
       <Stack.Screen
         name="Game"
         component={GameScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="HangManGame"
+        component={HangManGame}
         options={{
           headerShown: false,
         }}

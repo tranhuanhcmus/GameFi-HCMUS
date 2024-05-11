@@ -51,6 +51,7 @@ const HomeScreen = () => {
   const mummyRef = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
+  const [gameName, setGameName] = useState<string>("");
 
   const play = (type: string) => {
     const parsedFps = Number(fps);
@@ -97,13 +98,17 @@ const HomeScreen = () => {
   // }, []);
 
   return (
-    <View className=" relative  flex-1 flex-col items-center bg-[#0C0113]">
+    <View className=" relative  flex-1 flex-col items-center">
       <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
         source={require("../../../assets/BackGround.png")}
       />
-      <LoadingModal isVisible={isVisible} setIsVisible={setIsVisible} />
+      <LoadingModal
+        gameName={gameName}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+      />
       <View
         className="mt-20 flex w-full flex-row justify-center "
         style={{ marginTop: ConstantsResponsive.YR * 120 }}
@@ -151,12 +156,14 @@ const HomeScreen = () => {
         </View>
       </View>
       <View
-        className=" flex flex-row  justify-between "
+        className=" flex flex-row  justify-between"
         style={styles.labelButton}
       >
         <AwesomeButton
           onPress={() => {
-            console.log("Press Line-Up build");
+            if (!isVisible) setIsVisible(true);
+            setGameName("HangManGame");
+            socket.emitFindMatch("HangManGame");
           }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
@@ -164,16 +171,14 @@ const HomeScreen = () => {
           height={60}
           borderRadius={15}
         >
-          <Text style={styles.textSize}>Line-Up build</Text>
+          <Text style={styles.textSize}>HangMan</Text>
         </AwesomeButton>
 
         <AwesomeButton
           onPress={() => {
-            socket.connect();
-
             if (!isVisible) setIsVisible(true);
-            socket.emitFindMatch();
-            // navigate.replace("Game"); TODO
+            setGameName("Game");
+            socket.emitFindMatch("Game");
           }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
@@ -203,6 +208,7 @@ const styles = StyleSheet.create({
   labelButton: {
     height: ConstantsResponsive.YR * 80,
     width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 100,
+    top: -30,
   },
   textSize: {
     fontSize: ConstantsResponsive.YR * 20,
