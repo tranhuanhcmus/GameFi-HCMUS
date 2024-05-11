@@ -26,12 +26,15 @@ const breedBear = async(req, res) => {
 const getBear = async(req, res) => {
     try {
         const {bear} = req.body;
-        const factory = new BearFactory();
-        const myBear = new Bear(bear.eye, bear.fur, bear.element, bear.item);
         const bearEye = await models.EyePool.findOne({ where: { id: bear.eye } });
         const bearElement = await models.ElementPool.findOne({ where: { id: bear.element } });
         const bearFur = await models.FurPool.findOne({ where: { id: bear.fur } });
         const bearItem = await models.ItemPool.findOne({ where: { id: bear.item } });
+        let myBear = {};
+        myBear["eye"] = bearEye;
+        myBear["element"] = bearElement;
+        myBear["fur"] = bearFur;
+        myBear["item"] = bearItem;
         return res.sendResponse(myBear, "Get bear success", STATUS_CODES.OK);
 
     } catch (error) {
@@ -40,5 +43,5 @@ const getBear = async(req, res) => {
 }
 
 module.exports={
-	breedBear,
+	breedBear,getBear
 }

@@ -76,5 +76,6 @@ const router = express.Router();
 //  *         description: Internal server error
 //  */
 router.post('/breed', bearController.breedBear);
+router.post('/info', bearController.getBear);
 
 module.exports = router;
