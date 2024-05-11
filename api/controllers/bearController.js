@@ -31,10 +31,10 @@ const getBear = async(req, res) => {
         const bearFur = await models.FurPool.findOne({ where: { id: bear.fur } });
         const bearItem = await models.ItemPool.findOne({ where: { id: bear.item } });
         let myBear = {};
-        myBear["eye"] = bearEye;
-        myBear["element"] = bearElement;
-        myBear["fur"] = bearFur;
-        myBear["item"] = bearItem;
+        myBear["eye"] = { id: bearEye.id, description: bearEye.description };
+        myBear["element"] = { id: bearElement.id, description: bearElement.description };
+        myBear["fur"] = { id: bearFur.id, description: bearFur.description };
+        myBear["item"] = { id: bearItem.id, description: bearItem.description };
         return res.sendResponse(myBear, "Get bear success", STATUS_CODES.OK);
 
     } catch (error) {
