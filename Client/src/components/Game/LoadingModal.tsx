@@ -22,9 +22,11 @@ import { useDispatch } from "react-redux";
 const LoadingModal = ({
   isVisible,
   setIsVisible,
+  gameName,
 }: {
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
+  gameName: string;
 }) => {
   const navigate = useCustomNavigation();
   const socket = SocketIOClient.getInstance();
@@ -63,11 +65,17 @@ const LoadingModal = ({
   }, [second]);
 
   if (isVisible) {
+    socket.connect();
     socket.onListenKeyRoom((data) => {
       console.log(data);
       if (data !== "NO ROOM") {
         dispatch(setGameRoom(data));
-        navigate.replace("Game");
+
+        if (gameName == "Game") {
+          navigate.replace("Game");
+        } else if (gameName == "HangManGame") {
+          navigate.replace("HangManGame");
+        }
       }
     });
   }
