@@ -30,15 +30,15 @@ type NFTData = {
 };
 
 const petArray: NFTData[] = [
-  {
-    id: "1",
-    petImg:
-      "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
-    element: ELEMENT.FIRE,
-    level: 3,
-    name: "Harry's Pig",
-    rarityPet: "special",
-  },
+  // {
+  //   id: "1",
+  //   petImg:
+  //     "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
+  //   element: ELEMENT.FIRE,
+  //   level: 3,
+  //   name: "Harry's Pig",
+  //   rarityPet: "special",
+  // },
 ];
 
 const PlayScreen: React.FC<Props> = (props: Props) => {
@@ -47,7 +47,7 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     // Example: Dispatch an alert when the PlayScreen component mounts
-    dispatch(showAlert("This is an alert from PlayScreen"));
+    // dispatch(showAlert("This is an alert from PlayScreen"));
   }, [dispatch]);
 
   useEffect(() => {
@@ -60,14 +60,13 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
         "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
       );
       console.log(res.length);
-      
+
       const mappedData: NFTData[] = res.map((nft: NFT) => {
         return {
           id: nft.tokenid,
           element: ELEMENT.FIRE,
           level: getLevel(nft.exp),
-          petImg:
-            nft.JSONdata.image||"",
+          petImg: nft.JSONdata.image || "",
           name: nft.JSONdata.name,
           rarityPet: "special",
         };

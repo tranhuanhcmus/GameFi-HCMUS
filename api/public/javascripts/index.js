@@ -1,3 +1,5 @@
+const BE='http://localhost:4500'
+
 $(document).ready(function(){
 	showPage(pages.itemApp)
 })
@@ -9,4 +11,13 @@ $(document).on("click","header .navsWrapper .nav",function(){
 function showPage(page){
 	$(".page").hide()
 	$(`.page.page--${page}`).fadeIn(200)
+
+	switch (page) {
+		case pages.itemApp:
+			fetchItemAppList()
+			break;
+	
+		default:
+			break;
+	}
 }

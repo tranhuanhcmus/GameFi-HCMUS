@@ -39,28 +39,28 @@ const navArr: NavItem[] = [
     svg: <SVGStore height="100%" width="100%" />,
   },
   {
-    name: "EventScreen",
+    name: "TrendMarketScreen",
     component: TrendMarketScreen,
     content: "Event",
     header: true,
     svg: <SVGEvent height="100%" width="100%" />,
   },
   {
-    name: "PlayScreen",
+    name: "HomeScreen",
     component: HomeScreen,
     content: "Play",
     header: true,
     svg: <SVGPlay height="100%" width="100%" />,
   },
   {
-    name: "TrophyScreen",
+    name: "BreedScreen",
     component: BreedScreen,
     content: "Breed",
     svg: <SVGTrophy height="100%" width="100%" />,
   },
 
   {
-    name: "PetScreen",
+    name: "PlayScreen",
     component: PlayScreen,
     content: "Pet",
     header: true,
@@ -114,6 +114,8 @@ type LocalRootStackParamList = {
   HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
+  Shop: undefined;
+  Play: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -172,6 +174,27 @@ const Route = () => (
           headerShown: false,
         }}
         component={MainTab}
+      />
+      <Stack.Screen
+        name="Shop"
+        options={{
+          headerShown: false,
+        }}
+        component={ShopScreen}
+      />
+      <Stack.Screen
+        name="TrendMarket"
+        options={{
+          headerShown: false,
+        }}
+        component={TrendMarketScreen}
+      />
+      <Stack.Screen
+        name="Play"
+        options={{
+          headerShown: false,
+        }}
+        component={PlayScreen}
       />
     </Stack.Navigator>
     <AlertComponent />
