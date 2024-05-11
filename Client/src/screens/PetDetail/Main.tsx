@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
 import Healthpoint from "../../../assets/Healthpoint.svg";
 import Pet from "../../../assets/Pet.png"; // TODO: CHANGE LATER
-import Damage from "../../../assets/damage.svg";
+//import Damage from "../../../assets/damage.svg";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import { COLOR } from "../../utils/color";
@@ -46,7 +46,7 @@ export default function DetailOfPet(props: any) {
             marginEnd: 30,
           }}
         >
-          <Damage width={100} height={40} />
+          {/* <Damage width={100} height={40} /> */}
           <View
             style={{
               flex: 1,

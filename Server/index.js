@@ -355,7 +355,7 @@ io.on("connection", (socket) => {
   socket.on("success", (data) => {
     console.log(`User Disconnected: ${socket.id}`);
     matchPairs.delete(data);
-    // handleDisconnection(socket);
+    handleDisconnection(socket);
     console.log(matchPairs, socketPairs);
   });
 

@@ -62,7 +62,7 @@ const index = () => {
     return () => {
       socket.removeListenTakeDamage(handleDamage);
     };
-  }, []);
+  }, [socket]);
 
   const storeCorrectLetters = (keyInput: string) => {
     const ans = correctWord.toUpperCase();
@@ -140,19 +140,18 @@ const index = () => {
     // clear all stored data
     // replay
     setStatus("");
-    dispatch(setComponentHp(20));
-    dispatch(setHp(20));
+    dispatch(setComponentHp(40));
+    dispatch(setHp(40));
     dispatch(updateTurn(false));
     socket.emitSuccess(gameRoom);
+
     navigate.navigate("MainTab");
   };
 
   const handleEndTime = () => {
-    if (status === "win") {
-      setCorrectLetters("");
-      setWrongLetters("");
-      setStatus("");
-    }
+    setCorrectLetters("");
+    setWrongLetters("");
+    setStatus("");
 
     dispatch(swapTurn());
 

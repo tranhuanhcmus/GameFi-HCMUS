@@ -9,7 +9,7 @@ export interface AnimatedValues {
   [key: string]: any[][];
 }
 export default class GameLogic {
-  public static HEALTH_POINT = 20;
+  public static HEALTH_POINT = 40;
 
   /**
    * Size in pixel of table, please change if needed.
