@@ -1,9 +1,9 @@
 export const COLOR = {
-  PURPLE: "#40107e",
+  PURPLE: "#40107E",
   RED: "#E60722",
   GRAY: "#B6B8B5",
   BLUE: "#1A87EE",
-  YELLOW: "#F9CF2A",
+  YELLOW: "#F3B207",
   GREEN: "#42B50F",
   LIGHT_PURPLE: "#BC93F4",
   WHITE: "#FFFFFF",
