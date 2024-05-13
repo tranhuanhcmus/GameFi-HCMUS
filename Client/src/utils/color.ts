@@ -1,5 +1,5 @@
 export const COLOR = {
-  PURPLE: "#210035",
+  PURPLE: "#40107e",
   RED: "#E60722",
   GRAY: "#B6B8B5",
   BLUE: "#1A87EE",
@@ -12,4 +12,5 @@ export const COLOR = {
   BRIGHT_YELLOW: "#FFE243",
   BLACK: "#000000",
   CYAN: "#00F8F8",
+  DARKER_PURPLE: "#271647",
 };
