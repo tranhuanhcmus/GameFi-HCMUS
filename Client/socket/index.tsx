@@ -4,7 +4,8 @@ import { SOCKET } from "./constants";
 
 const PORT = 3001;
 let server: string;
-server = `http://192.168.1.14:${PORT}`; // TODO CHANGE LATER
+// server = `http://192.168.1.14:${PORT}`; // TODO CHANGE LATER
+server = `http://localhost:${PORT}`; // TODO CHANGE LATER
 // // Check if the environment is a browser and window.location is defined
 // const isBrowser =
 //   typeof window !== "undefined" &&
@@ -41,6 +42,7 @@ export type DataSocketTransfer = {
   damage: number;
   move: { startCell: Cell; endCell: Cell };
   table: any;
+  event?: string;
   // blockList: Cell[]
 };
 
@@ -90,12 +92,19 @@ export class SocketIOClient {
     this.socket.emit(SOCKET.JOIN_ROOM, data);
   }
 
-  emitFindMatch() {
-    this.socket.emit(SOCKET.FIND_MATCH);
+  emitFindMatch(nameGame: string) {
+    this.socket.emit(SOCKET.FIND_MATCH, nameGame);
   }
 
   emitEventGame(data: any) {
     this.socket.emit(SOCKET.EVENT_DIAMOND, data);
+  }
+
+  emitDisconnect() {
+    this.socket.emit("disconnect");
+  }
+  emitSuccess(data: any) {
+    this.socket.emit("success", data);
   }
 
   emitSendAcceptBooking(data: any) {
@@ -158,6 +167,9 @@ export class SocketIOClient {
     this.socket.on(SOCKET.TAKE_DAMAGE, (data) => {
       callback(data);
     });
+  }
+  removeListenTakeDamage(callback: any) {
+    this.socket.off(SOCKET.TAKE_DAMAGE, callback);
   }
 
   onListenMove(callback: (data: any) => void) {

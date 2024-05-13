@@ -28,6 +28,10 @@ const playerSlice = createSlice({
       state.hp = state.hp - action.payload;
       return state;
     },
+    setHp(state, action) {
+      state.hp = action.payload;
+      return state;
+    },
 
     setGameRoom(state, action) {
       state.gameRoom = action.payload;
@@ -35,6 +39,10 @@ const playerSlice = createSlice({
 
     updateComponentHp(state, action) {
       state.componentHp = state.componentHp - action.payload;
+      return state;
+    },
+    setComponentHp(state, action) {
+      state.componentHp = action.payload;
       return state;
     },
 
@@ -46,8 +54,14 @@ const playerSlice = createSlice({
 });
 
 export { playerSlice };
-export const { updateHp, updateComponentHp, setGameRoom, updateComponentTurn } =
-  playerSlice.actions;
+export const {
+  updateHp,
+  updateComponentHp,
+  setHp,
+  setComponentHp,
+  setGameRoom,
+  updateComponentTurn,
+} = playerSlice.actions;
 
 export const selectLoading = (state: RootState) => state.loading;
 

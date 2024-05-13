@@ -8,5 +8,6 @@ export type RootStackParamList = {
   DetailOfPet: any;
   Breed: any;
   MainTab: any;
+  HangManGame: any;
   Play: any;
 };

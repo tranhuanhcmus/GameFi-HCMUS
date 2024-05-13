@@ -6,13 +6,33 @@ import GameBoard from "../../components/Game/Board";
 import GameHeader from "../../components/Game/Header";
 import UpperLayer from "../../components/Game/UpperLayer";
 import { COLOR } from "../../utils/color";
-
+import { Audio } from "expo-av";
 import ConstantsResponsive from "../../constants/Constanst";
 import { initSocket } from "../../redux/socketSlice";
 
 const GameScreen = () => {
   const dispatch = useDispatch();
+  const sound = new Audio.Sound();
 
+  const playSound = async () => {
+    try {
+      await sound.unloadAsync(); // Unload any sound that might be loaded already
+      await sound.loadAsync(
+        require("../../../assets/audio/soundTrackGame.mp3"),
+      ); // Adjust path
+      sound.setOnPlaybackStatusUpdate(async (status) => {
+        // Verify that the sound is loaded before checking didJustFinish
+        if (status.isLoaded && status.didJustFinish) {
+          await sound.setPositionAsync(0); // Rewind the sound to the start
+          await sound.playAsync(); // Start playing again
+        }
+      });
+      await sound.playAsync();
+      // Additional settings can be adjusted here, e.g., volume, looping
+    } catch (error) {
+      console.log("Error playing sound", error);
+    }
+  };
   const { turn, damage, blockList, swapCells } = useSelector(
     (state: any) => state.board,
   );
@@ -24,6 +44,7 @@ const GameScreen = () => {
   /** Init socket */
   useEffect(() => {
     dispatch(initSocket());
+    playSound();
   }, []);
 
   return (
