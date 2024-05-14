@@ -4,7 +4,7 @@ export const COLOR = {
   GRAY: "#B6B8B5",
   BLUE: "#1A87EE",
   YELLOW: "#F3B207",
-  GREEN: "#42B50F",
+  GREEN: "#4BBA16",
   LIGHT_PURPLE: "#BC93F4",
   WHITE: "#FFFFFF",
   GRAY2: "#D9D9D9",
@@ -13,4 +13,5 @@ export const COLOR = {
   BLACK: "#000000",
   CYAN: "#00F8F8",
   DARKER_PURPLE: "#271647",
+  PINK: "#F0357D",
 };

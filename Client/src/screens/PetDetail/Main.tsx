@@ -11,7 +11,7 @@ import useCustomNavigation from "../../hooks/useCustomNavigation";
 import StatisticModal from "./StatisticModal";
 export default function DetailOfPet(props: any) {
   const [data, setData] = useState({ ...props.route.params });
-  const [isStaticModalVisible, setIsStaticModalVisible] = useState(true);
+  const [isStaticModalVisible, setIsStaticModalVisible] = useState(false);
   const navigate = useCustomNavigation();
   return (
     <View
