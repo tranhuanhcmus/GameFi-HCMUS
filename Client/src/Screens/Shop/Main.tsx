@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ConstantsResponsive from "../../constants/Constanst";
 import {
   View,
@@ -15,20 +15,175 @@ import CustomText from "../../components/CustomText";
 import AlertBuyComponent from "../../components/AlertBuyComponent";
 import woodSign from "../../../assets/WoodSign3.png";
 import { flare } from "viem/chains";
-
+import { COLOR } from "../../utils/color";
+import Lucky from "../../../assets/medicine.png";
+import Medicine from "../../../assets/Medicine.svg";
 type Props = {};
-const petArray = [
+const itemArray = [
   {
     id: "1",
-    title: "Energy",
-  },
-  {
-    id: "100",
-    title: "Food",
+    title: "Lucky",
+    data: [
+      {
+        id: "1",
+        itemImg: Lucky,
+        itemColor: COLOR.GREEN,
+        price: 100,
+        imgPrice: 250,
+        itemAmount: 50,
+        itemType: "1",
+      },
+      {
+        id: "2",
+        itemImg: Lucky,
+        itemColor: COLOR.GREEN,
+        price: 300,
+        imgPrice: 250,
+        itemAmount: 250,
+        itemType: "1",
+      },
+      {
+        id: "3",
+        itemImg: Lucky,
+        itemColor: COLOR.GREEN,
+        price: 950,
+        imgPrice: 100,
+        itemAmount: 1000,
+        itemType: "1",
+      },
+    ],
   },
   {
     id: "2",
-    title: "Special pack",
+    title: "Energy",
+    data: [
+      {
+        id: "1",
+        itemImg: Medicine,
+        itemColor: COLOR.PINK,
+        price: 20,
+        imgPrice: 250,
+        itemAmount: 1,
+        itemType: "2",
+      },
+      {
+        id: "2",
+        itemImg: Medicine,
+        itemColor: COLOR.PINK,
+        price: 50,
+        imgPrice: 250,
+        itemAmount: 5,
+        itemType: "2",
+      },
+      {
+        id: "3",
+        itemImg: Medicine,
+        itemColor: COLOR.PINK,
+        price: 100,
+        imgPrice: 250,
+        itemAmount: 10,
+        itemType: "2",
+      },
+    ],
+  },
+  {
+    id: "3",
+    title: "Pet Food",
+    data: [
+      {
+        id: "1",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 100,
+        imgPrice: 250,
+        itemAmount: 0,
+        itemType: "3",
+      },
+      {
+        id: "2",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 200,
+        imgPrice: 250,
+        itemAmount: 0,
+        itemType: "3",
+      },
+      {
+        id: "3",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 300,
+        imgPrice: 250,
+        itemAmount: 0,
+        itemType: "3",
+      },
+    ],
+  },
+  {
+    id: "4",
+    title: "Gem",
+    data: [
+      {
+        id: "1",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 200,
+        imgPrice: 250,
+        itemAmount: 50,
+        itemType: "4",
+      },
+      {
+        id: "2",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 520,
+        imgPrice: 250,
+        itemAmount: 200,
+        itemType: "4",
+      },
+      {
+        id: "3",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 1450,
+        imgPrice: 250,
+        itemAmount: 1000,
+        itemType: "4",
+      },
+    ],
+  },
+  {
+    id: "5",
+    title: "Energy",
+    data: [
+      {
+        id: "1",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 100,
+        imgPrice: 250,
+        itemAmount: 1,
+        itemType: "5",
+      },
+      {
+        id: "2",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 300,
+        imgPrice: 250,
+        itemAmount: 5,
+        itemType: "5",
+      },
+      {
+        id: "1",
+        itemImg: Lucky,
+        itemColor: COLOR.DARKER_PURPLE,
+        price: 1000,
+        imgPrice: 250,
+        itemAmount: 100,
+        itemType: "5",
+      },
+    ],
   },
 ];
 const ShopScreen = (props: Props) => {
@@ -40,18 +195,39 @@ const ShopScreen = (props: Props) => {
     setClickItem(false);
   };
 
+  const flatListRef = useRef<FlatList>(null);
+
+  const scrollToBottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
   return (
-    <View style={styles.backgroundImage} className="bg-[#210035]">
+    <View style={[styles.backgroundImage, { backgroundColor: COLOR.PURPLE }]}>
       <AlertBuyComponent
         isVisible={clickItem}
         onClose={onSetClose}
       ></AlertBuyComponent>
       <View
-        style={styles.playArea}
-        className="mt-4 flex h-[100%] w-[100%] flex-col items-center justify-center "
+        style={[
+          styles.playArea,
+          {
+            display: "flex",
+            height: ConstantsResponsive.MAX_HEIGHT,
+            width: ConstantsResponsive.MAX_WIDTH,
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        ]}
       >
         <FlatList
-          data={petArray}
+          ref={flatListRef}
+          data={itemArray}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ gap: 20 }}
           keyExtractor={(item) => item.id}
@@ -64,12 +240,26 @@ const ShopScreen = (props: Props) => {
                   style={styles.img}
                 />
                 <View
-                  className="absolute flex items-center justify-center "
-                  style={styles.img}
+                  style={[
+                    styles.img,
+                    {
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      position: "absolute",
+                    },
+                  ]}
                 >
                   <CustomText
-                    className="font-rexlia text-[30px] text-white"
-                    style={styles.positionText}
+                    style={[
+                      styles.positionText,
+                      {
+                        fontFamily: "mt-2",
+                        fontSize: 25,
+                        color: COLOR.WHITE,
+                        fontWeight: "bold",
+                      },
+                    ]}
                   >
                     {item.title}
                   </CustomText>
@@ -81,13 +271,20 @@ const ShopScreen = (props: Props) => {
                   gap: 10,
                   width: "100%",
                 }}
-                data={petArray}
+                data={item.data}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
                 numColumns={3}
                 renderItem={({ item }) => (
                   <View className="mt-3">
-                    <ItemComponent onPress={onClickItem} />
+                    <ItemComponent
+                      itemColor={item.itemColor}
+                      itemAmount={item.itemAmount}
+                      price={item.price}
+                      imgPrice={item.imgPrice}
+                      onPress={onClickItem}
+                      itemType={item.itemType}
+                    />
                   </View>
                 )}
               />
