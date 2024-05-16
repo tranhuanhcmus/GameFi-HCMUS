@@ -1,10 +1,10 @@
 export const COLOR = {
-  PURPLE: "#210035",
+  PURPLE: "#40107E",
   RED: "#E60722",
   GRAY: "#B6B8B5",
   BLUE: "#1A87EE",
-  YELLOW: "#F9CF2A",
-  GREEN: "#42B50F",
+  YELLOW: "#F3B207",
+  GREEN: "#4BBA16",
   LIGHT_PURPLE: "#BC93F4",
   WHITE: "#FFFFFF",
   GRAY2: "#D9D9D9",
@@ -12,4 +12,6 @@ export const COLOR = {
   BRIGHT_YELLOW: "#FFE243",
   BLACK: "#000000",
   CYAN: "#00F8F8",
+  DARKER_PURPLE: "#271647",
+  PINK: "#F0357D",
 };

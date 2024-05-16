@@ -30,6 +30,7 @@ import GameLogic, { AnimatedValues } from "../../utils/game/game";
 import FinishModal from "./FinishModal";
 import log from "../../logger/index.js";
 import { updateMove, updateTableSocket } from "../../redux/socketSlice";
+import { Audio } from "expo-av";
 
 const GameBoard = () => {
   /** Redux, state and dispatch */
@@ -40,6 +41,31 @@ const GameBoard = () => {
   const { hp, componentHp, isComponentTurn } = useSelector(
     (state: any) => state.player,
   );
+
+  const sound = new Audio.Sound();
+  const sound2 = new Audio.Sound();
+
+  const playSound = async () => {
+    try {
+      await sound.unloadAsync(); // Unload any sound that might be loaded already
+      await sound.loadAsync(require("../../../assets/audio/move.mp3")); // Adjust path
+      await sound.playAsync();
+      // Additional settings can be adjusted here, e.g., volume, looping
+    } catch (error) {
+      console.log("Error playing sound", error);
+    }
+  };
+
+  const playSound2 = async () => {
+    try {
+      await sound2.unloadAsync(); // Unload any sound that might be loaded already
+      await sound2.loadAsync(require("../../../assets/audio/broken.mp3")); // Adjust path
+      await sound2.playAsync();
+      // Additional settings can be adjusted here, e.g., volume, looping
+    } catch (error) {
+      console.log("Error playing sound", error);
+    }
+  };
 
   /** ====================================================== */
   /** useState */
@@ -417,7 +443,7 @@ const GameBoard = () => {
             endCell: { row: row + numCellY, column: column + numCellX },
           }),
         );
-
+        playSound2();
         onDestroyCells();
       } else {
         // RUN BACK THE ANIMATION
@@ -516,6 +542,7 @@ const GameBoard = () => {
         )
           return;
       }
+      playSound();
     };
 
     const onReleaseCell = (column: number, row: number) => {
@@ -534,6 +561,7 @@ const GameBoard = () => {
       dispatch(updateComponentTurn(false));
 
       // Let's play some animation for swap
+
       swapAnimation(row, column, numCellX, numCellY);
     };
 

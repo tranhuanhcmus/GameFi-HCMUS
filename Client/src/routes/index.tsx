@@ -21,6 +21,7 @@ import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
 import LoadingComponent from "../components/LoadingComponent";
 import HeaderRight from "../components/HeaderRight";
+import HangManGame from "../screens/HangManGame/index";
 
 type Props = {};
 import { BreedScreen } from "../screens/Breed/Main";
@@ -28,6 +29,8 @@ import DetailOfPet from "../screens/PetDetail/Main";
 import HomeScreen from "../screens/Home/Main";
 import TrendMarketScreen from "../screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
+import LeagueScreen from "../screens/League/Main";
+import EventScreen from "../screens/Event/Main";
 
 const navArr: NavItem[] = [
   {
@@ -57,6 +60,7 @@ const navArr: NavItem[] = [
     content: "Breed",
     svg: <SVGTrophy height="100%" width="100%" />,
   },
+
   {
     name: "PlayScreen",
     component: PlayScreen,
@@ -109,10 +113,13 @@ type LocalRootStackParamList = {
   Connect: undefined;
   MainTab: undefined;
   Game: undefined;
+  HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
   Shop: undefined;
   Play: undefined;
+  League: undefined;
+  Event: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -127,7 +134,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="MainTab">
+    <Stack.Navigator initialRouteName="Event">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
@@ -146,6 +153,14 @@ const Route = () => (
       <Stack.Screen
         name="Game"
         component={GameScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="HangManGame"
+        component={HangManGame}
         options={{
           headerShown: false,
         }}
@@ -184,6 +199,21 @@ const Route = () => (
           headerShown: false,
         }}
         component={PlayScreen}
+      />
+
+      <Stack.Screen
+        name="League"
+        component={LeagueScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Event"
+        component={EventScreen}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
     <AlertComponent />

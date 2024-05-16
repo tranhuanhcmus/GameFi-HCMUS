@@ -28,29 +28,47 @@ import SpriteSheet from "rn-sprite-sheet";
 import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
 import LoadingModal from "../../components/Game/LoadingModal";
+import ChooseGameModal from "./ChooseGameModal";
 type Props = {};
 
 const HomeScreen = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
-  const userState = useSelector(selectUser);
+  /** Constant */
   const health = 60;
 
+  /** useState */
+  const [isVisible, setIsVisible] = useState(false);
+  const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
+    useState(false);
+  const [offsetX, setOffsetX] = useState<number>(0);
+  const [offsetY, setOffsetY] = useState<number>(0);
+  const [gameName, setGameName] = useState<string>("");
+  const [fps, setFps] = useState<string>("2");
+  const [loop, setLoop] = useState<boolean>(false);
+  const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
+
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+
+  /** useSelector */
+  const userState = useSelector(selectUser);
+
+  /** useBalance */
   const { data, isError, isLoading } = useBalance({
     address: userState.address,
   });
+
+  /** useDisconnect */
   const { disconnect } = useDisconnect(); // Add useDisconnect hook
+
+  /** useCustomNavigation */
   const navigate = useCustomNavigation();
+
+  /** useAppDispatch */
   const dispatch = useAppDispatch();
   const socket = SocketIOClient.getInstance();
 
-  const [loop, setLoop] = useState<boolean>(false);
-  const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [fps, setFps] = useState<string>("2");
+  /** useRef */
   const mummyRef = useRef<SpriteSheet>(null);
-  const [offsetX, setOffsetX] = useState<number>(0);
-  const [offsetY, setOffsetY] = useState<number>(0);
 
   const play = (type: string) => {
     const parsedFps = Number(fps);
@@ -69,6 +87,7 @@ const HomeScreen = () => {
     setLoop(true);
     setResetAfterFinish(true);
   };
+
   let healthBarWidth =
     ((ConstantsResponsive.MAX_WIDTH -
       ConstantsResponsive.XR * 200 -
@@ -76,11 +95,13 @@ const HomeScreen = () => {
       ConstantsResponsive.XR * 6) *
       health) /
     100;
+
   const stop = () => {
     if (mummyRef.current) {
       mummyRef.current.stop(() => console.log("stopped"));
     }
   };
+
   // useEffect(() => {
   //   if (!isConnected) {
   //     navigate.replace("Connect");
@@ -97,29 +118,31 @@ const HomeScreen = () => {
   // }, []);
 
   return (
-    <View className=" relative  flex-1 flex-col items-center bg-[#0C0113]">
-      <Image
+    <View
+      style={{
+        position: "relative",
+        flex: 1,
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: COLOR.PURPLE,
+        height: ConstantsResponsive.MAX_HEIGHT,
+        width: ConstantsResponsive.MAX_WIDTH,
+      }}
+    >
+      <ChooseGameModal
+        isVisible={isChooseGameModalVisible}
+        setIsVisible={setIsChooseGameModalVisible}
+      />
+      {/* <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
         source={require("../../../assets/BackGround.png")}
+      /> */}
+      <LoadingModal
+        gameName={gameName}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
       />
-      <LoadingModal isVisible={isVisible} setIsVisible={setIsVisible} />
-      <View
-        className="mt-20 flex w-full flex-row justify-center "
-        style={{ marginTop: ConstantsResponsive.YR * 120 }}
-      >
-        <SVGPlay width={40} height={40} />
-        <SVGPlay width={40} height={40} />
-        <SVGPlay width={40} height={40} />
-      </View>
-      <View className="flex flex-col items-center">
-        <View style={styles.healthBar}>
-          <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
-        </View>
-        <CustomText className="mt-2 font-rexlia text-4xl text-[#b15555]">
-          Level 6
-        </CustomText>
-      </View>
 
       <View style={styles.playArea} className="relative  ">
         <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
@@ -150,37 +173,67 @@ const HomeScreen = () => {
           </TouchableNativeFeedback>
         </View>
       </View>
+
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          height: 150,
+          marginTop: 10,
+        }}
+      >
+        <CustomText
+          style={{
+            fontFamily: "mt-2",
+            fontWeight: "bold",
+            fontSize: 20,
+            color: COLOR.WHITE,
+          }}
+        >
+          LEVEL 2
+        </CustomText>
+        <View style={styles.healthBar}>
+          <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
+        </View>
+      </View>
       <View
         className=" flex flex-row  justify-between"
         style={styles.labelButton}
       >
         <AwesomeButton
+          // onPress={() => {
+          //   if (!isVisible) setIsVisible(true);
+          //   setGameName("HangManGame");
+          //   socket.emitFindMatch("HangManGame");
+          // }}
           onPress={() => {
-            console.log("Press Line-Up build");
+            setIsChooseGameModalVisible(true);
           }}
-          backgroundDarker={COLOR.DARK_YELLOW}
-          backgroundColor={COLOR.BRIGHT_YELLOW}
-          width={150}
+          backgroundDarker={COLOR.DARKER_PURPLE}
+          backgroundColor={COLOR.DARKER_PURPLE}
+          width={100}
           height={60}
           borderRadius={15}
         >
-          <Text style={styles.textSize}>Line-Up build</Text>
+          <Text style={[styles.textSize, { color: COLOR.WHITE }]}>
+            CHANGE GAME
+          </Text>
         </AwesomeButton>
 
         <AwesomeButton
-          onPress={() => {
-            socket.connect();
-
-            if (!isVisible) setIsVisible(true);
-            socket.emitFindMatch();
-          }}
+          // onPress={() => {
+          //   if (!isVisible) setIsVisible(true);
+          //   setGameName("Game");
+          //   socket.emitFindMatch("Game");
+          // }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
-          width={150}
+          width={170}
           height={60}
           borderRadius={15}
         >
-          <Text style={styles.textSize}>Normal play</Text>
+          <Text style={styles.textSize}>PLAY</Text>
         </AwesomeButton>
       </View>
     </View>
@@ -189,11 +242,6 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-  },
-
   backgroundImage: {
     width: ConstantsResponsive.MAX_WIDTH,
     height: ConstantsResponsive.MAX_HEIGHT,
@@ -205,10 +253,9 @@ const styles = StyleSheet.create({
     top: -30,
   },
   textSize: {
-    fontSize: ConstantsResponsive.YR * 20,
-    lineHeight: ConstantsResponsive.YR * 20,
-    fontWeight: "bold",
-    color: COLOR.BLACK,
+    fontSize: ConstantsResponsive.YR * 25,
+    lineHeight: ConstantsResponsive.YR * 25,
+    fontWeight: "900",
     textAlign: "center",
   },
 
@@ -328,12 +375,12 @@ const styles = StyleSheet.create({
       ConstantsResponsive.XR * 60,
     marginLeft: ConstantsResponsive.XR * 40,
     marginTop: ConstantsResponsive.YR * 10,
-    backgroundColor: "white",
+    backgroundColor: COLOR.WHITE,
     borderRadius: ConstantsResponsive.YR * 10,
   },
   healthBarInner: {
     position: "absolute",
-    backgroundColor: "#ff1a1a",
+    backgroundColor: COLOR.DARKER_PURPLE,
     left: ConstantsResponsive.XR * 3,
 
     top: ConstantsResponsive.YR * 3,

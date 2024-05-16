@@ -36,7 +36,6 @@ const PetCard: React.FC<PetCardProps> = ({
 }) => {
   const navigate = useCustomNavigation();
 
-  console.log("prop ", petImg, element, level, name, rarityPet);
   return (
     <TouchableOpacity
       onPress={() => {
