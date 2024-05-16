@@ -30,6 +30,7 @@ import HomeScreen from "../screens/Home/Main";
 import TrendMarketScreen from "../screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
 import LeagueScreen from "../screens/League/Main";
+import EventScreen from "../screens/Event/Main";
 
 const navArr: NavItem[] = [
   {
@@ -118,6 +119,7 @@ type LocalRootStackParamList = {
   Shop: undefined;
   Play: undefined;
   League: undefined;
+  Event: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -132,7 +134,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="League">
+    <Stack.Navigator initialRouteName="Event">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
@@ -202,6 +204,13 @@ const Route = () => (
       <Stack.Screen
         name="League"
         component={LeagueScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Event"
+        component={EventScreen}
         options={{
           headerShown: false,
         }}
