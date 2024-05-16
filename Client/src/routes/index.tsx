@@ -29,6 +29,7 @@ import DetailOfPet from "../screens/PetDetail/Main";
 import HomeScreen from "../screens/Home/Main";
 import TrendMarketScreen from "../screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
+import LeagueScreen from "../screens/League/Main";
 
 const navArr: NavItem[] = [
   {
@@ -116,6 +117,7 @@ type LocalRootStackParamList = {
   Home: undefined;
   Shop: undefined;
   Play: undefined;
+  League: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -130,7 +132,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Shop">
+    <Stack.Navigator initialRouteName="League">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
@@ -195,6 +197,14 @@ const Route = () => (
           headerShown: false,
         }}
         component={PlayScreen}
+      />
+
+      <Stack.Screen
+        name="League"
+        component={LeagueScreen}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
     <AlertComponent />
