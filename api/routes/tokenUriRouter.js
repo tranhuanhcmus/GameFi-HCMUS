@@ -58,7 +58,7 @@ router.post('/', tokenUriController.add);
  *         required: true
  *         description: ID of the token URI to get information.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Information of the token URI returned successfully
@@ -82,7 +82,7 @@ router.get('/:id', tokenUriController.getById);
  *         required: true
  *         description: ID of the token URI to update information.
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -112,7 +112,7 @@ router.put('/:id', tokenUriController.updateById);
  *         required: true
  *         description: ID of the token URI to delete.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Token URI deleted successfully
