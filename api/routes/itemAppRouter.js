@@ -63,7 +63,7 @@ router.post('/', upload.single("imageFile"), itemAppController.add);
  *         required: true
  *         description: ID of the item app to get information.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Information of the item app returned successfully
@@ -87,7 +87,7 @@ router.get('/:id', itemAppController.getById);
  *         required: true
  *         description: ID of the item app to update information.
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -117,7 +117,7 @@ router.put('/:id', itemAppController.updateById);
  *         required: true
  *         description: ID of the item app to delete.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Item app deleted successfully

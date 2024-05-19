@@ -60,7 +60,7 @@ router.post('/', itemGameController.add);
  *         required: true
  *         description: ID of the item game to get information.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Information of the item game returned successfully
@@ -84,7 +84,7 @@ router.get('/:id', itemGameController.getById);
  *         required: true
  *         description: ID of the item game to update information.
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -114,7 +114,7 @@ router.put('/:id', itemGameController.updateById);
  *         required: true
  *         description: ID of the item game to delete.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Item game deleted successfully

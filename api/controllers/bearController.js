@@ -25,7 +25,7 @@ const breedBear = async(req, res) => {
 
 const getBear = async(req, res) => {
     try {
-        const {bear} = req.body;
+        const bear = req.body;
         const bearEye = await models.EyePool.findOne({ where: { id: bear.eye } });
         const bearElement = await models.ElementPool.findOne({ where: { id: bear.element } });
         const bearFur = await models.FurPool.findOne({ where: { id: bear.fur } });
@@ -41,6 +41,7 @@ const getBear = async(req, res) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
+
 
 module.exports={
 	breedBear,getBear

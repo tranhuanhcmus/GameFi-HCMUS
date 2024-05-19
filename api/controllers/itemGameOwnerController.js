@@ -24,19 +24,42 @@ const getById = async(req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-const getByOwner = async(req, res, next) => {
+const getByOwner = async (req, res, next) => {
     try {
+        const { owner } = req.params;
+        const results = await models.ItemGameOwner.findAll({ where: { owner: owner } });
 
-        const { owner } = req.params
-        const result = await models.ItemGameOwner.findOne({ where: { owner: owner } })
-
-        if (!result) {
-            return res.sendResponse(null, `Not Found Owner ${owner} `, STATUS_CODES.NOT_FOUND)
+        if (!results || results.length === 0) {
+            return res.sendResponse(null, `Not Found Owner ${owner}`, STATUS_CODES.NOT_FOUND);
         }
 
-        return res.sendResponse(result, `Get Owner ${owner}  Success`, STATUS_CODES.OK)
+        // Lặp qua mảng kết quả
+        for (const result of results) {
+            // console.log(result.dataValues.id);
+            // Gọi hàm getById để lấy thông tin chi tiết của mỗi id
+            const detailedResult = await models.ItemGame.findOne({ where: { id: result.dataValues.id } })
+            // console.log(detailedResult.dataValues.description);
+            // Kiểm tra kết quả từ hàm getById và xử lý phản hồi
+            if (!detailedResult) {
+                // Nếu không tìm thấy hoặc có lỗi, trả về lỗi tương ứng
+                return res.sendResponse(null, `Error fetching details for ID ${result.dataValues.id}`, detailedResult ? detailedResult.status : STATUS_CODES.INTERNAL_ERROR);
+            }
+            // Nếu thành công, gắn thông tin chi tiết vào mảng kết quả
+            result.dataValues.name = detailedResult.dataValues.name;
+            result.dataValues.description = detailedResult.dataValues.description;
+            result.dataValues.category = detailedResult.dataValues.category;
+            result.dataValues.quality = detailedResult.dataValues.quality;
+            result.dataValues.itemquantity = detailedResult.dataValues.quantity;
+            result.dataValues.gemcost = detailedResult.dataValues.gemcost;
+            result.dataValues.goldcost = detailedResult.dataValues.goldcost;
+            result.dataValues.image = detailedResult.dataValues.image;
+            console.log(result);
+        }
+
+        // Trả về kết quả đã được mapping thông tin chi tiết
+        return res.sendResponse(results, `Get Owner ${owner} Game Items Success`, STATUS_CODES.OK);
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const deleteById = async(req, res, next) => {

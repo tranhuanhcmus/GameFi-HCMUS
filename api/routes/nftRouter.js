@@ -56,7 +56,7 @@ router.post('/', nftController.add);
  *         required: true
  *         description: ID of the NFT to get information.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Information of the NFT returned successfully
@@ -80,7 +80,7 @@ router.get('/:id', nftController.getById);
  *         required: true
  *         description: ID of the NFT to update information.
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -110,7 +110,7 @@ router.put('/:id', nftController.updateById);
  *         required: true
  *         description: ID of the NFT to delete.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: NFT deleted successfully
