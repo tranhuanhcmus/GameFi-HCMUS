@@ -23,7 +23,7 @@ import { swapTurn } from "../../redux/hangManSlice";
 import { DataSocketTransfer } from "../../../socket";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 
-const index = () => {
+const Index = () => {
   const { hp, componentHp, gameRoom } = useSelector(
     (state: any) => state.player,
   );
@@ -191,7 +191,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
 
 const styles = StyleSheet.create({
   container: {
