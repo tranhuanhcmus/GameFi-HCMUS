@@ -30,7 +30,7 @@ export default function DetailOfPet(props: any) {
         style={{
           fontSize: 40,
           color: COLOR.YELLOW,
-          fontFamily: "mrt-mid",
+          // fontFamily: "mrt-mid",
           textAlign: "center",
           marginTop: 20,
         }}
@@ -98,17 +98,17 @@ const styles = StyleSheet.create({
   petNameTitle: {
     fontSize: 40,
     color: COLOR.WHITE,
-    fontFamily: "mrt-mid",
+    // fontFamily: "mrt-mid",
   },
   hpTitle: {
     fontSize: 30,
     color: COLOR.RED,
-    fontFamily: "mrt-mid",
+    // fontFamily: "mrt-mid",
   },
   damgeTitle: {
     fontSize: 30,
     color: COLOR.GRAY,
-    fontFamily: "mrt-mid",
+    // fontFamily: "mrt-mid",
   },
   hpContainer: {
     width: "50%",
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   levelTitle: {
     fontSize: 30,
     color: COLOR.WHITE,
-    fontFamily: "mrt-mid",
+    // fontFamily: "mrt-mid",
   },
   backgroundImage: {
     width: ConstantsResponsive.MAX_WIDTH,
