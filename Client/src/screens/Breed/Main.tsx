@@ -1,46 +1,64 @@
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import axios from "axios";
+import React, { useState } from "react";
+import { Image, SafeAreaView, StyleSheet, View } from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
+import PetAvatar from "../../../assets/Pet.png";
 import backGroundImage from "../../../assets/background3.png";
-import Heart from "../../../assets/heart.png";
-import { RoundButton } from "../../components/Button/RoundButton";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
-import { COLOR } from "../../utils/color";
-import React, { useEffect } from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import PetAvatar from "../../../assets/Pet.png";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
-import axios from "axios";
+import { COLOR } from "../../utils/color";
+import Egg from "../../../assets/Egg.png";
+import Hourglass from "../../../assets/Hourglass.png";
 
 const URL = "http://192.168.1.14:4500"; // YOU CAN CHANGE THIS.
 
-const Pet = () => {
+const Pet = (props: any) => {
+  const { name, image } = props;
   return (
     <View
       style={{
         display: "flex",
         justifyContent: "space-evenly",
         alignItems: "center",
+        backgroundColor: COLOR.DARKER_PURPLE,
+        paddingTop: 10,
+        borderRadius: 10,
+        width: "40%",
+        height: "auto",
       }}
     >
-      <View style={styles.avatar}>
+      <View
+        style={{
+          width: "70%",
+          aspectRatio: 1,
+          borderRadius: 100,
+          backgroundColor: COLOR.WHITE,
+          marginBottom: 10,
+        }}
+      >
         <Image
-          source={PetAvatar}
+          source={image}
           alt=""
           style={{ width: "100%", height: "100%" }}
         />
       </View>
-      <View style={styles.idInputBox}>
+      <View
+        style={{
+          width: "auto",
+          height: "auto",
+          justifyContent: "center",
+        }}
+      >
         <CustomText
           style={{
-            color: COLOR.BLACK,
+            color: COLOR.WHITE,
             fontSize: 18,
             fontWeight: "bold",
-            paddingHorizontal: 10,
+            textAlign: "center",
           }}
         >
-          1234
+          {name}
         </CustomText>
       </View>
     </View>
@@ -48,6 +66,18 @@ const Pet = () => {
 };
 
 export function BreedScreen() {
+  const [data, setData] = useState([
+    {
+      id: 1,
+      name: "White bear",
+      image: PetAvatar,
+    },
+    {
+      id: 2,
+      name: "Brown bear",
+      image: PetAvatar,
+    },
+  ]);
   const navigate = useCustomNavigation();
 
   /**
@@ -77,44 +107,74 @@ export function BreedScreen() {
   };
 
   return (
-    <SafeAreaView className="h-screen w-screen bg-[#210035]">
-      <Image
-        style={styles.backgroundImage}
-        resizeMode="stretch"
-        source={backGroundImage}
-      />
-      <View style={styles.container}>
-        <CustomText style={styles.title}>Breed</CustomText>
-        {/* <View className="h-[50%] w-[90%] object-cover">
-          <Image source={Heart} alt="Heart" style={styles.imageContainer} />
-        </View> */}
+    <View
+      style={{
+        width: ConstantsResponsive.MAX_WIDTH,
+        height: ConstantsResponsive.MAX_HEIGHT,
+        backgroundColor: COLOR.PURPLE,
+      }}
+    >
+      <View
+        style={{
+          width: "100%",
+          height: "30%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          marginTop: 40,
+        }}
+      >
+        {data
+          ? data.map((item, index) => (
+              <Pet key={index} name={item.name} image={item.image}></Pet>
+            ))
+          : null}
+      </View>
 
-        {/* <View style={styles.addButtonContainer}>
-          <RoundButton
-            onPress={() => {
-              console.log("Pressed");
-            }}
-          />
-          <RoundButton
-            onPress={() => {
-              console.log("Pressed");
-            }}
-          />
-        </View> */}
-        <View
+      <Image
+        source={Egg}
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH / 6,
+          height: ConstantsResponsive.MAX_WIDTH / 6,
+          alignSelf: "center",
+          marginVertical: 20,
+        }}
+      />
+      <View
+        style={{
+          alignItems: "center",
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: "auto",
+        }}
+      >
+        <Pet name="Brown bear" image={PetAvatar}></Pet>
+      </View>
+
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          marginTop: 20,
+        }}
+      >
+        <Image
+          source={Hourglass}
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            height: "70%",
+            width: ConstantsResponsive.MAX_WIDTH / 20,
+            height: ConstantsResponsive.MAX_HEIGHT / 20,
           }}
+        />
+        <CustomText
+          style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
         >
-          <Pet></Pet>
-          <FontAwesomeIcon icon={faPlus} size={40} color={COLOR.RED} />
-          <Pet></Pet>
-        </View>
+          10 min
+        </CustomText>
+      </View>
+      <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 20 }}>
         <AwesomeButton
-          style={styles.breedButton}
+          style={{ justifyContent: "center", alignSelf: "center" }}
           onPress={() => {
             breedFunction(null, null);
             // navigate.navigate("DetailOfPet");
@@ -122,16 +182,16 @@ export function BreedScreen() {
           width={225}
           height={65}
           borderRadius={20}
-          backgroundColor={COLOR.RED}
+          backgroundColor={COLOR.GREEN}
         >
           <CustomText
             style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
           >
-            See my baby bear
+            MAKE BEAR
           </CustomText>
         </AwesomeButton>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -180,10 +240,6 @@ const styles = StyleSheet.create({
   },
 
   breedButton: {
-    // width: 225,
-    // height: 65,
-    // borderRadius: 20,
-    // backgroundColor: COLOR.RED,
     justifyContent: "center",
     marginTop: 22,
   },
