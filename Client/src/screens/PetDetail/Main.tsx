@@ -7,6 +7,7 @@ import Fire from "../../../assets/elements/Fire.png";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
+import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
 
 export default function DetailOfPet(props: any) {
@@ -90,10 +91,6 @@ export default function DetailOfPet(props: any) {
               width: "20%",
               aspectRatio: 1,
             }}
-            // style={{
-            //   width: 10,
-            //   height: 10,
-            // }}
           />
           <CustomText
             style={{ fontSize: 20, color: COLOR.WHITE, fontWeight: "bold" }}
@@ -180,6 +177,42 @@ export default function DetailOfPet(props: any) {
             }}
           ></View>
         </View>
+      </View>
+
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          alignSelf: "center",
+          marginBottom: 10,
+        }}
+      >
+        <AwesomeButton
+          style={{
+            justifyContent: "center",
+            alignSelf: "center",
+          }}
+          onPress={() => {
+            console.log("ahahahaha");
+
+            // navigate.navigate("DetailOfPet");
+          }}
+          width={ConstantsResponsive.MAX_WIDTH * 0.7}
+          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
+          borderRadius={20}
+          backgroundColor={COLOR.YELLOW}
+        >
+          <CustomText
+            style={{
+              textAlign: "center",
+              color: COLOR.BLACK,
+              fontSize: 20,
+              fontWeight: "bold",
+            }}
+          >
+            Pick to fight
+          </CustomText>
+        </AwesomeButton>
       </View>
     </View>
   );
