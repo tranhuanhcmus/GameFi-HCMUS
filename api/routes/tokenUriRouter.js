@@ -11,6 +11,62 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     TokenUri:
+ *       type: object
+ *       required:
+ *         - id
+ *         - tokenUri
+ *         - data
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: Unique identifier for the Token Uri
+ *         tokenUri:
+ *           type: string
+ *           description: Token URI of the Token Uri
+ *         data:
+ *           type: object
+ *           required:
+ *             - name
+ *             - type
+ *             - image
+ *             - title
+ *             - tokenId
+ *             - attributes
+ *             - description
+ *           properties:
+ *             name:
+ *               type: string
+ *               description: Name of the token
+ *             type:
+ *               type: string
+ *               description: Type of the token
+ *             image:
+ *               type: string
+ *               description: URL of the token image
+ *             title:
+ *               type: string
+ *               description: Title of the token
+ *             tokenId:
+ *               type: string
+ *               description: Token ID
+ *             attributes:
+ *               type: object
+ *               required:
+ *                 - type
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   description: Type attribute of the token
+ *             description:
+ *               type: string
+ *               description: Description of the token
+ */
+
+/**
+ * @swagger
  * /tokenUris/:
  *   get:
  *     summary: Get list of all token URIs
@@ -37,6 +93,17 @@ router.get('/', tokenUriController.getAll);
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/TokenUri'
+ *           example:
+ *               tokenUri: "https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/105.json"
+ *               data:
+ *                  name: "Harry's Dragon"
+ *                  type: "NFT"
+ *                  image: "https://images.nightcafe.studio/jobs/ZmXUlD3BXhjV4i4wnWka/ZmXUlD3BXhjV4i4wnWka--1--zv5e8.jpg?tr=w-1600,c-at_max"
+ *                  title: "Test"
+ *                  tokenId: "104"
+ *                  attributes:
+ *                      type: "Dragon"
+ *                  description: "This is a normal Dragon"
  *     responses:
  *       200:
  *         description: New token URI added successfully
@@ -89,6 +156,18 @@ router.get('/:id', tokenUriController.getById);
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/TokenUri'
+ *           example:
+ *               id: 1
+ *               tokenUri: "https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/105.json"
+ *               data:
+ *                  name: "Harry's Dragon"
+ *                  type: "NFT"
+ *                  image: "https://images.nightcafe.studio/jobs/ZmXUlD3BXhjV4i4wnWka/ZmXUlD3BXhjV4i4wnWka--1--zv5e8.jpg?tr=w-1600,c-at_max"
+ *                  title: "Test"
+ *                  tokenId: "104"
+ *                  attributes:
+ *                      type: "Dragon"
+ *                  description: "This is a normal Dragon"
  *     responses:
  *       200:
  *         description: Information of the token URI updated successfully

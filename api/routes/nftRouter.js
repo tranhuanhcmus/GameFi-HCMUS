@@ -7,6 +7,36 @@ const router = express.Router();
  * tags:
  *   name: NFT
  *   description: API for managing NFTs
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     NFT:
+ *       type: object
+ *       required:
+ *         - tokenId
+ *         - tokenUri
+ *         - owner
+ *         - exp
+ *       properties:
+ *         tokenId:
+ *           type: string
+ *           description: Token Id of the NFT
+ *         tokenUri:
+ *           type: string
+ *           description: Token URI of the NFT
+ *         owner:
+ *           type: string
+ *           description: Owner of the NFT
+ *         exp:
+ *           type: integer
+ *           description: EXP of the NFT
+ */
+ 
+/**
+ * @swagger
  * /nfts:
  *   get:
  *     summary: Get list of all NFTs
@@ -35,6 +65,14 @@ router.get('/', nftController.getAll);
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/NFT'
+ *           examples:
+ *             example1:
+ *               summary: Example item game
+ *               value:
+ *                  tokenId: "9999"
+ *                  tokenUri: "APITest.json"
+ *                  owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"
+ *                  exp: "0"
  *     responses:
  *       200:
  *         description: New NFT added successfully
@@ -87,6 +125,14 @@ router.get('/:id', nftController.getById);
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/NFT'
+ *           examples:
+ *             example1:
+ *               summary: Example item game
+ *               value:
+ *                  tokenId: "9999"
+ *                  tokenUri: "APITest.json"
+ *                  owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"
+ *                  exp: "0"
  *     responses:
  *       200:
  *         description: Information of the NFT updated successfully

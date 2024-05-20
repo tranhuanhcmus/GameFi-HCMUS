@@ -19,7 +19,7 @@ const getById = async(req, res, next) => {
             return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
         }
 
-        return res.sendResponse(result, `Get ID ${id}  Success`, STATUS_CODES.OK)
+        return res.sendResponse(result, `Get ID ${id} Success`, STATUS_CODES.OK)
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
@@ -68,7 +68,7 @@ const updateById = async(req, res, next) => {
             await row.update(updateData)
             await row.reload()
 
-            return res.sendResponse(row, `Update ID ${id}  Success`, STATUS_CODES.OK)
+            return res.sendResponse(row, `Update ID ${id} Success`, STATUS_CODES.OK)
         }
 
     } catch (error) {

@@ -11,6 +11,28 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     ItemAppOwner:
+ *       type: object
+ *       required:
+ *         - id
+ *         - owner
+ *         - quantity
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: Id of the item app
+ *         owner:
+ *           type: string
+ *           description: Owner of the item app
+ *         quantity:
+ *           type: integer
+ *           description: Quantity of the item app
+ */
+
+/**
+ * @swagger
  * /itemAppOwners/:
  *   get:
  *     summary: Get list of all item app owners
@@ -41,11 +63,9 @@ router.get('/', itemAppOwnerController.getAll);
  *             example1:
  *               summary: Example item app owner
  *               value:
- *                  id: "7dc748d5-de7d-4a76-9a58-62463ee7be15"
+ *                  id: "7dc748d5-de7d-4a76-9a58-62463ee7be14"
  *                  owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"
- *                  quantity: 10000
- *                  createdAt: "2024-04-20T08:52:28.105Z"
- *                  updatedAt: "2024-04-20T08:52:28.105Z"
+ *                  quantity: 9999
  *     responses:
  *       200:
  *         description: New item app owner added successfully
@@ -104,18 +124,11 @@ router.get('/owner/:owner', itemAppOwnerController.getByOwner);
 
 /**
  * @swagger
- * /itemAppOwners/{id}:
+ * /itemAppOwners/:
  *   put:
  *     summary: Update information of an item app owner by ID
  *     tags: [ItemAppOwner]
  *     description: Update information of an item app owner based on the provided ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the item app owner to update information.
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -129,8 +142,6 @@ router.get('/owner/:owner', itemAppOwnerController.getByOwner);
  *                  id: "7dc748d5-de7d-4a76-9a58-62463ee7be14"
  *                  owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"
  *                  quantity: 9999
- *                  createdAt: "2024-04-20T08:52:28.105Z"
- *                  updatedAt: "2024-04-20T08:52:28.105Z"
  *     responses:
  *       200:
  *         description: Information of the item app owner updated successfully
@@ -139,7 +150,7 @@ router.get('/owner/:owner', itemAppOwnerController.getByOwner);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', itemAppOwnerController.updateById);
+router.put('/', itemAppOwnerController.updateById);
 
 /**
  * @swagger
