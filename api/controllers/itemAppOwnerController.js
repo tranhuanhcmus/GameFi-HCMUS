@@ -83,14 +83,16 @@ const deleteById = async(req, res, next) => {
     }
 }
 
-const add = async(req, res, next) => {
+const add = async (req, res, next) => {
     try {
-
-        const newRow = await models.ItemAppOwner.create(req.body)
-
-        return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
-
-
+        const rowData = req.body;
+        const row = await models.ItemAppOwner.findOne({ where: { id: rowData.id, owner: rowData.owner } });
+        if (row) {
+            return res.sendResponse(null, `User ${rowData.owner} already has Item ID ${rowData.id}`, STATUS_CODES.CONFLICT);
+        } else {
+            const newRow = await models.ItemAppOwner.create(rowData);
+            return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK);
+        }
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }

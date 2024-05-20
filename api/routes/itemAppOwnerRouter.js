@@ -69,6 +69,8 @@ router.get('/', itemAppOwnerController.getAll);
  *     responses:
  *       200:
  *         description: New item app owner added successfully
+ *       404:
+ *         description: The provided pair of item and owner already exists in the database
  *       500:
  *         description: Internal server error
  */
