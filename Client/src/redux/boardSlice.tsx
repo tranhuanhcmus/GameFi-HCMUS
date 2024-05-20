@@ -117,6 +117,4 @@ export const {
   updateCellsToSwap,
 } = boardSlice.actions;
 
-export const selectLoading = (state: RootState) => state.loading;
-
 export default boardSlice.reducer;

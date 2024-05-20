@@ -201,6 +201,5 @@ router.put('/:id', tokenUriController.updateById);
  *         description: Internal server error
  */
 router.delete('/:id', tokenUriController.deleteById);
-router.post('/breed', tokenUriController.breed);
 
 module.exports = router;

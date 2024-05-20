@@ -36,7 +36,7 @@ const LeagueScreen = () => {
         <CustomText
           style={{
             fontSize: 40,
-            fontFamily: "mt-2",
+            // fontFamily: "mt-2",
             fontWeight: "bold",
             color: COLOR.YELLOW,
           }}
@@ -46,7 +46,7 @@ const LeagueScreen = () => {
         <CustomText
           style={{
             fontSize: 35,
-            fontFamily: "mt-2",
+            // fontFamily: "mt-2",
             color: COLOR.YELLOW,
           }}
         >

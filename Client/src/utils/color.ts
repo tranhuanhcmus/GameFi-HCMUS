@@ -14,4 +14,5 @@ export const COLOR = {
   CYAN: "#00F8F8",
   DARKER_PURPLE: "#271647",
   PINK: "#F0357D",
+  LIGHT_GREEN: "#C6FFC5",
 };

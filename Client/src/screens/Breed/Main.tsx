@@ -1,6 +1,12 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { Image, SafeAreaView, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
 import PetAvatar from "../../../assets/Pet.png";
 import backGroundImage from "../../../assets/background3.png";
@@ -10,13 +16,24 @@ import useCustomNavigation from "../../hooks/useCustomNavigation";
 import { COLOR } from "../../utils/color";
 import Egg from "../../../assets/Egg.png";
 import Hourglass from "../../../assets/Hourglass.png";
+import Plus from "../../../assets/Plus.png";
+import QuestionMark from "../../../assets/Question.png";
+import { useSelector } from "react-redux";
+import log from "../../logger/index";
 
 const URL = "http://192.168.1.14:4500"; // YOU CAN CHANGE THIS.
 
 const Pet = (props: any) => {
+  const navigate = useCustomNavigation();
   const { name, image } = props;
+
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => {
+        if (!name && !image) {
+          navigate.navigate("Play", { isBreed: true });
+        }
+      }}
       style={{
         display: "flex",
         justifyContent: "space-evenly",
@@ -35,13 +52,22 @@ const Pet = (props: any) => {
           borderRadius: 100,
           backgroundColor: COLOR.WHITE,
           marginBottom: 10,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Image
-          source={image}
-          alt=""
-          style={{ width: "100%", height: "100%" }}
-        />
+        {image ? (
+          <Image
+            source={{
+              uri: image,
+            }}
+            alt="Alternative"
+            style={{ width: "100%", height: "100%", borderRadius: 100 }}
+          />
+        ) : (
+          <Image source={Plus} alt="" style={{ width: "80%", height: "80%" }} />
+        )}
       </View>
       <View
         style={{
@@ -58,28 +84,109 @@ const Pet = (props: any) => {
             textAlign: "center",
           }}
         >
-          {name}
+          {name ? name : "Pick a pet"}
         </CustomText>
       </View>
-    </View>
+    </TouchableOpacity>
+  );
+};
+
+const ChildPet = (props: any) => {
+  const navigate = useCustomNavigation();
+  const { name, image } = props;
+
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        if (!name && !image) {
+          navigate.navigate("Play", { isBreed: true });
+        }
+      }}
+      style={{
+        display: "flex",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        backgroundColor: COLOR.DARKER_PURPLE,
+        paddingTop: 10,
+        borderRadius: 10,
+        width: "40%",
+        height: "auto",
+      }}
+    >
+      <View
+        style={{
+          width: "70%",
+          aspectRatio: 1,
+          borderRadius: 100,
+          backgroundColor: COLOR.WHITE,
+          marginBottom: 10,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {image ? (
+          <Image
+            source={{
+              uri: image,
+            }}
+            alt="Alternative"
+            style={{ width: "100%", height: "100%" }}
+          />
+        ) : (
+          <Image
+            source={QuestionMark}
+            alt=""
+            style={{
+              width: "80%",
+              height: "80%",
+            }}
+          />
+        )}
+      </View>
+      <View
+        style={{
+          width: "auto",
+          height: "auto",
+          justifyContent: "center",
+        }}
+      >
+        <CustomText
+          style={{
+            color: COLOR.WHITE,
+            fontSize: 18,
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          {name ? name : "New generation"}
+        </CustomText>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 export function BreedScreen() {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: "White bear",
-      image: PetAvatar,
-    },
-    {
-      id: 2,
-      name: "Brown bear",
-      image: PetAvatar,
-    },
-  ]);
+  // const [data, setData] = useState([
+  //   {
+  //     id: 1,
+  //     name: "White bear",
+  //     image: PetAvatar,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Brown bear",
+  //     image: PetAvatar,
+  //   },
+  // ]);
+  const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
+  const [data, setData] = useState([fatherPet, motherPet]);
   const navigate = useCustomNavigation();
 
+  useEffect(() => {
+    log.info(fatherPet, motherPet);
+    setData([fatherPet, motherPet]);
+  }, [fatherPet, motherPet]);
   /**
    *
    * @param father
@@ -87,22 +194,28 @@ export function BreedScreen() {
    */
 
   const breedFunction = async (father: any, mother: any) => {
-    father = { id: 1 };
-    mother = { id: 1 };
+    console.log("father", father);
+    console.log("mother ", mother);
+    console.log(`${URL}/bears/breed`);
+    if (!father || !mother) {
+      console.error("Invalid father or mother data for breeding");
+      return; // Or handle the error differently
+    }
+
     try {
-      const response = await axios.post(`${URL}/tokenUris/breed`, {
+      const response = await axios.post(`${URL}/bears/breed`, {
         headers: {
           "Content-Type": "application/json",
         },
         params: {
-          fatherId: father.id,
-          motherId: mother.id,
+          dad: father,
+          mom: mother,
         },
       });
 
-      console.log("GET request successful:", response.data);
+      console.log("POST request successful:", response.data);
     } catch (postError: any) {
-      console.error("Error making GET request:", postError);
+      console.error("Error making POST request:", postError);
     }
   };
 
@@ -126,7 +239,7 @@ export function BreedScreen() {
       >
         {data
           ? data.map((item, index) => (
-              <Pet key={index} name={item.name} image={item.image}></Pet>
+              <Pet key={index} name={item.name} image={item.petImg}></Pet>
             ))
           : null}
       </View>
@@ -147,7 +260,7 @@ export function BreedScreen() {
           height: "auto",
         }}
       >
-        <Pet name="Brown bear" image={PetAvatar}></Pet>
+        <ChildPet name={null} image={null}></ChildPet>
       </View>
 
       <View
@@ -176,7 +289,10 @@ export function BreedScreen() {
         <AwesomeButton
           style={{ justifyContent: "center", alignSelf: "center" }}
           onPress={() => {
-            breedFunction(null, null);
+            if (fatherPet.id && motherPet.id) {
+              breedFunction(fatherPet, motherPet);
+            }
+
             // navigate.navigate("DetailOfPet");
           }}
           width={225}
