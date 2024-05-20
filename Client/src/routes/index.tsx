@@ -134,7 +134,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Event">
+    <Stack.Navigator initialRouteName="Breed">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
