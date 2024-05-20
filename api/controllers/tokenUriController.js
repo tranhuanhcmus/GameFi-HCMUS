@@ -80,34 +80,10 @@ const updateById = async (req, res, next) => {
 	}
 };
 
-const breed = async (req, res, next) => {
-	console.log('req ', req.body.params);
-	const { fatherId, motherId } = req.body.params;
-
-	const fatherRecord = await models.TokenUri.findOne({
-		where: { id: fatherId },
-	});
-	const motherRecord = await models.TokenUri.findOne({
-		where: { id: motherId },
-	});
-
-	if (!fatherRecord || !motherRecord) {
-		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
-	}
-
-	console.log('father ', fatherRecord);
-	console.log('mother ', motherRecord);
-
-	// genetic.crossover
-	return res.sendResponse(`Add success`, STATUS_CODES.OK);
-	// const row = await models.TokenUri.findOne({ where: { id: id } });
-};
-
 module.exports = {
 	getAll,
 	getById,
 	add,
 	deleteById,
 	updateById,
-	breed,
 };

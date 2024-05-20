@@ -60,6 +60,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
       );
 
       const mappedData: NFTData[] = res.map((nft: NFT) => {
+        console.log("nft ", nft);
         return {
           id: nft.tokenid,
           element: ELEMENT.FIRE,

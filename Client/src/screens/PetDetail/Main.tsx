@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import AwesomeButton from "react-native-really-awesome-button";
-import Healthpoint from "../../../assets/Healthpoint.svg";
-import Pet from "../../../assets/Pet.png"; // TODO: CHANGE LATER
+import { Image, StyleSheet, View } from "react-native";
 import Damage from "../../../assets/Damage.svg";
+import Heart from "../../../assets/Healthpoint.svg";
+import Pet from "../../../assets/Pet.png";
+import Fire from "../../../assets/elements/Fire.png";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
-import { COLOR } from "../../utils/color";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
-import StatisticModal from "./StatisticModal";
+import { COLOR } from "../../utils/color";
+
 export default function DetailOfPet(props: any) {
   const [data, setData] = useState({ ...props.route.params });
+
   const [isStaticModalVisible, setIsStaticModalVisible] = useState(false);
   const navigate = useCustomNavigation();
   return (
@@ -22,73 +23,163 @@ export default function DetailOfPet(props: any) {
         display: "flex",
       }}
     >
-      <StatisticModal
-        isVisible={isStaticModalVisible}
-        setIsVisible={setIsStaticModalVisible}
-      />
-      <CustomText
+      <View
         style={{
-          fontSize: 40,
-          color: COLOR.YELLOW,
-          // fontFamily: "mrt-mid",
-          textAlign: "center",
-          marginTop: 20,
+          width: "100%",
+          height: "40%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          backgroundColor: COLOR.LIGHT_GREEN,
+          borderBottomLeftRadius: 10,
+          borderBottomRightRadius: 10,
         }}
       >
-        {data.name}
+        {data.petImg ? (
+          <Image source={{ uri: data.petImg }} alt="" style={styles.petImage} />
+        ) : (
+          <Image source={Pet} alt="" style={styles.petImage} />
+        )}
+      </View>
+      <CustomText
+        style={{
+          color: COLOR.YELLOW,
+          fontSize: 30,
+          fontWeight: "bold",
+          textAlign: "right",
+          paddingEnd: 10,
+        }}
+      >
+        {data.name ? data.name : "BROWN BEAR"}
       </CustomText>
 
-      <View style={[styles.petContainer, { marginBottom: 0, marginTop: 40 }]}>
-        <TouchableOpacity
-          onPress={() => {
-            setIsStaticModalVisible(true);
-          }}
-        >
-          <CustomText style={{ color: COLOR.WHITE }}>STATS</CustomText>
-        </TouchableOpacity>
-        <Image
-          source={data.petImg !== "" ? { uri: data.petImg } : { uri: Pet }}
-          alt=""
-          style={styles.petImage}
-        />
-      </View>
-
-      {/* Level */}
       <View
         style={[
           styles.levelContainer,
           {
             marginBottom: 10,
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "space-between",
             alignItems: "center",
-            paddingHorizontal: 100,
+            paddingHorizontal: 10,
+            marginVertical: 20,
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: ConstantsResponsive.MAX_HEIGHT / 30,
           },
         ]}
       >
-        <CustomText style={styles.levelTitle}>Level</CustomText>
-        <CustomText style={styles.levelTitle}>{data.level}</CustomText>
+        <CustomText
+          style={{ fontSize: 20, color: COLOR.WHITE, fontWeight: "bold" }}
+        >
+          Level {data.level ? data.level : 1}
+        </CustomText>
+        <View
+          style={{
+            width: "50%",
+            height: ConstantsResponsive.MAX_HEIGHT / 30,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <Image
+            source={Fire}
+            style={{
+              width: "20%",
+              aspectRatio: 1,
+            }}
+            // style={{
+            //   width: 10,
+            //   height: 10,
+            // }}
+          />
+          <CustomText
+            style={{ fontSize: 20, color: COLOR.WHITE, fontWeight: "bold" }}
+          >
+            {data.element ? data.element : "Fire"}
+          </CustomText>
+        </View>
       </View>
       <View
         style={{
-          marginTop: 60,
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: 50,
           display: "flex",
+          flexDirection: "row",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-around",
+          marginBottom: 10,
+          marginTop: 10,
         }}
       >
-        <AwesomeButton
-          onPress={() => {
-            navigate.navigate("Play");
-          }}
-          backgroundDarker={COLOR.DARK_YELLOW}
-          backgroundColor={COLOR.YELLOW}
-          width={80}
-          height={30}
-          borderRadius={40}
-        >
-          Back
-        </AwesomeButton>
+        <Heart></Heart>
+        <View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 5,
+            }}
+          >
+            <CustomText style={{ color: COLOR.WHITE, fontSize: 18 }}>
+              Healthpoint
+            </CustomText>
+            <CustomText style={{ color: COLOR.WHITE, fontSize: 18 }}>
+              {data.healthPoint ? data.healthPoint : 20}
+            </CustomText>
+          </View>
+          <View
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.8,
+              height: ConstantsResponsive.MAX_HEIGHT / 40,
+              backgroundColor: COLOR.RED,
+              borderRadius: 10,
+            }}
+          ></View>
+        </View>
+      </View>
+
+      <View
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: 50,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-around",
+          marginBottom: 10,
+          marginTop: 10,
+        }}
+      >
+        <Damage></Damage>
+        <View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 5,
+            }}
+          >
+            <CustomText style={{ color: COLOR.WHITE, fontSize: 18 }}>
+              Damage
+            </CustomText>
+            <CustomText style={{ color: COLOR.WHITE, fontSize: 18 }}>
+              {data.damage ? data.damage : 10}
+            </CustomText>
+          </View>
+          <View
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.8,
+              height: ConstantsResponsive.MAX_HEIGHT / 40,
+              backgroundColor: COLOR.CYAN,
+              borderRadius: 10,
+            }}
+          ></View>
+        </View>
       </View>
     </View>
   );

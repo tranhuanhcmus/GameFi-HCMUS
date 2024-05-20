@@ -194,22 +194,28 @@ export function BreedScreen() {
    */
 
   const breedFunction = async (father: any, mother: any) => {
-    father = { id: 1 };
-    mother = { id: 1 };
+    console.log("father", father);
+    console.log("mother ", mother);
+    console.log(`${URL}/bears/breed`);
+    if (!father || !mother) {
+      console.error("Invalid father or mother data for breeding");
+      return; // Or handle the error differently
+    }
+
     try {
-      const response = await axios.post(`${URL}/tokenUris/breed`, {
+      const response = await axios.post(`${URL}/bears/breed`, {
         headers: {
           "Content-Type": "application/json",
         },
         params: {
-          fatherId: father.id,
-          motherId: mother.id,
+          dad: father,
+          mom: mother,
         },
       });
 
-      console.log("GET request successful:", response.data);
+      console.log("POST request successful:", response.data);
     } catch (postError: any) {
-      console.error("Error making GET request:", postError);
+      console.error("Error making POST request:", postError);
     }
   };
 
@@ -283,7 +289,10 @@ export function BreedScreen() {
         <AwesomeButton
           style={{ justifyContent: "center", alignSelf: "center" }}
           onPress={() => {
-            breedFunction(null, null);
+            if (fatherPet.id && motherPet.id) {
+              breedFunction(fatherPet, motherPet);
+            }
+
             // navigate.navigate("DetailOfPet");
           }}
           width={225}
