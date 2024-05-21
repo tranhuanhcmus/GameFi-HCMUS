@@ -1,0 +1,22 @@
+@import '/src/common.scss';
+
+#header{
+	box-sizing: border-box;
+	padding: 28px 80px;
+	background-color: $gray22;
+	height: 90px;
+	.header_wrapper{
+		height: 100%;
+		width: 100%;
+		max-width: 1520px;
+		margin: auto;
+		display: flex;
+		gap: 24px;
+		align-items: center;
+	}
+	.logo{
+		height: 100%;
+		width: auto;
+		object-fit: contain;
+	}
+}
