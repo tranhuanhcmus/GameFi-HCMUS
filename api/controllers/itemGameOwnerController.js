@@ -19,7 +19,7 @@ const getById = async(req, res, next) => {
             return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
         }
 
-        return res.sendResponse(result, `Get ID ${id}  Success`, STATUS_CODES.OK)
+        return res.sendResponse(result, `Get ID ${id} Success`, STATUS_CODES.OK)
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
@@ -81,38 +81,41 @@ const deleteById = async(req, res, next) => {
     }
 }
 
-const add = async(req, res, next) => {
+const add = async (req, res, next) => {
     try {
-
-        const newRow = await models.ItemGameOwner.create(req.body)
-
-        return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
-
-
-    } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
-    }
-}
-const updateById = async(req, res, next) => {
-    try {
-
-        const { id } = req.params
-        const row = await models.ItemGameOwner.findOne({ where: { id: id } })
-
-        if (!row) {
-            return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
+        const rowData = req.body;
+        const row = await models.ItemGameOwner.findOne({ where: { id: rowData.id, owner: rowData.owner } });
+        if (row) {
+            return res.sendResponse(null, `User ${rowData.owner} already has Item ID ${rowData.id}`, STATUS_CODES.CONFLICT);
         } else {
-            const updateData = req.body
-            await row.update(updateData)
-            await row.reload()
-
-            return res.sendResponse(row, `Update ID ${id}  Success`, STATUS_CODES.OK)
+            const newRow = await models.ItemGameOwner.create(rowData);
+            return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK);
         }
-
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
+const updateById = async (req, res, next) => {
+    try {
+        const updateData = req.body;
+        
+        console.log("updateData: ", updateData.id);
+        
+        const row = await models.ItemGameOwner.findOne({ where: { id: updateData.id, owner: updateData.owner } });
+        
+        if (!row) {
+            return res.sendResponse(null, `Not Found ID ${updateData.id}`, STATUS_CODES.NOT_FOUND);
+        } else {
+            await row.update(updateData);
+            await row.reload();
+            
+            return res.sendResponse(row, `Update ID ${updateData.id} Success`, STATUS_CODES.OK);
+        }
+    } catch (error) {
+        return res.sendResponse(null, error.message || error, STATUS_CODES.INTERNAL_ERROR);
+    }
+};
+
 
 module.exports={
 	getAll,getById,add,deleteById,updateById,getByOwner

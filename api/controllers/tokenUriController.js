@@ -22,7 +22,7 @@ const getById = async (req, res, next) => {
 			);
 		}
 
-		return res.sendResponse(result, `Get ID ${id}  Success`, STATUS_CODES.OK);
+		return res.sendResponse(result, `Get ID ${id} Success`, STATUS_CODES.OK);
 	} catch (error) {
 		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
 	}
@@ -50,16 +50,23 @@ const deleteById = async (req, res, next) => {
 
 const add = async (req, res, next) => {
 	try {
-		const newRow = await models.TokenUri.create(req.body);
+		const rowData = req.body;
+        const row = await models.TokenUri.findOne({ where: { tokenUri: rowData.tokenUri } });
+        if (row) {
+            return res.sendResponse(null, `Token URI ${rowData.tokenUri} already exists in the database`, STATUS_CODES.CONFLICT);
+        } else {
+			const newRow = await models.TokenUri.create(req.body);
 
-		return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK);
+			return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK);
+        }
 	} catch (error) {
 		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
 	}
 };
 const updateById = async (req, res, next) => {
 	try {
-		const { id } = req.params;
+		const updateData = req.body;
+        const id = updateData.id;
 		const row = await models.TokenUri.findOne({ where: { id: id } });
 
 		if (!row) {
@@ -69,38 +76,15 @@ const updateById = async (req, res, next) => {
 				STATUS_CODES.NOT_FOUND
 			);
 		} else {
-			const updateData = req.body;
 			await row.update(updateData);
 			await row.reload();
 
-			return res.sendResponse(row, `Update ID ${id}  Success`, STATUS_CODES.OK);
+			return res.sendResponse(row, `Update ID ${id} Success`, STATUS_CODES.OK);
 		}
 	} catch (error) {
+		console.log("error: ", error)
 		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
 	}
-};
-
-const breed = async (req, res, next) => {
-	console.log('req ', req.body.params);
-	const { fatherId, motherId } = req.body.params;
-
-	const fatherRecord = await models.TokenUri.findOne({
-		where: { id: fatherId },
-	});
-	const motherRecord = await models.TokenUri.findOne({
-		where: { id: motherId },
-	});
-
-	if (!fatherRecord || !motherRecord) {
-		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
-	}
-
-	console.log('father ', fatherRecord);
-	console.log('mother ', motherRecord);
-
-	// genetic.crossover
-	return res.sendResponse(`Add success`, STATUS_CODES.OK);
-	// const row = await models.TokenUri.findOne({ where: { id: id } });
 };
 
 module.exports = {
@@ -109,5 +93,4 @@ module.exports = {
 	add,
 	deleteById,
 	updateById,
-	breed,
 };

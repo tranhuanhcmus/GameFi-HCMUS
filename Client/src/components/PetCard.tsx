@@ -25,6 +25,8 @@ interface PetCardProps {
   level: number;
   name: string;
   rarityPet: string;
+  isBreed: boolean; // CHECK IF THIS PET CHOOSE TO BREED
+  onPress: (item: any) => void;
 }
 
 const PetCard: React.FC<PetCardProps> = ({
@@ -33,19 +35,25 @@ const PetCard: React.FC<PetCardProps> = ({
   level,
   name,
   rarityPet,
+  isBreed,
+  onPress,
 }) => {
   const navigate = useCustomNavigation();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigate.navigate("DetailOfPet", {
-          petImg,
-          element,
-          level,
-          name,
-          rarityPet,
-        });
+        if (isBreed) {
+          onPress(null);
+        } else {
+          navigate.navigate("DetailOfPet", {
+            petImg,
+            element,
+            level,
+            name,
+            rarityPet,
+          });
+        }
       }}
     >
       <View
@@ -68,7 +76,7 @@ const PetCard: React.FC<PetCardProps> = ({
             <Egg></Egg>
             <CustomText
               style={{
-                fontFamily: "mt-2",
+                // fontFamily: "mt-2",
                 position: "absolute",
                 fontWeight: "bold",
                 fontSize: 16,
@@ -87,7 +95,7 @@ const PetCard: React.FC<PetCardProps> = ({
 
         <CustomText
           style={{
-            fontFamily: "mrt-mid",
+            // fontFamily: "mrt-mid",
             color: COLOR.WHITE,
             fontSize: 18,
             marginTop: 5,
@@ -97,7 +105,7 @@ const PetCard: React.FC<PetCardProps> = ({
         </CustomText>
         <CustomText
           style={{
-            fontFamily: "mrt-mid ",
+            // fontFamily: "mrt-mid ",
             color: COLOR.WHITE,
             fontSize: 14,
             fontWeight: "100",

@@ -40,17 +40,6 @@ export const ItemComponent: React.FC<ItemProps> = ({
   itemAmount,
   itemType,
 }) => {
-  useEffect(() => {
-    console.log({
-      itemImg,
-      itemColor,
-      price,
-      onPress,
-      imgPrice,
-      itemAmount,
-      itemType,
-    });
-  }, []);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -113,7 +102,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
         )}
         <Text
           style={{
-            fontFamily: "mt-2",
+            // fontFamily: "mt-2",
             color: COLOR.WHITE,
             fontSize: 15,
             fontWeight: "bold",
@@ -176,7 +165,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
         />
         <Text
           style={{
-            fontFamily: "mt-2",
+            // fontFamily: "mt-2",
             fontWeight: "bold",
             color: COLOR.WHITE,
             fontSize: 20,

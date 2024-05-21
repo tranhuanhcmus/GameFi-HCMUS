@@ -217,7 +217,7 @@ const ShopScreen = (props: Props) => {
           styles.playArea,
           {
             display: "flex",
-            height: ConstantsResponsive.MAX_HEIGHT,
+            height: ConstantsResponsive.MAX_HEIGHT * 0.8,
             width: ConstantsResponsive.MAX_WIDTH,
             flexDirection: "column",
             alignItems: "center",

@@ -11,6 +11,28 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     ItemAppOwner:
+ *       type: object
+ *       required:
+ *         - id
+ *         - owner
+ *         - quantity
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: Id of the item app
+ *         owner:
+ *           type: string
+ *           description: Owner of the item app
+ *         quantity:
+ *           type: integer
+ *           description: Quantity of the item app
+ */
+
+/**
+ * @swagger
  * /itemAppOwners/:
  *   get:
  *     summary: Get list of all item app owners
@@ -37,9 +59,18 @@ router.get('/', itemAppOwnerController.getAll);
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/ItemAppOwner'
+ *           examples:
+ *             example1:
+ *               summary: Example item app owner
+ *               value:
+ *                  id: "7dc748d5-de7d-4a76-9a58-62463ee7be14"
+ *                  owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"
+ *                  quantity: 9999
  *     responses:
  *       200:
  *         description: New item app owner added successfully
+ *       404:
+ *         description: The provided pair of item and owner already exists in the database
  *       500:
  *         description: Internal server error
  */
@@ -58,7 +89,7 @@ router.post('/', itemAppOwnerController.add);
  *         required: true
  *         description: ID of the item app owner to get information.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Information of the item app owner returned successfully
@@ -95,24 +126,24 @@ router.get('/owner/:owner', itemAppOwnerController.getByOwner);
 
 /**
  * @swagger
- * /itemAppOwners/{id}:
+ * /itemAppOwners/:
  *   put:
  *     summary: Update information of an item app owner by ID
  *     tags: [ItemAppOwner]
  *     description: Update information of an item app owner based on the provided ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the item app owner to update information.
- *         schema:
- *           type: integer
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/ItemAppOwner'
+ *           examples:
+ *             example1:
+ *               summary: Example item app owner
+ *               value:
+ *                  id: "7dc748d5-de7d-4a76-9a58-62463ee7be14"
+ *                  owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"
+ *                  quantity: 9999
  *     responses:
  *       200:
  *         description: Information of the item app owner updated successfully
@@ -121,7 +152,7 @@ router.get('/owner/:owner', itemAppOwnerController.getByOwner);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', itemAppOwnerController.updateById);
+router.put('/', itemAppOwnerController.updateById);
 
 /**
  * @swagger
@@ -136,7 +167,7 @@ router.put('/:id', itemAppOwnerController.updateById);
  *         required: true
  *         description: ID of the item app owner to delete.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Item app owner deleted successfully

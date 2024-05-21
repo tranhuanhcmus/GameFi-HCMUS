@@ -11,6 +11,62 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     TokenUri:
+ *       type: object
+ *       required:
+ *         - id
+ *         - tokenUri
+ *         - data
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: Unique identifier for the Token Uri
+ *         tokenUri:
+ *           type: string
+ *           description: Token URI of the Token Uri
+ *         data:
+ *           type: object
+ *           required:
+ *             - name
+ *             - type
+ *             - image
+ *             - title
+ *             - tokenId
+ *             - attributes
+ *             - description
+ *           properties:
+ *             name:
+ *               type: string
+ *               description: Name of the token
+ *             type:
+ *               type: string
+ *               description: Type of the token
+ *             image:
+ *               type: string
+ *               description: URL of the token image
+ *             title:
+ *               type: string
+ *               description: Title of the token
+ *             tokenId:
+ *               type: string
+ *               description: Token ID
+ *             attributes:
+ *               type: object
+ *               required:
+ *                 - type
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   description: Type attribute of the token
+ *             description:
+ *               type: string
+ *               description: Description of the token
+ */
+
+/**
+ * @swagger
  * /tokenUris/:
  *   get:
  *     summary: Get list of all token URIs
@@ -37,9 +93,22 @@ router.get('/', tokenUriController.getAll);
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/TokenUri'
+ *           example:
+ *               tokenUri: "https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/105.json"
+ *               data:
+ *                  name: "Harry's Dragon"
+ *                  type: "NFT"
+ *                  image: "https://images.nightcafe.studio/jobs/ZmXUlD3BXhjV4i4wnWka/ZmXUlD3BXhjV4i4wnWka--1--zv5e8.jpg?tr=w-1600,c-at_max"
+ *                  title: "Test"
+ *                  tokenId: "104"
+ *                  attributes:
+ *                      type: "Dragon"
+ *                  description: "This is a normal Dragon"
  *     responses:
  *       200:
  *         description: New token URI added successfully
+ *       404:
+ *         description: The provided Token URI already exists in the database
  *       500:
  *         description: Internal server error
  */
@@ -58,7 +127,7 @@ router.post('/', tokenUriController.add);
  *         required: true
  *         description: ID of the token URI to get information.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Information of the token URI returned successfully
@@ -71,24 +140,29 @@ router.get('/:id', tokenUriController.getById);
 
 /**
  * @swagger
- * /tokenUris/{id}:
+ * /tokenUris/:
  *   put:
  *     summary: Update information of a token URI by ID
  *     tags: [TokenUri]
  *     description: Update information of a token URI based on the provided ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the token URI to update information.
- *         schema:
- *           type: integer
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/TokenUri'
+ *           example:
+ *               id: 2
+ *               tokenUri: "https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/105.json"
+ *               data:
+ *                  name: "Harry's Dragon"
+ *                  type: "NFT"
+ *                  image: "https://images.nightcafe.studio/jobs/ZmXUlD3BXhjV4i4wnWka/ZmXUlD3BXhjV4i4wnWka--1--zv5e8.jpg?tr=w-1600,c-at_max"
+ *                  title: "Test"
+ *                  tokenId: "104"
+ *                  attributes:
+ *                      type: "Dragon"
+ *                  description: "This is a normal Dragon"
  *     responses:
  *       200:
  *         description: Information of the token URI updated successfully
@@ -97,7 +171,7 @@ router.get('/:id', tokenUriController.getById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', tokenUriController.updateById);
+router.put('/', tokenUriController.updateById);
 
 /**
  * @swagger
@@ -112,7 +186,7 @@ router.put('/:id', tokenUriController.updateById);
  *         required: true
  *         description: ID of the token URI to delete.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Token URI deleted successfully
@@ -122,6 +196,5 @@ router.put('/:id', tokenUriController.updateById);
  *         description: Internal server error
  */
 router.delete('/:id', tokenUriController.deleteById);
-router.post('/breed', tokenUriController.breed);
 
 module.exports = router;

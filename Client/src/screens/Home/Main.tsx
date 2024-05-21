@@ -185,7 +185,7 @@ const HomeScreen = () => {
       >
         <CustomText
           style={{
-            fontFamily: "mt-2",
+            // fontFamily: "mt-2",
             fontWeight: "bold",
             fontSize: 20,
             color: COLOR.WHITE,

@@ -8,6 +8,7 @@ import upperLayerSlice from "./uppLayerSlice";
 import playerSlice from "./playerSlice";
 import socketSlice from "./socketSlice";
 import hangManSlice from "./hangManSlice";
+import breedSlice from "./breedSlice";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     hangMan: hangManSlice,
     player: playerSlice,
     socket: socketSlice,
+    breed: breedSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
