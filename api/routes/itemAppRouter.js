@@ -126,18 +126,11 @@ router.get('/:id', itemAppController.getById);
 
 /**
  * @swagger
- * /itemApps/{id}:
+ * /itemApps/:
  *   put:
  *     summary: Update information of an item app by ID
  *     tags: [ItemApp]
  *     description: Update information of an item app based on the provided ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the item app to update information.
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -165,7 +158,7 @@ router.get('/:id', itemAppController.getById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', itemAppController.updateById);
+router.put('/', itemAppController.updateById);
 
 /**
  * @swagger

@@ -127,18 +127,11 @@ router.get('/:id', itemGameController.getById);
 
 /**
  * @swagger
- * /itemGames/{id}:
+ * /itemGames/:
  *   put:
  *     summary: Update information of an item game by ID
  *     tags: [ItemGame]
  *     description: Update information of an item game based on the provided ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the item game to update information.
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -166,7 +159,7 @@ router.get('/:id', itemGameController.getById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', itemGameController.updateById);
+router.put('/', itemGameController.updateById);
 
 /**
  * @swagger

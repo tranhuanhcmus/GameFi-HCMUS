@@ -107,6 +107,8 @@ router.get('/', tokenUriController.getAll);
  *     responses:
  *       200:
  *         description: New token URI added successfully
+ *       404:
+ *         description: The provided Token URI already exists in the database
  *       500:
  *         description: Internal server error
  */
@@ -138,18 +140,11 @@ router.get('/:id', tokenUriController.getById);
 
 /**
  * @swagger
- * /tokenUris/{id}:
+ * /tokenUris/:
  *   put:
  *     summary: Update information of a token URI by ID
  *     tags: [TokenUri]
  *     description: Update information of a token URI based on the provided ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the token URI to update information.
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -157,7 +152,7 @@ router.get('/:id', tokenUriController.getById);
  *           schema:
  *             $ref: '#/components/schemas/TokenUri'
  *           example:
- *               id: 1
+ *               id: 2
  *               tokenUri: "https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/105.json"
  *               data:
  *                  name: "Harry's Dragon"
@@ -176,7 +171,7 @@ router.get('/:id', tokenUriController.getById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', tokenUriController.updateById);
+router.put('/', tokenUriController.updateById);
 
 /**
  * @swagger

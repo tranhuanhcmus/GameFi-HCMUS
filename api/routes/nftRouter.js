@@ -107,18 +107,11 @@ router.get('/:id', nftController.getById);
 
 /**
  * @swagger
- * /nfts/{id}:
+ * /nfts/:
  *   put:
  *     summary: Update information of a NFT by ID
  *     tags: [NFT]
  *     description: Updates information of a NFT based on the provided ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the NFT to update information.
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -141,7 +134,7 @@ router.get('/:id', nftController.getById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', nftController.updateById);
+router.put('/', nftController.updateById);
 
 /**
  * @swagger

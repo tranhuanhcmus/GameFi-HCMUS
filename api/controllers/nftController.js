@@ -86,18 +86,18 @@ const add = async(req, res, next) => {
 }
 const updateById = async(req, res, next) => {
     try {
-
-        const { id } = req.params
-        const row = await models.NFT.findOne({ where: { tokenId: id } })
+        const updateData = req.body;
+        const tokenId = updateData.tokenId;
+        console.log(tokenId)
+        const row = await models.NFT.findOne({ where: { tokenId: tokenId } })
 
         if (!row) {
-            return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
+            return res.sendResponse(null, `Not Found ID ${tokenId} `, STATUS_CODES.NOT_FOUND)
         } else {
-            const updateData = req.body
             await row.update(updateData)
             await row.reload()
 
-            return res.sendResponse(row, `Update ID ${id} Success`, STATUS_CODES.OK)
+            return res.sendResponse(row, `Update ID ${tokenId} Success`, STATUS_CODES.OK)
         }
 
     } catch (error) {
