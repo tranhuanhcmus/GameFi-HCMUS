@@ -1,0 +1,67 @@
+@import '/src/common.scss';
+
+.home_page {
+	display: flex;
+	flex-direction: column;
+	gap: 60px;
+
+	.hot_section {
+		.section__body {
+			display: flex;
+			gap: 20px 40px;
+			flex-wrap: wrap;
+
+		}
+	}
+
+	.hot_nft {
+		display: flex;
+		gap: 16px;
+		align-self: center;
+		height: 80px;
+		width: 300px;
+		
+		cursor: pointer;
+		background-color: $black;
+		transition: all 0.2s ease;
+		border-radius: 12px;
+		padding: 16px;
+		overflow: hidden;
+		box-sizing: border-box;
+		.hot_nft__image {
+			height: 100%;
+
+			img {
+				height: 100%;
+				width: auto;
+				object-fit: contain;
+			}
+		}
+
+		.hot_nft__info_wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+			justify-content: center;
+
+			.name {
+				font-weight: 700;
+				font-size: 18px;
+			}
+
+			.price {
+				font-weight: 600;
+				font-size: 14px;
+				color: $gray16;
+
+				&::before {
+					content: '$';
+				}
+			}
+		}
+
+		&:hover {
+			background-color: $gray23;
+		}
+	}
+}

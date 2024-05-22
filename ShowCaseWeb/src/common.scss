@@ -1,31 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sora:wght@100..800&display=swap');
 
 $white: #FFFFFF;
-$gray1:#F3F5F7;
-$gray2:#E7EBEF;
-$gray3:#DAE0E7;
-$gray4:#CED6DF;
-$gray5:#C1CBD7;
-$gray6:#B4C0CF;
-$gray7:#A8B6C7;
-$gray8:#9BACBF;
-$gray9:#8FA2B7;
-$gray10:#8398AF;
-$gray11:#768EA7;
-$gray12:#6A84A0;
-$gray13:#5F7A95;
-$gray14:#587089;
-$gray15:#50657C;
-$gray16:#485B70;
-$gray17:#405064;
-$gray18:#384657;
-$gray19:#303C4B;
-$gray20:#28323E;
-$gray21:#202832;
-$gray22:#181E25;
-$gray23:#101419;
-$gray24:#080A0C;
-$black:#000;
+$gray1: #F3F5F7;
+$gray2: #E7EBEF;
+$gray3: #DAE0E7;
+$gray4: #CED6DF;
+$gray5: #C1CBD7;
+$gray6: #B4C0CF;
+$gray7: #A8B6C7;
+$gray8: #9BACBF;
+$gray9: #8FA2B7;
+$gray10: #8398AF;
+$gray11: #768EA7;
+$gray12: #6A84A0;
+$gray13: #5F7A95;
+$gray14: #587089;
+$gray15: #50657C;
+$gray16: #485B70;
+$gray17: #405064;
+$gray18: #384657;
+$gray19: #303C4B;
+$gray20: #28323E;
+$gray21: #202832;
+$gray22: #181E25;
+$gray23: #101419;
+$gray24: #080A0C;
+$black: #000;
 $primary1: #D8EEFF;
 $primary2: #B1DBFF;
 $primary3: #8AC4FF;
@@ -36,11 +36,193 @@ $primary7: #1E50B7;
 $primary8: #133893;
 
 
-html{
+html {
 	font-size: 16px;
-	font-family: "Sora","Inter", sans-serif;
+	font-family: "Sora", "Inter", sans-serif;
 	font-optical-sizing: auto;
 	font-weight: 500;
 	font-style: normal;
 	color: $white;
+	background-color: $black;
+}
+
+.notification_button {
+	img {
+		height: 24px;
+		width: 24px;
+		object-fit: contain;
+	}
+
+	box-sizing: border-box;
+	height: 40px;
+	width: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all .2s ease;
+}
+
+.wallet_button {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+
+	.network_button {
+		background-color: $gray21;
+		display: flex;
+		flex-direction: row;
+		gap: 5px;
+		align-items: center;
+	}
+
+	.account_button {
+		box-sizing: border-box;
+		height: 40px;
+		width: 40px;
+		border-radius: 50%;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 2px solid transparent;
+		cursor: pointer;
+		transition: all .2s ease-in;
+
+		&:hover {
+			border: 2px solid $primary4;
+		}
+
+		img {
+			height: 100%;
+			width: auto;
+			object-fit: contain;
+		}
+	}
+}
+
+.primary_button {
+	box-sizing: border-box;
+	padding: 8px 16px;
+	border-radius: 12px;
+	background-color: $primary5;
+	transition: all .2s ease;
+	cursor: pointer;
+	color: #fff;
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 24px;
+
+	&:hover {
+		background-color: $primary6;
+	}
+}
+
+.page_wrapper {
+	height: 200vh;
+	padding: 60px 80px ;
+}
+
+.page {
+	max-width: 1520px;
+	margin: auto;
+	.section{
+		width: 100%;
+		overflow: auto;
+		.section__header{
+			margin-bottom: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			.section__header__detail{
+				font-size: 14px;
+				font-weight: 700;
+				color: $primary7;
+				cursor: pointer;
+			}
+		}
+		.section__title{
+			font-weight: 700;
+			font-size: 32px;
+		}
+	}
+	.carousel_section{
+		height: 350px;
+		display: flex;
+		flex-direction: row;
+		gap: 40px;
+		align-items: center;
+		img{
+			flex: 1;
+			min-width: 200px;
+			height: auto;
+			object-fit: contain;
+		}
+
+	}
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	100% {
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
+
+
+
+@keyframes fadeOut {
+	0% {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	100% {
+		visibility: hidden;
+		opacity: 0;
+	}
+}
+
+@keyframes slideInLTR {
+	0% {
+		visibility: hidden;
+		opacity: 0;
+		transform: translateX(-30px);
+	}
+
+	100% {
+		visibility: visible;
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes slideInRTL {
+	0% {
+		visibility: hidden;
+		opacity: 0;
+		transform: translateX(30px);
+	}
+
+	100% {
+		visibility: visible;
+		opacity: 1;
+		transform: translateX(0);
+	}
 }
