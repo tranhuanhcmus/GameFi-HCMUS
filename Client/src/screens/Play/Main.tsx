@@ -38,7 +38,8 @@ const petArray: NFTData[] = [
 ];
 
 const PlayScreen: React.FC<Props> = (props: any) => {
-  const { isBreed } = props.route.params;
+  const [isBreed, setIsBreed] = useState(props.route.params);
+  // const { isBreed } = props.route.params;
   const [data, setData] = useState<NFTData[]>(petArray);
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
