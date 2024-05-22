@@ -29,6 +29,7 @@ import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
 import LoadingModal from "../../components/Game/LoadingModal";
 import ChooseGameModal from "./ChooseGameModal";
+import Damage from "../../../assets/Damage.svg";
 type Props = {};
 
 const HomeScreen = () => {
@@ -143,9 +144,51 @@ const HomeScreen = () => {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
       />
-
-      <View style={styles.playArea} className="relative  ">
-        <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
+      <View
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: "auto",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          marginTop: ConstantsResponsive.MAX_WIDTH * 0.25,
+          paddingEnd: 5,
+        }}
+      >
+        <View style={{ zIndex: 99 }}>
+          <Damage />
+        </View>
+        <View
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH * 0.2,
+            height: ConstantsResponsive.MAX_HEIGHT * 0.05,
+            backgroundColor: COLOR.DARKER_PURPLE,
+            marginLeft: -20,
+            borderRadius: 15,
+            justifyContent: "center",
+          }}
+        >
+          <CustomText
+            style={{
+              color: COLOR.WHITE,
+              textAlign: "center",
+              fontSize: 15,
+              fontWeight: "bold",
+            }}
+          >
+            10
+          </CustomText>
+        </View>
+      </View>
+      <View
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: "auto",
+          marginTop: 10,
+        }}
+      >
+        <View style={{ display: "flex", alignItems: "center" }}>
           <TouchableNativeFeedback onPress={() => play("walk")}>
             <View
               style={{
@@ -180,7 +223,6 @@ const HomeScreen = () => {
           flexDirection: "row",
           alignItems: "center",
           height: 150,
-          marginTop: 10,
         }}
       >
         <CustomText
@@ -198,8 +240,16 @@ const HomeScreen = () => {
         </View>
       </View>
       <View
-        className=" flex flex-row  justify-between"
-        style={styles.labelButton}
+        style={{
+          height: "auto",
+          width: ConstantsResponsive.MAX_WIDTH,
+          top: -30,
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "center",
+          justifyContent: "space-between",
+          paddingHorizontal: ConstantsResponsive.MAX_WIDTH * 0.03,
+        }}
       >
         <AwesomeButton
           // onPress={() => {
@@ -212,8 +262,8 @@ const HomeScreen = () => {
           }}
           backgroundDarker={COLOR.DARKER_PURPLE}
           backgroundColor={COLOR.DARKER_PURPLE}
-          width={100}
-          height={60}
+          width={ConstantsResponsive.MAX_WIDTH * 0.4}
+          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
           borderRadius={15}
         >
           <Text style={[styles.textSize, { color: COLOR.WHITE }]}>
@@ -229,8 +279,8 @@ const HomeScreen = () => {
           // }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
-          width={170}
-          height={60}
+          width={ConstantsResponsive.MAX_WIDTH * 0.5}
+          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
           borderRadius={15}
         >
           <Text style={styles.textSize}>PLAY</Text>
