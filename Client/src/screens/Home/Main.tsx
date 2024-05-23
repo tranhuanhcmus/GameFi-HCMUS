@@ -135,11 +135,11 @@ const HomeScreen = () => {
         isVisible={isInventoryModalVisible}
         setIsVisible={setIsInventoryModalVisible}
       />
-      {/* <Image
+      <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
-        source={require("../../../assets/BackGround.png")}
-      /> */}
+        source={require("../../../assets/background2.jpg")}
+      />
       <LoadingModal
         gameName={gameName}
         isVisible={isVisible}

@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Modal,
 } from "react-native";
 import { COLOR } from "../../utils/color";
 import ConstantsResponsive from "../../constants/Constanst";
@@ -28,128 +29,130 @@ const ChooseGameModal = ({
   useEffect(() => {}, [isVisible]);
 
   return isVisible ? (
-    <View
-      style={{
-        width: ConstantsResponsive.MAX_WIDTH,
-        height: ConstantsResponsive.MAX_HEIGHT,
-        backgroundColor: COLOR.PURPLE,
-        position: "absolute",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        zIndex: 99,
-        paddingVertical: 50,
-      }}
-    >
+    <Modal animationType="slide" transparent={true} visible={isVisible}>
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
-          height: "auto",
-          flexDirection: "row",
-          justifyContent: "flex-end",
+          height: ConstantsResponsive.MAX_HEIGHT,
+          backgroundColor: COLOR.PURPLE,
+          position: "absolute",
+          display: "flex",
+          justifyContent: "space-between",
           alignItems: "center",
+          zIndex: 99,
+          paddingVertical: 50,
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            // TODO
-            console.log("Close this modal pls");
-          }}
-        >
-          <CloseButton></CloseButton>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: "auto",
-        }}
-      >
-        <CustomText
-          style={{ color: COLOR.WHITE, fontSize: 30, textAlign: "center" }}
-        >
-          CHOOSE GAME
-        </CustomText>
-      </View>
-      <ScrollView
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          flexGrow: 1,
-        }}
-      >
-        {/* ROW OF 2 GAMES */}
         <View
           style={{
             width: ConstantsResponsive.MAX_WIDTH,
             height: "auto",
-            display: "flex",
             flexDirection: "row",
+            justifyContent: "flex-end",
             alignItems: "center",
-            justifyContent: "space-around",
-            marginTop: 10,
+            paddingEnd: 10,
           }}
         >
-          <View>
-            <View style={{ width: 150, height: 180, borderRadius: 10 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsVisible(false);
-                }}
-                style={{ flex: 1 }}
-              >
-                <Image
-                  source={DiamondGameBg}
-                  style={{
-                    flex: 1,
-                    width: null,
-                    height: null,
-                    resizeMode: "cover",
-                    borderRadius: 10,
-                  }}
-                ></Image>
-              </TouchableOpacity>
-            </View>
-            <CustomText
-              style={{ color: COLOR.WHITE, fontSize: 20, marginTop: 5 }}
-            >
-              Diamond crash
-            </CustomText>
-            <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
-              1,0000
-            </CustomText>
-          </View>
-          <View>
-            <View style={{ width: 150, height: 180, borderRadius: 10 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsVisible(false);
-                }}
-                style={{ flex: 1 }}
-              >
-                <Image
-                  source={HangmanBg}
-                  style={{
-                    flex: 1,
-                    width: null,
-                    height: null,
-                    resizeMode: "cover",
-                    borderRadius: 10,
-                  }}
-                ></Image>
-              </TouchableOpacity>
-            </View>
-            <CustomText
-              style={{ color: COLOR.WHITE, fontSize: 20, marginTop: 5 }}
-            >
-              Hangman
-            </CustomText>
-            <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
-              1,512
-            </CustomText>
-          </View>
+          <TouchableOpacity
+            onPress={() => {
+              setIsVisible(false);
+            }}
+          >
+            <CloseButton></CloseButton>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-    </View>
+        <View
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: "auto",
+          }}
+        >
+          <CustomText
+            style={{ color: COLOR.WHITE, fontSize: 30, textAlign: "center" }}
+          >
+            CHOOSE GAME
+          </CustomText>
+        </View>
+        <ScrollView
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH,
+            flexGrow: 1,
+          }}
+        >
+          {/* ROW OF 2 GAMES */}
+          <View
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH,
+              height: "auto",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              marginTop: 10,
+            }}
+          >
+            <View>
+              <View style={{ width: 150, height: 180, borderRadius: 10 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsVisible(false);
+                  }}
+                  style={{ flex: 1 }}
+                >
+                  <Image
+                    source={DiamondGameBg}
+                    style={{
+                      flex: 1,
+                      width: null,
+                      height: null,
+                      resizeMode: "cover",
+                      borderRadius: 10,
+                    }}
+                  ></Image>
+                </TouchableOpacity>
+              </View>
+              <CustomText
+                style={{ color: COLOR.WHITE, fontSize: 20, marginTop: 5 }}
+              >
+                Diamond crash
+              </CustomText>
+              <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
+                1,0000
+              </CustomText>
+            </View>
+            <View>
+              <View style={{ width: 150, height: 180, borderRadius: 10 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsVisible(false);
+                  }}
+                  style={{ flex: 1 }}
+                >
+                  <Image
+                    source={HangmanBg}
+                    style={{
+                      flex: 1,
+                      width: null,
+                      height: null,
+                      resizeMode: "cover",
+                      borderRadius: 10,
+                    }}
+                  ></Image>
+                </TouchableOpacity>
+              </View>
+              <CustomText
+                style={{ color: COLOR.WHITE, fontSize: 20, marginTop: 5 }}
+              >
+                Hangman
+              </CustomText>
+              <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
+                1,512
+              </CustomText>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </Modal>
   ) : null;
 };
 

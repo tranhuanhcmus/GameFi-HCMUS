@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import PetCard from "../../components/PetCard";
 import ConstantsResponsive from "../../constants/Constanst";
@@ -95,6 +101,15 @@ const PlayScreen: React.FC<Props> = (props: any) => {
   };
   return (
     <View style={styles.backgroundImage} className="bg-[#210035]">
+      <Image
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: ConstantsResponsive.MAX_HEIGHT,
+          position: "absolute",
+        }}
+        resizeMode="stretch"
+        source={require("../../../assets/background2.jpg")}
+      />
       <View
         style={styles.playArea}
         className="h-[90%] w-[100%] items-center justify-center "

@@ -17,7 +17,7 @@ import woodSign from "../../../assets/WoodSign3.png";
 import { flare } from "viem/chains";
 import { COLOR } from "../../utils/color";
 import Lucky from "../../../assets/medicine.png";
-import Medicine from "../../../assets/Medicine.svg";
+import Medicine from "../../../assets/medicine.svg";
 type Props = {};
 const itemArray = [
   {
@@ -217,6 +217,11 @@ const ShopScreen = (props: Props) => {
         backgroundColor: COLOR.PURPLE,
       }}
     >
+      <Image
+        style={styles.backgroundImage}
+        resizeMode="stretch"
+        source={require("../../../assets/background2.jpg")}
+      />
       <AlertBuyComponent
         isVisible={clickItem}
         onClose={onSetClose}
@@ -263,7 +268,6 @@ const ShopScreen = (props: Props) => {
                     style={[
                       styles.positionText,
                       {
-                        fontFamily: "mt-2",
                         fontSize: 20,
                         color: COLOR.WHITE,
                         fontWeight: "bold",
