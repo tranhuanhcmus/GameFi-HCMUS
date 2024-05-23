@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -19,17 +19,16 @@ import { selectUser } from "../../redux/userSlice";
 
 import AwesomeButton from "react-native-really-awesome-button";
 import SpriteSheet from "rn-sprite-sheet";
-import Damage from "../../../assets/Damage.svg";
+import Damage from "../../../assets/damage.svg";
 import LoadingModal from "../../components/Game/LoadingModal";
 import { COLOR } from "../../utils/color";
-import ChooseGameModal from "./ChooseGameModal";
-<<<<<<< HEAD
+
 import { useIsFocused } from "@react-navigation/native";
-=======
 import Coin from "../../../assets/coin.svg";
 import Inventory from "../../../assets/inventory.svg";
+import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
->>>>>>> refs/remotes/origin/game-screen-creation
+
 type Props = {};
 
 const HomeScreen = () => {
@@ -185,31 +184,26 @@ const HomeScreen = () => {
             100
           </CustomText>
         </View>
+      </View>
 
-<<<<<<< HEAD
       <View style={styles.playArea} className="relative  ">
         <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
-          <View
-            style={{
-              transform: [{ translateX: offsetX }, { translateY: offsetY }],
-              marginBottom: ConstantsResponsive.YR * 30,
+          <SpriteSheet
+            ref={mummyRef}
+            source={require("../../../assets/spritesheet_5.png")}
+            columns={21}
+            rows={1}
+            height={
+              ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 3 * 250
+            }
+            animations={{
+              walk: [
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18, 19, 20,
+              ],
             }}
-          >
-            <SpriteSheet
-              ref={mummyRef}
-              source={require("../../../assets/spritesheet_5.png")}
-              columns={21}
-              rows={1}
-              height={
-                ConstantsResponsive.MAX_HEIGHT -
-                ConstantsResponsive.YR * 3 * 250
-              }
-              animations={{
-                walk: [
-                  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                  18, 19, 20,
-                ],
-=======
+          ></SpriteSheet>
+        </View>
         <View
           style={{
             display: "flex",
@@ -255,19 +249,7 @@ const HomeScreen = () => {
           height: "auto",
           marginTop: 10,
         }}
-      >
-        <View style={{ display: "flex", alignItems: "center" }}>
-          <TouchableNativeFeedback onPress={() => play("walk")}>
-            <View
-              style={{
-                transform: [{ translateX: offsetX }, { translateY: offsetY }],
-                marginBottom: ConstantsResponsive.YR * 30,
->>>>>>> refs/remotes/origin/game-screen-creation
-              }}
-            />
-          </View>
-        </View>
-      </View>
+      ></View>
 
       <View
         style={{

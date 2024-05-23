@@ -4,7 +4,7 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import GameSettings from "../screens/Setting/Main";
+
 import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SVGBird from "../../assets/SVGBird.svg";
@@ -220,7 +220,6 @@ const Route = () => (
     </Stack.Navigator>
     <AlertComponent />
     <LoadingComponent />
-    <GameSettings />
   </NavigationContainer>
 );
 

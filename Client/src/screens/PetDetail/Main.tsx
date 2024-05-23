@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import Damage from "../../../assets/Damage.svg";
+import Damage from "../../../assets/damage.svg";
 import Heart from "../../../assets/Healthpoint.svg";
 import Pet from "../../../assets/Pet.png";
 import Fire from "../../../assets/elements/Fire.png";

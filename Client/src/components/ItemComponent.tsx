@@ -12,7 +12,7 @@ import useCustomNavigation from "../hooks/useCustomNavigation";
 import ConstantsResponsive from "../constants/Constanst";
 import Medicine from "../../assets/Medicine.svg";
 import { LinearGradient } from "expo-linear-gradient";
-import Coin from "../../assets/Coin.svg";
+import Coin from "../../assets/coin.svg";
 import medi from "../../assets/medicine.png";
 import { COLOR } from "../utils/color";
 import { height, width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
