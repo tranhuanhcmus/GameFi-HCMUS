@@ -1,5 +1,6 @@
 import { StyleSheet, View, SafeAreaView } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { CommonActions } from "@react-navigation/native";
 import Header from "./Header";
 import ManFigure from "./ManFigure";
 import WordBox from "./WordBox";
@@ -13,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateHp } from "../../redux/playerSlice";
 import TimingLine from "./TimingLine";
 import { SocketIOClient } from "../../../socket";
+import { Animated } from "react-native";
 import {
   updateComponentHp,
   setComponentHp,
@@ -21,13 +23,22 @@ import {
 import { updateTurn } from "../../redux/hangManSlice";
 import { swapTurn } from "../../redux/hangManSlice";
 import { DataSocketTransfer } from "../../../socket";
+import { useIsFocused } from "@react-navigation/native";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
+import GameSettings from "../../components/GameSetting";
+import { setVisable } from "../../redux/settingGameSlice";
+import { Audio } from "expo-av";
+import useAudioPlayer from "../../hooks/useMusicPlayer";
 
 const index = () => {
   const { hp, componentHp, gameRoom } = useSelector(
     (state: any) => state.player,
   );
   const { turn, damage } = useSelector((state: any) => state.hangMan);
+
+  const { isVisable, sound, music } = useSelector(
+    (state: any) => state.settingGame,
+  );
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
   const socket = SocketIOClient.getInstance();
@@ -36,33 +47,29 @@ const index = () => {
   const [status, setStatus] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timing, setTiming] = useState(30);
-  const [countDamage, setCountDamage] = useState<number>(0);
+  const [gameOver, setGameOver] = useState(false);
+  const isFocused = useIsFocused();
+  const soundGame = new Audio.Sound();
 
   const correctWord = WordsArray[currentIndex].answer;
 
+  const handleDamage = useCallback((data: DataSocketTransfer) => {
+    if (data?.event == "Defeat") {
+      setStatus("Defeat");
+    } else if (data?.event == "Victory") {
+      setStatus("Victory");
+    } else {
+      console.log(data.damage);
+      dispatch(updateHp(data.damage));
+      setCurrentIndex(data.table);
+    }
+  }, []);
+
   useEffect(() => {
-    socket.onListenFirstTurn((data) => {
-      dispatch(updateTurn(data));
-    });
-
-    const handleDamage = (data: DataSocketTransfer) => {
-      if (data?.event == "Defeat") {
-        setStatus("Defeat");
-      } else if (data?.event == "Victory") {
-        setStatus("Victory");
-      } else {
-        console.log(data.damage);
-        dispatch(updateHp(data.damage));
-        setCurrentIndex(data.table);
-      }
-    };
-
-    socket.onListenTakeDamage(handleDamage);
-
-    return () => {
-      socket.removeListenTakeDamage(handleDamage);
-    };
-  }, [socket]);
+    if (status == "Defeat" || status == "Victory") {
+      setGameOver(true);
+    }
+  }, [status]);
 
   const storeCorrectLetters = (keyInput: string) => {
     const ans = correctWord.toUpperCase();
@@ -144,7 +151,8 @@ const index = () => {
     dispatch(setHp(40));
     dispatch(updateTurn(false));
     socket.emitSuccess(gameRoom);
-
+    socket.removeListenFristTurn();
+    socket.removeListenTakeDamage();
     navigate.navigate("MainTab");
   };
 
@@ -154,14 +162,31 @@ const index = () => {
     setStatus("");
 
     dispatch(swapTurn());
-
-    if (status === "Defeat" || status === "Victory") {
-      setTiming(0);
-    }
   };
+  const handleCloseModal = () => {
+    dispatch(setVisable(false));
+  };
+
+  useAudioPlayer(sound);
+
+  useEffect(() => {
+    socket.onListenFirstTurn((data) => {
+      console.log(data);
+      dispatch(updateTurn(data));
+    });
+
+    socket.onListenTakeDamage(handleDamage);
+
+    return () => {
+      // Remove the event listeners:
+      socket.removeListenFristTurn();
+      socket.removeListenTakeDamage();
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
+      <GameSettings isVisible={isVisable} onClose={handleCloseModal} />
       <View style={styles.playArea}>
         {/* <View style={styles.row}>
           <ManFigure wrongWord={wrongLetters.length} />
@@ -170,7 +195,9 @@ const index = () => {
           <Header></Header>
         </View>
         <TimingLine
+          gameOver={gameOver}
           turn={turn}
+          leaveScreen={!isFocused}
           duration={timing}
           onCompletion={handleEndTime}
         />

@@ -29,6 +29,7 @@ import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
 import LoadingModal from "../../components/Game/LoadingModal";
 import ChooseGameModal from "./ChooseGameModal";
+import { useIsFocused } from "@react-navigation/native";
 type Props = {};
 
 const HomeScreen = () => {
@@ -40,6 +41,7 @@ const HomeScreen = () => {
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
   const [offsetX, setOffsetX] = useState<number>(0);
+  const isFocused = useIsFocused();
   const [offsetY, setOffsetY] = useState<number>(0);
   const [gameName, setGameName] = useState<string>("");
   const [fps, setFps] = useState<string>("2");
@@ -110,12 +112,14 @@ const HomeScreen = () => {
   //     dispatch(setAddress(address));
   //   }
   // }, [isConnected]);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setOffsetX((prevOffsetX) => prevOffsetX + 50); // Update offsetX every interval
-  //   }, 1000); // Change the interval as needed for desired animation speed
-  // }, []);
+  useEffect(() => {
+    if (isFocused) {
+      play("walk");
+    } else {
+      // Optional: stop the animation when the screen is not focused
+      stop();
+    }
+  }, [isFocused]);
 
   return (
     <View
@@ -146,31 +150,29 @@ const HomeScreen = () => {
 
       <View style={styles.playArea} className="relative  ">
         <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
-          <TouchableNativeFeedback onPress={() => play("walk")}>
-            <View
-              style={{
-                transform: [{ translateX: offsetX }, { translateY: offsetY }],
-                marginBottom: ConstantsResponsive.YR * 30,
+          <View
+            style={{
+              transform: [{ translateX: offsetX }, { translateY: offsetY }],
+              marginBottom: ConstantsResponsive.YR * 30,
+            }}
+          >
+            <SpriteSheet
+              ref={mummyRef}
+              source={require("../../../assets/spritesheet_5.png")}
+              columns={21}
+              rows={1}
+              height={
+                ConstantsResponsive.MAX_HEIGHT -
+                ConstantsResponsive.YR * 3 * 250
+              }
+              animations={{
+                walk: [
+                  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                  18, 19, 20,
+                ],
               }}
-            >
-              <SpriteSheet
-                ref={mummyRef}
-                source={require("../../../assets/spritesheet_5.png")}
-                columns={21}
-                rows={1}
-                height={
-                  ConstantsResponsive.MAX_HEIGHT -
-                  ConstantsResponsive.YR * 3 * 250
-                }
-                animations={{
-                  walk: [
-                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-                    17, 18, 19, 20,
-                  ],
-                }}
-              />
-            </View>
-          </TouchableNativeFeedback>
+            />
+          </View>
         </View>
       </View>
 
@@ -202,14 +204,14 @@ const HomeScreen = () => {
         style={styles.labelButton}
       >
         <AwesomeButton
-          // onPress={() => {
-          //   if (!isVisible) setIsVisible(true);
-          //   setGameName("HangManGame");
-          //   socket.emitFindMatch("HangManGame");
-          // }}
           onPress={() => {
-            setIsChooseGameModalVisible(true);
+            if (!isVisible) setIsVisible(true);
+            setGameName("HangManGame");
+            socket.emitFindMatch("HangManGame");
           }}
+          // onPress={() => {
+          //   setIsChooseGameModalVisible(true);
+          // }}
           backgroundDarker={COLOR.DARKER_PURPLE}
           backgroundColor={COLOR.DARKER_PURPLE}
           width={100}

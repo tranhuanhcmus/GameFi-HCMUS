@@ -17,6 +17,7 @@ import CustomText from "../../components/CustomText";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
 import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
+
 const ChooseGameModal = ({
   isVisible,
   setIsVisible,

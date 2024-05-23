@@ -19,7 +19,6 @@ const hangManSlice = createSlice({
   reducers: {
     updateTurn(state, action) {
       state.turn = action.payload;
-      return state;
     },
     swapTurn(state) {
       state.turn = !state.turn;
