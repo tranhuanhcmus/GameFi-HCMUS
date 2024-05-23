@@ -95,11 +95,6 @@ const PlayScreen: React.FC<Props> = (props: any) => {
   };
   return (
     <View style={styles.backgroundImage} className="bg-[#210035]">
-      <CustomText
-        style={{ color: COLOR.WHITE, fontSize: 30, textAlign: "center" }}
-      >
-        PACK
-      </CustomText>
       <View
         style={styles.playArea}
         className="h-[90%] w-[100%] items-center justify-center "
@@ -124,7 +119,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
               level={item.level}
               name={item.name}
               rarityPet={item.rarityPet}
-              isBreed={true}
+              isBreed={isBreed}
               onPress={() => onPress(item)}
             ></PetCard>
           )}
