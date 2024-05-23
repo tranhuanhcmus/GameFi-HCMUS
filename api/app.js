@@ -15,6 +15,7 @@ const {
   itemGameOwnerRouter, 
   itemAppOwnerRouter, 
   adminRouter, 
+  hangmanRouter,
   bearRouter,
   elementPoolRouter,
   eyePoolRouter,
@@ -42,6 +43,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Routes
 app.use('/user', userRouter);
+app.use('/hangmans', hangmanRouter);
 app.use('/bears', bearRouter);
 app.use('/eyes', eyePoolRouter);
 app.use('/elements', elementPoolRouter);
@@ -79,7 +81,7 @@ connectDB().then((connected) => {
       console.log(`Server is running on ${process.env.SERVER_URL}:${port}`);
       //====================================Events====================================//
       // Catch Events
-      catchEventNFT();
+      // catchEventNFT();
     });
   }
 });

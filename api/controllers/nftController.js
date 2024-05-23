@@ -75,12 +75,18 @@ const deleteById = async(req, res, next) => {
 const add = async(req, res, next) => {
     try {
         var newRowData = req.body
-        newRowData.lastTimePlayed = new Date()
-        const newRow = await models.NFT.create(newRowData)
+        const tokenId = newRowData.tokenId;
 
-        return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
+        const row = await models.NFT.findOne({ where: { tokenId: tokenId } })
 
+        if (row) {
+            return res.sendResponse(null, `Token Id ${tokenId} already exists in the database`, STATUS_CODES.BAD_REQUEST)
+        } else {
+            newRowData.lastTimePlayed = new Date()
+            const newRow = await models.NFT.create(newRowData)
 
+            return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
+        }
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }

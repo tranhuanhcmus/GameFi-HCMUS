@@ -3,66 +3,129 @@ const { Web3 } = require('web3');
 const rpc = "wss://eth-sepolia.api.onfinality.io/public";
 const db = require('./config.js');
 const axios = require('axios');
+const models = require("./database/models")
+const { STATUS_CODES } = require("./constants")
 
 const createNFT = async (tokenid, from, to) => {
     try {
-        // Lấy TOKENURI từ tokenid
+        // Get TOKENURI from tokenid
         const tokenURI = await getTokenURI(tokenid);
         console.log(tokenURI, tokenid);
 
-        // Kiểm tra xem TOKENURI có tồn tại và không rỗng không
+        // Check if TOKENURI exists and is not empty
         if (tokenURI) {
             // Kiểm tra xem NFT đã tồn tại trong cơ sở dữ liệu chưa
-            const existingNFTResult = await db.query(
-                'SELECT COUNT(*) FROM K20_GameFi_DATN_HCMUS.NFT WHERE TOKENID = $1',
-                [tokenid]
-            );
-            const existingNFTCount = parseInt(existingNFTResult.rows[0].count);
+            // const existingNFTResult = await db.query(
+            //     'SELECT COUNT(*) FROM K20_GameFi_DATN_HCMUS.NFT WHERE TOKENID = $1',
+            //     [tokenid]
+            // );
+            // const existingNFTCount = parseInt(existingNFTResult.rows[0].count);
 
-            if (existingNFTCount === 0) {
-                // Gọi hàm createTokenURI để tạo mới TOKENURI trước khi thêm mới NFT
-                const createTokenURIResult = await CreateTokenURI(tokenid);
-                if (createTokenURIResult.apiCode === 500 || createTokenURIResult.apiCode === 404) {
-                    console.log('Lỗi khi tạo mới TOKENURI:', createTokenURIResult.message);
-                    return createTokenURIResult;
-                }
+            // if (existingNFTCount === 0) {
+            //     // Gọi hàm createTokenURI để tạo mới TOKENURI trước khi thêm mới NFT
+            //     const createTokenURIResult = await CreateTokenURI(tokenid);
+            //     if (createTokenURIResult.apiCode === 500 || createTokenURIResult.apiCode === 404) {
+            //         console.log('Lỗi khi tạo mới TOKENURI:', createTokenURIResult.message);
+            //         return createTokenURIResult;
+            //     }
 
-                // Thêm mới NFT vào bảng NFT
-                await db.query(
-                    'INSERT INTO K20_GameFi_DATN_HCMUS.NFT (TOKENID, TOKENURI, OWNER) VALUES ($1, $2, $3, $4)',
-                    [tokenid, tokenURI, to, 0]
-                );
-                console.log('Tạo NFT thành công');
-                return { message: 'Tạo NFT thành công', apiCode: 200 };
+            //     // Thêm mới NFT vào bảng NFT
+            //     await db.query(
+            //         'INSERT INTO K20_GameFi_DATN_HCMUS.NFT (TOKENID, TOKENURI, OWNER) VALUES ($1, $2, $3, $4)',
+            //         [tokenid, tokenURI, to, 0]
+            //     );
+            //     console.log('Tạo NFT thành công');
+            //     return { message: 'Tạo NFT thành công', apiCode: 200 };
+            // } else {
+            //     console.log('NFT đã tồn tại trong cơ sở dữ liệu');
+            //     return { message: 'NFT đã tồn tại trong cơ sở dữ liệu', apiCode: 409 };
+            // }
+            const row = await models.NFT.findOne({ where: { tokenId: tokenid } });
+
+            if (row) {
+                return {
+                    data: null,
+                    message: `Token ID ${tokenid} already exists in the database`,
+                    statusCode: STATUS_CODES.BAD_REQUEST
+                };
             } else {
-                console.log('NFT đã tồn tại trong cơ sở dữ liệu');
-                return { message: 'NFT đã tồn tại trong cơ sở dữ liệu', apiCode: 409 };
+                const newRowData = {
+                    tokenId: tokenid,
+                    tokenUri: tokenURI,
+                    owner: to,
+                    lastTimePlayed: new Date()
+                };
+                const newRow = await models.NFT.create(newRowData);
+
+                return {
+                    data: newRow,
+                    message: 'Add NFT success',
+                    statusCode: STATUS_CODES.OK
+                };
             }
         } else {
-            console.log('Không có hoặc lỗi khi lấy thông tin TOKENURI từ tokenid:', tokenid);
-            return { message: 'Không có hoặc lỗi khi lấy thông tin TOKENURI từ tokenid', apiCode: 404 };
+            console.log('No or error retrieving TOKENURI from tokenid:', tokenid);
+            return {
+                message: 'No or error retrieving TOKENURI from tokenid',
+                apiCode: 404
+            };
         }
     } catch (error) {
-        console.log('Tạo mới NFT không thành công', error.message);
-        return { message: 'Lỗi khi tạo mới NFT', apiCode: 500 };
+        console.log('Failed to create new NFT', error.message);
+        return {
+            message: 'Error creating new NFT',
+            apiCode: 500
+        };
     }
 };
+
 
 const updateNFT = async (tokenid, to) => {
   try {
     console.log(tokenid, to);
-    // Execute the logic of updating NFT ownership
-    await db.query(
-      'UPDATE K20_GameFi_DATN_HCMUS.NFT SET OWNER = $2 WHERE TOKENID = $1',
-      [tokenid, to]
-    );
-    console.log('Cập nhật NFT thành công');
-    return { message: 'Cập nhật NFT thành công' };
+    // // Execute the logic of updating NFT ownership
+    // await db.query(
+    //   'UPDATE K20_GameFi_DATN_HCMUS.NFT SET OWNER = $2 WHERE TOKENID = $1',
+    //   [tokenid, to]
+    // );
+    // console.log('Cập nhật NFT thành công');
+    // return { message: 'Cập nhật NFT thành công' };
+    const row = await models.NFT.findOne({ where: { tokenId: tokenid } });
+
+    if (!row) {
+      return {
+        data: null,
+        message: `Token ID ${tokenid} not found`,
+        statusCode: STATUS_CODES.NOT_FOUND
+      };
+    }
+
+    const updateData = {
+      tokenId: tokenid,
+      tokenUri: row.tokenUri,
+      owner: to,
+      exp: row.exp,
+      lastTimePlayed: new Date()
+    };
+
+    await row.update(updateData);
+    await row.reload();
+
+    return {
+      data: row,
+      message: `Update ID ${tokenid} success`,
+      statusCode: STATUS_CODES.OK
+    };
   } catch (error) {
-    console.error('Cập nhật NFT không thành công', error);
-    // throw error; // Rethrow the error to handle it at the caller's level
+    console.error('Failed to update NFT', error);
+    return {
+      data: null,
+      message: 'Error updating NFT',
+      statusCode: STATUS_CODES.INTERNAL_SERVER_ERROR
+    };
   }
 };
+
 
 async function getInfoFromTokenURI(url) {
     try {
@@ -170,34 +233,34 @@ function catchEventNFT() {
     const web3 = new Web3(rpc);
     const petContract = new web3.eth.Contract(PetABI, PetAddress);
 
-    const url = 'https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/104.json';
+    // const url = 'https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/104.json';
     // CreateTokenURI(url);
     // UpdateTokenURI(url);
     // GetTokenURIData(url);
 
-    // var evMitter = petContract.events.Transfer({
-    //     filter: {},
-    //     fromBlock: "latest"
-    // }, (error, event) => {
-    //     console.log(event);
-    // })
-    // evMitter.on("connected", function(subscriptionId) {
-    //     console.log("connected success with subscriptionId:", subscriptionId);
-    // })
-    // evMitter.on('data', (event) => {
-    //     const {from, to, tokenId} = event.returnValues; 
-    //     console.log('from: ', from);
-    //     if (from === '0x0000000000000000000000000000000000000000') {
-    //         createNFT(tokenId, from, to);
-    //     }
-    //     else {
-    //         updateNFT(tokenId, to);
-    //     }
-    // })
-    // evMitter.on('error', (error, receipt) => {
-    //     // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-    //     console.log("error on subscribe", error);
-    // });
+    var evMitter = petContract.events.Transfer({
+        filter: {},
+        fromBlock: "latest"
+    }, (error, event) => {
+        console.log(event);
+    })
+    evMitter.on("connected", function(subscriptionId) {
+        console.log("connected success with subscriptionId:", subscriptionId);
+    })
+    evMitter.on('data', (event) => {
+        const {from, to, tokenId} = event.returnValues; 
+        console.log('from: ', from);
+        if (from === '0x0000000000000000000000000000000000000000') {
+            createNFT(tokenId, from, to);
+        }
+        else {
+            updateNFT(tokenId, to);
+        }
+    })
+    evMitter.on('error', (error, receipt) => {
+        // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+        console.log("error on subscribe", error);
+    });
 
 
     // petContract.getPastEvents('Transfer', {
