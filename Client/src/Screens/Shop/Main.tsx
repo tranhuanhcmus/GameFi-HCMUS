@@ -188,8 +188,10 @@ const itemArray = [
 ];
 const ShopScreen = (props: Props) => {
   const [clickItem, setClickItem] = useState(false);
-  const onClickItem = () => {
+  const [item, setItem] = useState({ message: "", description: "" });
+  const onClickItem = (item: any) => {
     setClickItem(true);
+    setItem({ message: "Item", description: "" });
   };
   const onSetClose = () => {
     setClickItem(false);
@@ -207,23 +209,30 @@ const ShopScreen = (props: Props) => {
     scrollToBottom();
   }, []);
   return (
-    <View style={[styles.backgroundImage, { backgroundColor: COLOR.PURPLE }]}>
+    <View
+      style={{
+        width: ConstantsResponsive.MAX_WIDTH,
+        height: ConstantsResponsive.MAX_HEIGHT,
+        position: "absolute",
+        backgroundColor: COLOR.PURPLE,
+      }}
+    >
       <AlertBuyComponent
         isVisible={clickItem}
         onClose={onSetClose}
+        message={item.message}
+        description={item.description}
       ></AlertBuyComponent>
       <View
-        style={[
-          styles.playArea,
-          {
-            display: "flex",
-            height: ConstantsResponsive.MAX_HEIGHT * 0.8,
-            width: ConstantsResponsive.MAX_WIDTH,
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        ]}
+        style={{
+          display: "flex",
+          height: ConstantsResponsive.MAX_HEIGHT * 0.75,
+          width: ConstantsResponsive.MAX_WIDTH,
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: ConstantsResponsive.MAX_WIDTH * 0.2,
+        }}
       >
         <FlatList
           ref={flatListRef}
@@ -255,7 +264,7 @@ const ShopScreen = (props: Props) => {
                       styles.positionText,
                       {
                         fontFamily: "mt-2",
-                        fontSize: 25,
+                        fontSize: 20,
                         color: COLOR.WHITE,
                         fontWeight: "bold",
                       },
@@ -282,7 +291,9 @@ const ShopScreen = (props: Props) => {
                       itemAmount={item.itemAmount}
                       price={item.price}
                       imgPrice={item.imgPrice}
-                      onPress={onClickItem}
+                      onPress={() => {
+                        onClickItem(item);
+                      }}
                       itemType={item.itemType}
                     />
                   </View>
