@@ -31,21 +31,21 @@ const getALlByOwner = async(req, res, next) => {
         const { owner } = req.params
         const rows = await models.NFT.findAll({ where: { owner: owner } })
 
-
         let result=[]
 
         for (let i = 0; i < rows.length; i++) {
             let uri = rows[i].tokenUri;
 
             let tokenUri= await models.TokenUri.findOne({where:{tokenUri:uri}})
-
-            result.push({
-                         tokenId: rows[i].tokenId,
-                         tokenUri: rows[i].tokenUri,
-                         owner: rows[i].owner,
-                         exp: rows[i].exp,
-                         data: tokenUri.data 
-                     });
+                if (tokenUri) {
+                    result.push({
+                        tokenId: rows[i].tokenId,
+                        tokenUri: rows[i].tokenUri,
+                        owner: rows[i].owner,
+                        exp: rows[i].exp,
+                        data: tokenUri.data 
+                    });
+                }
           }
 
         return res.sendResponse(result, `Get by Owner ${owner} Success`, STATUS_CODES.OK)
@@ -74,8 +74,9 @@ const deleteById = async(req, res, next) => {
 
 const add = async(req, res, next) => {
     try {
-
-        const newRow = await models.NFT.create(req.body)
+        var newRowData = req.body
+        newRowData.lastTimePlayed = new Date()
+        const newRow = await models.NFT.create(newRowData)
 
         return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
 
@@ -86,7 +87,7 @@ const add = async(req, res, next) => {
 }
 const updateById = async(req, res, next) => {
     try {
-        const updateData = req.body;
+        var updateData = req.body;
         const tokenId = updateData.tokenId;
         console.log(tokenId)
         const row = await models.NFT.findOne({ where: { tokenId: tokenId } })
@@ -94,6 +95,7 @@ const updateById = async(req, res, next) => {
         if (!row) {
             return res.sendResponse(null, `Not Found ID ${tokenId} `, STATUS_CODES.NOT_FOUND)
         } else {
+            updateData.lastTimePlayed = new Date()
             await row.update(updateData)
             await row.reload()
 

@@ -36,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
     exp: {
       type:DataTypes.INTEGER,
       defaultValue:0
+    },
+    lastTimePlayed: {
+      type:DataTypes.DATE,
+      defaultValue: new Date()
+    },
+    energy: {
+      type:DataTypes.INTEGER,
+      defaultValue:3
     }
   }, {
     sequelize,
