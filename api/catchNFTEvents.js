@@ -175,29 +175,29 @@ function catchEventNFT() {
     // UpdateTokenURI(url);
     // GetTokenURIData(url);
 
-    // var evMitter = petContract.events.Transfer({
-    //     filter: {},
-    //     fromBlock: "latest"
-    // }, (error, event) => {
-    //     console.log(event);
-    // })
-    // evMitter.on("connected", function(subscriptionId) {
-    //     console.log("connected success with subscriptionId:", subscriptionId);
-    // })
-    // evMitter.on('data', (event) => {
-    //     const {from, to, tokenId} = event.returnValues; 
-    //     console.log('from: ', from);
-    //     if (from === '0x0000000000000000000000000000000000000000') {
-    //         createNFT(tokenId, from, to);
-    //     }
-    //     else {
-    //         updateNFT(tokenId, to);
-    //     }
-    // })
-    // evMitter.on('error', (error, receipt) => {
-    //     // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-    //     console.log("error on subscribe", error);
-    // });
+    var evMitter = petContract.events.Transfer({
+        filter: {},
+        fromBlock: "latest"
+    }, (error, event) => {
+        console.log(event);
+    })
+    evMitter.on("connected", function(subscriptionId) {
+        console.log("connected success with subscriptionId:", subscriptionId);
+    })
+    evMitter.on('data', (event) => {
+        const {from, to, tokenId} = event.returnValues; 
+        console.log('from: ', from);
+        if (from === '0x0000000000000000000000000000000000000000') {
+            createNFT(tokenId, from, to);
+        }
+        else {
+            updateNFT(tokenId, to);
+        }
+    })
+    evMitter.on('error', (error, receipt) => {
+        // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+        console.log("error on subscribe", error);
+    });
 
 
     // petContract.getPastEvents('Transfer', {
