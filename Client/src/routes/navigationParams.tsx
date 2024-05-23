@@ -9,4 +9,5 @@ export type RootStackParamList = {
   MainTab: any;
   HangManGame: any;
   Play: any;
+  Home: any;
 };

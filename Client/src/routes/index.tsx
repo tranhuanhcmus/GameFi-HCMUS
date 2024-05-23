@@ -215,6 +215,13 @@ const Route = () => (
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
     <AlertComponent />
     <LoadingComponent />
