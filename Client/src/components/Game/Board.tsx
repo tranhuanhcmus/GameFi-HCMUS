@@ -12,11 +12,11 @@ import {
   Text,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
-import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
-import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
-import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
-import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
+import Candy from "../../../assets/candy/17.png";
+import IceCube from "../../../assets/candy/2.png";
+import Chocolate from "../../../assets/candy/20.png";
+import Banana from "../../../assets/candy/6.png";
+import IceCream from "../../../assets/candy/8.png";
 import { DataSocketTransfer } from "../../../socket";
 import {
   updateBlockList,

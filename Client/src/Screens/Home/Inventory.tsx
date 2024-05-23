@@ -1,11 +1,19 @@
-import React, { useEffect } from "react";
-import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  Image,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import { COLOR } from "../../utils/color";
+import FastImage from "react-native-fast-image";
 import Medicine from "../../../assets/medicine.png";
 const InventoryModal = ({
   isVisible,
@@ -17,256 +25,134 @@ const InventoryModal = ({
   const navigate = useCustomNavigation();
   useEffect(() => {}, [isVisible]);
 
+  const [data, setData] = useState([
+    {
+      id: 1,
+      image: require("../../../assets/medicine.png"),
+      quantity: 2,
+    },
+    {
+      id: 2,
+      image: require("../../../assets/healing_potion.png"),
+      quantity: 2,
+    },
+    {
+      id: 3,
+      image: require("../../../assets/candy/17.png"),
+      quantity: 2,
+    },
+    {
+      id: 4,
+      image: require("../../../assets/candy/14.png"),
+      quantity: 2,
+    },
+    {
+      id: 5,
+      image: require("../../../assets/candy/19.png"),
+      quantity: 2,
+    },
+  ]);
+
+  const InventoryItem = ({
+    image,
+    quantity,
+  }: {
+    image: any;
+    quantity: number;
+  }) => {
+    return (
+      <View
+        style={{
+          backgroundColor: COLOR.DARKER_PURPLE,
+          width: ConstantsResponsive.MAX_WIDTH * 0.3,
+          height: ConstantsResponsive.MAX_WIDTH * 0.4,
+          borderRadius: 20,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Image source={image} style={{ width: 50, height: 50 }} />
+        <View
+          style={{
+            width: "100%",
+            height: "auto",
+            paddingEnd: 10,
+          }}
+        >
+          <CustomText
+            style={{
+              color: COLOR.WHITE,
+              fontSize: 15,
+              textAlign: "right",
+              fontWeight: "bold",
+            }}
+          >
+            x{quantity}
+          </CustomText>
+        </View>
+      </View>
+    );
+  };
   return isVisible ? (
-    <View
-      style={{
-        width: ConstantsResponsive.MAX_WIDTH,
-        height: ConstantsResponsive.MAX_HEIGHT * 0.7,
-        backgroundColor: COLOR.CYAN,
-        position: "absolute",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        zIndex: 99,
-        top: ConstantsResponsive.MAX_HEIGHT * 0.1,
-      }}
-    >
+    <Modal animationType="slide" transparent={true} visible={isVisible}>
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
-          height: "10%",
-          flexDirection: "row",
-          justifyContent: "flex-end",
+          height: ConstantsResponsive.MAX_HEIGHT * 0.7,
+          backgroundColor: COLOR.PURPLE,
+          position: "absolute",
+          display: "flex",
+          justifyContent: "space-between",
           alignItems: "center",
+          bottom: 0,
+          borderWidth: 1,
+          borderColor: COLOR.WHITE,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            setIsVisible(false);
+        <View
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: "10%",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            paddingEnd: 10,
           }}
         >
-          <CloseButton></CloseButton>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={() => {
+              setIsVisible(false);
+            }}
+          >
+            <CloseButton></CloseButton>
+          </TouchableOpacity>
+        </View>
 
-      <ScrollView
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: "80%",
-          flexGrow: 1,
-        }}
-      >
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            marginVertical: 5,
+        <FlatList
+          data={data}
+          numColumns={3}
+          columnWrapperStyle={{
+            gap: 10,
+            width: "100%",
           }}
-        >
-          <View
-            style={{
-              backgroundColor: COLOR.DARKER_PURPLE,
-              width: ConstantsResponsive.MAX_WIDTH * 0.3,
-              height: ConstantsResponsive.MAX_WIDTH * 0.4,
-              borderRadius: 20,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image source={Medicine} style={{ width: 50, height: 50 }} />
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-                paddingEnd: 10,
-              }}
-            >
-              <CustomText
-                style={{
-                  color: COLOR.WHITE,
-                  fontSize: 15,
-                  textAlign: "right",
-                  fontWeight: "bold",
-                }}
-              >
-                x10
-              </CustomText>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: COLOR.DARKER_PURPLE,
-              width: ConstantsResponsive.MAX_WIDTH * 0.3,
-              height: ConstantsResponsive.MAX_WIDTH * 0.4,
-              borderRadius: 20,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image source={Medicine} style={{ width: 50, height: 50 }} />
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-                paddingEnd: 10,
-              }}
-            >
-              <CustomText
-                style={{
-                  color: COLOR.WHITE,
-                  fontSize: 15,
-                  textAlign: "right",
-                  fontWeight: "bold",
-                }}
-              >
-                x10
-              </CustomText>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: COLOR.DARKER_PURPLE,
-              width: ConstantsResponsive.MAX_WIDTH * 0.3,
-              height: ConstantsResponsive.MAX_WIDTH * 0.4,
-              borderRadius: 20,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image source={Medicine} style={{ width: 50, height: 50 }} />
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-                paddingEnd: 10,
-              }}
-            >
-              <CustomText
-                style={{
-                  color: COLOR.WHITE,
-                  fontSize: 15,
-                  textAlign: "right",
-                  fontWeight: "bold",
-                }}
-              >
-                x10
-              </CustomText>
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
+          contentContainerStyle={{
+            gap: 20,
             justifyContent: "space-around",
+            alignItems: "center",
           }}
-        >
-          <View
-            style={{
-              backgroundColor: COLOR.DARKER_PURPLE,
-              width: ConstantsResponsive.MAX_WIDTH * 0.3,
-              height: ConstantsResponsive.MAX_WIDTH * 0.4,
-              borderRadius: 20,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image source={Medicine} style={{ width: 50, height: 50 }} />
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-                paddingEnd: 10,
-              }}
-            >
-              <CustomText
-                style={{
-                  color: COLOR.WHITE,
-                  fontSize: 15,
-                  textAlign: "right",
-                  fontWeight: "bold",
-                }}
-              >
-                x10
-              </CustomText>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: COLOR.DARKER_PURPLE,
-              width: ConstantsResponsive.MAX_WIDTH * 0.3,
-              height: ConstantsResponsive.MAX_WIDTH * 0.4,
-              borderRadius: 20,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image source={Medicine} style={{ width: 50, height: 50 }} />
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-                paddingEnd: 10,
-              }}
-            >
-              <CustomText
-                style={{
-                  color: COLOR.WHITE,
-                  fontSize: 15,
-                  textAlign: "right",
-                  fontWeight: "bold",
-                }}
-              >
-                x10
-              </CustomText>
-            </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: COLOR.DARKER_PURPLE,
-              width: ConstantsResponsive.MAX_WIDTH * 0.3,
-              height: ConstantsResponsive.MAX_WIDTH * 0.4,
-              borderRadius: 20,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image source={Medicine} style={{ width: 50, height: 50 }} />
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-                paddingEnd: 10,
-              }}
-            >
-              <CustomText
-                style={{
-                  color: COLOR.WHITE,
-                  fontSize: 15,
-                  textAlign: "right",
-                  fontWeight: "bold",
-                }}
-              >
-                x10
-              </CustomText>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    </View>
+          renderItem={({ item }) => (
+            <InventoryItem
+              image={item.image}
+              quantity={item.quantity}
+            ></InventoryItem>
+          )}
+        />
+      </View>
+    </Modal>
   ) : null;
 };
 

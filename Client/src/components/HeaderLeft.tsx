@@ -1,15 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import SVGSetting from "../../assets/SVGSetting.svg";
+import Setting from "../../assets/setting.svg";
+import { COLOR } from "../utils/color";
+import ConstantsResponsive from "../constants/Constanst";
 
 type Props = {};
 
 const HeaderLeft = (props: Props) => {
-  return (
-    <View className="flex h-full w-full items-center justify-center ">
-      <SVGSetting height={40} width={40}></SVGSetting>
-    </View>
-  );
+  return <Setting height={30} width={30} style={{ marginLeft: 10 }}></Setting>;
 };
 
 export default HeaderLeft;

@@ -47,17 +47,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
           className="relative items-center justify-center"
         >
           <Image resizeMode="stretch" source={medicine} style={styles.img} />
-          <CustomText
-            // style={{
-            //   fontSize: 18,
-            //   marginBottom: 10,
-            //   fontWeight: "900",
-
-            //   fontFamily: "rexlia",
-            //   color: "white",
-            // }}
-            className="absolute mt-3 text-start font-rexlia text-[40px] text-white"
-          >
+          <CustomText className="absolute mt-3 text-start text-[40px] text-white">
             {message || "Rare food"}
           </CustomText>
         </View>
@@ -65,18 +55,8 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
           className="absolute top-[35%] mt-3 w-full flex-col bg-[#36144b]  "
           style={styles.container2}
         >
-          <CustomText
-            // style={{
-            //   fontSize: 18,
-            //   marginBottom: 10,
-            //   fontWeight: "900",
-
-            //   fontFamily: "rexlia",
-            //   color: "white",
-            // }}
-            className="mt-3 text-start font-rexlia text-[20px] text-white"
-          >
-            {message || "Use: up to 10 point per items"}
+          <CustomText className="mt-3 text-start  text-[20px] text-white">
+            {description || "Use: up to 10 point per items"}
           </CustomText>
           <View
             className="flex w-full items-center justify-center "
@@ -85,8 +65,14 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             <GradientButton
               colors={["#F7971E", "#FFD200"]}
               style={styles.buttonBuy}
+              onPress={handleCancel}
             >
-              <Text className="text-center font-rexlia text-[20px]">250</Text>
+              <Text
+                className="text-center text-[20px]"
+                style={{ fontWeight: "bold" }}
+              >
+                250
+              </Text>
             </GradientButton>
           </View>
         </View>

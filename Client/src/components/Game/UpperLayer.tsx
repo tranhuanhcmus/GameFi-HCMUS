@@ -25,11 +25,11 @@ import {
   updateTurn,
 } from "../../redux/boardSlice";
 import GameLogic from "../../utils/game/game";
-import Banana from "../../../assets/Match3-PNG/PNG/ico/6.png";
-import Chocolate from "../../../assets/Match3-PNG/PNG/ico/20.png";
-import Candy from "../../../assets/Match3-PNG/PNG/ico/17.png";
-import IceCube from "../../../assets/Match3-PNG/PNG/ico/2.png";
-import IceCream from "../../../assets/Match3-PNG/PNG/ico/8.png";
+import Banana from "../../../assets/candy/6.png";
+import Chocolate from "../../../assets/candy/20.png";
+import Candy from "../../../assets/candy/17.png";
+import IceCube from "../../../assets/candy/2.png";
+import IceCream from "../../../assets/candy/8.png";
 import log from "../../logger/index.js";
 import { updateComponentHp } from "../../redux/playerSlice";
 const UpperLayer = () => {

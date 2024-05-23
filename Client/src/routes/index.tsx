@@ -88,7 +88,6 @@ const renderNavElement = (data: NavItem[]) => {
       options={{
         headerTransparent: true,
         headerTintColor: "#fff",
-
         headerShown: item.header || false,
 
         headerLeft: () => <HeaderLeft></HeaderLeft>,

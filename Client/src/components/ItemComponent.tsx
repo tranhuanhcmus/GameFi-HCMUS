@@ -1,26 +1,14 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-  Image,
-} from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import useCustomNavigation from "../hooks/useCustomNavigation";
-import ConstantsResponsive from "../constants/Constanst";
-import Medicine from "../../assets/Medicine.svg";
-import { LinearGradient } from "expo-linear-gradient";
-import Coin from "../../assets/Coin.svg";
-import medi from "../../assets/medicine.png";
-import { COLOR } from "../utils/color";
-import { height, width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
-import Lucky from "../../assets/medicine.png";
+import Coin from "../../assets/coin.svg";
+import Food from "../../assets/candy/14.png";
 import Blood from "../../assets/Medicine.svg";
 import Gem from "../../assets/diamond.png";
 import Lightning from "../../assets/lightning.svg";
-import Food from "../../assets/Match3-PNG/PNG/ico/14.png";
+import Lucky from "../../assets/medicine.png";
+import ConstantsResponsive from "../constants/Constanst";
+import { COLOR } from "../utils/color";
 interface ItemProps {
   itemImg?: any;
   itemColor?: string;
@@ -53,6 +41,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
         height:
           ConstantsResponsive.MAX_HEIGHT / 3 - 120 * ConstantsResponsive.YR,
         backgroundColor: itemColor,
+        paddingTop: 2,
       }}
     >
       <View
@@ -168,7 +157,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
             // fontFamily: "mt-2",
             fontWeight: "bold",
             color: COLOR.WHITE,
-            fontSize: 20,
+            fontSize: 15,
           }}
         >
           {price}

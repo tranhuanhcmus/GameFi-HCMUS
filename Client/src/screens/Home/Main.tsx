@@ -19,7 +19,7 @@ import { selectUser } from "../../redux/userSlice";
 
 import AwesomeButton from "react-native-really-awesome-button";
 import SpriteSheet from "rn-sprite-sheet";
-import Damage from "../../../assets/Damage.svg";
+import Damage from "../../../assets/damage.svg";
 import LoadingModal from "../../components/Game/LoadingModal";
 import { COLOR } from "../../utils/color";
 import ChooseGameModal from "./ChooseGameModal";
@@ -36,7 +36,7 @@ const HomeScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
-  const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(true);
+  const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
   const [gameName, setGameName] = useState<string>("");
