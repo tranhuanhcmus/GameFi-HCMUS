@@ -1,35 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
-  SafeAreaView,
-  View,
-  Button,
-  Image,
-  TextInput,
-  Switch,
-  Text,
   StyleSheet,
+  Text,
   TouchableNativeFeedback,
+  View,
+  Image,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
+import { useSelector } from "react-redux";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
+import { SocketIOClient } from "../../../socket";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
-import GradientButton from "../../components/Button/GradientButton";
-import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { useAppDispatch } from "../../redux/store";
-import { selectUser, setAddress } from "../../redux/userSlice";
-import SVGPlay from "../../../assets/SVGPlay.svg";
-import { useSelector } from "react-redux";
-import PetCarousel from "../../components/Pets/PetCarousel";
-import { SocketIOClient } from "../../../socket";
+import { selectUser } from "../../redux/userSlice";
 
-import NormalButton from "../../components/Button/NormalButton";
-import SpriteSheet from "rn-sprite-sheet";
 import AwesomeButton from "react-native-really-awesome-button";
-import { COLOR } from "../../utils/color";
+import SpriteSheet from "rn-sprite-sheet";
+import Damage from "../../../assets/damage.svg";
 import LoadingModal from "../../components/Game/LoadingModal";
+import { COLOR } from "../../utils/color";
 import ChooseGameModal from "./ChooseGameModal";
-import Damage from "../../../assets/Damage.svg";
+import Coin from "../../../assets/coin.svg";
+import Inventory from "../../../assets/inventory.svg";
+import InventoryModal from "./Inventory";
 type Props = {};
 
 const HomeScreen = () => {
@@ -40,6 +36,7 @@ const HomeScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
+  const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
   const [gameName, setGameName] = useState<string>("");
@@ -134,11 +131,15 @@ const HomeScreen = () => {
         isVisible={isChooseGameModalVisible}
         setIsVisible={setIsChooseGameModalVisible}
       />
-      {/* <Image
+      <InventoryModal
+        isVisible={isInventoryModalVisible}
+        setIsVisible={setIsInventoryModalVisible}
+      />
+      <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
-        source={require("../../../assets/BackGround.png")}
-      /> */}
+        source={require("../../../assets/background2.jpg")}
+      />
       <LoadingModal
         gameName={gameName}
         isVisible={isVisible}
@@ -146,41 +147,77 @@ const HomeScreen = () => {
       />
       <View
         style={{
-          width: ConstantsResponsive.MAX_WIDTH,
+          width: ConstantsResponsive.MAX_WIDTH * 0.4,
           height: "auto",
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "flex-end",
+          justifyContent: "space-around",
           marginTop: ConstantsResponsive.MAX_WIDTH * 0.25,
-          paddingEnd: 5,
+          backgroundColor: COLOR.DARKER_PURPLE,
+          borderRadius: 20,
         }}
       >
-        <View style={{ zIndex: 99 }}>
-          <Damage />
-        </View>
         <View
           style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.2,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.05,
-            backgroundColor: COLOR.DARKER_PURPLE,
-            marginLeft: -20,
-            borderRadius: 15,
+            display: "flex",
             justifyContent: "center",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
+          <Coin></Coin>
           <CustomText
             style={{
-              color: COLOR.WHITE,
+              color: COLOR.YELLOW,
               textAlign: "center",
               fontSize: 15,
               fontWeight: "bold",
             }}
           >
-            10
+            100
+          </CustomText>
+        </View>
+
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Damage />
+          <CustomText
+            style={{
+              color: COLOR.CYAN,
+              textAlign: "center",
+              fontSize: 15,
+              fontWeight: "bold",
+            }}
+          >
+            3
           </CustomText>
         </View>
       </View>
+      <View
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          paddingEnd: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            setIsInventoryModalVisible(true);
+          }}
+        >
+          <Inventory />
+        </TouchableOpacity>
+      </View>
+
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,

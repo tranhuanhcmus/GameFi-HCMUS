@@ -1,4 +1,4 @@
-package com.client;
+package com.anonymous.Client;
 
 import android.os.Build;
 import android.os.Bundle;

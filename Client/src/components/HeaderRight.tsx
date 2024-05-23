@@ -1,15 +1,17 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
 import SVGProfile from "../../assets/SVGProfile.svg";
+import Profile from "../../assets/avatar.png";
 
 type Props = {};
 
 const HeaderRight = () => {
   return (
-    <View className="flex h-full w-full items-center justify-center ">
-      <SVGProfile height={40} width={40}></SVGProfile>
-    </View>
+    <Image
+      source={require("../../assets/avatar.png")}
+      style={{ width: 40, height: 40, marginRight: 5 }}
+    />
   );
 };
 

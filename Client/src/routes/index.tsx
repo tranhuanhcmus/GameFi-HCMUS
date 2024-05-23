@@ -7,15 +7,14 @@ import {
 import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SVGBird from "../../assets/SVGBird.svg";
-import SVGEvent from "../../assets/SVGEvent.svg";
-import SVGPlay from "../../assets/SVGPlay.svg";
-import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
-import SVGTrophy from "../../assets/SVGTrophy.svg";
+// import SVGEvent from "../../assets/SVGEvent.svg";
+// import SVGPlay from "../../assets/SVGPlay.svg";
+// import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
+// import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../Screens/Connect/Main";
 import GameScreen from "../Screens/Game/Main";
 import PlayScreen from "../Screens/Play/Main";
 import ShopScreen from "../Screens/Shop/Main";
-import TestScreen from "../Screens/Test/Main";
 import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
 import Header from "../components/Header";
@@ -23,7 +22,6 @@ import LoadingComponent from "../components/LoadingComponent";
 import HeaderRight from "../components/HeaderRight";
 import HangManGame from "../Screens/HangManGame/index";
 
-type Props = {};
 import { BreedScreen } from "../Screens/Breed/Main";
 import DetailOfPet from "../Screens/PetDetail/Main";
 import HomeScreen from "../Screens/Home/Main";
@@ -31,34 +29,37 @@ import TrendMarketScreen from "../Screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
 import LeagueScreen from "../Screens/League/Main";
 import EventScreen from "../Screens/Event/Main";
-
+import Damage from "../../assets/damage.svg";
+import Star from "../../assets/star.svg";
+import Trophy from "../../assets/trophy.svg";
+import Coin from "../../assets/coin.svg";
 const navArr: NavItem[] = [
   {
     name: "ShopScreen",
     header: true,
     component: ShopScreen,
     content: "Shop",
-    svg: <SVGStore height="100%" width="100%" />,
+    svg: <Coin height="100%" width="100%" />,
   },
   {
     name: "TrendMarketScreen",
     component: TrendMarketScreen,
     content: "Event",
     header: true,
-    svg: <SVGEvent height="100%" width="100%" />,
+    svg: <Star height="100%" width="100%" />,
   },
   {
     name: "HomeScreen",
     component: HomeScreen,
     content: "Play",
     header: true,
-    svg: <SVGPlay height="100%" width="100%" />,
+    svg: <Damage height="100%" width="100%" />,
   },
   {
     name: "BreedScreen",
     component: BreedScreen,
     content: "Breed",
-    svg: <SVGTrophy height="100%" width="100%" />,
+    svg: <Trophy height="100%" width="100%" />,
   },
 
   {
@@ -87,7 +88,6 @@ const renderNavElement = (data: NavItem[]) => {
       options={{
         headerTransparent: true,
         headerTintColor: "#fff",
-
         headerShown: item.header || false,
 
         headerLeft: () => <HeaderLeft></HeaderLeft>,
@@ -211,6 +211,13 @@ const Route = () => (
       <Stack.Screen
         name="Event"
         component={EventScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
         options={{
           headerShown: false,
         }}
