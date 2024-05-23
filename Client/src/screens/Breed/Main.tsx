@@ -223,10 +223,15 @@ export function BreedScreen() {
     <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
-        height: ConstantsResponsive.MAX_HEIGHT,
+        height: ConstantsResponsive.MAX_HEIGHT * 0.8,
         backgroundColor: COLOR.PURPLE,
       }}
     >
+      <Image
+        style={styles.backgroundImage}
+        resizeMode="stretch"
+        source={require("../../../assets/background2.jpg")}
+      />
       <View
         style={{
           width: "100%",
@@ -285,7 +290,13 @@ export function BreedScreen() {
           10 min
         </CustomText>
       </View>
-      <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 20 }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "flex-end",
+          marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.05,
+        }}
+      >
         <AwesomeButton
           style={{ justifyContent: "center", alignSelf: "center" }}
           onPress={() => {

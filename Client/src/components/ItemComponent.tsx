@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import Coin from "../../assets/coin.svg";
 import Food from "../../assets/candy/14.png";
-import Blood from "../../assets/Medicine.svg";
+import Blood from "../../assets/medicine.svg";
 import Gem from "../../assets/diamond.png";
 import Lightning from "../../assets/lightning.svg";
 import Lucky from "../../assets/medicine.png";

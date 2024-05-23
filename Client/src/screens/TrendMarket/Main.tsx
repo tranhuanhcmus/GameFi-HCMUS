@@ -1,4 +1,11 @@
-import { View, Text, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Image,
+} from "react-native";
 import React from "react";
 import TrendComponent from "../../components/TrendComponent";
 import TrendCard from "../../components/TrendCard";
@@ -12,6 +19,15 @@ const trend = true;
 const TrendMarketScreen = (props: Props) => {
   return (
     <SafeAreaView className="flex-1 bg-color_app">
+      <Image
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: ConstantsResponsive.MAX_HEIGHT,
+          position: "absolute",
+        }}
+        resizeMode="stretch"
+        source={require("../../../assets/background2.jpg")}
+      />
       <View style={styles.playArea} className="flex flex-col p-2 ">
         <View className="gap-1">
           <Text className="font-light text-white">TrendMarketScreen</Text>

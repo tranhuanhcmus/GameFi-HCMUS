@@ -22,6 +22,15 @@ const LeagueScreen = () => {
         backgroundColor: COLOR.PURPLE,
       }}
     >
+      <Image
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: ConstantsResponsive.MAX_HEIGHT,
+          position: "absolute",
+        }}
+        resizeMode="stretch"
+        source={require("../../../assets/background2.jpg")}
+      />
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
