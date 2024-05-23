@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-} from "react-native";
-import { useDispatch } from "react-redux";
-import { showAlert } from "../../redux/alertSlice";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import PetCard from "../../components/PetCard";
-import { ELEMENT } from "../../constants/types";
 import ConstantsResponsive from "../../constants/Constanst";
-import { flare } from "viem/chains";
+import { ELEMENT } from "../../constants/types";
+import { showAlert } from "../../redux/alertSlice";
 
+import CustomText from "../../components/CustomText";
 import { NFT, UserService } from "../../services/UserService";
-import axios from "axios";
+import { COLOR } from "../../utils/color";
 import { getLevel } from "../../utils/pet";
 
+import log from "../../logger/index";
+import useCustomNavigation from "../../hooks/useCustomNavigation";
+import breedSlice, { setFatherPet, setMotherPet } from "../../redux/breedSlice";
 type Props = {};
 
 type NFTData = {
@@ -41,9 +37,13 @@ const petArray: NFTData[] = [
   // },
 ];
 
-const PlayScreen: React.FC<Props> = (props: Props) => {
-  const dispatch = useDispatch();
+const PlayScreen: React.FC<Props> = (props: any) => {
+  const [isBreed, setIsBreed] = useState(props.route.params);
+  // const { isBreed } = props.route.params;
   const [data, setData] = useState<NFTData[]>(petArray);
+  const dispatch = useDispatch();
+  const navigate = useCustomNavigation();
+  const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
 
   useEffect(() => {
     // Example: Dispatch an alert when the PlayScreen component mounts
@@ -61,6 +61,7 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
       );
 
       const mappedData: NFTData[] = res.map((nft: NFT) => {
+        console.log("nft ", nft);
         return {
           id: nft.tokenid,
           element: ELEMENT.FIRE,
@@ -81,11 +82,27 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
     dispatch(showAlert("Test Alert!"));
   };
 
+  const onPress = (item: any) => {
+    console.log("item ", item);
+    try {
+      if (!fatherPet.id) dispatch(setFatherPet(item));
+      else if (!motherPet.id) dispatch(setMotherPet(item));
+    } catch (e) {
+      console.log("Loi");
+    }
+
+    navigate.goBack();
+  };
   return (
     <View style={styles.backgroundImage} className="bg-[#210035]">
+      <CustomText
+        style={{ color: COLOR.WHITE, fontSize: 30, textAlign: "center" }}
+      >
+        PACK
+      </CustomText>
       <View
         style={styles.playArea}
-        className="mt-4 h-[90%] w-[100%] items-center justify-center "
+        className="h-[90%] w-[100%] items-center justify-center "
       >
         <FlatList
           className="flex-1"
@@ -107,6 +124,8 @@ const PlayScreen: React.FC<Props> = (props: Props) => {
               level={item.level}
               name={item.name}
               rarityPet={item.rarityPet}
+              isBreed={true}
+              onPress={() => onPress(item)}
             ></PetCard>
           )}
         />

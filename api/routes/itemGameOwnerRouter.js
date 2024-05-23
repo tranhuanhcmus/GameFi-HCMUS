@@ -58,7 +58,7 @@ router.post('/', itemGameOwnerController.add);
  *         required: true
  *         description: ID of the item game owner to get information.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Information of the item game owner returned successfully
@@ -106,7 +106,7 @@ router.get('/owner/:owner', itemGameOwnerController.getByOwner);
  *         required: true
  *         description: ID of the item game owner to update information.
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -136,7 +136,7 @@ router.put('/:id', itemGameOwnerController.updateById);
  *         required: true
  *         description: ID of the item game owner to delete.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Item game owner deleted successfully

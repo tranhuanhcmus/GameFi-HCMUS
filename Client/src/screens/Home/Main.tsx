@@ -1,35 +1,35 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
-  SafeAreaView,
-  View,
-  Button,
-  Image,
-  TextInput,
-  Switch,
-  Text,
   StyleSheet,
+  Text,
   TouchableNativeFeedback,
+  View,
+  Image,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
+import { useSelector } from "react-redux";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
+import { SocketIOClient } from "../../../socket";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
-import GradientButton from "../../components/Button/GradientButton";
-import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { useAppDispatch } from "../../redux/store";
-import { selectUser, setAddress } from "../../redux/userSlice";
-import SVGPlay from "../../../assets/SVGPlay.svg";
-import { useSelector } from "react-redux";
-import PetCarousel from "../../components/Pets/PetCarousel";
-import { SocketIOClient } from "../../../socket";
+import { selectUser } from "../../redux/userSlice";
 
-import NormalButton from "../../components/Button/NormalButton";
-import SpriteSheet from "rn-sprite-sheet";
 import AwesomeButton from "react-native-really-awesome-button";
-import { COLOR } from "../../utils/color";
+import SpriteSheet from "rn-sprite-sheet";
+import Damage from "../../../assets/Damage.svg";
 import LoadingModal from "../../components/Game/LoadingModal";
+import { COLOR } from "../../utils/color";
 import ChooseGameModal from "./ChooseGameModal";
+<<<<<<< HEAD
 import { useIsFocused } from "@react-navigation/native";
+=======
+import Coin from "../../../assets/coin.svg";
+import Inventory from "../../../assets/inventory.svg";
+import InventoryModal from "./Inventory";
+>>>>>>> refs/remotes/origin/game-screen-creation
 type Props = {};
 
 const HomeScreen = () => {
@@ -40,6 +40,7 @@ const HomeScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
+  const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(true);
   const [offsetX, setOffsetX] = useState<number>(0);
   const isFocused = useIsFocused();
   const [offsetY, setOffsetY] = useState<number>(0);
@@ -137,6 +138,10 @@ const HomeScreen = () => {
         isVisible={isChooseGameModalVisible}
         setIsVisible={setIsChooseGameModalVisible}
       />
+      <InventoryModal
+        isVisible={isInventoryModalVisible}
+        setIsVisible={setIsInventoryModalVisible}
+      />
       {/* <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
@@ -147,7 +152,41 @@ const HomeScreen = () => {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
       />
+      <View
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH * 0.4,
+          height: "auto",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-around",
+          marginTop: ConstantsResponsive.MAX_WIDTH * 0.25,
+          backgroundColor: COLOR.DARKER_PURPLE,
+          borderRadius: 20,
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Coin></Coin>
+          <CustomText
+            style={{
+              color: COLOR.YELLOW,
+              textAlign: "center",
+              fontSize: 15,
+              fontWeight: "bold",
+            }}
+          >
+            100
+          </CustomText>
+        </View>
 
+<<<<<<< HEAD
       <View style={styles.playArea} className="relative  ">
         <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
           <View
@@ -170,6 +209,60 @@ const HomeScreen = () => {
                   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
                   18, 19, 20,
                 ],
+=======
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Damage />
+          <CustomText
+            style={{
+              color: COLOR.CYAN,
+              textAlign: "center",
+              fontSize: 15,
+              fontWeight: "bold",
+            }}
+          >
+            3
+          </CustomText>
+        </View>
+      </View>
+      <View
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          paddingEnd: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            setIsInventoryModalVisible(true);
+          }}
+        >
+          <Inventory />
+        </TouchableOpacity>
+      </View>
+
+      <View
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: "auto",
+          marginTop: 10,
+        }}
+      >
+        <View style={{ display: "flex", alignItems: "center" }}>
+          <TouchableNativeFeedback onPress={() => play("walk")}>
+            <View
+              style={{
+                transform: [{ translateX: offsetX }, { translateY: offsetY }],
+                marginBottom: ConstantsResponsive.YR * 30,
+>>>>>>> refs/remotes/origin/game-screen-creation
               }}
             />
           </View>
@@ -182,12 +275,11 @@ const HomeScreen = () => {
           flexDirection: "row",
           alignItems: "center",
           height: 150,
-          marginTop: 10,
         }}
       >
         <CustomText
           style={{
-            fontFamily: "mt-2",
+            // fontFamily: "mt-2",
             fontWeight: "bold",
             fontSize: 20,
             color: COLOR.WHITE,
@@ -200,8 +292,16 @@ const HomeScreen = () => {
         </View>
       </View>
       <View
-        className=" flex flex-row  justify-between"
-        style={styles.labelButton}
+        style={{
+          height: "auto",
+          width: ConstantsResponsive.MAX_WIDTH,
+          top: -30,
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "center",
+          justifyContent: "space-between",
+          paddingHorizontal: ConstantsResponsive.MAX_WIDTH * 0.03,
+        }}
       >
         <AwesomeButton
           onPress={() => {
@@ -214,8 +314,8 @@ const HomeScreen = () => {
           // }}
           backgroundDarker={COLOR.DARKER_PURPLE}
           backgroundColor={COLOR.DARKER_PURPLE}
-          width={100}
-          height={60}
+          width={ConstantsResponsive.MAX_WIDTH * 0.4}
+          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
           borderRadius={15}
         >
           <Text style={[styles.textSize, { color: COLOR.WHITE }]}>
@@ -231,8 +331,8 @@ const HomeScreen = () => {
           // }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
-          width={170}
-          height={60}
+          width={ConstantsResponsive.MAX_WIDTH * 0.5}
+          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
           borderRadius={15}
         >
           <Text style={styles.textSize}>PLAY</Text>

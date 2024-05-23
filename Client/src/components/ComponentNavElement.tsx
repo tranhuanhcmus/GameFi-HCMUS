@@ -2,6 +2,7 @@
 import { View } from "react-native";
 import React from "react";
 import CustomText from "./CustomText";
+import { COLOR } from "../utils/color";
 
 interface ComponentNavElementProps {
   focused: boolean;
@@ -19,10 +20,7 @@ const ComponentNavElement: React.FC<ComponentNavElementProps> = ({
       {children}
       <CustomText
         style={{
-          fontFamily: "rexlia",
-          fontWeight: focused ? "900" : "400",
-          fontSize: focused ? 20 : 18,
-          color: "white",
+          color: focused ? COLOR.WHITE : COLOR.GRAY,
         }}
       >
         {content}

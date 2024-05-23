@@ -26,7 +26,7 @@ const TrendMarketScreen = (props: Props) => {
         </View>
         <View className="mt-4 ">
           <Text className="font-ligh text-white"> My Portfolio</Text>
-          <View className="mt-2 flex flex-row">
+          <View className=" flex flex-row">
             <TrendCard
               imgUrl=""
               name="FireBird"
@@ -42,7 +42,7 @@ const TrendMarketScreen = (props: Props) => {
           </Text>
           <ScrollView
             horizontal
-            className="mb-3 mt-2 flex flex-row gap-x-3 overflow-auto"
+            className="mb-3  flex flex-row gap-x-3 overflow-auto"
           >
             <ButtonFilter
               className="rounded-xl bg-color_button_filter py-2 "
