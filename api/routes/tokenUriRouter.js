@@ -55,11 +55,23 @@ const router = express.Router();
  *             attributes:
  *               type: object
  *               required:
- *                 - type
+ *                 - element
+ *                 - eye
+ *                 - fur
+ *                 - item
  *               properties:
- *                 type:
- *                   type: string
- *                   description: Type attribute of the token
+ *                 element:
+ *                   type: integer
+ *                   description: Element attribute of the token
+ *                 eye:
+ *                   type: integer
+ *                   description: Epe attribute of the token
+ *                 fur:
+ *                   type: integer
+ *                   description: Fur attribute of the token
+ *                 item:
+ *                   type: integer
+ *                   description: Item attribute of the token
  *             description:
  *               type: string
  *               description: Description of the token
@@ -102,7 +114,10 @@ router.get('/', tokenUriController.getAll);
  *                  title: "Test"
  *                  tokenId: "104"
  *                  attributes:
- *                      type: "Dragon"
+ *                      element: 0
+ *                      eye: 1
+ *                      fur: 1
+ *                      item: 0
  *                  description: "This is a normal Dragon"
  *     responses:
  *       200:
@@ -161,7 +176,10 @@ router.get('/:id', tokenUriController.getById);
  *                  title: "Test"
  *                  tokenId: "104"
  *                  attributes:
- *                      type: "Dragon"
+ *                      element: 1
+ *                      eye: 1
+ *                      fur: 1
+ *                      item: 1
  *                  description: "This is a normal Dragon"
  *     responses:
  *       200:
