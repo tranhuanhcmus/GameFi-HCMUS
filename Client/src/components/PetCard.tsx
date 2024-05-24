@@ -61,11 +61,41 @@ const PetCard: React.FC<PetCardProps> = ({
         className="rounded-[20px] bg-[#2B2B2B] p-[10px] "
       >
         <View className="mb-2 flex flex-row items-center justify-between">
-          {ELEMENT.FIRE === element && <FIRE></FIRE>}
+          {/* {ELEMENT.FIRE === element && <FIRE></FIRE>}
           {ELEMENT.IRON === element && <IRON></IRON>}
           {ELEMENT.LEAF === element && <LEAF></LEAF>}
           {ELEMENT.STONE === element && <STONE></STONE>}
-          {ELEMENT.WATER === element && <WATER></WATER>}
+          {ELEMENT.WATER === element && <WATER></WATER>} */}
+          {ELEMENT.FIRE === element && (
+            <Image
+              source={require("../../assets/elements/Fire.png")}
+              style={{ width: 20, height: 20 }}
+            />
+          )}
+          {ELEMENT.IRON === element && (
+            <Image
+              source={require("../../assets/elements/Iron.png")}
+              style={{ width: 20, height: 20 }}
+            />
+          )}
+          {ELEMENT.LEAF === element && (
+            <Image
+              source={require("../../assets/elements/Leaf.png")}
+              style={{ width: 20, height: 20 }}
+            />
+          )}
+          {ELEMENT.STONE === element && (
+            <Image
+              source={require("../../assets/elements/Stone.png")}
+              style={{ width: 20, height: 20 }}
+            />
+          )}
+          {ELEMENT.WATER === element && (
+            <Image
+              source={require("../../assets/elements/Water.png")}
+              style={{ width: 20, height: 20 }}
+            />
+          )}
           <View
             style={{
               justifyContent: "center",

@@ -2,7 +2,7 @@ import { ScrollView, View, Image } from "react-native";
 import CustomText from "../../components/CustomText";
 import { COLOR } from "../../utils/color";
 import ConstantsResponsive from "../../constants/Constanst";
-import Medicine from "../../../assets/Medicine.svg";
+import Medicine from "../../../assets/medicine.svg";
 import Lucky from "../../../assets/medicine.png";
 const EventScreen = () => {
   return (

@@ -39,7 +39,7 @@ const HomeScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
-  const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(true);
+  const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
   const [offsetX, setOffsetX] = useState<number>(0);
   const isFocused = useIsFocused();
   const [offsetY, setOffsetY] = useState<number>(0);
@@ -141,11 +141,11 @@ const HomeScreen = () => {
         isVisible={isInventoryModalVisible}
         setIsVisible={setIsInventoryModalVisible}
       />
-      {/* <Image
+      <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
-        source={require("../../../assets/BackGround.png")}
-      /> */}
+        source={require("../../../assets/background2.jpg")}
+      />
       <LoadingModal
         gameName={gameName}
         isVisible={isVisible}

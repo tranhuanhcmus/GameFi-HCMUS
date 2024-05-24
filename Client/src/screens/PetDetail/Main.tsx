@@ -184,7 +184,7 @@ export default function DetailOfPet(props: any) {
           position: "absolute",
           bottom: 0,
           alignSelf: "center",
-          marginBottom: 10,
+          marginBottom: 20,
         }}
       >
         <AwesomeButton
@@ -193,9 +193,7 @@ export default function DetailOfPet(props: any) {
             alignSelf: "center",
           }}
           onPress={() => {
-            console.log("ahahahaha");
-
-            // navigate.navigate("DetailOfPet");
+            navigate.navigate("Home");
           }}
           width={ConstantsResponsive.MAX_WIDTH * 0.7}
           height={ConstantsResponsive.MAX_HEIGHT * 0.1}
@@ -279,7 +277,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   petImage: {
-    width: "70%",
+    width: "60%",
     height: "auto",
     aspectRatio: 1,
     borderRadius: 20,

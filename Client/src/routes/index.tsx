@@ -89,7 +89,6 @@ const renderNavElement = (data: NavItem[]) => {
       options={{
         headerTransparent: true,
         headerTintColor: "#fff",
-
         headerShown: item.header || false,
 
         headerLeft: () => <HeaderLeft></HeaderLeft>,
@@ -213,6 +212,13 @@ const Route = () => (
       <Stack.Screen
         name="Event"
         component={EventScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
         options={{
           headerShown: false,
         }}
