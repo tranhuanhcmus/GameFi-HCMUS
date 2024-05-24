@@ -81,7 +81,7 @@ connectDB().then((connected) => {
       console.log(`Server is running on ${process.env.SERVER_URL}:${port}`);
       //====================================Events====================================//
       // Catch Events
-      // catchEventNFT();
+      catchEventNFT();
     });
   }
 });
