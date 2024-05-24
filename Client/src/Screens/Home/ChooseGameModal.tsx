@@ -18,18 +18,22 @@ import CustomText from "../../components/CustomText";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
 import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
+import { SocketIOClient } from "../../../socket";
 
 const ChooseGameModal = ({
   isVisible,
   setIsVisible,
+  setGameName,
 }: {
   isVisible: boolean;
+  setGameName: (content: string) => void;
   setIsVisible: (value: boolean) => void;
 }) => {
+  const socket = SocketIOClient.getInstance();
   const navigate = useCustomNavigation();
   useEffect(() => {}, [isVisible]);
 
-  return isVisible ? (
+  return (
     <Modal animationType="slide" transparent={true} visible={isVisible}>
       <View
         style={{
@@ -97,6 +101,8 @@ const ChooseGameModal = ({
                 <TouchableOpacity
                   onPress={() => {
                     setIsVisible(false);
+
+                    setGameName("Game");
                   }}
                   style={{ flex: 1 }}
                 >
@@ -126,6 +132,8 @@ const ChooseGameModal = ({
                 <TouchableOpacity
                   onPress={() => {
                     setIsVisible(false);
+
+                    setGameName("HangManGame");
                   }}
                   style={{ flex: 1 }}
                 >
@@ -154,7 +162,7 @@ const ChooseGameModal = ({
         </ScrollView>
       </View>
     </Modal>
-  ) : null;
+  );
 };
 
 export default ChooseGameModal;

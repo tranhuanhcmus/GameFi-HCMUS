@@ -125,7 +125,7 @@ const HomeScreen = () => {
     <View
       style={{
         position: "relative",
-        flex: 1,
+        display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: COLOR.PURPLE,
@@ -134,6 +134,7 @@ const HomeScreen = () => {
       }}
     >
       <ChooseGameModal
+        setGameName={setGameName}
         isVisible={isChooseGameModalVisible}
         setIsVisible={setIsChooseGameModalVisible}
       />
@@ -154,7 +155,7 @@ const HomeScreen = () => {
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH * 0.4,
-          height: "auto",
+          height: ConstantsResponsive.YR * 50,
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
@@ -184,26 +185,6 @@ const HomeScreen = () => {
             100
           </CustomText>
         </View>
-      </View>
-
-      <View style={styles.playArea} className="relative  ">
-        <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
-          <SpriteSheet
-            ref={mummyRef}
-            source={require("../../../assets/spritesheet_5.png")}
-            columns={21}
-            rows={1}
-            height={
-              ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 3 * 250
-            }
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20,
-              ],
-            }}
-          ></SpriteSheet>
-        </View>
         <View
           style={{
             display: "flex",
@@ -225,6 +206,7 @@ const HomeScreen = () => {
           </CustomText>
         </View>
       </View>
+
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
@@ -243,13 +225,25 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <View
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: "auto",
-          marginTop: 10,
-        }}
-      ></View>
+      <View style={styles.playArea} className="relative  ">
+        <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
+          <SpriteSheet
+            ref={mummyRef}
+            source={require("../../../assets/spritesheet_5.png")}
+            columns={21}
+            rows={1}
+            height={
+              ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 3 * 250
+            }
+            animations={{
+              walk: [
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18, 19, 20,
+              ],
+            }}
+          ></SpriteSheet>
+        </View>
+      </View>
 
       <View
         style={{
@@ -287,13 +281,8 @@ const HomeScreen = () => {
       >
         <AwesomeButton
           onPress={() => {
-            if (!isVisible) setIsVisible(true);
-            setGameName("HangManGame");
-            socket.emitFindMatch("HangManGame");
+            setIsChooseGameModalVisible(true);
           }}
-          // onPress={() => {
-          //   setIsChooseGameModalVisible(true);
-          // }}
           backgroundDarker={COLOR.DARKER_PURPLE}
           backgroundColor={COLOR.DARKER_PURPLE}
           width={ConstantsResponsive.MAX_WIDTH * 0.4}
@@ -306,18 +295,18 @@ const HomeScreen = () => {
         </AwesomeButton>
 
         <AwesomeButton
-          // onPress={() => {
-          //   if (!isVisible) setIsVisible(true);
-          //   setGameName("Game");
-          //   socket.emitFindMatch("Game");
-          // }}
+          onPress={() => {
+            if (!isVisible) setIsVisible(true);
+
+            socket.emitFindMatch(gameName);
+          }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
           width={ConstantsResponsive.MAX_WIDTH * 0.5}
           height={ConstantsResponsive.MAX_HEIGHT * 0.1}
           borderRadius={15}
         >
-          <Text style={styles.textSize}>PLAY</Text>
+          <Text style={styles.textSize}>{gameName}</Text>
         </AwesomeButton>
       </View>
     </View>
@@ -474,11 +463,7 @@ const styles = StyleSheet.create({
   playArea: {
     width: ConstantsResponsive.MAX_WIDTH,
 
-    height:
-      ConstantsResponsive.MAX_HEIGHT -
-      ConstantsResponsive.YR * 250 -
-      ConstantsResponsive.YR * 112 -
-      ConstantsResponsive.YR * 112,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.3,
     flexDirection: "column",
   },
   playRow: {
