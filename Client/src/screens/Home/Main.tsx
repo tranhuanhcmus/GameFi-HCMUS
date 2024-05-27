@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,7 +15,7 @@ import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { useAppDispatch } from "../../redux/store";
-import { selectUser } from "../../redux/userSlice";
+import { selectUser, setAddress } from "../../redux/userSlice";
 
 import AwesomeButton from "react-native-really-awesome-button";
 import SpriteSheet from "rn-sprite-sheet";
@@ -100,14 +100,14 @@ const HomeScreen = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     navigate.replace("Connect");
-  //     dispatch(setAddress(undefined));
-  //   } else {
-  //     dispatch(setAddress(address));
-  //   }
-  // }, [isConnected]);
+  useEffect(() => {
+    if (!isConnected) {
+      navigate.replace("Connect");
+      dispatch(setAddress(undefined));
+    } else {
+      dispatch(setAddress(address));
+    }
+  }, [isConnected]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -145,7 +145,7 @@ const HomeScreen = () => {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
       />
-      <View
+      {/* <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH * 0.4,
           height: "auto",
@@ -199,7 +199,7 @@ const HomeScreen = () => {
             3
           </CustomText>
         </View>
-      </View>
+      </View> */}
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
@@ -207,6 +207,7 @@ const HomeScreen = () => {
           flexDirection: "row",
           justifyContent: "flex-end",
           paddingEnd: 10,
+          marginTop: ConstantsResponsive.MAX_HEIGHT * 0.2,
         }}
       >
         <TouchableOpacity
@@ -235,7 +236,7 @@ const HomeScreen = () => {
             >
               <SpriteSheet
                 ref={mummyRef}
-                source={require("../../../assets/spritesheet_5.png")}
+                source={require("../../../assets/spritesheet_7.png")}
                 columns={21}
                 rows={1}
                 height={

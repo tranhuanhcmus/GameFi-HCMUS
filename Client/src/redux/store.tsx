@@ -8,6 +8,7 @@ import upperLayerSlice from "./uppLayerSlice";
 import playerSlice from "./playerSlice";
 import socketSlice from "./socketSlice";
 import hangManSlice from "./hangManSlice";
+import settingGameSlice from "./settingGameSlice";
 import breedSlice from "./breedSlice";
 
 export const store = configureStore({
@@ -19,6 +20,7 @@ export const store = configureStore({
     upperLayer: upperLayerSlice,
     hangMan: hangManSlice,
     player: playerSlice,
+    settingGame: settingGameSlice,
     socket: socketSlice,
     breed: breedSlice,
   },

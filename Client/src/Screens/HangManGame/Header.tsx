@@ -19,8 +19,11 @@ import { COLOR } from "../../utils/color";
 
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
 import { HEADER } from "../../constants/header";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { playerSlice } from "../../redux/playerSlice";
+
+import Setting from "../../../assets/SVGSetting.svg";
+import { setVisable } from "../../redux/settingGameSlice";
 
 interface props {
   hp: number;
@@ -45,7 +48,7 @@ const User: React.FC<props> = ({ hp }) => {
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
-
+  const isFirstRender = useRef(true);
   const floatingTextAnim = useRef(new Animated.Value(0)).current;
 
   // Call this function when the character receives damage
@@ -107,12 +110,6 @@ const User: React.FC<props> = ({ hp }) => {
       });
     }
   };
-  // useEffect(() => {
-  //   play("walk");
-  //   // const interval = setInterval(() => {
-  //   //   setOffsetX((prevOffsetX) => prevOffsetX + 10); // Update offsetX every interval
-  //   // }, 1000); // Change the interval as needed for desired animation speed
-  // }, []);
 
   const stop = () => {
     if (mummyRef.current) {
@@ -121,6 +118,13 @@ const User: React.FC<props> = ({ hp }) => {
   };
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      // Skip the effect on first render
+      play("default");
+      isFirstRender.current = false;
+      return;
+    }
+
     play("walk");
     setTimeout(() => {
       receiveDamage(10);
@@ -171,6 +175,7 @@ const User: React.FC<props> = ({ hp }) => {
           rows={1}
           width={ConstantsResponsive.XR * 2 * 80}
           animations={{
+            default: [20],
             walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           }}
         />
@@ -188,6 +193,8 @@ const Component: React.FC<props> = ({ hp }) => {
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
+  const isFirstRender = useRef(true);
+  const dispatch = useDispatch();
 
   const play = (type: string) => {
     const parsedFps = Number(fps);
@@ -200,8 +207,6 @@ const Component: React.FC<props> = ({ hp }) => {
         resetAfterFinish,
       });
     }
-    setOffsetX(0);
-    setOffsetY(0);
   };
   const play1 = (type: string) => {
     const parsedFps = Number(fps + 1);
@@ -248,6 +253,13 @@ const Component: React.FC<props> = ({ hp }) => {
   };
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      // Skip the effect on first render
+      play("default");
+      isFirstRender.current = false;
+      return;
+    }
+
     play("walk");
     setTimeout(() => {
       receiveDamage(10);
@@ -264,6 +276,17 @@ const Component: React.FC<props> = ({ hp }) => {
           resizeMode="contain"
         ></Image>
       </View>
+      <TouchableOpacity
+        style={styles.setting}
+        onPress={() => {
+          dispatch(setVisable(true));
+        }}
+      >
+        <Setting
+          height={styles.setting.height}
+          width={styles.setting.width}
+        ></Setting>
+      </TouchableOpacity>
 
       <View style={styles.playerPet}>
         <SpriteSheet
@@ -298,6 +321,7 @@ const Component: React.FC<props> = ({ hp }) => {
           rows={1}
           width={ConstantsResponsive.XR * 2 * 80}
           animations={{
+            default: [20],
             walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           }}
         />
@@ -397,6 +421,14 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
+  },
+
+  setting: {
+    position: "absolute",
+    height: ConstantsResponsive.XR * 50,
+    width: ConstantsResponsive.XR * 50,
+    top: ConstantsResponsive.YR * 80,
+    right: ConstantsResponsive.XR * 4,
   },
 
   playerPet: {

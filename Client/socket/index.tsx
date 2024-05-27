@@ -30,7 +30,7 @@ server = `http://localhost:${PORT}`; // TODO CHANGE LATER
 //   server = `${SERVER_URL}${PORT}`;
 // }
 
-console.log(`Server URL: ${server}`);
+// console.log(`Server URL: ${server}`);
 
 export type Cell = {
   row: string;
@@ -107,30 +107,6 @@ export class SocketIOClient {
     this.socket.emit("success", data);
   }
 
-  emitSendAcceptBooking(data: any) {
-    this.socket.emit(SOCKET.SEND_ACCEPT_BOOKING, data);
-  }
-
-  emitSendUpdateLocation(data: any) {
-    this.socket.emit(SOCKET.UPDATE_LOCATION_DRIVER, data);
-  }
-
-  emitGetCustomerLocation(data: any) {
-    this.socket.emit(SOCKET.GET_LOCATION_CUSTOMER, data);
-  }
-
-  emitPickCustomer(data: any) {
-    this.socket.emit(SOCKET.SEND_NOTIFY_PICK_UP, data);
-  }
-
-  emitSuccessTrip(data: any) {
-    this.socket.emit(SOCKET.SEND_NOTIFY_TRIP_SUCCESS, data);
-  }
-
-  emitCancelTrip(data: any) {
-    this.socket.emit(SOCKET.SEND_NOTIFY_CANCEL_TRIP, data);
-  }
-
   emitAttack(data: any) {
     this.socket.emit(SOCKET.ATTACK, data);
   }
@@ -168,8 +144,12 @@ export class SocketIOClient {
       callback(data);
     });
   }
-  removeListenTakeDamage(callback: any) {
-    this.socket.off(SOCKET.TAKE_DAMAGE, callback);
+  removeListenTakeDamage() {
+    this.socket.off(SOCKET.TAKE_DAMAGE);
+  }
+
+  removeListenFristTurn() {
+    this.socket.off(SOCKET.FIRST_TURN);
   }
 
   onListenMove(callback: (data: any) => void) {
