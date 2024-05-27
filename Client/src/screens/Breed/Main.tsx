@@ -21,7 +21,7 @@ import QuestionMark from "../../../assets/Question.png";
 import { useSelector } from "react-redux";
 import log from "../../logger/index";
 
-const URL = "http://192.168.1.14:4500"; // YOU CAN CHANGE THIS.
+const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
 const Pet = (props: any) => {
   const navigate = useCustomNavigation();

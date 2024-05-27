@@ -145,7 +145,7 @@ const HomeScreen = () => {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
       />
-      <View
+      {/* <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH * 0.4,
           height: "auto",
@@ -199,7 +199,7 @@ const HomeScreen = () => {
             3
           </CustomText>
         </View>
-      </View>
+      </View> */}
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
@@ -207,6 +207,7 @@ const HomeScreen = () => {
           flexDirection: "row",
           justifyContent: "flex-end",
           paddingEnd: 10,
+          marginTop: ConstantsResponsive.MAX_HEIGHT * 0.2,
         }}
       >
         <TouchableOpacity
