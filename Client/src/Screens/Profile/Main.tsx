@@ -9,6 +9,7 @@ import {
   FlatList,
   StyleSheet,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { ItemComponent } from "../../components/ItemComponent";
 import { ELEMENT } from "../../constants/types";
@@ -25,10 +26,21 @@ import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = () => {
+  const flatListRef = useRef<FlatList>(null);
   const [isConnected, setIsConnected] = useState(false);
   const navigation = useNavigation();
+
+  const scrollToBottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
   return (
-    <View
+    <ScrollView
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
         height: ConstantsResponsive.MAX_HEIGHT,
@@ -49,7 +61,7 @@ const ProfileScreen = () => {
         <Image
           source={require("../../../assets/avatar.png")}
           style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.1,
+            width: ConstantsResponsive.MAX_WIDTH * 0.2,
             aspectRatio: 1,
           }}
         />
@@ -64,7 +76,249 @@ const ProfileScreen = () => {
           @username
         </CustomText>
       </View>
+      <View
+        id="progress"
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: ConstantsResponsive.MAX_HEIGHT * 0.2,
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "flex-start",
+          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+          marginBottom: ConstantsResponsive.MAX_WIDTH * 0.05,
+        }}
+      >
+        <CustomText
+          style={{ color: COLOR.WHITE, fontWeight: "bold", fontSize: 17 }}
+        >
+          Secure your progress
+        </CustomText>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH * 0.9,
+            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+            backgroundColor: COLOR.DARKER_PURPLE,
+            justifyContent: "flex-start",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+            borderRadius: 20,
+            paddingLeft: 10,
+          }}
+        >
+          <Image
+            source={require("../../../assets/avatar.png")}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.1,
+              height: ConstantsResponsive.MAX_WIDTH * 0.1,
+            }}
+          />
+          <CustomText
+            style={{
+              color: COLOR.WHITE,
+              fontWeight: "bold",
+              fontSize: 17,
+              marginLeft: 10,
+            }}
+          >
+            Update Avatar & Nickname
+          </CustomText>
+        </TouchableOpacity>
+      </View>
 
+      <View
+        id="in_game_currency"
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: "auto",
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "flex-start",
+          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+          marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.05,
+        }}
+      >
+        <CustomText
+          style={{
+            color: COLOR.WHITE,
+            fontWeight: "bold",
+            fontSize: 17,
+            marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.04,
+          }}
+        >
+          In-game currencies
+        </CustomText>
+        <FlatList
+          ref={flatListRef}
+          data={[
+            { id: 1, image: require("../../../assets/coin.svg"), quantity: 0 },
+          ]}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ gap: 20 }}
+          keyExtractor={(item) => item.id}
+          horizontal={true}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH * 0.3,
+                height: ConstantsResponsive.MAX_WIDTH * 0.3,
+                backgroundColor: COLOR.DARKER_PURPLE,
+                borderRadius: 20,
+              }}
+            >
+              <View>
+                <Image
+                  source={item.image}
+                  style={{
+                    width: ConstantsResponsive.MAX_WIDTH * 0.2,
+                    height: ConstantsResponsive.MAX_WIDTH * 0.2,
+                  }}
+                />
+              </View>
+            </View>
+          )}
+        />
+      </View>
+      <View
+        id="inventory"
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: "auto",
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "flex-start",
+          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+        }}
+      >
+        <CustomText
+          style={{
+            color: COLOR.WHITE,
+            fontWeight: "bold",
+            fontSize: 17,
+            marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.04,
+          }}
+        >
+          Inventory
+        </CustomText>
+        <View
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH * 0.9,
+            height: "auto",
+            backgroundColor: COLOR.DARKER_PURPLE,
+            borderRadius: 20,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.9,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+              backgroundColor: COLOR.DARKER_PURPLE,
+              justifyContent: "flex-start",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              borderRadius: 20,
+              paddingLeft: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: COLOR.WHITE,
+            }}
+          >
+            <Image
+              source={require("../../../assets/avatar.png")}
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH * 0.1,
+                height: ConstantsResponsive.MAX_WIDTH * 0.1,
+              }}
+            />
+            <CustomText
+              style={{
+                color: COLOR.WHITE,
+                fontWeight: "bold",
+                fontSize: 17,
+                marginLeft: 10,
+              }}
+            >
+              Beasts
+            </CustomText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.9,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+              backgroundColor: COLOR.DARKER_PURPLE,
+              justifyContent: "flex-start",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              borderRadius: 20,
+              paddingLeft: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: COLOR.WHITE,
+            }}
+          >
+            <Image
+              source={require("../../../assets/avatar.png")}
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH * 0.1,
+                height: ConstantsResponsive.MAX_WIDTH * 0.1,
+              }}
+            />
+            <CustomText
+              style={{
+                color: COLOR.WHITE,
+                fontWeight: "bold",
+                fontSize: 17,
+                marginLeft: 10,
+              }}
+            >
+              Wallets & Token
+            </CustomText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.8,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+              backgroundColor: COLOR.DARKER_PURPLE,
+              justifyContent: "flex-start",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              borderRadius: 20,
+              paddingLeft: 10,
+            }}
+          >
+            <Image
+              source={require("../../../assets/avatar.png")}
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH * 0.1,
+                height: ConstantsResponsive.MAX_WIDTH * 0.1,
+              }}
+            />
+            <CustomText
+              style={{
+                color: COLOR.WHITE,
+                fontWeight: "bold",
+                fontSize: 17,
+                marginLeft: 10,
+              }}
+            >
+              NFTs
+            </CustomText>
+          </TouchableOpacity>
+        </View>
+      </View>
       <View
         id="bottom_button"
         style={{
@@ -73,21 +327,8 @@ const ProfileScreen = () => {
           display: "flex",
           justifyContent: "space-around",
           alignItems: "center",
-          position: "absolute",
-          bottom: 0,
         }}
       >
-        <AwesomeButton
-          onPress={() => {
-            navigation.goBack();
-          }}
-          backgroundColor={COLOR.YELLOW}
-          backgroundDarker={COLOR.DARK_YELLOW}
-          width={ConstantsResponsive.MAX_WIDTH * 0.8}
-        >
-          Logout
-        </AwesomeButton>
-
         <AwesomeButton
           onPress={() => {
             setIsConnected(true);
@@ -99,7 +340,7 @@ const ProfileScreen = () => {
           View wallet
         </AwesomeButton>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
