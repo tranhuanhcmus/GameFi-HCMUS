@@ -666,11 +666,13 @@ const styles = StyleSheet.create({
   boardContainer: {
     height: GameLogic.TABLE_HEIGHT,
     width: GameLogic.TABLE_WIDTH,
-    backgroundColor: COLOR.WHITE,
+    backgroundColor: COLOR.DARKER_PURPLE,
     alignContent: "center",
     top: GameLogic.POSITION_TOP,
     left: GameLogic.POSITION_LEFT,
     position: "absolute",
+    borderWidth: 1,
+    borderColor: COLOR.WHITE,
   },
   row: {
     height: "auto",
