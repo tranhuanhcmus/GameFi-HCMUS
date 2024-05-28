@@ -1,5 +1,6 @@
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
+const { Op } = require('sequelize');
 const getAll = async(req, res, next) => {
     try {
         const list = await models.ItemAppOwner.findAll()
@@ -117,8 +118,66 @@ const updateById = async (req, res, next) => {
         return res.sendResponse(null, error.message || error, STATUS_CODES.INTERNAL_ERROR);
     }
 };
+const getOwnerCurrency = async (req, res, next) => {
+    try {
+        const { owner } = req.params;
+        const results = await models.ItemAppOwner.findAll({
+            where: {
+                owner: owner
+            }
+        });
 
+        if (!results || results.length === 0) {
+            return res.sendResponse(null, `Not Found Owner ${owner}`, STATUS_CODES.NOT_FOUND);
+        }
+
+        // Initialize an array to hold filtered detailed results
+        const detailedResults = [];
+
+        // Loop through the results array
+        for (const result of results) {
+            // Get detailed information for each id with an OR condition on the name field
+            const detailedResult = await models.ItemApp.findOne({
+                where: {
+                    id: result.dataValues.id,
+                    [Op.or]: [
+                        { name: 'Gem' },
+                        { name: 'Gold' }
+                    ]
+                }
+            });
+            
+            // Check the result from getById and handle the response
+            if (!detailedResult) {
+                // If not found or there's an error, continue to the next result
+                continue;
+            }
+
+            // If successful, attach the detailed information to the result
+            result.dataValues.name = detailedResult.dataValues.name;
+            result.dataValues.description = detailedResult.dataValues.description;
+            result.dataValues.category = detailedResult.dataValues.category;
+            result.dataValues.quality = detailedResult.dataValues.quality;
+            result.dataValues.itemquantity = detailedResult.dataValues.quantity;
+            result.dataValues.gemcost = detailedResult.dataValues.gemcost;
+            result.dataValues.goldcost = detailedResult.dataValues.goldcost;
+            result.dataValues.image = detailedResult.dataValues.image;
+
+            // Push the detailed result to the filtered array
+            detailedResults.push(result);
+        }
+
+        if (detailedResults.length === 0) {
+            return res.sendResponse(null, `No items found for owner ${owner} with names 'Gem' or 'Gold'`, STATUS_CODES.NOT_FOUND);
+        }
+
+        // Return the results with mapped detailed information
+        return res.sendResponse(detailedResults, `Get Owner ${owner} App Items Success`, STATUS_CODES.OK);
+    } catch (error) {
+        return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);
+    }
+}
 
 module.exports={
-	getAll,getById,add,deleteById,updateById,getByOwner
+	getAll,getById,add,deleteById,updateById,getByOwner,getOwnerCurrency
 }

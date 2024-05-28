@@ -177,5 +177,6 @@ router.put('/', itemAppOwnerController.updateById);
  *         description: Internal server error
  */
 router.delete('/:id', itemAppOwnerController.deleteById);
+router.get('/currency/:owner', itemAppOwnerController.getOwnerCurrency);
 
 module.exports = router;
