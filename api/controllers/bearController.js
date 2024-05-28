@@ -25,7 +25,8 @@ const breedBear = async (req, res) => {
 
 const getBear = async (req, res) => {
 	try {
-		const bear = req.body;
+		const { bear } = req.body;
+		console.log(bear.eye, bear.fur, bear.element, bear.item);
 		const bearEye = await models.EyePool.findOne({ where: { id: bear.eye } });
 		const bearElement = await models.ElementPool.findOne({
 			where: { id: bear.element },
