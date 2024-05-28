@@ -60,19 +60,6 @@ const GameScreen = () => {
         <UpperLayer />
 
         <GameBoard />
-
-        <View
-          style={{
-            top: 300,
-          }}
-        >
-          <Text style={{ color: COLOR.WHITE }}>
-            turn: {turn} damage: {damage}
-          </Text>
-          <Text style={{ color: COLOR.WHITE }}>
-            hp: {hp} componentHp: {componentHp}
-          </Text>
-        </View>
       </View>
     </SafeAreaView>
   );

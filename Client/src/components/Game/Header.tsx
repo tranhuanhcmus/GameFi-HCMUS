@@ -18,6 +18,7 @@ import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
 import { HEADER } from "../../constants/header";
 import { useSelector } from "react-redux";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface props {
   hp: number;
@@ -301,29 +302,76 @@ const Component: React.FC<props> = ({ hp }) => {
     </View>
   );
 };
+
+const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
+
 //  HEALTH BAR AND DAMAGE BAR.
 const Bar: React.FC<props> = ({ hp }) => {
+  const animatedWidth = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animatedWidth, {
+      toValue: (hp / GameLogic.HEALTH_POINT) * 100,
+      duration: 700,
+      useNativeDriver: false,
+    }).start();
+  }, [hp]);
+
+  // Adjust the colors and stops for your desired "glassy" look
+  const barColors = ["#ff3030", "#ff8c00"];
+  const colorLocations = [0, 1];
+
   return (
-    <View style={styles.bar}>
-      <View style={styles.energyBar}>
-        <View
-          style={{
-            height: "100%",
-            width: hp,
-            backgroundColor: COLOR.LIGHT_PURPLE,
-            borderTopRightRadius: 4,
-            borderTopLeftRadius: 10,
-            borderBottomLeftRadius: 4,
-            borderBottomRightRadius: 10,
-            marginBottom: 5,
-          }}
-        ></View>
-      </View>
-      <View style={styles.damageBar}></View>
+    <View style={styles.barContainer}>
+      <AnimatedGradient
+        style={[
+          styles.healthBar,
+          {
+            width: animatedWidth.interpolate({
+              inputRange: [0, 100],
+              outputRange: ["0%", "100%"],
+            }),
+          },
+        ]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        colors={barColors}
+        locations={colorLocations}
+      ></AnimatedGradient>
+
+      <Text style={styles.barText}>{`${hp}`}</Text>
     </View>
   );
 };
 const styles = StyleSheet.create({
+  barContainer: {
+    width: "60%",
+    height: 30,
+    padding: 3,
+    backgroundColor: "rgba(255,255,255,0.3)",
+    borderRadius: 15,
+    justifyContent: "center",
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  healthBar: {
+    height: "100%",
+    borderRadius: 12,
+    overflow: "hidden",
+    position: "absolute",
+    left: 3,
+    top: 3,
+    bottom: 3,
+  },
+  barText: {
+    textAlign: "center",
+    color: "#fff",
+    fontWeight: "bold",
+  },
   characterArea: {
     position: "absolute",
     top: 0,
@@ -363,34 +411,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
-  petImage: {
-    width: 100,
-    height: 100,
-  },
+
   avatarImage: {
     width: 50,
     height: 50,
     borderRadius: HEADER.BORDER_RADIUS,
   },
-  energyBar: {
-    width: GameLogic.HEALTH_POINT,
-    height: 20,
-    backgroundColor: "transparent",
-    borderTopRightRadius: 4,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 10,
-    marginBottom: 5,
-  },
-  damageBar: {
-    width: GameLogic.HEALTH_POINT,
-    height: 20,
-    backgroundColor: "#70A2FF",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 4,
-  },
+
   bar: {
     height: "auto",
     width: "auto",
@@ -408,12 +435,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
   },
-  boardContainer: {
-    height: "auto",
-    width: "auto",
-    backgroundColor: COLOR.WHITE,
-    alignContent: "center",
-  },
+
   row: {
     height: "auto",
     width: "auto",
@@ -421,11 +443,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignContent: "center",
     justifyContent: "space-around",
-  },
-
-  imageInCell: {
-    width: "80%",
-    height: "80%",
   },
 });
 
