@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Image,
   SafeAreaView,
@@ -20,6 +20,7 @@ import Plus from "../../../assets/Plus.png";
 import QuestionMark from "../../../assets/Question.png";
 import { useSelector } from "react-redux";
 import log from "../../logger/index";
+import SpriteSheet from "rn-sprite-sheet";
 
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
@@ -183,10 +184,16 @@ export function BreedScreen() {
   const [data, setData] = useState([fatherPet, motherPet]);
   const navigate = useCustomNavigation();
 
+  const eggRef = useRef<SpriteSheet>(null);
+
   useEffect(() => {
     log.info(fatherPet, motherPet);
     setData([fatherPet, motherPet]);
   }, [fatherPet, motherPet]);
+
+  useEffect(() => {
+    playRunAnimation("walk");
+  }, []);
   /**
    *
    * @param father
@@ -216,6 +223,17 @@ export function BreedScreen() {
       console.log("POST request successful:", response.data);
     } catch (postError: any) {
       console.error("Error making POST request:", postError);
+    }
+  };
+
+  const playRunAnimation = (type: string) => {
+    if (eggRef.current) {
+      eggRef.current.play({
+        type,
+        // fps: isNaN(parsedFps) ? 16 : parsedFps,
+        // loop,
+        // resetAfterFinish,
+      }); // Play "run" animation
     }
   };
 
@@ -249,7 +267,7 @@ export function BreedScreen() {
           : null}
       </View>
 
-      <Image
+      {/* <Image
         source={Egg}
         style={{
           width: ConstantsResponsive.MAX_WIDTH / 6,
@@ -257,7 +275,28 @@ export function BreedScreen() {
           alignSelf: "center",
           marginVertical: 20,
         }}
-      />
+      /> */}
+      <View
+        id="spritesheet_egg"
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <SpriteSheet
+          ref={eggRef}
+          source={require("../../../assets/spritesheet_egg.jpg")}
+          columns={6}
+          rows={1}
+          height={20}
+          width={20}
+          animations={{
+            walk: [0, 1, 2, 3, 4, 5],
+          }}
+        />
+      </View>
       <View
         style={{
           alignItems: "center",
