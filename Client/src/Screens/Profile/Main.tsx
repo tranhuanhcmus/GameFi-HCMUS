@@ -37,6 +37,7 @@ const ProfileScreen = () => {
     >
       {isConnected && <W3mAccountButton balance="show" />}
       <View
+        id="image_info"
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           height: ConstantsResponsive.MAX_HEIGHT * 0.2,
@@ -63,115 +64,29 @@ const ProfileScreen = () => {
           @username
         </CustomText>
       </View>
-      <View
-        id="info_container"
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: ConstantsResponsive.MAX_HEIGHT * 0.5,
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-        }}
-      >
-        <TextInput
-          id="first_name"
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.8,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-            backgroundColor: COLOR.DARKER_PURPLE,
-            borderRadius: 15,
-            color: COLOR.WHITE,
-          }}
-          placeholderTextColor={COLOR.WHITE}
-          placeholder="What's your first name"
-          textAlign="center"
-          textAlignVertical="center"
-        ></TextInput>
 
-        <TextInput
-          id="last_name"
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.8,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-            backgroundColor: COLOR.DARKER_PURPLE,
-            borderRadius: 15,
-            color: COLOR.WHITE,
-          }}
-          placeholderTextColor={COLOR.WHITE}
-          placeholder="And your last name?"
-          textAlign="center"
-          textAlignVertical="center"
-        ></TextInput>
-
-        <TextInput
-          id="gender"
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.8,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-            backgroundColor: COLOR.DARKER_PURPLE,
-            borderRadius: 15,
-            color: COLOR.WHITE,
-          }}
-          placeholderTextColor={COLOR.WHITE}
-          placeholder="Select gender"
-          textAlign="center"
-          textAlignVertical="center"
-        ></TextInput>
-
-        <TextInput
-          id="dob"
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.8,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-            backgroundColor: COLOR.DARKER_PURPLE,
-            borderRadius: 15,
-            color: COLOR.WHITE,
-          }}
-          placeholderTextColor={COLOR.WHITE}
-          placeholder="What's your date of birth"
-          textAlign="center"
-          textAlignVertical="center"
-        ></TextInput>
-      </View>
       <View
         id="bottom_button"
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
-          flexGrow: 1,
+          height: ConstantsResponsive.MAX_HEIGHT * 0.3,
           display: "flex",
           justifyContent: "space-around",
           alignItems: "center",
+          position: "absolute",
+          bottom: 0,
         }}
       >
-        <View
-          id="first_bottom_row_button"
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH,
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-around",
+        <AwesomeButton
+          onPress={() => {
+            navigation.goBack();
           }}
+          backgroundColor={COLOR.YELLOW}
+          backgroundDarker={COLOR.DARK_YELLOW}
+          width={ConstantsResponsive.MAX_WIDTH * 0.8}
         >
-          <AwesomeButton
-            onPress={() => {
-              navigation.goBack();
-            }}
-            backgroundColor={COLOR.GREEN}
-            backgroundDarker={COLOR.DARK_YELLOW}
-          >
-            Update profile
-          </AwesomeButton>
-          <AwesomeButton
-            onPress={() => {
-              navigation.goBack();
-            }}
-            backgroundColor={COLOR.YELLOW}
-            backgroundDarker={COLOR.DARK_YELLOW}
-          >
-            Logout
-          </AwesomeButton>
-        </View>
+          Logout
+        </AwesomeButton>
 
         <AwesomeButton
           onPress={() => {
