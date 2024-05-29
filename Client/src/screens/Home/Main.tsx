@@ -26,6 +26,7 @@ import ChooseGameModal from "./ChooseGameModal";
 import Coin from "../../../assets/coin.svg";
 import Inventory from "../../../assets/inventory.svg";
 import InventoryModal from "./Inventory";
+import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 type Props = {};
 
 const HomeScreen = () => {
@@ -99,6 +100,32 @@ const HomeScreen = () => {
       mummyRef.current.stop(() => console.log("stopped"));
     }
   };
+
+  const fetchData = async () => {
+    try {
+      const res: any[] = await ItemAppOwnerService.getItemAppOwner(address);
+      console.log("fetchData res", res.data);
+      // const mappedData: any[] = res.map((nft: any) => {
+      //   console.log("nft ", nft);
+      //   return {
+      //     id: nft.tokenid,
+      //     element: ELEMENT.FIRE,
+      //     level: getLevel(nft.exp),
+      //     petImg: nft.data.image || "",
+      //     name: nft.data.name,
+      //     rarityPet: "special",
+      //   };
+      // });
+
+      // setData(mappedData);
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (!isConnected) {
