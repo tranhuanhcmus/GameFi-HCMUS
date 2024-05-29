@@ -220,7 +220,7 @@ const ShopScreen = (props: Props) => {
       <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
+        source={require("../../../assets/BackGroundHome.jpg")}
       />
       <AlertBuyComponent
         isVisible={clickItem}
