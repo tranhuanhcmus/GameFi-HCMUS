@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Image,
   SafeAreaView,
@@ -20,8 +20,9 @@ import Plus from "../../../assets/Plus.png";
 import QuestionMark from "../../../assets/Question.png";
 import { useSelector } from "react-redux";
 import log from "../../logger/index";
+import SpriteSheet from "rn-sprite-sheet";
 
-const URL = "http://192.168.1.14:4500"; // YOU CAN CHANGE THIS.
+const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
 const Pet = (props: any) => {
   const navigate = useCustomNavigation();
@@ -183,10 +184,16 @@ export function BreedScreen() {
   const [data, setData] = useState([fatherPet, motherPet]);
   const navigate = useCustomNavigation();
 
+  const eggRef = useRef<SpriteSheet>(null);
+
   useEffect(() => {
     log.info(fatherPet, motherPet);
     setData([fatherPet, motherPet]);
   }, [fatherPet, motherPet]);
+
+  useEffect(() => {
+    playRunAnimation("walk");
+  }, []);
   /**
    *
    * @param father
@@ -219,6 +226,17 @@ export function BreedScreen() {
     }
   };
 
+  const playRunAnimation = (type: string) => {
+    if (eggRef.current) {
+      eggRef.current.play({
+        type,
+        // fps: isNaN(parsedFps) ? 16 : parsedFps,
+        // loop,
+        // resetAfterFinish,
+      }); // Play "run" animation
+    }
+  };
+
   return (
     <View
       style={{
@@ -229,10 +247,10 @@ export function BreedScreen() {
     >
       <SafeAreaView>
         {/* <Image
-          style={styles.backgroundImage}
-          resizeMode="stretch"
-          source={require("../../../assets/background2.jpg")}
-        /> */}
+        style={styles.backgroundImage}
+        resizeMode="stretch"
+        source={require("../../../assets/background2.jpg")}
+      /> */}
         <View
           style={{
             width: "100%",
@@ -243,6 +261,73 @@ export function BreedScreen() {
             marginTop: 40,
           }}
         >
+          {data
+            ? data.map((item, index) => (
+                <Pet key={index} name={item.name} image={item.petImg}></Pet>
+              ))
+            : null}
+        </View>
+
+        {/* <Image
+        source={Egg}
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH / 6,
+          height: ConstantsResponsive.MAX_WIDTH / 6,
+          alignSelf: "center",
+          marginVertical: 20,
+        }}
+      /> */}
+        <View
+          id="spritesheet_egg"
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <SpriteSheet
+            ref={eggRef}
+            source={require("../../../assets/spritesheet_egg.jpg")}
+            columns={6}
+            rows={1}
+            height={20}
+            width={20}
+            animations={{
+              walk: [0, 1, 2, 3, 4, 5],
+            }}
+          />
+        </View>
+        <View
+          style={{
+            alignItems: "center",
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: "auto",
+          }}
+        >
+          <ChildPet name={null} image={null}></ChildPet>
+        </View>
+
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            marginTop: 20,
+          }}
+        >
+          <Image
+            source={Hourglass}
+            style={{
+              width: "100%",
+              height: "30%",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              marginTop: 40,
+            }}
+          />
           {data
             ? data.map((item, index) => (
                 <Pet key={index} name={item.name} image={item.petImg}></Pet>

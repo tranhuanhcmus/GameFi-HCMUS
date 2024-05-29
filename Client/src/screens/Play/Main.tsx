@@ -20,6 +20,7 @@ import { getLevel } from "../../utils/pet";
 import log from "../../logger/index";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import breedSlice, { setFatherPet, setMotherPet } from "../../redux/breedSlice";
+import { useAccount } from "wagmi";
 type Props = {};
 
 type NFTData = {
@@ -46,6 +47,7 @@ const petArray: NFTData[] = [
 const PlayScreen: React.FC<Props> = (props: any) => {
   const [isBreed, setIsBreed] = useState(props.route.params);
   // const { isBreed } = props.route.params;
+  const { address, isConnecting, isDisconnected } = useAccount();
   const [data, setData] = useState<NFTData[]>(petArray);
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
@@ -62,18 +64,16 @@ const PlayScreen: React.FC<Props> = (props: any) => {
 
   const fetchData = async () => {
     try {
-      const res: NFT[] = await UserService.getNFTsByOwner(
-        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-      );
-
-      const mappedData: NFTData[] = res.map((nft: NFT) => {
+      const res: NFT[] = await UserService.getNFTsByOwner(address);
+      console.log("fetchData res", res);
+      const mappedData: any[] = res.map((nft: any) => {
         console.log("nft ", nft);
         return {
           id: nft.tokenid,
           element: ELEMENT.FIRE,
           level: getLevel(nft.exp),
-          petImg: nft.JSONdata.image || "",
-          name: nft.JSONdata.name,
+          petImg: nft.data.image || "",
+          name: nft.data.name,
           rarityPet: "special",
         };
       });

@@ -146,7 +146,7 @@ const HomeScreen = () => {
       />
       <Image
         style={styles.backgroundImage}
-        resizeMode="cover"
+        resizeMode="stretch"
         source={require("../../../assets/BackGroundHome.jpg")}
       />
       <LoadingModal

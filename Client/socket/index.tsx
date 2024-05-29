@@ -30,7 +30,7 @@ server = `http://localhost:${PORT}`; // TODO CHANGE LATER
 //   server = `${SERVER_URL}${PORT}`;
 // }
 
-console.log(`Server URL: ${server}`);
+// console.log(`Server URL: ${server}`);
 
 export type Cell = {
   row: string;
