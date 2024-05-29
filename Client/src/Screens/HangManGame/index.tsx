@@ -27,8 +27,9 @@ import { useIsFocused } from "@react-navigation/native";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import GameSettings from "../../components/GameSetting";
 import { setVisable } from "../../redux/settingGameSlice";
-import { Audio } from "expo-av";
+
 import useAudioPlayer from "../../hooks/useMusicPlayer";
+import { playSound } from "../../function/SoundGame";
 
 const Index = () => {
   const { hp, componentHp, gameRoom } = useSelector(
@@ -49,7 +50,6 @@ const Index = () => {
   const [timing, setTiming] = useState(30);
   const [gameOver, setGameOver] = useState(false);
   const isFocused = useIsFocused();
-  const soundGame = new Audio.Sound();
 
   const correctWord = WordsArray[currentIndex].answer;
 
@@ -167,7 +167,7 @@ const Index = () => {
     dispatch(setVisable(false));
   };
 
-  useAudioPlayer(sound);
+  useAudioPlayer(music, "soundTrackGame");
 
   useEffect(() => {
     socket.onListenFirstTurn((data) => {
@@ -210,7 +210,10 @@ const Index = () => {
           turn={turn}
           correctLetters={correctLetters}
           wrongLetters={wrongLetters}
-          onPress={(input: string) => storeCorrectLetters(input)}
+          onPress={(input: string) => {
+            playSound(sound, "pressTyping");
+            storeCorrectLetters(input);
+          }}
         />
         <StatusPopup status={status} onPress={handlePopupButton} />
       </View>

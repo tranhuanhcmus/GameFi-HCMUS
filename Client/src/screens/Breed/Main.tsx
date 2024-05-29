@@ -227,97 +227,97 @@ export function BreedScreen() {
         backgroundColor: COLOR.PURPLE,
       }}
     >
-      <Image
-        style={styles.backgroundImage}
-        resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
-      />
-      <View
-        style={{
-          width: "100%",
-          height: "30%",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          marginTop: 40,
-        }}
-      >
-        {data
-          ? data.map((item, index) => (
-              <Pet key={index} name={item.name} image={item.petImg}></Pet>
-            ))
-          : null}
-      </View>
-
-      <Image
-        source={Egg}
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH / 6,
-          height: ConstantsResponsive.MAX_WIDTH / 6,
-          alignSelf: "center",
-          marginVertical: 20,
-        }}
-      />
-      <View
-        style={{
-          alignItems: "center",
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: "auto",
-        }}
-      >
-        <ChildPet name={null} image={null}></ChildPet>
-      </View>
-
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          marginTop: 20,
-        }}
-      >
-        <Image
-          source={Hourglass}
+      <SafeAreaView>
+        {/* <Image
+          style={styles.backgroundImage}
+          resizeMode="stretch"
+          source={require("../../../assets/background2.jpg")}
+        /> */}
+        <View
           style={{
-            width: ConstantsResponsive.MAX_WIDTH / 20,
-            height: ConstantsResponsive.MAX_HEIGHT / 20,
+            width: "100%",
+            height: "30%",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            marginTop: 40,
+          }}
+        >
+          {data
+            ? data.map((item, index) => (
+                <Pet key={index} name={item.name} image={item.petImg}></Pet>
+              ))
+            : null}
+        </View>
+        <Image
+          source={Egg}
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH / 6,
+            height: ConstantsResponsive.MAX_WIDTH / 6,
+            alignSelf: "center",
+            marginVertical: 20,
           }}
         />
-        <CustomText
-          style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
-        >
-          10 min
-        </CustomText>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "flex-end",
-          marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.05,
-        }}
-      >
-        <AwesomeButton
-          style={{ justifyContent: "center", alignSelf: "center" }}
-          onPress={() => {
-            if (fatherPet.id && motherPet.id) {
-              breedFunction(fatherPet, motherPet);
-            }
-
-            // navigate.navigate("DetailOfPet");
+        <View
+          style={{
+            alignItems: "center",
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: "auto",
           }}
-          width={225}
-          height={65}
-          borderRadius={20}
-          backgroundColor={COLOR.GREEN}
         >
+          <ChildPet name={null} image={null}></ChildPet>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            marginTop: 20,
+          }}
+        >
+          <Image
+            source={Hourglass}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH / 20,
+              height: ConstantsResponsive.MAX_HEIGHT / 20,
+            }}
+          />
           <CustomText
             style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
           >
-            MAKE BEAR
+            10 min
           </CustomText>
-        </AwesomeButton>
-      </View>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.05,
+          }}
+        >
+          <AwesomeButton
+            style={{ justifyContent: "center", alignSelf: "center" }}
+            onPress={() => {
+              if (fatherPet.id && motherPet.id) {
+                breedFunction(fatherPet, motherPet);
+              }
+
+              // navigate.navigate("DetailOfPet");
+            }}
+            width={225}
+            height={65}
+            borderRadius={20}
+            backgroundColor={COLOR.GREEN}
+          >
+            <CustomText
+              style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
+            >
+              MAKE BEAR
+            </CustomText>
+          </AwesomeButton>
+        </View>
+      </SafeAreaView>
     </View>
   );
 }

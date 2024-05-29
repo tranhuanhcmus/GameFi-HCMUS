@@ -28,6 +28,8 @@ import Coin from "../../../assets/coin.svg";
 import Inventory from "../../../assets/inventory.svg";
 import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
+import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
+import HangmanBg from "../../../assets/HangmanBg.png";
 
 type Props = {};
 
@@ -44,7 +46,7 @@ const HomeScreen = () => {
   const isFocused = useIsFocused();
   const [offsetY, setOffsetY] = useState<number>(0);
   const [gameName, setGameName] = useState<string>("");
-  const [fps, setFps] = useState<string>("2");
+  const [fps, setFps] = useState<string>("10");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
 
@@ -78,7 +80,7 @@ const HomeScreen = () => {
     if (mummyRef.current) {
       mummyRef.current.play({
         type,
-        fps: isNaN(parsedFps) ? 16 : parsedFps,
+        fps: isNaN(parsedFps) ? 20 : parsedFps,
         loop,
         resetAfterFinish,
         onFinish: () => console.log("hi"),
@@ -144,8 +146,8 @@ const HomeScreen = () => {
       />
       <Image
         style={styles.backgroundImage}
-        resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
+        resizeMode="cover"
+        source={require("../../../assets/BackGroundHome.jpg")}
       />
       <LoadingModal
         gameName={gameName}
@@ -229,16 +231,17 @@ const HomeScreen = () => {
         <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
           <SpriteSheet
             ref={mummyRef}
-            source={require("../../../assets/spritesheet_5.png")}
-            columns={21}
-            rows={1}
+            source={require("../../../assets/spritesheet_4.png")}
+            columns={8}
+            rows={7}
             height={
               ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 3 * 250
             }
             animations={{
               walk: [
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20,
+                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
               ],
             }}
           ></SpriteSheet>
@@ -285,11 +288,11 @@ const HomeScreen = () => {
           }}
           backgroundDarker={COLOR.DARKER_PURPLE}
           backgroundColor={COLOR.DARKER_PURPLE}
-          width={ConstantsResponsive.MAX_WIDTH * 0.4}
-          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
+          width={ConstantsResponsive.MAX_WIDTH * 0.3}
+          height={ConstantsResponsive.MAX_HEIGHT * 0.09}
           borderRadius={15}
         >
-          <Text style={[styles.textSize, { color: COLOR.WHITE }]}>
+          <Text style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}>
             CHANGE GAME
           </Text>
         </AwesomeButton>
@@ -302,11 +305,32 @@ const HomeScreen = () => {
           }}
           backgroundDarker={COLOR.DARK_YELLOW}
           backgroundColor={COLOR.BRIGHT_YELLOW}
-          width={ConstantsResponsive.MAX_WIDTH * 0.5}
-          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
+          width={ConstantsResponsive.MAX_WIDTH * 0.6}
+          height={ConstantsResponsive.MAX_HEIGHT * 0.09}
           borderRadius={15}
         >
-          <Text style={styles.textSize}>{gameName}</Text>
+          <View
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              columnGap: 20,
+            }}
+          >
+            <Image
+              source={gameName === "HangManGame" ? HangmanBg : DiamondGameBg}
+              style={{
+                height: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
+                width: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
+                resizeMode: "cover",
+                borderRadius: 10,
+              }}
+            />
+            <Text style={styles.textSize}>Play</Text>
+          </View>
         </AwesomeButton>
       </View>
     </View>
@@ -326,8 +350,14 @@ const styles = StyleSheet.create({
     top: -30,
   },
   textSize: {
-    fontSize: ConstantsResponsive.YR * 25,
-    lineHeight: ConstantsResponsive.YR * 25,
+    fontSize: ConstantsResponsive.YR * 30,
+    lineHeight: ConstantsResponsive.YR * 30,
+    fontWeight: "900",
+    textAlign: "center",
+  },
+  textSizeChangGame: {
+    fontSize: ConstantsResponsive.YR * 20,
+    lineHeight: ConstantsResponsive.YR * 20,
     fontWeight: "900",
     textAlign: "center",
   },
