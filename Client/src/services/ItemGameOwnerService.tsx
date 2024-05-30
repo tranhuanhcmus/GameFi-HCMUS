@@ -1,7 +1,7 @@
 import { api } from "../apis";
 import { API } from "../apis/constants";
 
-export class ItemAppOwnerService {
+export class ItemGameOwnerService {
   /**
    * GET ITEMS IN GAME
    * @param address
@@ -10,9 +10,10 @@ export class ItemAppOwnerService {
   static async getItems(address: `0x${string}` | undefined) {
     return new Promise<any[]>(async (resolve, reject) => {
       try {
-        const response = await api.get(API.NFT + `/${address}`);
+        const response = await api.get(
+          API.ITEM_GAME_OWNER + `/owner/${address}`,
+        );
 
-        console.log("response ", response.data);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);
