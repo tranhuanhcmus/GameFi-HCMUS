@@ -173,32 +173,32 @@ function catchEventNFT() {
     // });
 
 
-    petContract.getPastEvents('Transfer', {
-        filter: {},
-        fromBlock:  5969058,
-        toBlock: 'latest' 
-    })
-    .then(function(events) {
-        // Process the retrieved events
-        // console.log("event: ", events.map(event => event.returnValues));
-        if(events){
-            events.forEach(item=>{
-                const event = item.returnValues;
-                const {from, to, tokenId} = event; 
-                console.log("event",event);
-                if (from === '0x0000000000000000000000000000000000000000') {
-                    createNFT(tokenId, from, to);
-                }
-                else {
-                    updateNFT(tokenId, to);
-                }
-            })
-        }
-    })
-    .catch(function(error) {
-        // Handle errors
-        console.error("error when listen event: ", error);
-    });
+    // petContract.getPastEvents('Transfer', {
+    //     filter: {},
+    //     fromBlock:  5969058,
+    //     toBlock: 'latest' 
+    // })
+    // .then(function(events) {
+    //     // Process the retrieved events
+    //     // console.log("event: ", events.map(event => event.returnValues));
+    //     if(events){
+    //         events.forEach(item=>{
+    //             const event = item.returnValues;
+    //             const {from, to, tokenId} = event; 
+    //             console.log("event",event);
+    //             if (from === '0x0000000000000000000000000000000000000000') {
+    //                 createNFT(tokenId, from, to);
+    //             }
+    //             else {
+    //                 updateNFT(tokenId, to);
+    //             }
+    //         })
+    //     }
+    // })
+    // .catch(function(error) {
+    //     // Handle errors
+    //     console.error("error when listen event: ", error);
+    // });
 }
 
 module.exports = { catchEventNFT }

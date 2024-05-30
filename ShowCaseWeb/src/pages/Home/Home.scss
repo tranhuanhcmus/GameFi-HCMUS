@@ -5,12 +5,21 @@
 	flex-direction: column;
 	gap: 60px;
 
+	.discover_section {
+		.section__body {
+			display: flex;
+			gap: 40px;
+			flex-wrap: wrap;
+			padding: 10px 0;
+		}
+	}
+
 	.hot_section {
 		.section__body {
 			display: flex;
 			gap: 20px 40px;
 			flex-wrap: wrap;
-
+			padding: 10px 0;
 		}
 	}
 
@@ -23,7 +32,7 @@
 		
 		cursor: pointer;
 		background-color: $black;
-		transition: all 0.2s ease;
+		transition: all 0.25s ease;
 		border-radius: 12px;
 		padding: 16px;
 		overflow: hidden;
@@ -62,6 +71,7 @@
 
 		&:hover {
 			background-color: $gray23;
+			transform: scale(1.025);
 		}
 	}
 }

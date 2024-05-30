@@ -14,6 +14,7 @@
 		gap: 8px;
 		align-items: center;
 		padding: 8px;
+		justify-content: space-between;
 	}
 	.menu__arrow{
 		height: 20px;
@@ -38,6 +39,7 @@
 		min-width: 220px;
 		visibility: hidden;
 		// max-height: 0px;
+		z-index: 99;
 		transform: translateY(-20px);
 		opacity: 0;
 		transition: all .2s ease-in;
