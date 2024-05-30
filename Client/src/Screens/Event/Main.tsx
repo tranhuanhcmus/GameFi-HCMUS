@@ -101,7 +101,10 @@ const EventScreen = () => {
               >
                 ENTER
               </CustomText>
-              <Image source={Lucky} style={{ width: 30, height: 30 }} />
+              <Image
+                source={{ uri: "http://localhost:3000/" }}
+                style={{ width: 30, height: 30 }}
+              />
               <CustomText
                 style={{
                   color: COLOR.WHITE,

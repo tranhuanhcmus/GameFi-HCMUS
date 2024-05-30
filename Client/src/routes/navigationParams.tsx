@@ -10,4 +10,6 @@ export type RootStackParamList = {
   HangManGame: any;
   Play: any;
   Home: any;
+  Shop: any;
+  Profile: any;
 };

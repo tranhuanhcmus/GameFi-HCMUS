@@ -1,52 +1,62 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, Animated, StyleSheet, Dimensions } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Animated, StyleSheet } from "react-native";
 import ConstantsResponsive from "../../constants/Constanst";
 
-interface props {
+interface Props {
   duration: number;
   onCompletion: () => void;
   turn: boolean;
+  gameOver: boolean;
+  leaveScreen: boolean;
 }
 
-const TimingLine: React.FC<props> = ({ turn, duration, onCompletion }) => {
+const TimingLine: React.FC<Props> = ({
+  turn,
+  duration,
+  onCompletion,
+  gameOver,
+  leaveScreen,
+}) => {
   const animatedWidth = useRef(
     new Animated.Value(
       ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 40,
     ),
   ).current;
 
-  const [time, setTime] = useState(duration);
-
   useEffect(() => {
-    if (duration == 30) {
-      animatedWidth.setValue(
-        ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 40,
-      ); // Reset the width to full whenever the duration changes to a value greater than 0
+    if (leaveScreen) {
+      animatedWidth.stopAnimation();
+    } else {
+      if (!gameOver) {
+        animatedWidth.setValue(
+          ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 40,
+        );
 
-      const animation = Animated.timing(animatedWidth, {
-        toValue: 0,
-        duration: duration * 1000, // Convert seconds to milliseconds
-        useNativeDriver: false,
-      });
+        Animated.timing(animatedWidth, {
+          toValue: 0,
+          duration: duration * 1000,
+          useNativeDriver: false,
+        }).start(({ finished }) => {
+          if (finished) onCompletion();
+        });
+      } else {
+        animatedWidth.stopAnimation();
+      }
 
-      animation.start(({ finished }) => {
-        setTime((time) => time - 1);
-        // If the animation is complete and not interrupted
-        if (finished) {
-          onCompletion && onCompletion();
-        }
-      });
-
-      // Cleanup function to stop the animation if the component is unmounted
-      return () => animation.stop();
+      // Cleanup function
+      return () => {
+        animatedWidth.stopAnimation();
+      };
     }
-  }, [time]);
+  }, [turn, gameOver, leaveScreen]);
 
   return (
     <View style={styles.container}>
       <Animated.View
-        className={turn ? "bg-green-500" : "bg-red-500"}
-        style={[styles.timingLine, { width: animatedWidth }]}
+        style={[
+          styles.timingLine,
+          { width: animatedWidth, backgroundColor: turn ? "green" : "red" },
+        ]}
       />
     </View>
   );
@@ -56,8 +66,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     borderRadius: 15,
-    height: 5, // Set the height of the timing line
-    backgroundColor: "rgba(0,0,0,0.1)", // Background of the timing line (container)
+    height: 5,
+    backgroundColor: "rgba(0,0,0,0.1)",
   },
   timingLine: {
     height: "100%",

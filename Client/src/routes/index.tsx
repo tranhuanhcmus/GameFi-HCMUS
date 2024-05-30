@@ -4,6 +4,7 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
+
 import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SVGBird from "../../assets/SVGBird.svg";
@@ -33,6 +34,8 @@ import Damage from "../../assets/damage.svg";
 import Star from "../../assets/star.svg";
 import Trophy from "../../assets/trophy.svg";
 import Coin from "../../assets/coin.svg";
+import ProfileScreen from "../Screens/Profile/Main";
+import { flare } from "viem/chains";
 const navArr: NavItem[] = [
   {
     name: "ShopScreen",
@@ -102,6 +105,7 @@ const renderNavElement = (data: NavItem[]) => {
             </View>
           </ComponentNavElement>
         ),
+        lazy: true,
       }}
     />
   ));
@@ -120,6 +124,7 @@ type LocalRootStackParamList = {
   Play: undefined;
   League: undefined;
   Event: undefined;
+  Profile: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -127,14 +132,14 @@ const Tab = createBottomTabNavigator();
 
 // Bottom tab navigator.
 const MainTab = () => (
-  <Tab.Navigator initialRouteName="PlayScreen" screenOptions={Screenstyle}>
+  <Tab.Navigator initialRouteName="Connect" screenOptions={Screenstyle}>
     {renderNavElement(navArr)}
   </Tab.Navigator>
 );
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="MainTab">
+    <Stack.Navigator initialRouteName="Connect">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
@@ -220,6 +225,15 @@ const Route = () => (
         component={HomeScreen}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          headerShown: false,
+          animation: "slide_from_right",
+          navigationBarHidden: false,
         }}
       />
     </Stack.Navigator>

@@ -108,9 +108,9 @@ const InventoryModal = ({
           alignItems: "center",
           bottom: 0,
           borderWidth: 1,
-          borderColor: COLOR.WHITE,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
+
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
         }}
       >
         <View
