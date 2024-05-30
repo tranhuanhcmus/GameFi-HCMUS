@@ -1,7 +1,7 @@
 import { api } from "../apis";
 import { API } from "../apis/constants";
 
-export class ItemAppOwnerService {
+export class ItemGameService {
   /**
    * GET COIN ON HEADER
    * @param address

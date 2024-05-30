@@ -27,6 +27,7 @@ import Coin from "../../../assets/coin.svg";
 import Inventory from "../../../assets/inventory.svg";
 import InventoryModal from "./Inventory";
 import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
+import petSlice from "../../redux/petSlice";
 type Props = {};
 
 const HomeScreen = () => {
@@ -44,12 +45,16 @@ const HomeScreen = () => {
   const [fps, setFps] = useState<string>("2");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
+  const [pet, setPet] = useState();
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
   /** useSelector */
   const userState = useSelector(selectUser);
+  const { name, type, image, title, tokenId, attributes, level } = useSelector(
+    (state: any) => state.pet,
+  );
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
@@ -101,32 +106,6 @@ const HomeScreen = () => {
     }
   };
 
-  const fetchData = async () => {
-    try {
-      const res: any[] = await ItemAppOwnerService.getItemAppOwner(address);
-      console.log("fetchData res", res.data);
-      // const mappedData: any[] = res.map((nft: any) => {
-      //   console.log("nft ", nft);
-      //   return {
-      //     id: nft.tokenid,
-      //     element: ELEMENT.FIRE,
-      //     level: getLevel(nft.exp),
-      //     petImg: nft.data.image || "",
-      //     name: nft.data.name,
-      //     rarityPet: "special",
-      //   };
-      // });
-
-      // setData(mappedData);
-    } catch (error) {
-      console.error("Error fetching NFTs:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   useEffect(() => {
     if (!isConnected) {
       navigate.replace("Connect");
@@ -141,6 +120,30 @@ const HomeScreen = () => {
   //     setOffsetX((prevOffsetX) => prevOffsetX + 50); // Update offsetX every interval
   //   }, 1000); // Change the interval as needed for desired animation speed
   // }, []);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const res: any[] = await ItemGameOwnerService.getItems(address);
+  //     setData([...res]);
+  //   } catch (error) {
+  //     console.error("ItemGameOwnerService.getItems", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [address]);
+
+  useEffect(() => {
+    console.warn("petState ", {
+      name,
+      type,
+      image,
+      title,
+      tokenId,
+      attributes,
+    });
+  }, [name, type, image, title, tokenId, attributes]);
 
   return (
     <View
@@ -298,7 +301,7 @@ const HomeScreen = () => {
             color: COLOR.WHITE,
           }}
         >
-          LEVEL 2
+          LEVEL {level}
         </CustomText>
         <View style={styles.healthBar}>
           <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
