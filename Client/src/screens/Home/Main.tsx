@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
+import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { SocketIOClient } from "../../../socket";
@@ -154,68 +155,15 @@ const HomeScreen = () => {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
       />
-      <View
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH * 0.4,
-          height: ConstantsResponsive.YR * 50,
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-around",
-          marginTop: ConstantsResponsive.MAX_WIDTH * 0.25,
-          backgroundColor: COLOR.DARKER_PURPLE,
-          borderRadius: 20,
-        }}
-      >
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Coin></Coin>
-          <CustomText
-            style={{
-              color: COLOR.YELLOW,
-              textAlign: "center",
-              fontSize: 15,
-              fontWeight: "bold",
-            }}
-          >
-            100
-          </CustomText>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Damage />
-          <CustomText
-            style={{
-              color: COLOR.CYAN,
-              textAlign: "center",
-              fontSize: 15,
-              fontWeight: "bold",
-            }}
-          >
-            3
-          </CustomText>
-        </View>
-      </View>
 
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           display: "flex",
           flexDirection: "row",
+          position: "absolute",
           justifyContent: "flex-end",
-          paddingEnd: 10,
+          top: ConstantsResponsive.YR * 2 * 120,
         }}
       >
         <TouchableOpacity
@@ -223,11 +171,38 @@ const HomeScreen = () => {
             setIsInventoryModalVisible(true);
           }}
         >
-          <Inventory />
+          <Inventory
+            height={ConstantsResponsive.YR * 120}
+            width={ConstantsResponsive.XR * 120}
+          />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.playArea} className="relative  ">
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          height: ConstantsResponsive.YR * 120,
+          marginTop: ConstantsResponsive.YR * 120,
+        }}
+      >
+        <CustomText
+          style={{
+            // fontFamily: "mt-2",
+            fontWeight: "bold",
+            fontSize: 40,
+            color: COLOR.WHITE,
+          }}
+        >
+          LEVEL 2
+        </CustomText>
+        <View style={styles.healthBar}>
+          <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
+        </View>
+      </View>
+
+      <View style={styles.playArea}>
         <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
           <SpriteSheet
             ref={mummyRef}
@@ -247,34 +222,12 @@ const HomeScreen = () => {
           ></SpriteSheet>
         </View>
       </View>
-
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          height: 150,
-        }}
-      >
-        <CustomText
-          style={{
-            // fontFamily: "mt-2",
-            fontWeight: "bold",
-            fontSize: 20,
-            color: COLOR.WHITE,
-          }}
-        >
-          LEVEL 2
-        </CustomText>
-        <View style={styles.healthBar}>
-          <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
-        </View>
-      </View>
       <View
         style={{
           height: "auto",
           width: ConstantsResponsive.MAX_WIDTH,
-          top: -30,
+          position: "absolute",
+          bottom: ConstantsResponsive.YR * 120,
           display: "flex",
           flexDirection: "row",
           alignContent: "center",
@@ -282,33 +235,45 @@ const HomeScreen = () => {
           paddingHorizontal: ConstantsResponsive.MAX_WIDTH * 0.03,
         }}
       >
-        <AwesomeButton
+        <NormalButton
           onPress={() => {
             setIsChooseGameModalVisible(true);
           }}
-          backgroundDarker={COLOR.DARKER_PURPLE}
-          backgroundColor={COLOR.DARKER_PURPLE}
-          width={ConstantsResponsive.MAX_WIDTH * 0.3}
-          height={ConstantsResponsive.MAX_HEIGHT * 0.09}
-          borderRadius={15}
+          style={styles.btnChooseGame}
+          shadowColor={COLOR.BROWN}
         >
+          <Image
+            style={{
+              position: "absolute",
+              width: ConstantsResponsive.MAX_WIDTH * 0.3,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonBrown.png")}
+          />
           <Text style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}>
             CHANGE GAME
           </Text>
-        </AwesomeButton>
+        </NormalButton>
 
-        <AwesomeButton
+        <NormalButton
           onPress={() => {
             if (!isVisible) setIsVisible(true);
 
             socket.emitFindMatch(gameName);
           }}
-          backgroundDarker={COLOR.DARK_YELLOW}
-          backgroundColor={COLOR.BRIGHT_YELLOW}
-          width={ConstantsResponsive.MAX_WIDTH * 0.6}
-          height={ConstantsResponsive.MAX_HEIGHT * 0.09}
-          borderRadius={15}
+          shadowColor={COLOR.RED_BG_BUTTON}
+          style={styles.btnPlay}
         >
+          <Image
+            style={{
+              position: "absolute",
+              width: ConstantsResponsive.MAX_WIDTH * 0.6,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonRed.png")}
+          />
           <View
             style={{
               height: "100%",
@@ -316,7 +281,8 @@ const HomeScreen = () => {
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "flex-start",
+              justifyContent: "center",
+
               columnGap: 20,
             }}
           >
@@ -331,7 +297,7 @@ const HomeScreen = () => {
             />
             <Text style={styles.textSize}>Play</Text>
           </View>
-        </AwesomeButton>
+        </NormalButton>
       </View>
     </View>
   );
@@ -344,16 +310,36 @@ const styles = StyleSheet.create({
     height: ConstantsResponsive.MAX_HEIGHT,
     position: "absolute",
   },
+
+  btnPlay: {
+    position: "relative",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: ConstantsResponsive.MAX_WIDTH * 0.6,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+  },
+  btnChooseGame: {
+    position: "relative",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: ConstantsResponsive.MAX_WIDTH * 0.3,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+  },
   labelButton: {
     height: ConstantsResponsive.YR * 80,
     width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 100,
     top: -30,
   },
   textSize: {
-    fontSize: ConstantsResponsive.YR * 30,
-    lineHeight: ConstantsResponsive.YR * 30,
+    fontSize: ConstantsResponsive.YR * 50,
+    lineHeight: ConstantsResponsive.YR * 50,
     fontWeight: "900",
     textAlign: "center",
+    color: "white",
   },
   textSizeChangGame: {
     fontSize: ConstantsResponsive.YR * 20,
@@ -479,11 +465,13 @@ const styles = StyleSheet.create({
     marginLeft: ConstantsResponsive.XR * 40,
     marginTop: ConstantsResponsive.YR * 10,
     backgroundColor: COLOR.WHITE,
+    borderWidth: 2,
+    borderColor: COLOR.BROWN,
     borderRadius: ConstantsResponsive.YR * 10,
   },
   healthBarInner: {
     position: "absolute",
-    backgroundColor: COLOR.DARKER_PURPLE,
+    backgroundColor: COLOR.RED_BG_BUTTON,
     left: ConstantsResponsive.XR * 3,
 
     top: ConstantsResponsive.YR * 3,
@@ -492,6 +480,8 @@ const styles = StyleSheet.create({
   },
   playArea: {
     width: ConstantsResponsive.MAX_WIDTH,
+    position: "absolute",
+    bottom: ConstantsResponsive.YR * 120 + ConstantsResponsive.YR * 120,
 
     height: ConstantsResponsive.MAX_HEIGHT * 0.3,
     flexDirection: "column",

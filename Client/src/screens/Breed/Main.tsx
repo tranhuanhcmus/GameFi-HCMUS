@@ -286,7 +286,7 @@ export function BreedScreen() {
             alignItems: "center",
           }}
         >
-          <SpriteSheet
+          {/* <SpriteSheet
             ref={eggRef}
             source={require("../../../assets/spritesheet_egg.jpg")}
             columns={6}
@@ -296,7 +296,7 @@ export function BreedScreen() {
             animations={{
               walk: [0, 1, 2, 3, 4, 5],
             }}
-          />
+          /> */}
         </View>
         <View
           style={{

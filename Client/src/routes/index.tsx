@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -7,7 +7,7 @@ import {
 
 import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import SVGBird from "../../assets/SVGBird.svg";
+import Bear from "../../assets/iconBear.svg";
 // import SVGEvent from "../../assets/SVGEvent.svg";
 // import SVGPlay from "../../assets/SVGPlay.svg";
 // import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
@@ -22,6 +22,7 @@ import Header from "../components/Header";
 import LoadingComponent from "../components/LoadingComponent";
 import HeaderRight from "../components/HeaderRight";
 import HangManGame from "../Screens/HangManGame/index";
+import Breed from "../../assets/breed.svg";
 
 import { BreedScreen } from "../Screens/Breed/Main";
 import DetailOfPet from "../Screens/PetDetail/Main";
@@ -30,12 +31,14 @@ import TrendMarketScreen from "../Screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
 import LeagueScreen from "../Screens/League/Main";
 import EventScreen from "../Screens/Event/Main";
-import Damage from "../../assets/damage.svg";
+import Thunder from "../../assets/thunder.svg";
 import Star from "../../assets/star.svg";
 import Trophy from "../../assets/trophy.svg";
 import Coin from "../../assets/coin.svg";
 import ProfileScreen from "../Screens/Profile/Main";
 import { flare } from "viem/chains";
+import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
+import ConstantsResponsive from "../constants/Constanst";
 const navArr: NavItem[] = [
   {
     name: "ShopScreen",
@@ -56,13 +59,13 @@ const navArr: NavItem[] = [
     component: HomeScreen,
     content: "Play",
     header: true,
-    svg: <Damage height="100%" width="100%" />,
+    svg: <Thunder height="100%" width="100%" />,
   },
   {
     name: "BreedScreen",
     component: BreedScreen,
     content: "Breed",
-    svg: <Trophy height="100%" width="100%" />,
+    svg: <Breed height="100%" width="100%" />,
   },
 
   {
@@ -70,7 +73,7 @@ const navArr: NavItem[] = [
     component: PlayScreen,
     content: "Pet",
     header: true,
-    svg: <SVGBird height="100%" width="100%" />,
+    svg: <Bear height="100%" width="100%" />,
   },
 ];
 
@@ -91,6 +94,7 @@ const renderNavElement = (data: NavItem[]) => {
       options={{
         headerTransparent: true,
         headerTintColor: "#fff",
+
         headerShown: item.header || false,
 
         headerLeft: () => <HeaderLeft></HeaderLeft>,
@@ -99,7 +103,14 @@ const renderNavElement = (data: NavItem[]) => {
         tabBarIcon: ({ focused }: any) => (
           <ComponentNavElement content={item.content} focused={focused}>
             <View
-              className={`${focused ? "h-[45px] w-[45px]" : "h-[30px] w-[30px]"}`}
+              style={{
+                height: focused
+                  ? ConstantsResponsive.YR * 55
+                  : ConstantsResponsive.YR * 45,
+                width: focused
+                  ? ConstantsResponsive.XR * 55
+                  : ConstantsResponsive.XR * 45,
+              }}
             >
               {item.svg}
             </View>
@@ -139,7 +150,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Connect">
+    <Stack.Navigator initialRouteName="MainTab">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
@@ -253,6 +264,7 @@ const Screenstyle: BottomTabNavigationOptions = {
     paddingHorizontal: 20,
     paddingVertical: 20,
     borderTopWidth: 0,
+
     borderBottomWidth: 0,
     shadowColor: "#000000",
     elevation: 0,
