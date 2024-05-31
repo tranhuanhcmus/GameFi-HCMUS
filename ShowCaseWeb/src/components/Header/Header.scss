@@ -1,0 +1,36 @@
+@import '/src/common.scss';
+
+#header{
+	box-sizing: border-box;
+	padding: 28px 80px;
+	background-color: $gray22;
+	height: 90px;
+	position: sticky;
+	top: 0;
+	box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.30);
+	.header_wrapper{
+		height: 100%;
+		width: 100%;
+		max-width: 1520px;
+		margin: auto;
+		display: flex;
+		gap: 24px;
+		align-items: center;
+	}
+	.header_menu_wrapper,
+	.search_wrapper,
+	.control_wrapper{
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+	.search_wrapper{
+		flex: 1;
+		flex-direction: row-reverse;
+	}
+	.logo{
+		height: 100%;
+		width: auto;
+		object-fit: contain;
+	}
+}

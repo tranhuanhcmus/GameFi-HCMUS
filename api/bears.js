@@ -137,8 +137,8 @@ class Bear {
         return ['__eye', '__fur', '__element', '__item']
     }
 }
-const factory = new BearFactory()
-const bear = factory.getRandomBear()
+// const factory = new BearFactory()
+// const bear = factory.getRandomBear()
 
-console.log(bear);
+// console.log(bear);
 module.exports = { BearFactory, Bear };

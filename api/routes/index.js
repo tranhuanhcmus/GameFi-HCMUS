@@ -1,5 +1,6 @@
 module.exports={
 	adminRouter:require("./adminRouter"),
+	hangmanRouter:require("./hangmanRouter"), 
 	bearRouter:require("./bearRouter"), 
 	eyePoolRouter:require("./eyePoolRouter"), 
 	elementPoolRouter:require("./elementPoolRouter"), 

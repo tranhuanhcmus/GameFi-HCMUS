@@ -12,6 +12,48 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     ItemApp:
+ *       type: object
+ *       required:
+ *         - name
+ *         - description
+ *         - category
+ *         - quality
+ *         - quantity
+ *         - gemcost
+ *         - goldcost
+ *         - image
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Name of the item app
+ *         description:
+ *           type: string
+ *           description: Description of the item app
+ *         category:
+ *           type: string
+ *           description: Category of the item app
+ *         quality:
+ *           type: string
+ *           description: Quality of the item app
+ *         quantity:
+ *           type: integer
+ *           description: Quantity of the item app
+ *         gemcost:
+ *           type: integer
+ *           description: Gem cost of the item app
+ *         goldcost:
+ *           type: integer
+ *           description: Gold cost of the item app
+ *         image:
+ *           type: string
+ *           description: Image URL of the item app
+ */
+
+/**
+ * @swagger
  * /itemApps/:
  *   get:
  *     summary: Get list of all item apps
@@ -35,13 +77,21 @@ router.get('/', itemAppController.getAll);
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               imageFile:
- *                 type: string
- *                 format: binary
+ *             $ref: '#/components/schemas/ItemApp'
+ *           examples:
+ *             example1:
+ *               summary: Example item app
+ *               value:
+ *                  name: "API Test"
+ *                  description: "API Test"
+ *                  category: "Test"
+ *                  quality: "Test"
+ *                  quantity: 1
+ *                  gemcost: 1
+ *                  goldcost: 1000
+ *                  image: "/uploads/api-test.jpg"
  *     responses:
  *       200:
  *         description: New item app added successfully
@@ -76,24 +126,30 @@ router.get('/:id', itemAppController.getById);
 
 /**
  * @swagger
- * /itemApps/{id}:
+ * /itemApps/:
  *   put:
  *     summary: Update information of an item app by ID
  *     tags: [ItemApp]
  *     description: Update information of an item app based on the provided ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the item app to update information.
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/ItemApp'
+ *           examples:
+ *             example1:
+ *               summary: Example item app
+ *               value:
+ *                  id: "7dc748d5-de7d-4a76-9a58-62463ee7be14"
+ *                  name: "API Test"
+ *                  description: "API Test"
+ *                  category: "Test"
+ *                  quality: "Test"
+ *                  quantity: 1
+ *                  gemcost: 1
+ *                  goldcost: 1000
+ *                  image: "/uploads/api-test.jpg"
  *     responses:
  *       200:
  *         description: Information of the item app updated successfully
@@ -102,7 +158,7 @@ router.get('/:id', itemAppController.getById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', itemAppController.updateById);
+router.put('/', itemAppController.updateById);
 
 /**
  * @swagger

@@ -1,0 +1,29 @@
+@import '/src/common.scss';
+
+
+.search_bar{
+	.search_bar__icon{
+		position: absolute;
+		top: 50%;
+		left: 8px;
+		transform: translateY(-50%);
+		height: 24px;
+		width: 24px;
+		img{
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+	input{
+		height: 100%;
+		width: 100%;
+	}
+	box-sizing: border-box;
+	padding: 8px 16px;
+	padding-left: 40px;
+	position: relative;
+	height: 40px;
+	background-color: $gray21;
+	border-radius: 12px;
+	min-width: 25vw;
+}

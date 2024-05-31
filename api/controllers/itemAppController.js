@@ -22,7 +22,7 @@ const getById = async (req, res, next) => {
       );
     }
 
-    return res.sendResponse(result, `Get ID ${id}  Success`, STATUS_CODES.OK);
+    return res.sendResponse(result, `Get ID ${id} Success`, STATUS_CODES.OK);
   } catch (error) {
     return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
   }
@@ -61,7 +61,8 @@ const add = async (req, res, next) => {
 };
 const updateById = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const updateData = req.body;
+    const id = updateData.id;
     const row = await models.ItemApp.findOne({ where: { id: id } });
 
     if (!row) {
@@ -71,11 +72,10 @@ const updateById = async (req, res, next) => {
         STATUS_CODES.NOT_FOUND
       );
     } else {
-      const updateData = req.body;
       await row.update(updateData);
       await row.reload();
 
-      return res.sendResponse(row, `Update ID ${id}  Success`, STATUS_CODES.OK);
+      return res.sendResponse(row, `Update ID ${id} Success`, STATUS_CODES.OK);
     }
   } catch (error) {
     return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);

@@ -286,6 +286,46 @@ export function BreedScreen() {
             alignItems: "center",
           }}
         >
+          <SpriteSheet
+            ref={eggRef}
+            source={require("../../../assets/spritesheet_egg.jpg")}
+            columns={6}
+            rows={1}
+            height={20}
+            width={20}
+            animations={{
+              walk: [0, 1, 2, 3, 4, 5],
+            }}
+          />
+        </View>
+        <View
+          style={{
+            alignItems: "center",
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: "auto",
+          }}
+        >
+          <ChildPet name={null} image={null}></ChildPet>
+        </View>
+
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            marginTop: 20,
+          }}
+        >
+          <Image
+            source={Hourglass}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />
           {/* <SpriteSheet
             ref={eggRef}
             source={require("../../../assets/spritesheet_egg.jpg")}
