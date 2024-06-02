@@ -134,14 +134,14 @@ const HomeScreen = () => {
   //   fetchData();
   // }, []);
 
-  useEffect(() => {
-    if (!isConnected) {
-      navigate.replace("Connect");
-      dispatch(setAddress(undefined));
-    } else {
-      dispatch(setAddress(address));
-    }
-  }, [isConnected]);
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     navigate.replace("Connect");
+  //     dispatch(setAddress(undefined));
+  //   } else {
+  //     dispatch(setAddress(address));
+  //   }
+  // }, [isConnected]);
 
   // useEffect(() => {
   //   if (!isConnected) {
@@ -184,7 +184,7 @@ const HomeScreen = () => {
       <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
-        source={require("../../../assets/BackGroundHome.jpg")}
+        source={require("../../../assets/backGroundHome_4.png")}
       />
       <LoadingModal
         gameName={gameName}
@@ -242,9 +242,9 @@ const HomeScreen = () => {
         <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
           <SpriteSheet
             ref={mummyRef}
-            source={require("../../../assets/spritesheet_4.png")}
-            columns={8}
-            rows={7}
+            source={require("../../../assets/spritesSheet_18.png")}
+            columns={60}
+            rows={1}
             height={
               ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 3 * 250
             }
@@ -252,7 +252,8 @@ const HomeScreen = () => {
               walk: [
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
                 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
+                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
               ],
             }}
           ></SpriteSheet>
