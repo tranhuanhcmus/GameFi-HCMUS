@@ -94,7 +94,7 @@ const renderNavElement = (data: NavItem[]) => {
       options={{
         headerTransparent: true,
         headerTintColor: "#fff",
-
+        headerTitleAlign: "center",
         headerShown: item.header || false,
 
         headerLeft: () => <HeaderLeft></HeaderLeft>,
