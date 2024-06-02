@@ -17,12 +17,12 @@ const NormalButton = ({
   ...rest
 }: Props) => {
   return (
-    <DropShadow style={[styles.shadowProp, { shadowColor: shadowColor }]}>
-      <TouchableOpacity onPress={onPress} {...rest}>
-        <Shadow></Shadow>
-        {children}
-      </TouchableOpacity>
-    </DropShadow>
+    // <DropShadow style={[styles.shadowProp, { shadowColor: shadowColor }]}>
+    <TouchableOpacity onPress={onPress} {...rest}>
+      <Shadow></Shadow>
+      {children}
+    </TouchableOpacity>
+    // </DropShadow>
   );
 };
 

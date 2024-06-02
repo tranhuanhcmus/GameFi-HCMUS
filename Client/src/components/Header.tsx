@@ -25,6 +25,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+
         justifyContent: "space-around",
         position: "relative",
 

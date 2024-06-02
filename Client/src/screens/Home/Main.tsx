@@ -19,7 +19,8 @@ import { useAppDispatch } from "../../redux/store";
 import { selectUser } from "../../redux/userSlice";
 
 import AwesomeButton from "react-native-really-awesome-button";
-import SpriteSheet from "rn-sprite-sheet";
+// import SpriteSheet from "rn-sprite-sheet";
+import SpriteSheet from "../../components/SpriteSheet";
 import Damage from "../../../assets/damage.svg";
 import LoadingModal from "../../components/Game/LoadingModal";
 import { COLOR } from "../../utils/color";
@@ -245,9 +246,7 @@ const HomeScreen = () => {
             source={require("../../../assets/spritesSheet_18.png")}
             columns={60}
             rows={1}
-            height={
-              ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 3 * 250
-            }
+            height={ConstantsResponsive.MAX_HEIGHT * 0.2}
             animations={{
               walk: [
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
