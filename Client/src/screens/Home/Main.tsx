@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
+import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { SocketIOClient } from "../../../socket";
@@ -15,19 +16,23 @@ import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { useAppDispatch } from "../../redux/store";
-import { selectUser, setAddress } from "../../redux/userSlice";
+import { selectUser } from "../../redux/userSlice";
 
 import AwesomeButton from "react-native-really-awesome-button";
 import SpriteSheet from "rn-sprite-sheet";
 import Damage from "../../../assets/damage.svg";
 import LoadingModal from "../../components/Game/LoadingModal";
 import { COLOR } from "../../utils/color";
-import ChooseGameModal from "./ChooseGameModal";
+import { setAddress } from "../../redux/userSlice";
+import { useIsFocused } from "@react-navigation/native";
 import Coin from "../../../assets/coin.svg";
 import Inventory from "../../../assets/inventory.svg";
+import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
+import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
+import HangmanBg from "../../../assets/HangmanBg.png";
+
 import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
-import petSlice from "../../redux/petSlice";
 type Props = {};
 
 const HomeScreen = () => {
@@ -40,21 +45,18 @@ const HomeScreen = () => {
     useState(false);
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
   const [offsetX, setOffsetX] = useState<number>(0);
+  const isFocused = useIsFocused();
   const [offsetY, setOffsetY] = useState<number>(0);
   const [gameName, setGameName] = useState<string>("");
-  const [fps, setFps] = useState<string>("2");
+  const [fps, setFps] = useState<string>("10");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [pet, setPet] = useState();
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
   /** useSelector */
   const userState = useSelector(selectUser);
-  const { name, type, image, title, tokenId, attributes, level } = useSelector(
-    (state: any) => state.pet,
-  );
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
@@ -80,7 +82,7 @@ const HomeScreen = () => {
     if (mummyRef.current) {
       mummyRef.current.play({
         type,
-        fps: isNaN(parsedFps) ? 16 : parsedFps,
+        fps: isNaN(parsedFps) ? 20 : parsedFps,
         loop,
         resetAfterFinish,
         onFinish: () => console.log("hi"),
@@ -106,50 +108,63 @@ const HomeScreen = () => {
     }
   };
 
-  useEffect(() => {
-    if (!isConnected) {
-      navigate.replace("Connect");
-      dispatch(setAddress(undefined));
-    } else {
-      dispatch(setAddress(address));
-    }
-  }, [isConnected]);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setOffsetX((prevOffsetX) => prevOffsetX + 50); // Update offsetX every interval
-  //   }, 1000); // Change the interval as needed for desired animation speed
-  // }, []);
-
   // const fetchData = async () => {
   //   try {
-  //     const res: any[] = await ItemGameOwnerService.getItems(address);
-  //     setData([...res]);
+  //     const res: any[] = await ItemAppOwnerService.getItemAppOwner(address);
+  //     console.log("fetchData res", res.data);
+  //     // const mappedData: any[] = res.map((nft: any) => {
+  //     //   console.log("nft ", nft);
+  //     //   return {
+  //     //     id: nft.tokenid,
+  //     //     element: ELEMENT.FIRE,
+  //     //     level: getLevel(nft.exp),
+  //     //     petImg: nft.data.image || "",
+  //     //     name: nft.data.name,
+  //     //     rarityPet: "special",
+  //     //   };
+  //     // });
+
+  //     // setData(mappedData);
   //   } catch (error) {
-  //     console.error("ItemGameOwnerService.getItems", error);
+  //     console.error("Error fetching NFTs:", error);
   //   }
   // };
 
   // useEffect(() => {
   //   fetchData();
-  // }, [address]);
+  // }, []);
 
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     navigate.replace("Connect");
+  //     dispatch(setAddress(undefined));
+  //   } else {
+  //     dispatch(setAddress(address));
+  //   }
+  // }, [isConnected]);
+
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     navigate.replace("Connect");
+  //     dispatch(setAddress(undefined));
+  //   } else {
+  //     dispatch(setAddress(address));
+  //   }
+  // }, [isConnected]);
   useEffect(() => {
-    console.warn("petState ", {
-      name,
-      type,
-      image,
-      title,
-      tokenId,
-      attributes,
-    });
-  }, [name, type, image, title, tokenId, attributes]);
+    if (isFocused) {
+      play("walk");
+    } else {
+      // Optional: stop the animation when the screen is not focused
+      stop();
+    }
+  }, [isFocused]);
 
   return (
     <View
       style={{
         position: "relative",
-        flex: 1,
+        display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: COLOR.PURPLE,
@@ -158,6 +173,7 @@ const HomeScreen = () => {
       }}
     >
       <ChooseGameModal
+        setGameName={setGameName}
         isVisible={isChooseGameModalVisible}
         setIsVisible={setIsChooseGameModalVisible}
       />
@@ -168,76 +184,22 @@ const HomeScreen = () => {
       <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
+        source={require("../../../assets/backGroundHome_4.png")}
       />
       <LoadingModal
         gameName={gameName}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
       />
-      {/* <View
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH * 0.4,
-          height: "auto",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-around",
-          marginTop: ConstantsResponsive.MAX_WIDTH * 0.25,
-          backgroundColor: COLOR.DARKER_PURPLE,
-          borderRadius: 20,
-        }}
-      >
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Coin></Coin>
-          <CustomText
-            style={{
-              color: COLOR.YELLOW,
-              textAlign: "center",
-              fontSize: 15,
-              fontWeight: "bold",
-            }}
-          >
-            100
-          </CustomText>
-        </View>
 
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Damage />
-          <CustomText
-            style={{
-              color: COLOR.CYAN,
-              textAlign: "center",
-              fontSize: 15,
-              fontWeight: "bold",
-            }}
-          >
-            3
-          </CustomText>
-        </View>
-      </View> */}
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           display: "flex",
           flexDirection: "row",
+          position: "absolute",
           justifyContent: "flex-end",
-          paddingEnd: 10,
-          marginTop: ConstantsResponsive.MAX_HEIGHT * 0.2,
+          top: ConstantsResponsive.YR * 2 * 120,
         }}
       >
         <TouchableOpacity
@@ -245,73 +207,64 @@ const HomeScreen = () => {
             setIsInventoryModalVisible(true);
           }}
         >
-          <Inventory />
+          <Inventory
+            height={ConstantsResponsive.YR * 120}
+            width={ConstantsResponsive.XR * 120}
+          />
         </TouchableOpacity>
       </View>
 
       <View
         style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: "auto",
-          marginTop: 10,
-        }}
-      >
-        <View style={{ display: "flex", alignItems: "center" }}>
-          <TouchableNativeFeedback onPress={() => play("walk")}>
-            <View
-              style={{
-                transform: [{ translateX: offsetX }, { translateY: offsetY }],
-                marginBottom: ConstantsResponsive.YR * 30,
-              }}
-            >
-              <SpriteSheet
-                ref={mummyRef}
-                source={require("../../../assets/spritesheet_7.png")}
-                columns={21}
-                rows={1}
-                height={
-                  ConstantsResponsive.MAX_HEIGHT -
-                  ConstantsResponsive.YR * 3 * 250
-                }
-                animations={{
-                  walk: [
-                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-                    17, 18, 19, 20,
-                  ],
-                }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-      </View>
-
-      <View
-        style={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           alignItems: "center",
-          height: 150,
+          height: ConstantsResponsive.YR * 120,
+          marginTop: ConstantsResponsive.YR * 120,
         }}
       >
         <CustomText
           style={{
             // fontFamily: "mt-2",
             fontWeight: "bold",
-            fontSize: 20,
+            fontSize: 40,
             color: COLOR.WHITE,
           }}
         >
-          LEVEL {level}
+          LEVEL 2
         </CustomText>
         <View style={styles.healthBar}>
           <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
+        </View>
+      </View>
+
+      <View style={styles.playArea}>
+        <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
+          <SpriteSheet
+            ref={mummyRef}
+            source={require("../../../assets/spritesSheet_18.png")}
+            columns={60}
+            rows={1}
+            height={
+              ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 3 * 250
+            }
+            animations={{
+              walk: [
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
+              ],
+            }}
+          ></SpriteSheet>
         </View>
       </View>
       <View
         style={{
           height: "auto",
           width: ConstantsResponsive.MAX_WIDTH,
-          top: -30,
+          position: "absolute",
+          bottom: ConstantsResponsive.YR * 120,
           display: "flex",
           flexDirection: "row",
           alignContent: "center",
@@ -319,40 +272,69 @@ const HomeScreen = () => {
           paddingHorizontal: ConstantsResponsive.MAX_WIDTH * 0.03,
         }}
       >
-        <AwesomeButton
-          // onPress={() => {
-          //   if (!isVisible) setIsVisible(true);
-          //   setGameName("HangManGame");
-          //   socket.emitFindMatch("HangManGame");
-          // }}
+        <NormalButton
           onPress={() => {
             setIsChooseGameModalVisible(true);
           }}
-          backgroundDarker={COLOR.DARKER_PURPLE}
-          backgroundColor={COLOR.DARKER_PURPLE}
-          width={ConstantsResponsive.MAX_WIDTH * 0.4}
-          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-          borderRadius={15}
+          style={styles.btnChooseGame}
+          shadowColor={COLOR.BROWN}
         >
-          <Text style={[styles.textSize, { color: COLOR.WHITE }]}>
+          <Image
+            style={{
+              position: "absolute",
+              width: ConstantsResponsive.MAX_WIDTH * 0.3,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonBrown.png")}
+          />
+          <Text style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}>
             CHANGE GAME
           </Text>
-        </AwesomeButton>
+        </NormalButton>
 
-        <AwesomeButton
-          // onPress={() => {
-          //   if (!isVisible) setIsVisible(true);
-          //   setGameName("Game");
-          //   socket.emitFindMatch("Game");
-          // }}
-          backgroundDarker={COLOR.DARK_YELLOW}
-          backgroundColor={COLOR.BRIGHT_YELLOW}
-          width={ConstantsResponsive.MAX_WIDTH * 0.5}
-          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-          borderRadius={15}
+        <NormalButton
+          onPress={() => {
+            if (!isVisible) setIsVisible(true);
+
+            socket.emitFindMatch(gameName);
+          }}
+          shadowColor={COLOR.RED_BG_BUTTON}
+          style={styles.btnPlay}
         >
-          <Text style={styles.textSize}>PLAY</Text>
-        </AwesomeButton>
+          <Image
+            style={{
+              position: "absolute",
+              width: ConstantsResponsive.MAX_WIDTH * 0.6,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonRed.png")}
+          />
+          <View
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+
+              columnGap: 20,
+            }}
+          >
+            <Image
+              source={gameName === "HangManGame" ? HangmanBg : DiamondGameBg}
+              style={{
+                height: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
+                width: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
+                resizeMode: "cover",
+                borderRadius: 10,
+              }}
+            />
+            <Text style={styles.textSize}>Play</Text>
+          </View>
+        </NormalButton>
       </View>
     </View>
   );
@@ -365,14 +347,40 @@ const styles = StyleSheet.create({
     height: ConstantsResponsive.MAX_HEIGHT,
     position: "absolute",
   },
+
+  btnPlay: {
+    position: "relative",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: ConstantsResponsive.MAX_WIDTH * 0.6,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+  },
+  btnChooseGame: {
+    position: "relative",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: ConstantsResponsive.MAX_WIDTH * 0.3,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+  },
   labelButton: {
     height: ConstantsResponsive.YR * 80,
     width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 100,
     top: -30,
   },
   textSize: {
-    fontSize: ConstantsResponsive.YR * 25,
-    lineHeight: ConstantsResponsive.YR * 25,
+    fontSize: ConstantsResponsive.YR * 50,
+    lineHeight: ConstantsResponsive.YR * 50,
+    fontWeight: "900",
+    textAlign: "center",
+    color: "white",
+  },
+  textSizeChangGame: {
+    fontSize: ConstantsResponsive.YR * 20,
+    lineHeight: ConstantsResponsive.YR * 20,
     fontWeight: "900",
     textAlign: "center",
   },
@@ -494,11 +502,13 @@ const styles = StyleSheet.create({
     marginLeft: ConstantsResponsive.XR * 40,
     marginTop: ConstantsResponsive.YR * 10,
     backgroundColor: COLOR.WHITE,
+    borderWidth: 2,
+    borderColor: COLOR.BROWN,
     borderRadius: ConstantsResponsive.YR * 10,
   },
   healthBarInner: {
     position: "absolute",
-    backgroundColor: COLOR.DARKER_PURPLE,
+    backgroundColor: COLOR.RED_BG_BUTTON,
     left: ConstantsResponsive.XR * 3,
 
     top: ConstantsResponsive.YR * 3,
@@ -507,12 +517,10 @@ const styles = StyleSheet.create({
   },
   playArea: {
     width: ConstantsResponsive.MAX_WIDTH,
+    position: "absolute",
+    bottom: ConstantsResponsive.YR * 120 + ConstantsResponsive.YR * 120,
 
-    height:
-      ConstantsResponsive.MAX_HEIGHT -
-      ConstantsResponsive.YR * 250 -
-      ConstantsResponsive.YR * 112 -
-      ConstantsResponsive.YR * 112,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.3,
     flexDirection: "column",
   },
   playRow: {
