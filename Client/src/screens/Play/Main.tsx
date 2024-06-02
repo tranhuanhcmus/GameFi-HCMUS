@@ -64,7 +64,9 @@ const PlayScreen: React.FC<Props> = (props: any) => {
 
   const fetchData = async () => {
     try {
-      const res: NFT[] = await UserService.getNFTsByOwner(address);
+      const res: NFT[] = await UserService.getNFTsByOwner(
+        "0x523B49cbeb95d98FA70941EabCf99B2a815D0d04",
+      );
       const mappedData: any[] = res.map((nft: any) => {
         console.log("nft ", nft);
         return {

@@ -57,15 +57,13 @@ const PetCard: React.FC<PetCardProps> = ({
       }}
     >
       <View
-        style={styles.listContainer}
-        className="rounded-[20px] bg-[#2B2B2B] p-[10px] "
+        style={{
+          width: Dimensions.get("window").width / 2 - 20,
+          backgroundColor: COLOR.SKY,
+        }}
+        className="rounded-[20px] p-[10px] "
       >
         <View className="mb-2 flex flex-row items-center justify-between">
-          {/* {ELEMENT.FIRE === element && <FIRE></FIRE>}
-          {ELEMENT.IRON === element && <IRON></IRON>}
-          {ELEMENT.LEAF === element && <LEAF></LEAF>}
-          {ELEMENT.STONE === element && <STONE></STONE>}
-          {ELEMENT.WATER === element && <WATER></WATER>} */}
           {ELEMENT.FIRE === element && (
             <Image
               source={require("../../assets/elements/Fire.png")}
