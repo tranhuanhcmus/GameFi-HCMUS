@@ -1,6 +1,7 @@
 /**
  * @author: duy-nhan
  */
+import { Audio } from "expo-av";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
@@ -9,7 +10,6 @@ import {
   PanResponderGestureState,
   StyleSheet,
   View,
-  Text,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Candy from "../../../assets/candy/17.png";
@@ -18,19 +18,18 @@ import Chocolate from "../../../assets/candy/20.png";
 import Banana from "../../../assets/candy/6.png";
 import IceCream from "../../../assets/candy/8.png";
 import { DataSocketTransfer } from "../../../socket";
+import StatusPopup from "../../Screens/HangManGame/StatusPopup";
+import useCustomNavigation from "../../hooks/useCustomNavigation";
+import log from "../../logger/index.js";
 import {
   updateBlockList,
   updateCellsToSwap,
   updateTable,
 } from "../../redux/boardSlice";
 import { updateComponentTurn, updateHp } from "../../redux/playerSlice";
-import { store } from "../../redux/store";
+import { updateMove } from "../../redux/socketSlice";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
-import FinishModal from "./FinishModal";
-import log from "../../logger/index.js";
-import { updateMove, updateTableSocket } from "../../redux/socketSlice";
-import { Audio } from "expo-av";
 
 const GameBoard = () => {
   /** Redux, state and dispatch */
@@ -38,10 +37,10 @@ const GameBoard = () => {
   const { socket } = useSelector((state: any) => state.socket);
   const blockStateTable = useSelector((state: any) => state.board.table);
   const table = useSelector((state: any) => state.board.table);
-  const { hp, componentHp, isComponentTurn } = useSelector(
+  const { hp, componentHp, isComponentTurn, gameRoom } = useSelector(
     (state: any) => state.player,
   );
-
+  const navigate = useCustomNavigation();
   const sound = new Audio.Sound();
   const sound2 = new Audio.Sound();
 
@@ -71,6 +70,9 @@ const GameBoard = () => {
   /** useState */
   const [blockList, setBlockList] = useState<any[]>([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [coordinate, setCoordinate] = useState(
+    GameLogic.generateAnimatedValueXY,
+  );
   const INPUT_RANGE = [-1, 0, 1];
   const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
 
@@ -199,15 +201,18 @@ const GameBoard = () => {
   }, [hp, componentHp]);
 
   useEffect(() => {
-    // Delay before exploding next
-    const delayExecution = setTimeout(() => {
-      const matchedBlocklist = checkTable(boardTable);
-      if (matchedBlocklist && matchedBlocklist.length > 0) {
-        setBlockList([...matchedBlocklist]);
-      } else {
-      }
-    }, 500);
-    return () => clearTimeout(delayExecution);
+    // Check if game stops or not
+    if (hp > 0 && componentHp > 0) {
+      // Delay before exploding next
+      const delayExecution = setTimeout(() => {
+        const matchedBlocklist = checkTable(boardTable);
+        if (matchedBlocklist && matchedBlocklist.length > 0) {
+          setBlockList([...matchedBlocklist]);
+        } else {
+        }
+      }, 500);
+      return () => clearTimeout(delayExecution);
+    }
   }, [table]);
 
   useEffect(() => {
@@ -223,6 +228,19 @@ const GameBoard = () => {
       }
     });
   }, []);
+
+  const handlePopupButton = () => {
+    // clear all stored data
+    // replay
+    // setStatus("");
+    // dispatch(setComponentHp(40));
+    // dispatch(setHp(40));
+    // dispatch(updateTurn(false));
+    socket.emitSuccess(gameRoom);
+    socket.removeListenFristTurn();
+    socket.removeListenTakeDamage();
+    navigate.navigate("MainTab");
+  };
 
   /** ====================================================== */
 
@@ -276,25 +294,6 @@ const GameBoard = () => {
     cells.forEach((cell) => {
       Animated.parallel([
         Animated.sequence([
-          Animated.timing(
-            initialState.current.backgroundColor[cell.row][cell.col],
-            {
-              toValue: 1,
-              useNativeDriver: true,
-              duration: 200,
-            },
-          ),
-          Animated.timing(
-            initialState.current.backgroundColor[cell.row][cell.col],
-            {
-              toValue: 0,
-              useNativeDriver: true,
-              duration: 200,
-              delay: 1000,
-            },
-          ),
-        ]),
-        Animated.sequence([
           Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
             toValue: 1000,
             useNativeDriver: true,
@@ -315,16 +314,16 @@ const GameBoard = () => {
             duration: 200,
             useNativeDriver: true,
           }),
-          Animated.timing(initialState.current.scale[cell.row][cell.col], {
-            toValue: 2,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-          Animated.timing(initialState.current.scale[cell.row][cell.col], {
-            toValue: 1,
-            duration: 100,
-            useNativeDriver: true,
-          }),
+          // Animated.timing(initialState.current.scale[cell.row][cell.col], {
+          //   toValue: 2,
+          //   duration: 200,
+          //   useNativeDriver: true,
+          // }),
+          // Animated.timing(initialState.current.scale[cell.row][cell.col], {
+          //   toValue: 1,
+          //   duration: 100,
+          //   useNativeDriver: true,
+          // }),
           Animated.timing(initialState.current.zIndex[cell.row][cell.col], {
             toValue: 1,
             useNativeDriver: true,
@@ -336,7 +335,7 @@ const GameBoard = () => {
           useNativeDriver: true,
           duration: 2000,
         }),
-      ]).start(() => {
+      ]).start(function () {
         if (cellCnt > 1) cellCnt = cellCnt - 1;
         else {
           setBlockList([]);
@@ -426,7 +425,7 @@ const GameBoard = () => {
           tension: 100,
         },
       ),
-    ]).start(() => {
+    ]).start(function () {
       onSwap2CellTable(row, column, row + numCellY, column + numCellX);
 
       const matchedBlockList = checkTable(boardTable);
@@ -601,11 +600,13 @@ const GameBoard = () => {
   return useMemo(() => {
     return (
       <View style={styles.boardContainer}>
-        <FinishModal
-          isVisible={isVisible}
-          setIsVisible={setIsVisible}
-          isWinner={isWinner.current}
-        />
+        {isVisible ? (
+          <StatusPopup
+            status={isWinner.current ? "Victory" : "Defeat"}
+            onPress={handlePopupButton}
+          />
+        ) : null}
+
         {boardTable.length > 0 ? (
           boardTable.map((row: any, indexRow: any) => (
             <View key={indexRow} style={styles.row}>

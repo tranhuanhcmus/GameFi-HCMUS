@@ -238,7 +238,7 @@ const UpperLayer = () => {
               width: blockWidth,
               overflow: "hidden",
               backgroundColor: "transparent",
-              borderColor: COLOR.PURPLE,
+              borderColor: COLOR.DARKER_PURPLE,
             }}
           >
             {/* cells in block here */}
@@ -258,7 +258,7 @@ const UpperLayer = () => {
                       height: GameLogic.HEIGHT_PER_CELL,
                       width: GameLogic.WIDTH_PER_CELL,
                       zIndex: 99,
-                      backgroundColor: COLOR.WHITE,
+                      backgroundColor: COLOR.PURPLE,
                       borderRadius: 5,
                       display: "flex",
                       alignItems: "center",

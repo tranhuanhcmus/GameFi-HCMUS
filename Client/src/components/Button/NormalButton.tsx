@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, TouchableOpacity, StyleSheet } from "react-native";
 import { Shadow } from "react-native-shadow-2";
-import DropShadow from "react-native-drop-shadow";
+// import DropShadow from "react-native-drop-shadow";
 
 type Props = {
   className?: any;
@@ -17,12 +17,12 @@ const NormalButton = ({
   ...rest
 }: Props) => {
   return (
-    <DropShadow style={[styles.shadowProp, { shadowColor: shadowColor }]}>
+    // <DropShadow style={[styles.shadowProp, { shadowColor: shadowColor }]}>
       <TouchableOpacity onPress={onPress} {...rest}>
         <Shadow></Shadow>
         {children}
       </TouchableOpacity>
-    </DropShadow>
+    // </DropShadow>
   );
 };
 
