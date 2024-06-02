@@ -177,5 +177,6 @@ router.put('/', itemGameOwnerController.updateById);
  *         description: Internal server error
  */
 router.delete('/:id', itemGameOwnerController.deleteById);
+router.post('/purchase', itemGameOwnerController.purchaseItem);
 
 module.exports = router;
