@@ -10,6 +10,7 @@ import socketSlice from "./socketSlice";
 import hangManSlice from "./hangManSlice";
 import settingGameSlice from "./settingGameSlice";
 import breedSlice from "./breedSlice";
+import petSlice from "./petSlice";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     settingGame: settingGameSlice,
     socket: socketSlice,
     breed: breedSlice,
+    pet: petSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

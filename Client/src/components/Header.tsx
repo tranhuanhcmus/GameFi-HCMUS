@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import ConstantsResponsive from "../constants/Constanst";
@@ -8,11 +8,32 @@ import CustomText from "./CustomText";
 import Thunder from "../../assets/thunder.svg";
 import Coin from "../../assets/coin.svg";
 import useCustomNavigation from "../hooks/useCustomNavigation";
+import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
+import { useAccount } from "wagmi";
+import log from "../logger/index.js";
 interface HeaderProps {
   name: string;
 }
+const GOLD = "Gold";
+const GEM = "Gem";
 
 const Header: React.FC<HeaderProps> = ({ name }) => {
+  const [data, setData] = useState<any[]>([]);
+
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+  const fetchData = async () => {
+    try {
+      const res: any[] = await ItemAppOwnerService.getCurrency(address);
+      setData([...data, ...res]);
+    } catch (error) {
+      log.error("ItemAppOwnerService.getCurrency", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [address]);
   const navigate = useCustomNavigation();
   return (
     <TouchableOpacity
@@ -62,7 +83,9 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             fontWeight: "bold",
           }}
         >
-          100
+          {data && data.length
+            ? data.find((item) => item.name == GOLD).quantity
+            : 0}
         </CustomText>
       </View>
 
@@ -86,7 +109,9 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             fontWeight: "bold",
           }}
         >
-          3
+          {data && data.length
+            ? data.find((item) => item.name == GEM).quantity
+            : 0}
         </CustomText>
       </View>
     </TouchableOpacity>

@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
+import { FlatList, Image, Modal, TouchableOpacity, View } from "react-native";
+import { useAccount } from "wagmi";
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
-import useCustomNavigation from "../../hooks/useCustomNavigation";
+import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
 import { COLOR } from "../../utils/color";
-import FastImage from "react-native-fast-image";
-import Medicine from "../../../assets/medicine.png";
 const InventoryModal = ({
   isVisible,
   setIsVisible,
@@ -22,36 +13,52 @@ const InventoryModal = ({
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
 }) => {
-  const navigate = useCustomNavigation();
-  useEffect(() => {}, [isVisible]);
+  // const [data, setData] = useState([
+  //   {
+  //     id: 1,
+  //     image: require("../../../assets/medicine.png"),
+  //     quantity: 2,
+  //   },
+  //   {
+  //     id: 2,
+  //     image: require("../../../assets/healing_potion.png"),
+  //     quantity: 2,
+  //   },
+  //   {
+  //     id: 3,
+  //     image: require("../../../assets/candy/17.png"),
+  //     quantity: 2,
+  //   },
+  //   {
+  //     id: 4,
+  //     image: require("../../../assets/candy/14.png"),
+  //     quantity: 2,
+  //   },
+  //   {
+  //     id: 5,
+  //     image: require("../../../assets/candy/19.png"),
+  //     quantity: 2,
+  //   },
+  // ]);
 
-  const [data, setData] = useState([
-    {
-      id: 1,
-      image: require("../../../assets/medicine.png"),
-      quantity: 2,
-    },
-    {
-      id: 2,
-      image: require("../../../assets/healing_potion.png"),
-      quantity: 2,
-    },
-    {
-      id: 3,
-      image: require("../../../assets/candy/17.png"),
-      quantity: 2,
-    },
-    {
-      id: 4,
-      image: require("../../../assets/candy/14.png"),
-      quantity: 2,
-    },
-    {
-      id: 5,
-      image: require("../../../assets/candy/19.png"),
-      quantity: 2,
-    },
-  ]);
+  /** useState */
+  const [data, setData] = useState<any[]>([]);
+
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+
+  const fetchData = async () => {
+    try {
+      const res: any[] = await ItemGameOwnerService.getItems(address);
+      setData([...res]);
+    } catch (error) {
+      console.error("ItemGameOwnerService.getItems", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [address]);
 
   const InventoryItem = ({
     image,
@@ -73,7 +80,14 @@ const InventoryModal = ({
           justifyContent: "center",
         }}
       >
-        <Image source={image} style={{ width: 50, height: 50 }} />
+        <Image
+          source={
+            image
+              ? { uri: `http://192.168.1.12:4500${image}` }
+              : require("../../../assets/candy/19.png")
+          }
+          style={{ width: 50, height: 50 }}
+        />
         <View
           style={{
             width: "100%",
