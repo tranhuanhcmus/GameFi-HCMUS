@@ -178,5 +178,5 @@ router.put('/', itemAppOwnerController.updateById);
  */
 router.delete('/:id', itemAppOwnerController.deleteById);
 router.get('/currency/:owner', itemAppOwnerController.getOwnerCurrency);
-
+router.post('/purchase', itemAppOwnerController.purchaseItem);
 module.exports = router;
