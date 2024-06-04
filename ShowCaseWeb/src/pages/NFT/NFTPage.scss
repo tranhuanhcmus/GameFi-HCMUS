@@ -1,0 +1,55 @@
+@import '/src/common.scss';
+
+.nft_page {
+	display: flex;
+	flex-direction: column;
+	gap: 60px;
+	.nft_page_detail{
+		display: flex;
+		gap: 20px;
+		.visualize{
+			flex:1;
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			align-items: center;
+			.visualize__image{
+				height: 75%;
+				border-radius: 16px;
+				overflow: hidden;
+				img{
+					height: 100%;
+					width: auto;
+					object-fit: cover;
+				}
+			}
+			.visualize__controls{
+				box-sizing: border-box;
+				width: 100%;
+				padding: 28px 32px;
+				background-color: $gray22;
+				border-radius: 16px;
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				.buy_button{
+					margin-top: 16px;
+					width: 100%;
+					line-height: 32px;
+				}
+			}
+		}
+		.information{
+			min-width: 50vw;
+			flex:1;
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+	}
+	.nft_page__label{
+		font-weight: 500;
+		color: #637592;
+		font-size: 18px;
+	}
+}

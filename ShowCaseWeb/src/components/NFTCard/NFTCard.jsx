@@ -3,7 +3,7 @@ import "./NFTCard.scss";
 const NFTCard = ({ data, ...restProps }) => {
   return (
     data && (
-      <div className="card card--nft">
+      <div className="card card--nft"  {...restProps }>
         <div className="card__img">
           <img src={data.image} alt="card" />
         </div>

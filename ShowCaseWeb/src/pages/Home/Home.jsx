@@ -4,6 +4,7 @@ import Menu from "components/Menu/Menu";
 import Dropdown from "components/Dropdown/Dropdown";
 import Button from "components/Button/Button";
 import NFTCard from "components/NFTCard/NFTCard";
+import { useNavigate } from "react-router-dom";
 
 const section1_images = [
   "/images/nft_1.svg",
@@ -91,6 +92,12 @@ const nfts = [
 ];
 
 const Home = () => {
+
+  const navigate = useNavigate();
+  const onClickCard = (item) => {
+    console.log(item);
+    navigate(`/nft/${item.id}`)
+  };
   return (
     <div className="page_wrapper">
       <div className="page home_page">
@@ -181,7 +188,11 @@ const Home = () => {
           </div>
           <div className="section__body">
             {nfts.map((item, index) => (
-              <NFTCard key={item.id} data={item} />
+              <NFTCard
+                onClick={() => onClickCard(item)}
+                key={item.id}
+                data={item}
+              />
             ))}
           </div>
         </div>
