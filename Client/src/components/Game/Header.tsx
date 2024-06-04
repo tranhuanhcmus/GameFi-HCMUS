@@ -88,7 +88,7 @@ const User: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
     setOffsetX(0);
@@ -103,7 +103,7 @@ const User: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
   };
@@ -195,7 +195,7 @@ const Component: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
     setOffsetX(0);
@@ -210,7 +210,7 @@ const Component: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
   };

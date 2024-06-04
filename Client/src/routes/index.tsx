@@ -36,6 +36,7 @@ import Star from "../../assets/star.svg";
 import Trophy from "../../assets/trophy.svg";
 import Coin from "../../assets/coin.svg";
 import ProfileScreen from "../Screens/Profile/Main";
+import Match3Game from "../Screens/Match3Game/Main";
 import { flare } from "viem/chains";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import ConstantsResponsive from "../constants/Constanst";
@@ -128,6 +129,7 @@ type LocalRootStackParamList = {
   Connect: undefined;
   MainTab: undefined;
   Game: undefined;
+  Match3Game: undefined;
   HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
@@ -169,6 +171,13 @@ const Route = () => (
       <Stack.Screen
         name="Game"
         component={GameScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Match3Game"
+        component={Match3Game}
         options={{
           headerShown: false,
         }}

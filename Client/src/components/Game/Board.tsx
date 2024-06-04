@@ -22,11 +22,16 @@ import StatusPopup from "../../Screens/HangManGame/StatusPopup";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import log from "../../logger/index.js";
 import {
+  emptyBlockList,
   updateBlockList,
   updateCellsToSwap,
   updateTable,
 } from "../../redux/boardSlice";
-import { updateComponentTurn, updateHp } from "../../redux/playerSlice";
+import {
+  updateComponentHp,
+  updateComponentTurn,
+  updateHp,
+} from "../../redux/playerSlice";
 import { updateMove } from "../../redux/socketSlice";
 import { COLOR } from "../../utils/color";
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
@@ -70,11 +75,7 @@ const GameBoard = () => {
   /** useState */
   const [blockList, setBlockList] = useState<any[]>([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [coordinate, setCoordinate] = useState(
-    GameLogic.generateAnimatedValueXY,
-  );
-  const INPUT_RANGE = [-1, 0, 1];
-  const OUTPUT_RANGE = [COLOR.RED, COLOR.YELLOW, COLOR.RED];
+  const [isDisabled, setIsDisabled] = useState(false);
 
   /** ====================================================== */
   /** useRef */
@@ -116,16 +117,6 @@ const GameBoard = () => {
         ),
       );
 
-    const backgroundColorInterpolate: Animated.Value[][] =
-      initialState.current.backgroundColor.map((row: any[]) =>
-        row.map((cell) =>
-          cell.interpolate({
-            inputRange: INPUT_RANGE,
-            outputRange: OUTPUT_RANGE,
-          }),
-        ),
-      );
-
     const scaleInterpolation: Animated.Value[][] =
       initialState.current.scale.map((row: any[]) =>
         row.map((cell) =>
@@ -143,7 +134,6 @@ const GameBoard = () => {
       rotation: rotateInterpolate,
       scale: scaleInterpolation,
       coordinate: coordinate,
-      backgroundColor: backgroundColorInterpolate,
       zIndex: initialState.current.zIndex,
     };
   }, [
@@ -195,7 +185,6 @@ const GameBoard = () => {
   useEffect(() => {
     if (hp <= 0 || componentHp <= 0) {
       hp <= 0 ? (isWinner.current = false) : (isWinner.current = true);
-      log.error("STOP GAME");
       setIsVisible(true);
     }
   }, [hp, componentHp]);
@@ -592,7 +581,7 @@ const GameBoard = () => {
             }),
           ),
       );
-  }, [table]);
+  }, [table, blockList]);
 
   /**
    * Frontend of component

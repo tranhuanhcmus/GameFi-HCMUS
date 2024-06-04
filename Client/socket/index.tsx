@@ -5,7 +5,7 @@ import { SOCKET } from "./constants";
 const PORT = 3001;
 let server: string;
 // server = `http://192.168.1.14:${PORT}`; // TODO CHANGE LATER
-server = `http://localhost:${PORT}`; // TODO CHANGE LATER
+server = `http://192.168.1.10:${PORT}`; // TODO CHANGE LATER
 // // Check if the environment is a browser and window.location is defined
 // const isBrowser =
 //   typeof window !== "undefined" &&
@@ -97,6 +97,7 @@ export class SocketIOClient {
   }
 
   emitEventGame(data: any) {
+    console.log("alooo");
     this.socket.emit(SOCKET.EVENT_DIAMOND, data);
   }
 
