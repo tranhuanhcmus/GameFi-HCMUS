@@ -27,7 +27,18 @@ interface props {
 const GameHeader = () => {
   const { hp, componentHp } = useSelector((state: any) => state.player);
   return (
-    <View style={styles.characterArea}>
+    <View
+      style={{
+        position: "absolute",
+        top: 0,
+        height: 200,
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
       <User hp={hp} />
       <Component hp={componentHp} />
     </View>
@@ -128,8 +139,29 @@ const User: React.FC<props> = ({ hp }) => {
   }, [hp]);
 
   return (
-    <View style={styles.player}>
-      <View style={styles.playerHeader}>
+    <View
+      style={{
+        position: "relative",
+        width: "50%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        alignItems: "center",
+        backgroundColor: COLOR.RED,
+      }}
+    >
+      <View
+        style={{
+          height: "auto",
+          width: "auto",
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "center",
+          alignItems: "center",
+          backgroundColor: COLOR.WHITE,
+        }}
+      >
         <Image style={styles.avatarImage} source={Avatar}></Image>
         <Bar hp={hp} />
       </View>
@@ -254,8 +286,29 @@ const Component: React.FC<props> = ({ hp }) => {
   }, [hp]);
 
   return (
-    <View style={styles.player}>
-      <View style={styles.playerHeader}>
+    <View
+      style={{
+        position: "relative",
+        width: "50%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        alignItems: "center",
+        backgroundColor: COLOR.PURPLE,
+      }}
+    >
+      <View
+        style={{
+          height: "auto",
+          width: "auto",
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "center",
+          alignItems: "center",
+          backgroundColor: COLOR.GREEN,
+        }}
+      >
         <Bar hp={hp} />
         <Image style={styles.avatarImage} source={Avatar}></Image>
       </View>
@@ -425,7 +478,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-around",
     alignItems: "center",
-    marginHorizontal: 10,
   },
   playerHeader: {
     height: "auto",
@@ -434,6 +486,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignContent: "center",
     alignItems: "center",
+    backgroundColor: COLOR.GREEN,
   },
 
   row: {

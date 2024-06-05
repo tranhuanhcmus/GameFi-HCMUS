@@ -34,6 +34,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { initSocket } from "../../../redux/socketSlice";
 import { DataSocketTransfer } from "../../../../socket";
+import StatusPopup from "../../HangManGame/StatusPopup";
+import useCustomNavigation from "../../../hooks/useCustomNavigation";
 
 // react-native-swipe-gestures swipeDirections type
 export enum swipeDirections {
@@ -48,22 +50,37 @@ interface Props {
   setScore: React.Dispatch<React.SetStateAction<number>>;
 }
 const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
+  /** ====================================================== */
+  /** useState */
   const [tileDataSource, setTileDataSource] = useState(initializeDataSource());
   const [blockScreen, setBlockScreen] = useState("");
-  const gridOrigin = useRef([0, 0]);
-  let invalidSwap = false;
+  const [isVisible, setIsVisible] = useState(false);
 
+  /** ====================================================== */
+  /** useRef */
+  const gridOrigin = useRef([0, 0]);
+  const isWinner = useRef(false);
+
+  /** ====================================================== */
+  /** variable */
+  let invalidSwap = false;
   const config = { velocityThreshold: 0.1, directionalOffsetThreshold: 60 };
 
+  /** ====================================================== */
+  /** useDispatch */
   const dispatch = useDispatch();
+
+  /** ====================================================== */
+  /** useCustomNavigation */
+  const navigate = useCustomNavigation();
+
+  /** ====================================================== */
+  /** useSelector */
   const { socket, move, tableSocket } = useSelector(
     (state: any) => state.socket,
   );
-  const { gameRoom, isComponentTurn } = useSelector(
+  const { gameRoom, hp, componentHp, isComponentTurn } = useSelector(
     (state: any) => state.player,
-  );
-  const { table, blockList, swapCells } = useSelector(
-    (state: any) => state.board,
   );
 
   const attackComponent = (tileData: TileDataType[][]) => {
@@ -76,6 +93,21 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
     });
   };
 
+  const handlePopupButton = () => {
+    // clear all stored data
+    // replay
+    // setStatus("");
+    // dispatch(setComponentHp(40));
+    // dispatch(setHp(40));
+    // dispatch(updateTurn(false));
+    socket.emitSuccess(gameRoom);
+    socket.removeListenFristTurn();
+    socket.removeListenTakeDamage();
+    navigate.navigate("MainTab");
+  };
+
+  /** ====================================================== */
+  /** useEffect */
   /** Init socket */
   useEffect(() => {
     dispatch(initSocket());
@@ -98,6 +130,13 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
       });
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (hp <= 0 || componentHp <= 0) {
+      hp <= 0 ? (isWinner.current = false) : (isWinner.current = true);
+      setIsVisible(true);
+    }
+  }, [hp, componentHp]);
 
   useEffect(() => {
     // To make the animation run after the color is changed. (Image loading time varies depending on the device.)
@@ -258,7 +297,9 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
       condenseColumns(newTileDataSource);
       recolorMatches(newTileDataSource);
 
-      attackComponent(newTileDataSource);
+      if (!isComponentTurn) {
+        attackComponent(newTileDataSource);
+      }
       return newTileDataSource;
     });
   };
@@ -278,6 +319,12 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
 
   return (
     <>
+      {isVisible ? (
+        <StatusPopup
+          status={isWinner.current ? "Victory" : "Defeat"}
+          onPress={handlePopupButton}
+        />
+      ) : null}
       <GestureRecognizer
         onLayout={onLayout}
         config={config}

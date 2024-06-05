@@ -37,12 +37,12 @@ const GameScreen = () => {
           moveCount={moveCount}
           score={score}
         /> */}
-        <View style={styles.scoreElement}>
+        {/* <View style={styles.scoreElement}>
           <Text>{score}</Text>
         </View>
         <View style={styles.scoreElement}>
           <Text>{moveCount}</Text>
-        </View>
+        </View> */}
       </SafeAreaView>
       <SwappableGrid setMoveCount={setMoveCount} setScore={setScore} />
     </ImageBackground>

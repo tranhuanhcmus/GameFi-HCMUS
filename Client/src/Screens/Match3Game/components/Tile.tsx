@@ -39,7 +39,6 @@ let styles = StyleSheet.create({
     width: TILE_WIDTH,
     height: TILE_WIDTH,
     position: "absolute",
-    backgroundColor: COLOR.RED,
   },
 });
 
