@@ -28,6 +28,7 @@ import Inventory from "../../../assets/inventory.svg";
 import InventoryModal from "./Inventory";
 import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 import petSlice from "../../redux/petSlice";
+
 type Props = {};
 
 const HomeScreen = () => {
@@ -106,6 +107,32 @@ const HomeScreen = () => {
     }
   };
 
+  const fetchData = async () => {
+    try {
+      const res: any[] = await ItemAppOwnerService.getCurrency(address);
+      console.log("fetchData res", res);
+      // const mappedData: any[] = res.map((nft: any) => {
+      //   console.log("nft ", nft);
+      //   return {
+      //     id: nft.tokenid,
+      //     element: ELEMENT.FIRE,
+      //     level: getLevel(nft.exp),
+      //     petImg: nft.data.image || "",
+      //     name: nft.data.name,
+      //     rarityPet: "special",
+      //   };
+      // });
+
+      // setData(mappedData);
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   useEffect(() => {
     if (!isConnected) {
       navigate.replace("Connect");
@@ -168,7 +195,7 @@ const HomeScreen = () => {
       <Image
         style={styles.backgroundImage}
         resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
+        source={require("../../../assets/backGroundHome_2.jpeg")}
       />
       <LoadingModal
         gameName={gameName}
@@ -245,7 +272,7 @@ const HomeScreen = () => {
             setIsInventoryModalVisible(true);
           }}
         >
-          <Inventory />
+          <Inventory width={40} height={40} />
         </TouchableOpacity>
       </View>
 

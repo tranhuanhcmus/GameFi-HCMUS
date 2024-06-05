@@ -1,33 +1,15 @@
-import { View, Image } from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
 import ConstantsResponsive from "../../constants/Constanst";
 import { COLOR } from "../../utils/color";
 import Plus from "../../../assets/plus.svg";
 import AwesomeButton from "react-native-really-awesome-button";
 import CustomText from "../../components/CustomText";
 import Pet from "../../../assets/avatar.png";
-// const BearCard = () => {
-//   return (
-//     <View
-//       style={{
-//         width: ConstantsResponsive.MAX_WIDTH * 0.4,
-//         height: ConstantsResponsive.MAX_HEIGHT * 0.4,
-//         backgroundColor: COLOR.DARKER_PURPLE,
-//         borderWidth: 4,
-//         borderColor: COLOR.LIGHT_PURPLE,
-//         borderRadius: 10,
-//         elevation: 100,
-//         display: "flex",
-//         justifyContent: "center",
-//         alignItems: "center",
-//       }}
-//     >
-//       <Plus width="60%" height="60%" fill={COLOR.PURPLE} />
-//     </View>
-//   );
-// };
+import useCustomNavigation from "../../hooks/useCustomNavigation";
 
-const BearCard = () => {
-  return (
+const BearCard = (props: any) => {
+  const navigate = useCustomNavigation();
+  return props && props.name ? (
     <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
@@ -80,12 +62,36 @@ const BearCard = () => {
         }}
       >
         <CustomText
-          style={{ textAlign: "center", fontWeight: "900", color: COLOR.WHITE }}
+          style={{
+            textAlign: "center",
+            fontWeight: "900",
+            color: COLOR.WHITE,
+          }}
         >
           LEVEL 1
         </CustomText>
       </View>
     </View>
+  ) : (
+    <TouchableOpacity
+      onPress={() => {
+        navigate.navigate("Play");
+      }}
+      style={{
+        width: ConstantsResponsive.MAX_WIDTH * 0.4,
+        height: ConstantsResponsive.MAX_HEIGHT * 0.4,
+        backgroundColor: COLOR.DARKER_PURPLE,
+        borderWidth: 4,
+        borderColor: COLOR.LIGHT_PURPLE,
+        borderRadius: 10,
+        elevation: 100,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Plus width="60%" height="60%" fill={COLOR.PURPLE} />
+    </TouchableOpacity>
   );
 };
 

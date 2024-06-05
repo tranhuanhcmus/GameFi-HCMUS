@@ -148,7 +148,6 @@ const User: React.FC<props> = ({ hp }) => {
         flexDirection: "column",
         justifyContent: "space-around",
         alignItems: "center",
-        backgroundColor: COLOR.RED,
       }}
     >
       <View
@@ -159,7 +158,6 @@ const User: React.FC<props> = ({ hp }) => {
           flexDirection: "row",
           alignContent: "center",
           alignItems: "center",
-          backgroundColor: COLOR.WHITE,
         }}
       >
         <Image style={styles.avatarImage} source={Avatar}></Image>
@@ -295,7 +293,6 @@ const Component: React.FC<props> = ({ hp }) => {
         flexDirection: "column",
         justifyContent: "space-around",
         alignItems: "center",
-        backgroundColor: COLOR.PURPLE,
       }}
     >
       <View
@@ -306,7 +303,6 @@ const Component: React.FC<props> = ({ hp }) => {
           flexDirection: "row",
           alignContent: "center",
           alignItems: "center",
-          backgroundColor: COLOR.GREEN,
         }}
       >
         <Bar hp={hp} />
@@ -486,7 +482,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignContent: "center",
     alignItems: "center",
-    backgroundColor: COLOR.GREEN,
   },
 
   row: {

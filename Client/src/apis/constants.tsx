@@ -6,5 +6,5 @@ export const API = {
   ITEM_GAME: "/itemGames",
   ITEM_APP: "/itemApps",
   BREED: "/breed",
-  server: "http://192.168.1.12:4500",
+  server: "http://192.168.1.11:4500",
 };
