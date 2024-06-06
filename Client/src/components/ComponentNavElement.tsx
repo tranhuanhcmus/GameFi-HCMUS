@@ -3,6 +3,7 @@ import { View } from "react-native";
 import React from "react";
 import CustomText from "./CustomText";
 import { COLOR } from "../utils/color";
+import ConstantsResponsive from "../constants/Constanst";
 
 interface ComponentNavElementProps {
   focused: boolean;
@@ -21,6 +22,8 @@ const ComponentNavElement: React.FC<ComponentNavElementProps> = ({
       <CustomText
         style={{
           color: focused ? COLOR.WHITE : COLOR.GRAY,
+          fontSize: ConstantsResponsive.XR * 25,
+          fontWeight: "bold",
         }}
       >
         {content}

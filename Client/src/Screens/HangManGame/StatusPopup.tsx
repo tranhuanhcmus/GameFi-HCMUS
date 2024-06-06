@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
     elevation: 14,
 
     backgroundColor: colors.shapeColor,
-    backgroundDarker: "white",
   },
   btnText: {
     textAlign: "center",

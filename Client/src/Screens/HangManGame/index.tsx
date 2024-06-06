@@ -1,8 +1,10 @@
-import { StyleSheet, View, SafeAreaView } from "react-native";
+import { StyleSheet, View, SafeAreaView, Image } from "react-native";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { CommonActions } from "@react-navigation/native";
 import Header from "./Header";
-import ManFigure from "./ManFigure";
+import { StatusBar } from "react-native";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { StatusBarHeight } from "../../function/CalculateStatusBar";
 import WordBox from "./WordBox";
 import { WordsArray } from "./data";
 import InputBox from "./InputBox";
@@ -27,8 +29,16 @@ import { useIsFocused } from "@react-navigation/native";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import GameSettings from "../../components/GameSetting";
 import { setVisable } from "../../redux/settingGameSlice";
-import { Audio } from "expo-av";
+
 import useAudioPlayer from "../../hooks/useMusicPlayer";
+import { playSound } from "../../function/SoundGame";
+import { NativeModules } from "react-native";
+
+// ...
+
+const { StatusBarManager } = NativeModules;
+
+const height = StatusBarManager.HEIGHT;
 
 const Index = () => {
   const { hp, componentHp, gameRoom } = useSelector(
@@ -49,7 +59,6 @@ const Index = () => {
   const [timing, setTiming] = useState(30);
   const [gameOver, setGameOver] = useState(false);
   const isFocused = useIsFocused();
-  const soundGame = new Audio.Sound();
 
   const correctWord = WordsArray[currentIndex].answer;
 
@@ -167,7 +176,7 @@ const Index = () => {
     dispatch(setVisable(false));
   };
 
-  useAudioPlayer(sound);
+  useAudioPlayer(music, "soundTrackGame");
 
   useEffect(() => {
     socket.onListenFirstTurn((data) => {
@@ -185,36 +194,44 @@ const Index = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <GameSettings isVisible={isVisable} onClose={handleCloseModal} />
-      <View style={styles.playArea}>
-        {/* <View style={styles.row}>
-          <ManFigure wrongWord={wrongLetters.length} />
-        </View> */}
-        <View style={styles.containHeader}>
-          <Header></Header>
-        </View>
-        <TimingLine
-          gameOver={gameOver}
-          turn={turn}
-          leaveScreen={!isFocused}
-          duration={timing}
-          onCompletion={handleEndTime}
-        />
-        <View style={styles.WordBox}>
-          <WordBox wordData={WordsArray[currentIndex]} />
-        </View>
+    <View style={styles.container}>
+      <Image
+        resizeMode="stretch"
+        source={require("../../../assets/backGroundGameHeader_2.png")}
+        style={styles.bgHeader}
+      />
 
-        <InputBox correctLetters={correctLetters} answer={correctWord} />
-        <Keyboard
-          turn={turn}
-          correctLetters={correctLetters}
-          wrongLetters={wrongLetters}
-          onPress={(input: string) => storeCorrectLetters(input)}
-        />
-        <StatusPopup status={status} onPress={handlePopupButton} />
-      </View>
-    </SafeAreaView>
+      <SafeAreaView>
+        <GameSettings isVisible={isVisable} onClose={handleCloseModal} />
+        <View style={styles.playArea}>
+          <View style={styles.containHeader}>
+            <Header></Header>
+          </View>
+          <TimingLine
+            gameOver={gameOver}
+            turn={turn}
+            leaveScreen={!isFocused}
+            duration={timing}
+            onCompletion={handleEndTime}
+          />
+          <View style={styles.WordBox}>
+            <WordBox wordData={WordsArray[currentIndex]} />
+          </View>
+
+          <InputBox correctLetters={correctLetters} answer={correctWord} />
+          <Keyboard
+            turn={turn}
+            correctLetters={correctLetters}
+            wrongLetters={wrongLetters}
+            onPress={(input: string) => {
+              playSound(sound, "pressTyping");
+              storeCorrectLetters(input);
+            }}
+          />
+          <StatusPopup status={status} onPress={handlePopupButton} />
+        </View>
+      </SafeAreaView>
+    </View>
   );
 };
 
@@ -226,6 +243,12 @@ const styles = StyleSheet.create({
   },
   containHeader: {
     height: ConstantsResponsive.MAX_HEIGHT * 0.2,
+  },
+
+  bgHeader: {
+    width: ConstantsResponsive.MAX_WIDTH,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.2 + StatusBarHeight,
+    position: "absolute",
   },
   playArea: {
     display: "flex",

@@ -9,6 +9,7 @@ import {
   FlatList,
   StyleSheet,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { ItemComponent } from "../../components/ItemComponent";
 import { ELEMENT } from "../../constants/types";
@@ -25,10 +26,21 @@ import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = () => {
+  const flatListRef = useRef<FlatList>(null);
   const [isConnected, setIsConnected] = useState(false);
   const navigation = useNavigation();
+
+  const scrollToBottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
   return (
-    <View
+    <ScrollView
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
         height: ConstantsResponsive.MAX_HEIGHT,
@@ -37,6 +49,7 @@ const ProfileScreen = () => {
     >
       {isConnected && <W3mAccountButton balance="show" />}
       <View
+        id="image_info"
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           height: ConstantsResponsive.MAX_HEIGHT * 0.2,
@@ -48,7 +61,7 @@ const ProfileScreen = () => {
         <Image
           source={require("../../../assets/avatar.png")}
           style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.1,
+            width: ConstantsResponsive.MAX_WIDTH * 0.2,
             aspectRatio: 1,
           }}
         />
@@ -64,115 +77,258 @@ const ProfileScreen = () => {
         </CustomText>
       </View>
       <View
-        id="info_container"
+        id="progress"
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
-          height: ConstantsResponsive.MAX_HEIGHT * 0.5,
+          height: ConstantsResponsive.MAX_HEIGHT * 0.2,
           display: "flex",
           justifyContent: "space-around",
-          alignItems: "center",
+          alignItems: "flex-start",
+          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+          marginBottom: ConstantsResponsive.MAX_WIDTH * 0.05,
         }}
       >
-        <TextInput
-          id="first_name"
+        <CustomText
+          style={{ color: COLOR.WHITE, fontWeight: "bold", fontSize: 17 }}
+        >
+          Secure your progress
+        </CustomText>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
           style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.8,
+            width: ConstantsResponsive.MAX_WIDTH * 0.9,
             height: ConstantsResponsive.MAX_HEIGHT * 0.1,
             backgroundColor: COLOR.DARKER_PURPLE,
-            borderRadius: 15,
-            color: COLOR.WHITE,
+            justifyContent: "flex-start",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+            borderRadius: 20,
+            paddingLeft: 10,
           }}
-          placeholderTextColor={COLOR.WHITE}
-          placeholder="What's your first name"
-          textAlign="center"
-          textAlignVertical="center"
-        ></TextInput>
+        >
+          <Image
+            source={require("../../../assets/avatar.png")}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.1,
+              height: ConstantsResponsive.MAX_WIDTH * 0.1,
+            }}
+          />
+          <CustomText
+            style={{
+              color: COLOR.WHITE,
+              fontWeight: "bold",
+              fontSize: 17,
+              marginLeft: 10,
+            }}
+          >
+            Update Avatar & Nickname
+          </CustomText>
+        </TouchableOpacity>
+      </View>
 
-        <TextInput
-          id="last_name"
+      <View
+        id="in_game_currency"
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: "auto",
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "flex-start",
+          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+          marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.05,
+        }}
+      >
+        <CustomText
           style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.8,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-            backgroundColor: COLOR.DARKER_PURPLE,
-            borderRadius: 15,
             color: COLOR.WHITE,
+            fontWeight: "bold",
+            fontSize: 17,
+            marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.04,
           }}
-          placeholderTextColor={COLOR.WHITE}
-          placeholder="And your last name?"
-          textAlign="center"
-          textAlignVertical="center"
-        ></TextInput>
-
-        <TextInput
-          id="gender"
+        >
+          In-game currencies
+        </CustomText>
+        <FlatList
+          ref={flatListRef}
+          data={[
+            { id: 1, image: require("../../../assets/coin.svg"), quantity: 0 },
+          ]}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ gap: 20 }}
+          keyExtractor={(item) => item.id}
+          horizontal={true}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH * 0.3,
+                height: ConstantsResponsive.MAX_WIDTH * 0.3,
+                backgroundColor: COLOR.DARKER_PURPLE,
+                borderRadius: 20,
+              }}
+            >
+              <View>
+                <Image
+                  source={item.image}
+                  style={{
+                    width: ConstantsResponsive.MAX_WIDTH * 0.2,
+                    height: ConstantsResponsive.MAX_WIDTH * 0.2,
+                  }}
+                />
+              </View>
+            </View>
+          )}
+        />
+      </View>
+      <View
+        id="inventory"
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: "auto",
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "flex-start",
+          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+        }}
+      >
+        <CustomText
           style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.8,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-            backgroundColor: COLOR.DARKER_PURPLE,
-            borderRadius: 15,
             color: COLOR.WHITE,
+            fontWeight: "bold",
+            fontSize: 17,
+            marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.04,
           }}
-          placeholderTextColor={COLOR.WHITE}
-          placeholder="Select gender"
-          textAlign="center"
-          textAlignVertical="center"
-        ></TextInput>
-
-        <TextInput
-          id="dob"
+        >
+          Inventory
+        </CustomText>
+        <View
           style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.8,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+            width: ConstantsResponsive.MAX_WIDTH * 0.9,
+            height: "auto",
             backgroundColor: COLOR.DARKER_PURPLE,
-            borderRadius: 15,
-            color: COLOR.WHITE,
+            borderRadius: 20,
           }}
-          placeholderTextColor={COLOR.WHITE}
-          placeholder="What's your date of birth"
-          textAlign="center"
-          textAlignVertical="center"
-        ></TextInput>
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.9,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+              backgroundColor: COLOR.DARKER_PURPLE,
+              justifyContent: "flex-start",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              borderRadius: 20,
+              paddingLeft: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: COLOR.WHITE,
+            }}
+          >
+            <Image
+              source={require("../../../assets/avatar.png")}
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH * 0.1,
+                height: ConstantsResponsive.MAX_WIDTH * 0.1,
+              }}
+            />
+            <CustomText
+              style={{
+                color: COLOR.WHITE,
+                fontWeight: "bold",
+                fontSize: 17,
+                marginLeft: 10,
+              }}
+            >
+              Beasts
+            </CustomText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.9,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+              backgroundColor: COLOR.DARKER_PURPLE,
+              justifyContent: "flex-start",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              borderRadius: 20,
+              paddingLeft: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: COLOR.WHITE,
+            }}
+          >
+            <Image
+              source={require("../../../assets/avatar.png")}
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH * 0.1,
+                height: ConstantsResponsive.MAX_WIDTH * 0.1,
+              }}
+            />
+            <CustomText
+              style={{
+                color: COLOR.WHITE,
+                fontWeight: "bold",
+                fontSize: 17,
+                marginLeft: 10,
+              }}
+            >
+              Wallets & Token
+            </CustomText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.8,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+              backgroundColor: COLOR.DARKER_PURPLE,
+              justifyContent: "flex-start",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              borderRadius: 20,
+              paddingLeft: 10,
+            }}
+          >
+            <Image
+              source={require("../../../assets/avatar.png")}
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH * 0.1,
+                height: ConstantsResponsive.MAX_WIDTH * 0.1,
+              }}
+            />
+            <CustomText
+              style={{
+                color: COLOR.WHITE,
+                fontWeight: "bold",
+                fontSize: 17,
+                marginLeft: 10,
+              }}
+            >
+              NFTs
+            </CustomText>
+          </TouchableOpacity>
+        </View>
       </View>
       <View
         id="bottom_button"
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
-          flexGrow: 1,
+          height: ConstantsResponsive.MAX_HEIGHT * 0.3,
           display: "flex",
           justifyContent: "space-around",
           alignItems: "center",
         }}
       >
-        <View
-          id="first_bottom_row_button"
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH,
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-around",
-          }}
-        >
-          <AwesomeButton
-            onPress={() => {
-              navigation.goBack();
-            }}
-            backgroundColor={COLOR.GREEN}
-            backgroundDarker={COLOR.DARK_YELLOW}
-          >
-            Update profile
-          </AwesomeButton>
-          <AwesomeButton
-            onPress={() => {
-              navigation.goBack();
-            }}
-            backgroundColor={COLOR.YELLOW}
-            backgroundDarker={COLOR.DARK_YELLOW}
-          >
-            Logout
-          </AwesomeButton>
-        </View>
-
         <AwesomeButton
           onPress={() => {
             setIsConnected(true);
@@ -184,7 +340,7 @@ const ProfileScreen = () => {
           View wallet
         </AwesomeButton>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
