@@ -11,9 +11,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
-    "assetBundlePatterns": ["**/*"],
-    "permissions": ["INTERNET"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "permissions": [
+      "INTERNET"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -36,6 +39,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

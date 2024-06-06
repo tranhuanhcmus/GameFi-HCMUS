@@ -1,18 +1,39 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import ConstantsResponsive from "../constants/Constanst";
 import { COLOR } from "../utils/color";
 import CustomText from "./CustomText";
-import Damage from "../../assets/damage.svg";
+import Thunder from "../../assets/thunder.svg";
 import Coin from "../../assets/coin.svg";
 import useCustomNavigation from "../hooks/useCustomNavigation";
+import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
+import { useAccount } from "wagmi";
+import log from "../logger/index.js";
 interface HeaderProps {
   name: string;
 }
+const GOLD = "Gold";
+const GEM = "Gem";
 
 const Header: React.FC<HeaderProps> = ({ name }) => {
+  const [data, setData] = useState<any[]>([]);
+
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+  const fetchData = async () => {
+    try {
+      const res: any[] = await ItemAppOwnerService.getCurrency(address);
+      setData([...data, ...res]);
+    } catch (error) {
+      log.error("ItemAppOwnerService.getCurrency", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [address]);
   const navigate = useCustomNavigation();
   return (
     <TouchableOpacity
@@ -20,18 +41,31 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         navigate.navigate("Shop");
       }}
       style={{
-        position: "absolute",
-        left: ConstantsResponsive.MAX_WIDTH * 0.15,
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
-        height: ConstantsResponsive.MAX_HEIGHT * 0.06,
+        height: ConstantsResponsive.YR * 40,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+
         justifyContent: "space-around",
-        backgroundColor: COLOR.DARKER_PURPLE,
+        position: "relative",
+
         borderRadius: 20,
+        paddingVertical: ConstantsResponsive.XR * 4,
       }}
     >
+      <Image
+        resizeMode="stretch"
+        style={{
+          height: ConstantsResponsive.YR * 40,
+          width:
+            ConstantsResponsive.MAX_WIDTH * 0.4 + ConstantsResponsive.XR * 4,
+          left: 0,
+
+          position: "absolute",
+        }}
+        source={require("../../assets/backGroundButtonBrown.png")}
+      />
       <View
         style={{
           display: "flex",
@@ -49,7 +83,9 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             fontWeight: "bold",
           }}
         >
-          100
+          {data && data.length
+            ? data.find((item) => item.name == GOLD).quantity
+            : 0}
         </CustomText>
       </View>
 
@@ -61,7 +97,10 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           alignItems: "center",
         }}
       >
-        <Damage />
+        <Thunder
+          height={ConstantsResponsive.YR * 25}
+          width={ConstantsResponsive.XR * 25}
+        />
         <CustomText
           style={{
             color: COLOR.CYAN,
@@ -70,7 +109,9 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             fontWeight: "bold",
           }}
         >
-          3
+          {data && data.length
+            ? data.find((item) => item.name == GEM).quantity
+            : 0}
         </CustomText>
       </View>
     </TouchableOpacity>

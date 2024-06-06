@@ -15,9 +15,9 @@ export function RoundButton({ onPress, ...props }: RoundButtonProps) {
     <AwesomeButton
       onPress={onPress}
       style={styles.addButton}
-      backgroundDarker={COLOR.DARK_YELLOW}
-      backgroundColor={COLOR.YELLOW}
-      width={80}
+      backgroundDarker={COLOR.PURPLE}
+      backgroundColor={COLOR.DARKER_PURPLE}
+      width={100}
       height={80}
       borderRadius={100}
     >

@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -20,76 +21,78 @@ import Plus from "../../../assets/Plus.png";
 import QuestionMark from "../../../assets/Question.png";
 import { useSelector } from "react-redux";
 import log from "../../logger/index";
-
+import SpriteSheet from "rn-sprite-sheet";
+import Breed from "../../../assets/breed.svg";
+import BearCard from "./BearCard";
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
-const Pet = (props: any) => {
-  const navigate = useCustomNavigation();
-  const { name, image } = props;
+// const Pet = (props: any) => {
+//   const navigate = useCustomNavigation();
+//   const { name, image } = props;
 
-  return (
-    <TouchableOpacity
-      onPress={() => {
-        if (!name && !image) {
-          navigate.navigate("Play", { isBreed: true });
-        }
-      }}
-      style={{
-        display: "flex",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        backgroundColor: COLOR.DARKER_PURPLE,
-        paddingTop: 10,
-        borderRadius: 10,
-        width: "40%",
-        height: "auto",
-      }}
-    >
-      <View
-        style={{
-          width: "70%",
-          aspectRatio: 1,
-          borderRadius: 100,
-          backgroundColor: COLOR.WHITE,
-          marginBottom: 10,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {image ? (
-          <Image
-            source={{
-              uri: image,
-            }}
-            alt="Alternative"
-            style={{ width: "100%", height: "100%", borderRadius: 100 }}
-          />
-        ) : (
-          <Image source={Plus} alt="" style={{ width: "80%", height: "80%" }} />
-        )}
-      </View>
-      <View
-        style={{
-          width: "auto",
-          height: "auto",
-          justifyContent: "center",
-        }}
-      >
-        <CustomText
-          style={{
-            color: COLOR.WHITE,
-            fontSize: 18,
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          {name ? name : "Pick a pet"}
-        </CustomText>
-      </View>
-    </TouchableOpacity>
-  );
-};
+//   return (
+//     <TouchableOpacity
+//       onPress={() => {
+//         if (!name && !image) {
+//           navigate.navigate("Play", { isBreed: true });
+//         }
+//       }}
+//       style={{
+//         display: "flex",
+//         justifyContent: "space-evenly",
+//         alignItems: "center",
+//         backgroundColor: COLOR.DARKER_PURPLE,
+//         paddingTop: 10,
+//         borderRadius: 10,
+//         width: "40%",
+//         height: "auto",
+//       }}
+//     >
+//       <View
+//         style={{
+//           width: "70%",
+//           aspectRatio: 1,
+//           borderRadius: 100,
+//           backgroundColor: COLOR.WHITE,
+//           marginBottom: 10,
+//           display: "flex",
+//           justifyContent: "center",
+//           alignItems: "center",
+//         }}
+//       >
+//         {image ? (
+//           <Image
+//             source={{
+//               uri: image,
+//             }}
+//             alt="Alternative"
+//             style={{ width: "100%", height: "100%", borderRadius: 100 }}
+//           />
+//         ) : (
+//           <Image source={Plus} alt="" style={{ width: "80%", height: "80%" }} />
+//         )}
+//       </View>
+//       <View
+//         style={{
+//           width: "auto",
+//           height: "auto",
+//           justifyContent: "center",
+//         }}
+//       >
+//         <CustomText
+//           style={{
+//             color: COLOR.WHITE,
+//             fontSize: 18,
+//             fontWeight: "bold",
+//             textAlign: "center",
+//           }}
+//         >
+//           {name ? name : "Pick a pet"}
+//         </CustomText>
+//       </View>
+//     </TouchableOpacity>
+//   );
+// };
 
 const ChildPet = (props: any) => {
   const navigate = useCustomNavigation();
@@ -144,24 +147,6 @@ const ChildPet = (props: any) => {
           />
         )}
       </View>
-      <View
-        style={{
-          width: "auto",
-          height: "auto",
-          justifyContent: "center",
-        }}
-      >
-        <CustomText
-          style={{
-            color: COLOR.WHITE,
-            fontSize: 18,
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          {name ? name : "New generation"}
-        </CustomText>
-      </View>
     </TouchableOpacity>
   );
 };
@@ -183,10 +168,13 @@ export function BreedScreen() {
   const [data, setData] = useState([fatherPet, motherPet]);
   const navigate = useCustomNavigation();
 
+  const eggRef = useRef<SpriteSheet>(null);
+
   useEffect(() => {
     log.info(fatherPet, motherPet);
     setData([fatherPet, motherPet]);
   }, [fatherPet, motherPet]);
+
   /**
    *
    * @param father
@@ -219,106 +207,86 @@ export function BreedScreen() {
     }
   };
 
+  const playRunAnimation = (type: string) => {
+    if (eggRef.current) {
+      eggRef.current.play({
+        type,
+        // fps: isNaN(parsedFps) ? 16 : parsedFps,
+        // loop,
+        // resetAfterFinish,
+      }); // Play "run" animation
+    }
+  };
+
   return (
-    <View
+    <ScrollView
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
-        height: ConstantsResponsive.MAX_HEIGHT * 0.8,
+        height: ConstantsResponsive.MAX_HEIGHT * 0.7,
         backgroundColor: COLOR.PURPLE,
       }}
     >
-      <Image
-        style={styles.backgroundImage}
-        resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
-      />
-      <View
-        style={{
-          width: "100%",
-          height: "30%",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          marginTop: 40,
-        }}
-      >
-        {data
-          ? data.map((item, index) => (
-              <Pet key={index} name={item.name} image={item.petImg}></Pet>
-            ))
-          : null}
-      </View>
-
-      <Image
-        source={Egg}
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH / 6,
-          height: ConstantsResponsive.MAX_WIDTH / 6,
-          alignSelf: "center",
-          marginVertical: 20,
-        }}
-      />
-      <View
-        style={{
-          alignItems: "center",
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: "auto",
-        }}
-      >
-        <ChildPet name={null} image={null}></ChildPet>
-      </View>
-
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          marginTop: 20,
-        }}
-      >
-        <Image
-          source={Hourglass}
+      <SafeAreaView>
+        <View
           style={{
-            width: ConstantsResponsive.MAX_WIDTH / 20,
-            height: ConstantsResponsive.MAX_HEIGHT / 20,
+            width: "100%",
+            height: "auto",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            marginTop: 40,
           }}
-        />
-        <CustomText
-          style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
         >
-          10 min
-        </CustomText>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "flex-end",
-          marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.05,
-        }}
-      >
-        <AwesomeButton
-          style={{ justifyContent: "center", alignSelf: "center" }}
-          onPress={() => {
-            if (fatherPet.id && motherPet.id) {
-              breedFunction(fatherPet, motherPet);
-            }
+          <BearCard props={{}} />
+          <BearCard props={{}} />
+        </View>
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Breed
+            height={ConstantsResponsive.MAX_HEIGHT * 0.1}
+            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+          />
+        </View>
+        <View
+          style={{
+            alignItems: "center",
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: "auto",
+          }}
+        >
+          {/* <ChildPet name={null} image={null}></ChildPet> */}
+          <BearCard />
+        </View>
 
-            // navigate.navigate("DetailOfPet");
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            marginTop: 20,
           }}
-          width={225}
-          height={65}
-          borderRadius={20}
-          backgroundColor={COLOR.GREEN}
         >
+          <Image
+            source={Hourglass}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH / 20,
+              height: ConstantsResponsive.MAX_HEIGHT / 20,
+            }}
+          />
           <CustomText
             style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
           >
-            MAKE BEAR
+            10 min
           </CustomText>
-        </AwesomeButton>
-      </View>
-    </View>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 

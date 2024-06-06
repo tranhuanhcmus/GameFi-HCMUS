@@ -17,7 +17,7 @@ const HeaderRight = () => {
     >
       <Image
         source={require("../../assets/avatar.png")}
-        style={{ width: 40, height: 40, marginRight: 5 }}
+        style={{ width: 40, height: 40, marginRight: 10 }}
       />
     </TouchableOpacity>
   );

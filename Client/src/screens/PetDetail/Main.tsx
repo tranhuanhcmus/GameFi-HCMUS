@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import Damage from "../../../assets/damage.svg";
+import Damage from "../../../assets/thunder.svg";
 import Heart from "../../../assets/Healthpoint.svg";
 import Pet from "../../../assets/Pet.png";
 import Fire from "../../../assets/elements/Fire.png";
@@ -9,12 +9,19 @@ import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
+import axios from "axios";
 
 export default function DetailOfPet(props: any) {
   const [data, setData] = useState({ ...props.route.params });
 
   const [isStaticModalVisible, setIsStaticModalVisible] = useState(false);
   const navigate = useCustomNavigation();
+
+  useEffect(() => {
+    console.error("data ", data);
+  }, []);
+
+  axios;
   return (
     <View
       style={{
@@ -151,7 +158,7 @@ export default function DetailOfPet(props: any) {
           marginTop: 10,
         }}
       >
-        <Damage></Damage>
+        <Damage width={30} height={30} />
         <View>
           <View
             style={{

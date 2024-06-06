@@ -7,6 +7,7 @@ import {
   TextInput,
   Switch,
   Modal,
+  Animated,
   Text,
   StyleSheet,
   TouchableNativeFeedback,
@@ -19,7 +20,10 @@ import AwesomeButton from "react-native-really-awesome-button";
 import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { setGameRoom } from "../../redux/playerSlice";
 import { useDispatch } from "react-redux";
+import BouncingText from "../BouncingText";
+
 import profile from "../../../assets/avatar.png";
+import { Ionicons } from "@expo/vector-icons";
 
 const LoadingModal = ({
   isVisible,
@@ -74,8 +78,8 @@ const LoadingModal = ({
       if (data !== "NO ROOM") {
         dispatch(setGameRoom(data));
 
-        if (gameName == "Game") {
-          navigate.navigate("Game");
+        if (gameName == "Match3Game") {
+          navigate.navigate("Match3Game");
         } else if (gameName == "HangManGame") {
           navigate.navigate("HangManGame");
         }
@@ -100,7 +104,8 @@ const LoadingModal = ({
             </View>
             <View style={styles.playerBlock}>
               <Image source={profile} style={styles.avatar} />
-              <Text style={styles.name}>Opponent</Text>
+              <BouncingText text="Finding Opponent..." />
+              {/* <Text style={styles.name}>Opponent</Text> */}
             </View>
           </View>
           <View className="absolute bottom-4">
@@ -133,6 +138,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
   containerContent: {
     width: "100%",
     height: "90%",
@@ -174,15 +180,17 @@ const styles = StyleSheet.create({
   vsBlock: {
     position: "absolute",
     backgroundColor: "#FECC50",
-    width: ConstantsResponsive.XR * 70,
+    width: ConstantsResponsive.XR * 100,
     height: ConstantsResponsive.YR * 70,
     zIndex: 100,
     top:
       (ConstantsResponsive.MAX_HEIGHT * 0.4 - ConstantsResponsive.YR * 30) / 2 -
       (ConstantsResponsive.YR * 70) / 2,
-    left: ConstantsResponsive.MAX_WIDTH / 2 - (ConstantsResponsive.XR * 70) / 2,
+    left:
+      ConstantsResponsive.MAX_WIDTH / 2 - (ConstantsResponsive.XR * 100) / 2,
     borderRadius: 15,
     padding: 2,
+
     alignItems: "center",
     justifyContent: "center",
   },
