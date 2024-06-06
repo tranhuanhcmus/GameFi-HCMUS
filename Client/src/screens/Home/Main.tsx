@@ -52,12 +52,16 @@ const HomeScreen = () => {
   const [fps, setFps] = useState<string>("10");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
+  const [pet, setPet] = useState();
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
   /** useSelector */
   const userState = useSelector(selectUser);
+  const { name, type, image, title, tokenId, attributes, level } = useSelector(
+    (state: any) => state.pet,
+  );
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
@@ -232,7 +236,7 @@ const HomeScreen = () => {
             color: COLOR.WHITE,
           }}
         >
-          LEVEL 2
+          LEVEL {level}
         </CustomText>
         <View style={styles.healthBar}>
           <View style={[styles.healthBarInner, { width: healthBarWidth }]} />

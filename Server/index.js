@@ -147,7 +147,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on(SOCKET.EVENT_DIAMOND, (data) => {
-    console.log(data);
     sendEvent(socket, data);
   });
 

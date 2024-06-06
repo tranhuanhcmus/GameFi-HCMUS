@@ -30,6 +30,7 @@ type NFTData = {
   level: number;
   name: string;
   rarityPet: string;
+  tokenUri: string;
 };
 
 const petArray: NFTData[] = [
@@ -74,6 +75,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
           petImg: nft.data.image || "",
           name: nft.data.name,
           rarityPet: "special",
+          tokenUri: nft.tokenUri,
         };
       });
 
@@ -134,6 +136,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
               name={item.name}
               rarityPet={item.rarityPet}
               isBreed={isBreed}
+              tokenUri={item.tokenUri}
               onPress={() => onPress(item)}
             ></PetCard>
           )}

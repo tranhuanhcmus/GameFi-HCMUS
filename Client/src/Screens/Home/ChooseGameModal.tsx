@@ -102,7 +102,7 @@ const ChooseGameModal = ({
                   onPress={() => {
                     setIsVisible(false);
 
-                    setGameName("Game");
+                    setGameName("Match3Game");
                   }}
                   style={{ flex: 1 }}
                 >

@@ -238,7 +238,7 @@ const UpperLayer = () => {
               width: blockWidth,
               overflow: "hidden",
               backgroundColor: "transparent",
-              borderColor: COLOR.PURPLE,
+              borderColor: COLOR.DARKER_PURPLE,
             }}
           >
             {/* cells in block here */}
@@ -258,7 +258,7 @@ const UpperLayer = () => {
                       height: GameLogic.HEIGHT_PER_CELL,
                       width: GameLogic.WIDTH_PER_CELL,
                       zIndex: 99,
-                      backgroundColor: COLOR.WHITE,
+                      backgroundColor: COLOR.DARKER_PURPLE,
                       borderRadius: 5,
                       display: "flex",
                       alignItems: "center",
@@ -301,12 +301,6 @@ const UpperLayer = () => {
   }, [blockList]);
 };
 const styles = StyleSheet.create({
-  boardContainer: {
-    height: GameLogic.SIZE_TABLE,
-    width: GameLogic.SIZE_TABLE,
-    backgroundColor: COLOR.WHITE,
-    alignContent: "center",
-  },
   cell: {
     height: GameLogic.SIZE_TABLE / 8,
     width: GameLogic.SIZE_TABLE / 8,

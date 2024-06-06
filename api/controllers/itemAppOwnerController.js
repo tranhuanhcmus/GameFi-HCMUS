@@ -83,7 +83,61 @@ const deleteById = async(req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-
+const purchaseItem = async (req, res, next) => {
+    try {
+        const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"];    // 0 is gem, 1 is gold
+        const rowData = req.body;
+        const currency = rowData.currency;
+        const userCurrencyBalance = await models.ItemAppOwner.findOne({ where: { id: currencyId[currency], owner: rowData.owner } });
+        if(rowData.id === currencyId[0] || rowData.id === currencyId[1]) {
+            return res.sendResponse(null, 'Cannot use one currency to purchase itself or another', STATUS_CODES.NOT_FOUND);
+        }
+        const totalPrice = (currency == 0) ? rowData.gemcost * rowData.quantity : rowData.goldcost * rowData.quantity;
+        console.log(userCurrencyBalance.quantity, totalPrice);
+        if (userCurrencyBalance.quantity < totalPrice){
+            return res.sendResponse(null, 'Your balance is not sufficient for this item', STATUS_CODES.NOT_FOUND);
+        }
+        else{
+            const row = await models.ItemAppOwner.findOne({ where: { id: rowData.id, owner: rowData.owner } });
+            if (row) {
+                const updateData = {
+                    id: rowData.id,
+                    owner: rowData.owner,
+                    quantity: row.quantity + rowData.quantity
+                }
+                await row.update(updateData);
+                await row.reload();
+                const updateCurrencyData = {
+                    id: currencyId[currency],
+                    owner: rowData.owner,
+                    quantity: userCurrencyBalance.quantity - totalPrice
+                }
+                await userCurrencyBalance.update(updateCurrencyData);
+                await userCurrencyBalance.reload();
+                console.log(updateCurrencyData.quantity);
+                return res.sendResponse(row, `Purchase success (update)`, STATUS_CODES.OK);
+            } else {
+                const newRow = {
+                    id: rowData.id,
+                    owner: rowData.owner,
+                    quantity: rowData.quantity
+                }
+                const result = await models.ItemAppOwner.create(rowData);
+                const updateCurrencyData = {
+                    id: currencyId[currency],
+                    owner: rowData.owner,
+                    quantity: userCurrencyBalance.quantity - totalPrice
+                }
+                await userCurrencyBalance.update(updateCurrencyData);
+                await userCurrencyBalance.reload();
+                return res.sendResponse(result, `Purchase success (create)`, STATUS_CODES.OK);
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+    }
+}
 const add = async (req, res, next) => {
     try {
         const rowData = req.body;
@@ -179,5 +233,5 @@ const getOwnerCurrency = async (req, res, next) => {
 }
 
 module.exports={
-	getAll,getById,add,deleteById,updateById,getByOwner,getOwnerCurrency
+	getAll,getById,purchaseItem,add,deleteById,updateById,getByOwner,getOwnerCurrency
 }

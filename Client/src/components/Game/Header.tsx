@@ -27,7 +27,18 @@ interface props {
 const GameHeader = () => {
   const { hp, componentHp } = useSelector((state: any) => state.player);
   return (
-    <View style={styles.characterArea}>
+    <View
+      style={{
+        position: "absolute",
+        top: 0,
+        height: 200,
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
       <User hp={hp} />
       <Component hp={componentHp} />
     </View>
@@ -88,7 +99,7 @@ const User: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
     setOffsetX(0);
@@ -103,7 +114,7 @@ const User: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
   };
@@ -128,8 +139,27 @@ const User: React.FC<props> = ({ hp }) => {
   }, [hp]);
 
   return (
-    <View style={styles.player}>
-      <View style={styles.playerHeader}>
+    <View
+      style={{
+        position: "relative",
+        width: "50%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        alignItems: "center",
+      }}
+    >
+      <View
+        style={{
+          height: "auto",
+          width: "auto",
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Image style={styles.avatarImage} source={Avatar}></Image>
         <Bar hp={hp} />
       </View>
@@ -195,7 +225,7 @@ const Component: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
     setOffsetX(0);
@@ -210,7 +240,7 @@ const Component: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
   };
@@ -254,8 +284,27 @@ const Component: React.FC<props> = ({ hp }) => {
   }, [hp]);
 
   return (
-    <View style={styles.player}>
-      <View style={styles.playerHeader}>
+    <View
+      style={{
+        position: "relative",
+        width: "50%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        alignItems: "center",
+      }}
+    >
+      <View
+        style={{
+          height: "auto",
+          width: "auto",
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Bar hp={hp} />
         <Image style={styles.avatarImage} source={Avatar}></Image>
       </View>
@@ -425,7 +474,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-around",
     alignItems: "center",
-    marginHorizontal: 10,
   },
   playerHeader: {
     height: "auto",

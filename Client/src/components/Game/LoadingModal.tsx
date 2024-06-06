@@ -78,8 +78,8 @@ const LoadingModal = ({
       if (data !== "NO ROOM") {
         dispatch(setGameRoom(data));
 
-        if (gameName == "Game") {
-          navigate.navigate("Game");
+        if (gameName == "Match3Game") {
+          navigate.navigate("Match3Game");
         } else if (gameName == "HangManGame") {
           navigate.navigate("HangManGame");
         }

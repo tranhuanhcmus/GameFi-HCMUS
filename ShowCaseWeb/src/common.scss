@@ -112,6 +112,17 @@ html {
 	font-weight: 600;
 	font-size: 14px;
 	line-height: 24px;
+	display: flex;
+	gap: 10px;
+	width: fit-content;
+	align-items: center;
+	justify-content: center;
+	min-width: 135px;
+
+	img {
+		height: 100%;
+		object-fit: contain;
+	}
 
 	&:hover {
 		background-color: $primary6;
@@ -120,45 +131,133 @@ html {
 
 .page_wrapper {
 	height: 200vh;
-	padding: 60px 80px ;
+	padding: 60px 80px;
 }
 
 .page {
 	max-width: 1520px;
 	margin: auto;
-	.section{
+
+	.section {
 		width: 100%;
+		min-height: 200px;
 		overflow: auto;
-		.section__header{
+
+		.section__header {
 			margin-bottom: 40px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			.section__header__detail{
+
+			.section__header__controls {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+			}
+
+			.section__header__detail {
 				font-size: 14px;
 				font-weight: 700;
 				color: $primary7;
 				cursor: pointer;
 			}
 		}
-		.section__title{
+
+		.section__title {
 			font-weight: 700;
 			font-size: 32px;
+
+			p {
+				margin-top: 10px;
+				color: #637592;
+				font-size: 14px;
+				font-weight: 500;
+			}
 		}
 	}
-	.carousel_section{
+
+	.carousel_section {
 		height: 350px;
 		display: flex;
 		flex-direction: row;
 		gap: 40px;
 		align-items: center;
-		img{
+
+		img {
 			flex: 1;
 			min-width: 200px;
 			height: auto;
 			object-fit: contain;
 		}
 
+	}
+}
+
+.card {
+	overflow: hidden;
+	border-radius: 16px;
+	background-color: $gray22;
+	cursor: pointer;
+	&:hover{
+		.card__img{
+			img{
+				transform: scale(1.05);
+			}
+		}
+	}
+	&.card--nft {
+		width: calc(25% - 30px);
+	}
+	.card__img{
+		width: 100%;
+		img{
+			width: 100%;
+			height: 200px;
+			object-fit: cover;
+			transition: all .5s ease;
+		}
+	}
+	.card__category {
+		height: 24px;
+		color: #637592;
+		font-size: 14px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		img {
+			height: 100%;
+		}
+	}
+
+	.card__text {
+		font-weight: 600;
+	}
+
+	.card__row {
+		.card__row__label {
+			font-weight: 500;
+			color: #637592;
+			font-size: 12px;
+			margin-bottom: 5px;
+		}
+		.card__row__value{
+			
+			height: 16px;
+			display: flex;
+			gap: 10px;
+			align-items: center;
+		}
+
+		img {
+			height: 100%;
+		}
+	}
+
+	.card__info {
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
 }
 

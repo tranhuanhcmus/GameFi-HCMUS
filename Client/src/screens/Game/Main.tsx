@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import backGroundImage from "../../../assets/background3.png";
-import GameBoard from "../../components/Game/Board";
-import GameHeader from "../../components/Game/Header";
-import UpperLayer from "../../components/Game/UpperLayer";
+
 import { COLOR } from "../../utils/color";
 import { Audio } from "expo-av";
 import ConstantsResponsive from "../../constants/Constanst";
 import { initSocket } from "../../redux/socketSlice";
+import GameHeader from "../../components/Game/Header";
+import UpperLayer from "../../components/Game/UpperLayer";
+import GameBoard from "../../components/Game/Board";
 
 const GameScreen = () => {
   const dispatch = useDispatch();
