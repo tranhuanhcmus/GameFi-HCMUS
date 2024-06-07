@@ -33,17 +33,7 @@ type NFTData = {
   tokenUri: string;
 };
 
-const petArray: NFTData[] = [
-  // {
-  //   id: "1",
-  //   petImg:
-  //     "https://www.shutterstock.com/image-vector/cute-pig-illustration-kawaii-chibi-600nw-2291790391.jpg",
-  //   element: ELEMENT.FIRE,
-  //   level: 3,
-  //   name: "Harry's Pig",
-  //   rarityPet: "special",
-  // },
-];
+const petArray: NFTData[] = [];
 
 const PlayScreen: React.FC<Props> = (props: any) => {
   const [isBreed, setIsBreed] = useState(props.route.params);
@@ -67,7 +57,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
     try {
       const res: NFT[] = await UserService.getNFTsByOwner(address);
       const mappedData: any[] = res.map((nft: any) => {
-        console.log("nft ", nft);
+        // console.log("nft ", nft);
         return {
           id: nft.tokenid,
           element: ELEMENT.FIRE,
@@ -84,16 +74,17 @@ const PlayScreen: React.FC<Props> = (props: any) => {
       console.error("Error fetching NFTs:", error);
     }
   };
-  const handleShowAlert = () => {
-    // Example: Dispatch an alert when a button is pressed
-    dispatch(showAlert("Test Alert!"));
-  };
 
   const onPress = (item: any) => {
     console.log("item ", item);
     try {
-      if (!fatherPet.id) dispatch(setFatherPet(item));
-      else if (!motherPet.id) dispatch(setMotherPet(item));
+      if (!fatherPet.tokenUri) {
+        log.warn("father chua co");
+        dispatch(setFatherPet(item));
+      } else if (!motherPet.tokenUri) {
+        log.warn("mother chua co");
+        dispatch(setMotherPet(item));
+      }
     } catch (e) {
       console.log("Loi");
     }
