@@ -1,13 +1,19 @@
-import { View, Image, TouchableOpacity } from "react-native";
-import ConstantsResponsive from "../../constants/Constanst";
-import { COLOR } from "../../utils/color";
-import Plus from "../../../assets/plus.svg";
+import { useEffect } from "react";
+import { Image, TouchableOpacity, View } from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
-import CustomText from "../../components/CustomText";
 import Pet from "../../../assets/avatar.png";
+import Plus from "../../../assets/plus.svg";
+import CustomText from "../../components/CustomText";
+import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
+import logger from "../../logger";
+import { COLOR } from "../../utils/color";
 
 const BearCard = (props: any) => {
+  useEffect(() => {
+    logger.warn("BearCard ", props);
+  }, []);
+
   const navigate = useCustomNavigation();
   return props && props.name ? (
     <View
@@ -29,7 +35,7 @@ const BearCard = (props: any) => {
         height={ConstantsResponsive.MAX_HEIGHT * 0.08}
         borderRadius={10}
       >
-        FIRE BEAR
+        {props.name ? props.name : "FIRE BEAR"}
       </AwesomeButton>
       <View
         style={{
@@ -47,9 +53,16 @@ const BearCard = (props: any) => {
             textAlign: "center",
           }}
         >
-          EPIC
+          {props.rarity ? props.rarity : "EPIC"}
         </CustomText>
-        <Image source={Pet} />
+        <Image
+          source={props.image ? { uri: props.image } : Pet}
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH * 0.2,
+            height: ConstantsResponsive.MAX_WIDTH * 0.2,
+            borderRadius: 100,
+          }}
+        />
       </View>
       <View
         style={{
@@ -68,14 +81,14 @@ const BearCard = (props: any) => {
             color: COLOR.WHITE,
           }}
         >
-          LEVEL 1
+          LEVEL {props.level ? props.level : 1}
         </CustomText>
       </View>
     </View>
   ) : (
     <TouchableOpacity
       onPress={() => {
-        navigate.navigate("Play");
+        navigate.navigate("Play", { isBreed: true });
       }}
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
