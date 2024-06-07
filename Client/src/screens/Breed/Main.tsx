@@ -26,74 +26,6 @@ import Breed from "../../../assets/breed.svg";
 import BearCard from "./BearCard";
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
-// const Pet = (props: any) => {
-//   const navigate = useCustomNavigation();
-//   const { name, image } = props;
-
-//   return (
-//     <TouchableOpacity
-//       onPress={() => {
-//         if (!name && !image) {
-//           navigate.navigate("Play", { isBreed: true });
-//         }
-//       }}
-//       style={{
-//         display: "flex",
-//         justifyContent: "space-evenly",
-//         alignItems: "center",
-//         backgroundColor: COLOR.DARKER_PURPLE,
-//         paddingTop: 10,
-//         borderRadius: 10,
-//         width: "40%",
-//         height: "auto",
-//       }}
-//     >
-//       <View
-//         style={{
-//           width: "70%",
-//           aspectRatio: 1,
-//           borderRadius: 100,
-//           backgroundColor: COLOR.WHITE,
-//           marginBottom: 10,
-//           display: "flex",
-//           justifyContent: "center",
-//           alignItems: "center",
-//         }}
-//       >
-//         {image ? (
-//           <Image
-//             source={{
-//               uri: image,
-//             }}
-//             alt="Alternative"
-//             style={{ width: "100%", height: "100%", borderRadius: 100 }}
-//           />
-//         ) : (
-//           <Image source={Plus} alt="" style={{ width: "80%", height: "80%" }} />
-//         )}
-//       </View>
-//       <View
-//         style={{
-//           width: "auto",
-//           height: "auto",
-//           justifyContent: "center",
-//         }}
-//       >
-//         <CustomText
-//           style={{
-//             color: COLOR.WHITE,
-//             fontSize: 18,
-//             fontWeight: "bold",
-//             textAlign: "center",
-//           }}
-//         >
-//           {name ? name : "Pick a pet"}
-//         </CustomText>
-//       </View>
-//     </TouchableOpacity>
-//   );
-// };
-
 const ChildPet = (props: any) => {
   const navigate = useCustomNavigation();
   const { name, image } = props;
@@ -151,28 +83,16 @@ const ChildPet = (props: any) => {
   );
 };
 
+const FATHER = "father";
+const MOTHER = "mother";
 export function BreedScreen() {
-  // const [data, setData] = useState([
-  //   {
-  //     id: 1,
-  //     name: "White bear",
-  //     image: PetAvatar,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Brown bear",
-  //     image: PetAvatar,
-  //   },
-  // ]);
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
-  const [data, setData] = useState([fatherPet, motherPet]);
+
   const navigate = useCustomNavigation();
 
-  const eggRef = useRef<SpriteSheet>(null);
-
   useEffect(() => {
-    log.info(fatherPet, motherPet);
-    setData([fatherPet, motherPet]);
+    log.info("fatherPet", fatherPet);
+    log.info("motherPet", motherPet);
   }, [fatherPet, motherPet]);
 
   /**
@@ -207,17 +127,6 @@ export function BreedScreen() {
     }
   };
 
-  const playRunAnimation = (type: string) => {
-    if (eggRef.current) {
-      eggRef.current.play({
-        type,
-        // fps: isNaN(parsedFps) ? 16 : parsedFps,
-        // loop,
-        // resetAfterFinish,
-      }); // Play "run" animation
-    }
-  };
-
   return (
     <ScrollView
       style={{
@@ -237,8 +146,22 @@ export function BreedScreen() {
             marginTop: 40,
           }}
         >
-          <BearCard props={{}} />
-          <BearCard props={{}} />
+          <BearCard
+            element={fatherPet.element}
+            level={fatherPet.level}
+            petImg={fatherPet.petImg}
+            name={fatherPet.name}
+            rarity={fatherPet.rarityPet}
+            tokenUri={fatherPet.tokenUri}
+          />
+          <BearCard
+            element={motherPet.element}
+            level={motherPet.level}
+            image={motherPet.petImg}
+            name={motherPet.name}
+            rarity={motherPet.rarityPet}
+            tokenUri={fatherPet.tokenUri}
+          />
         </View>
         <View
           style={{
@@ -259,7 +182,6 @@ export function BreedScreen() {
             height: "auto",
           }}
         >
-          {/* <ChildPet name={null} image={null}></ChildPet> */}
           <BearCard />
         </View>
 

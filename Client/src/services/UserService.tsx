@@ -22,10 +22,8 @@ export class UserService {
   static async getNFTsByOwner(address: `0x${string}` | undefined) {
     return new Promise<NFT[]>(async (resolve, reject) => {
       try {
-        console.log("API.USER + `/${address} ", address);
         const response = await api.get(API.NFT + `/${address}`);
 
-        console.log("response ", response.data);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);
