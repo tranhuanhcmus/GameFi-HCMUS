@@ -22,7 +22,7 @@ import { HEADER } from "../../constants/header";
 import { useDispatch, useSelector } from "react-redux";
 import { playerSlice } from "../../redux/playerSlice";
 
-import Setting from "../../../assets/SVGSetting.svg";
+import Setting from "../../../assets/setting.svg";
 import { setVisable } from "../../redux/settingGameSlice";
 
 interface props {
@@ -31,8 +31,20 @@ interface props {
 
 const GameHeader = () => {
   const { hp, componentHp } = useSelector((state: any) => state.player);
+  const dispatch = useDispatch();
   return (
     <View style={styles.characterArea}>
+      <TouchableOpacity
+        style={styles.setting}
+        onPress={() => {
+          dispatch(setVisable(true));
+        }}
+      >
+        <Setting
+          height={styles.setting.height}
+          width={styles.setting.width}
+        ></Setting>
+      </TouchableOpacity>
       <User hp={hp} />
       <Component hp={componentHp} />
     </View>
@@ -282,17 +294,6 @@ const Component: React.FC<props> = ({ hp }) => {
           resizeMode="contain"
         ></Image>
       </View>
-      <TouchableOpacity
-        style={styles.setting}
-        onPress={() => {
-          dispatch(setVisable(true));
-        }}
-      >
-        <Setting
-          height={styles.setting.height}
-          width={styles.setting.width}
-        ></Setting>
-      </TouchableOpacity>
 
       <View style={styles.playerPet}>
         <SpriteSheet
@@ -433,6 +434,7 @@ const styles = StyleSheet.create({
   },
 
   setting: {
+    zIndex: 100,
     position: "absolute",
     height: ConstantsResponsive.XR * 50,
     width: ConstantsResponsive.XR * 50,
@@ -506,7 +508,7 @@ const styles = StyleSheet.create({
     width: "60%",
     height: 30,
     padding: 3,
-    backgroundColor: "rgba(255,255,255,0.3)",
+    backgroundColor: "rgba(128,128,128,0.7)",
     borderRadius: 15,
     justifyContent: "center",
     overflow: "hidden",

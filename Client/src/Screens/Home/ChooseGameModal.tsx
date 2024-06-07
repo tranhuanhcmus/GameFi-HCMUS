@@ -39,7 +39,7 @@ const ChooseGameModal = ({
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           height: ConstantsResponsive.MAX_HEIGHT,
-          backgroundColor: COLOR.PURPLE,
+
           position: "absolute",
           display: "flex",
           justifyContent: "space-between",
@@ -48,6 +48,15 @@ const ChooseGameModal = ({
           paddingVertical: 50,
         }}
       >
+        <Image
+          resizeMode="stretch"
+          source={require("../../../assets/backGroundForInventory.png")}
+          style={{
+            position: "absolute",
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: ConstantsResponsive.MAX_HEIGHT,
+          }}
+        />
         <View
           style={{
             width: ConstantsResponsive.MAX_WIDTH,
@@ -73,7 +82,13 @@ const ChooseGameModal = ({
           }}
         >
           <CustomText
-            style={{ color: COLOR.WHITE, fontSize: 30, textAlign: "center" }}
+            style={{
+              color: COLOR.WHITE,
+              fontSize: 30,
+              textAlign: "center",
+              fontWeight: "bold",
+              fontFamily: "rexlia",
+            }}
           >
             CHOOSE GAME
           </CustomText>
@@ -119,11 +134,22 @@ const ChooseGameModal = ({
                 </TouchableOpacity>
               </View>
               <CustomText
-                style={{ color: COLOR.WHITE, fontSize: 20, marginTop: 5 }}
+                style={{
+                  color: COLOR.WHITE,
+                  fontSize: 20,
+                  marginTop: 5,
+                  fontFamily: "rexlia",
+                }}
               >
                 Diamond crash
               </CustomText>
-              <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
+              <CustomText
+                style={{
+                  color: COLOR.WHITE,
+                  fontSize: 20,
+                  fontFamily: "rexlia",
+                }}
+              >
                 1,0000
               </CustomText>
             </View>
@@ -150,11 +176,22 @@ const ChooseGameModal = ({
                 </TouchableOpacity>
               </View>
               <CustomText
-                style={{ color: COLOR.WHITE, fontSize: 20, marginTop: 5 }}
+                style={{
+                  color: COLOR.WHITE,
+                  fontSize: 20,
+                  marginTop: 5,
+                  fontFamily: "rexlia",
+                }}
               >
                 Hangman
               </CustomText>
-              <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
+              <CustomText
+                style={{
+                  color: COLOR.WHITE,
+                  fontSize: 20,
+                  fontFamily: "rexlia",
+                }}
+              >
                 1,512
               </CustomText>
             </View>

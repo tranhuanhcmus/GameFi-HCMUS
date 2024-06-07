@@ -197,12 +197,11 @@ const Index = () => {
     <View style={styles.container}>
       <Image
         resizeMode="stretch"
-        source={require("../../../assets/backGroundGameHeader_2.png")}
+        source={require("../../../assets/gameBackGround.png")}
         style={styles.bgHeader}
       />
 
       <SafeAreaView>
-        <GameSettings isVisible={isVisable} onClose={handleCloseModal} />
         <View style={styles.playArea}>
           <View style={styles.containHeader}>
             <Header></Header>
@@ -215,6 +214,11 @@ const Index = () => {
             onCompletion={handleEndTime}
           />
           <View style={styles.WordBox}>
+            <Image
+              resizeMode="stretch"
+              source={require("../../../assets/backGroundForTableQuestion.png")}
+              style={{ position: "absolute", width: "100%", height: "100%" }}
+            />
             <WordBox wordData={WordsArray[currentIndex]} />
           </View>
 
@@ -230,6 +234,7 @@ const Index = () => {
           />
           <StatusPopup status={status} onPress={handlePopupButton} />
         </View>
+        <GameSettings isVisible={isVisable} onClose={handleCloseModal} />
       </SafeAreaView>
     </View>
   );
@@ -242,27 +247,29 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundColor,
   },
   containHeader: {
-    height: ConstantsResponsive.MAX_HEIGHT * 0.2,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.35 - StatusBarHeight,
   },
 
   bgHeader: {
     width: ConstantsResponsive.MAX_WIDTH,
-    height: ConstantsResponsive.MAX_HEIGHT * 0.2 + StatusBarHeight,
+    height: ConstantsResponsive.MAX_HEIGHT,
+    // height: ConstantsResponsive.MAX_HEIGHT * 0.2 + StatusBarHeight,
     position: "absolute",
   },
   playArea: {
+    alignItems: "center",
     display: "flex",
-    height: ConstantsResponsive.MAX_HEIGHT,
-    width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 40,
+
+    height: ConstantsResponsive.MAX_HEIGHT * 0.85,
+    width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 105,
     flexDirection: "column",
 
-    marginHorizontal: ConstantsResponsive.XR * 20,
-    gap: ConstantsResponsive.YR * 20,
+    marginHorizontal: ConstantsResponsive.XR * 50,
+    rowGap: ConstantsResponsive.YR * 20,
   },
   WordBox: {
     display: "flex",
-    flexDirection: "column",
-    width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 40,
+    width: "100%",
     height: ConstantsResponsive.MAX_HEIGHT * 0.1,
   },
 });

@@ -223,9 +223,16 @@ export function BreedScreen() {
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
         height: ConstantsResponsive.MAX_HEIGHT * 0.7,
-        backgroundColor: COLOR.PURPLE,
       }}
     >
+      <Image
+        resizeMode="stretch"
+        source={require("../../../assets/backGroundForInventory.png")}
+        style={{
+          position: "absolute",
+          width: ConstantsResponsive.MAX_WIDTH,
+        }}
+      />
       <SafeAreaView>
         <View
           style={{

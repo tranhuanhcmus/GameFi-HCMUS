@@ -1,6 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
 import colors from "../../../common/colors";
+import ConstantsResponsive from "../../constants/Constanst";
 
 const Key = ({ text, onPress, disabled }) => {
   return (
@@ -9,9 +10,14 @@ const Key = ({ text, onPress, disabled }) => {
       onPress={() => onPress(text)}
       style={[
         styles.keyContainer,
-        { backgroundColor: disabled ? "#99a" : colors.key },
+        // { backgroundColor: disabled ? "#99a" : colors.key },
       ]}
     >
+      <Image
+        style={{ position: "absolute", width: "100%", height: "100%" }}
+        source={require("../../../assets/backGroundForKey.png")}
+        resizeMode="stretch"
+      />
       <Text style={styles.key}>{text}</Text>
     </TouchableOpacity>
   );
@@ -45,15 +51,18 @@ export default Keyboard;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    width: "100%",
+    justifyContent: "center",
     marginVertical: 20,
     flexWrap: "wrap",
+    height: "60%",
   },
   keyContainer: {
-    width: 30,
-    height: 38,
-    backgroundColor: colors.key,
+    width: "13%",
+    height: "10%",
+
     borderRadius: 8,
-    marginRight: 8,
+
     marginBottom: 10,
     justifyContent: "center",
     alignItems: "center",

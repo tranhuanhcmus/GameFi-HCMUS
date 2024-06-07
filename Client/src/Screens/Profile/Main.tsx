@@ -44,9 +44,16 @@ const ProfileScreen = () => {
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
         height: ConstantsResponsive.MAX_HEIGHT,
-        backgroundColor: COLOR.PURPLE,
       }}
     >
+      <Image
+        resizeMode="stretch"
+        source={require("../../../assets/backGroundForInventory.png")}
+        style={{
+          position: "absolute",
+          width: ConstantsResponsive.MAX_WIDTH,
+        }}
+      />
       {isConnected && <W3mAccountButton balance="show" />}
       <View
         id="image_info"

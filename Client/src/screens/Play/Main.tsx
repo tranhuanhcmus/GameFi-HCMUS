@@ -109,7 +109,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
           position: "absolute",
         }}
         resizeMode="stretch"
-        source={require("../../../assets/BackGroundHome.jpg")}
+        source={require("../../../assets/backGroundHome_3.png")}
       />
       <View
         style={styles.playArea}

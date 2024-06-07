@@ -45,9 +45,9 @@ const HomeScreen = () => {
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
-  const [offsetX, setOffsetX] = useState<number>(0);
+
   const isFocused = useIsFocused();
-  const [offsetY, setOffsetY] = useState<number>(0);
+
   const [gameName, setGameName] = useState<string>("");
   const [fps, setFps] = useState<string>("10");
   const [loop, setLoop] = useState<boolean>(false);
@@ -87,14 +87,13 @@ const HomeScreen = () => {
     if (mummyRef.current) {
       mummyRef.current.play({
         type,
-        fps: isNaN(parsedFps) ? 20 : parsedFps,
+        fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
         onFinish: () => console.log("hi"),
       });
     }
-    setOffsetX(0);
-    setOffsetY(0);
+
     setLoop(true);
     setResetAfterFinish(true);
   };
@@ -233,7 +232,7 @@ const HomeScreen = () => {
             // fontFamily: "mt-2",
             fontWeight: "bold",
             fontSize: 40,
-            color: COLOR.WHITE,
+            color: COLOR.BROWN,
           }}
         >
           LEVEL {level}
@@ -244,13 +243,13 @@ const HomeScreen = () => {
       </View>
 
       <View style={styles.playArea}>
-        <View className="absolute bottom-0 left-0 right-0  flex flex-1 items-center">
+        <View className="absolute bottom-0 left-0 right-0  items-center">
           <SpriteSheet
             ref={mummyRef}
             source={require("../../../assets/spritesSheet_18.png")}
             columns={60}
             rows={1}
-            height={ConstantsResponsive.MAX_HEIGHT * 0.2}
+            height={ConstantsResponsive.MAX_HEIGHT * 0.25}
             animations={{
               walk: [
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
@@ -259,7 +258,22 @@ const HomeScreen = () => {
                 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
               ],
             }}
-          ></SpriteSheet>
+          />
+          {/* <SpriteSheet
+            ref={mummyRef}
+            source={require("../../../assets/spritesheet_5.png")}
+            columns={21}
+            offsetX={0}
+            offsetY={0}
+            rows={1}
+            height={ConstantsResponsive.MAX_HEIGHT * 0.2}
+            animations={{
+              walk: [
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18, 19, 20,
+              ],
+            }}
+          /> */}
         </View>
       </View>
       <View

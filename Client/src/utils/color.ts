@@ -14,7 +14,7 @@ export const COLOR = {
   DARK_YELLOW: "#3a3a3a",
   RED_BG_BUTTON: "rgba(227,73,86,1)",
   BRIGHT_YELLOW: "#FFE243",
-  BLACK: "#000000",
+  BLACK: "#1E1E1E",
   CYAN: "#00F8F8",
   DARKER_PURPLE: "#271647",
   PINK: "#F0357D",
