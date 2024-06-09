@@ -66,6 +66,12 @@ const PlayScreen: React.FC<Props> = (props: any) => {
           name: nft.data.name,
           rarityPet: "special",
           tokenUri: nft.tokenUri,
+          attributes: {
+            element: nft.data.attributes.element,
+            eye: nft.data.attributes.eye,
+            fur: nft.data.attributes.fur,
+            item: nft.data.attributes.item,
+          },
         };
       });
 
@@ -100,7 +106,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
           position: "absolute",
         }}
         resizeMode="stretch"
-        source={require("../../../assets/BackGroundHome.jpg")}
+        source={require("../../../assets/backGroundHome_3.png")}
       />
       <View
         style={styles.playArea}

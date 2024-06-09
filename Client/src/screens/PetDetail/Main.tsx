@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import Damage from "../../../assets/thunder.svg";
 import Heart from "../../../assets/Healthpoint.svg";
-import Pet from "../../../assets/Pet.png";
+
 import Fire from "../../../assets/elements/Fire.png";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
@@ -47,7 +47,7 @@ export default function DetailOfPet(props: any) {
         {data.petImg ? (
           <Image source={{ uri: data.petImg }} alt="" style={styles.petImage} />
         ) : (
-          <Image source={Pet} alt="" style={styles.petImage} />
+          <Image source={{ uri: data.petImg }} alt="" style={styles.petImage} />
         )}
       </View>
       <CustomText

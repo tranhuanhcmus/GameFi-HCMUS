@@ -24,6 +24,7 @@ import BouncingText from "../BouncingText";
 
 import profile from "../../../assets/avatar.png";
 import { Ionicons } from "@expo/vector-icons";
+import NormalButton from "../Button/NormalButton";
 
 const LoadingModal = ({
   isVisible,
@@ -90,6 +91,15 @@ const LoadingModal = ({
   return (
     <Modal visible={isVisible} animationType="fade" transparent={true}>
       <View style={styles.container}>
+        <Image
+          resizeMode="stretch"
+          source={require("../../../assets/backGroundForInventory.png")}
+          style={{
+            position: "absolute",
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: ConstantsResponsive.MAX_HEIGHT,
+          }}
+        />
         <SafeAreaView style={styles.containerContent}>
           <View className="absolute top-5">
             <Text className="text-2xl font-bold text-white">{gameName}</Text>
@@ -108,21 +118,32 @@ const LoadingModal = ({
               {/* <Text style={styles.name}>Opponent</Text> */}
             </View>
           </View>
-          <View className="absolute bottom-4">
-            {/* {" "}
-            <Text>Finding room in {second} s</Text> */}
-            <AwesomeButton
-              onPress={() => {
-                setIsVisible(false);
-                setSecond(30);
+
+          <NormalButton
+            onPress={() => {
+              setIsVisible(false);
+              setSecond(30);
+            }}
+            style={{
+              position: "absolute",
+              bottom: 20,
+              height: ConstantsResponsive.YR * 70,
+              width: ConstantsResponsive.MAX_WIDTH * 0.4,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              resizeMode="stretch"
+              source={require("../../../assets/backGroundButtonRed.png")}
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
               }}
-              backgroundColor={COLOR.RED}
-              borderRadius={15}
-              backgroundDarker={COLOR.DARK_YELLOW}
-            >
-              <Text className="font-bold text-white ">Cancel</Text>
-            </AwesomeButton>
-          </View>
+            />
+            <Text className="font-bold text-white ">Cancel</Text>
+          </NormalButton>
         </SafeAreaView>
       </View>
     </Modal>
@@ -163,7 +184,7 @@ const styles = StyleSheet.create({
     padding: 20,
     width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 80,
     height: "50%",
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgba(125,125,125,0.8)",
     alignItems: "center",
   },
   avatar: {

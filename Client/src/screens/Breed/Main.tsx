@@ -24,67 +24,9 @@ import log from "../../logger/index";
 import SpriteSheet from "rn-sprite-sheet";
 import Breed from "../../../assets/breed.svg";
 import BearCard from "./BearCard";
+import { BreedService } from "../../services/BreedService";
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
-const ChildPet = (props: any) => {
-  const navigate = useCustomNavigation();
-  const { name, image } = props;
-
-  return (
-    <TouchableOpacity
-      onPress={() => {
-        if (!name && !image) {
-          navigate.navigate("Play", { isBreed: true });
-        }
-      }}
-      style={{
-        display: "flex",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        backgroundColor: COLOR.DARKER_PURPLE,
-        paddingTop: 10,
-        borderRadius: 10,
-        width: "40%",
-        height: "auto",
-      }}
-    >
-      <View
-        style={{
-          width: "70%",
-          aspectRatio: 1,
-          borderRadius: 100,
-          backgroundColor: COLOR.WHITE,
-          marginBottom: 10,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {image ? (
-          <Image
-            source={{
-              uri: image,
-            }}
-            alt="Alternative"
-            style={{ width: "100%", height: "100%" }}
-          />
-        ) : (
-          <Image
-            source={QuestionMark}
-            alt=""
-            style={{
-              width: "80%",
-              height: "80%",
-            }}
-          />
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const FATHER = "father";
-const MOTHER = "mother";
 export function BreedScreen() {
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
 
@@ -102,28 +44,31 @@ export function BreedScreen() {
    */
 
   const breedFunction = async (father: any, mother: any) => {
-    console.log("father", father);
-    console.log("mother ", mother);
-    console.log(`${URL}/bears/breed`);
     if (!father || !mother) {
-      console.error("Invalid father or mother data for breeding");
+      log.error("Invalid father or mother data for breeding");
       return; // Or handle the error differently
     }
 
     try {
-      const response = await axios.post(`${URL}/bears/breed`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        params: {
-          dad: father,
-          mom: mother,
-        },
-      });
+      const dad = {
+        item: father.attributes.item,
+        eye: father.attributes.eye,
+        fur: father.attributes.fur,
+        element: father.attributes.element,
+      };
+      const mom = {
+        item: mother.attributes.item,
+        eye: mother.attributes.eye,
+        fur: mother.attributes.fur,
+        element: mother.attributes.element,
+      };
+      log.error("dad", dad);
+      log.error("mom", mom);
+      const response = await BreedService.breed(dad, mom);
 
-      console.log("POST request successful:", response.data);
+      log.warn("POST request successful:", response);
     } catch (postError: any) {
-      console.error("Error making POST request:", postError);
+      log.error("Error making POST request:", postError);
     }
   };
 
@@ -132,9 +77,16 @@ export function BreedScreen() {
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
         height: ConstantsResponsive.MAX_HEIGHT * 0.7,
-        backgroundColor: COLOR.PURPLE,
       }}
     >
+      <Image
+        resizeMode="stretch"
+        source={require("../../../assets/backGroundForInventory.png")}
+        style={{
+          position: "absolute",
+          width: ConstantsResponsive.MAX_WIDTH,
+        }}
+      />
       <SafeAreaView>
         <View
           style={{
@@ -163,7 +115,11 @@ export function BreedScreen() {
             tokenUri={fatherPet.tokenUri}
           />
         </View>
-        <View
+        <TouchableOpacity
+          onPress={() => {
+            if (fatherPet.tokenUri && fatherPet.tokenUri)
+              breedFunction(fatherPet, motherPet);
+          }}
           style={{
             display: "flex",
             justifyContent: "center",
@@ -174,7 +130,7 @@ export function BreedScreen() {
             height={ConstantsResponsive.MAX_HEIGHT * 0.1}
             width={ConstantsResponsive.MAX_WIDTH * 0.1}
           />
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             alignItems: "center",

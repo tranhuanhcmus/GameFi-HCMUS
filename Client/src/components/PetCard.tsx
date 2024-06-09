@@ -7,13 +7,9 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-import LEAF from "../../assets/SVGLeaf.svg";
-import IRON from "../../assets/SVGIron.svg";
-import WATER from "../../assets/SVGWater.svg";
-import STONE from "../../assets/SVGStone.svg";
-import FIRE from "../../assets/SVGFire.svg";
+
 import Egg from "../../assets/SVGEgg.svg";
-import Pet from "../../assets/Pet.png";
+
 import { ELEMENT } from "../constants/types";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 import CustomText from "./CustomText";
@@ -120,7 +116,7 @@ const PetCard: React.FC<PetCardProps> = ({
         <View className="overflow-hidden rounded-[10px]">
           <Image
             className=" aspect-square w-[100%]  "
-            source={petImg !== "" ? { uri: petImg } : { uri: Pet }}
+            source={petImg !== "" ? { uri: petImg } : { uri: petImg }}
           />
         </View>
 

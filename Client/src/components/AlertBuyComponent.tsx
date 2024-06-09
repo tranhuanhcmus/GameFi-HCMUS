@@ -8,6 +8,7 @@ import {
   Text,
   Button,
 } from "react-native";
+import { COLOR } from "../utils/color";
 import ConstantsResponsive from "../constants/Constanst";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
@@ -15,6 +16,8 @@ import { showAlert, hideAlert, selectAlert } from "../redux/alertSlice";
 import CustomText from "./CustomText";
 import medicine from "../../assets/backGroundItem.png";
 import GradientButton from "./Button/GradientButton";
+import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
+import NormalButton from "./Button/NormalButton";
 
 interface AlertBuyComponentProps {
   isVisible?: boolean;
@@ -47,33 +50,50 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
           className="relative items-center justify-center"
         >
           <Image resizeMode="stretch" source={medicine} style={styles.img} />
-          <CustomText className="absolute mt-3 text-start text-[40px] text-white">
+          <CustomText
+            className="absolute mt-3 text-start font-rexlia text-[40px]"
+            style={{ color: COLOR.BRIGHT_YELLOW }}
+          >
             {message || "Rare food"}
           </CustomText>
         </View>
         <View
-          className="absolute top-[35%] mt-3 w-full flex-col bg-[#36144b]  "
+          className="absolute top-[35%] w-full flex-col  "
           style={styles.container2}
         >
-          <CustomText className="mt-3 text-start  text-[20px] text-white">
+          <Image
+            resizeMode="stretch"
+            style={{
+              position: "absolute",
+              height: styles.container2.height,
+              width: styles.container2.width,
+              borderRadius: styles.container2.borderRadius,
+            }}
+            source={require("../../assets/backGroundForInventory.png")}
+          />
+          <CustomText
+            className="mt-3 text-start font-rexlia  text-[20px]"
+            style={{ color: COLOR.BLACK }}
+          >
             {description || "Use: up to 10 point per items"}
           </CustomText>
           <View
             className="flex w-full items-center justify-center "
             style={styles.containerBuy}
           >
-            <GradientButton
-              colors={["#F7971E", "#FFD200"]}
-              style={styles.buttonBuy}
-              onPress={handleCancel}
-            >
+            <NormalButton onPress={handleCancel} style={styles.buttonBuy}>
+              <Image
+                source={require("../../assets/backGroundButtonRed.png")}
+                resizeMode="stretch"
+                style={{ width: "100%", height: "100%", position: "absolute" }}
+              />
               <Text
                 className="text-center text-[20px]"
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "bold", color: COLOR.WHITE }}
               >
                 250
               </Text>
-            </GradientButton>
+            </NormalButton>
           </View>
         </View>
       </View>
@@ -100,6 +120,7 @@ const styles = StyleSheet.create({
     height: (ConstantsResponsive.MAX_HEIGHT / 2.5) * 0.5,
   },
   container2: {
+    width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 65,
     borderRadius: ConstantsResponsive.XR * 60,
     height: (ConstantsResponsive.MAX_HEIGHT / 2.5) * 0.65,
     padding: ConstantsResponsive.XR * 30,
@@ -110,9 +131,8 @@ const styles = StyleSheet.create({
     left: ConstantsResponsive.XR * 30,
   },
   buttonBuy: {
-    width:
-      ConstantsResponsive.MAX_WIDTH -
-      ConstantsResponsive.XR * 65 -
-      ConstantsResponsive.XR * 90,
+    width: ConstantsResponsive.MAX_WIDTH * 0.4,
+    height: ConstantsResponsive.MAX_WIDTH * 0.1,
+    justifyContent: "center",
   },
 });

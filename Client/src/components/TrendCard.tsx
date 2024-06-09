@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-import Pet from "../../assets/Pet.png";
+import Pet from "../../assets/bear.png";
 import {
   LineChart,
   BarChart,

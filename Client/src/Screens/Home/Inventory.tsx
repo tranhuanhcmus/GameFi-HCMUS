@@ -70,9 +70,9 @@ const InventoryModal = ({
     return (
       <View
         style={{
-          backgroundColor: COLOR.DARKER_PURPLE,
           width: ConstantsResponsive.MAX_WIDTH * 0.3,
           height: ConstantsResponsive.MAX_WIDTH * 0.4,
+          backgroundColor: "white",
           borderRadius: 20,
           display: "flex",
           flexDirection: "column",
@@ -115,7 +115,7 @@ const InventoryModal = ({
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           height: ConstantsResponsive.MAX_HEIGHT * 0.7,
-          backgroundColor: COLOR.PURPLE,
+
           position: "absolute",
           display: "flex",
           justifyContent: "space-between",
@@ -127,6 +127,17 @@ const InventoryModal = ({
           borderTopRightRadius: 30,
         }}
       >
+        <Image
+          resizeMode="stretch"
+          source={require("../../../assets/backGroundForInventory.png")}
+          style={{
+            position: "absolute",
+            width: ConstantsResponsive.MAX_WIDTH,
+            height: ConstantsResponsive.MAX_HEIGHT * 0.7,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          }}
+        />
         <View
           style={{
             width: ConstantsResponsive.MAX_WIDTH,

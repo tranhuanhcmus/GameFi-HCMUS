@@ -19,7 +19,7 @@ const TimingLine: React.FC<Props> = ({
 }) => {
   const animatedWidth = useRef(
     new Animated.Value(
-      ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 40,
+      ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 240,
     ),
   ).current;
 
@@ -29,7 +29,7 @@ const TimingLine: React.FC<Props> = ({
     } else {
       if (!gameOver) {
         animatedWidth.setValue(
-          ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 40,
+          ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 240,
         );
 
         Animated.timing(animatedWidth, {
@@ -64,10 +64,10 @@ const TimingLine: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 240,
     borderRadius: 15,
-    height: 5,
-    backgroundColor: "rgba(0,0,0,0.1)",
+    height: ConstantsResponsive.YR * 10,
+    backgroundColor: "rgba(0,0,0,0.4)",
   },
   timingLine: {
     height: "100%",
