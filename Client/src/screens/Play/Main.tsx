@@ -66,6 +66,12 @@ const PlayScreen: React.FC<Props> = (props: any) => {
           name: nft.data.name,
           rarityPet: "special",
           tokenUri: nft.tokenUri,
+          attributes: {
+            element: nft.data.attributes.element,
+            eye: nft.data.attributes.eye,
+            fur: nft.data.attributes.fur,
+            item: nft.data.attributes.item,
+          },
         };
       });
 
