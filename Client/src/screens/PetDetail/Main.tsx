@@ -4,13 +4,25 @@ import Damage from "../../../assets/thunder.svg";
 import Heart from "../../../assets/Healthpoint.svg";
 
 import Fire from "../../../assets/elements/Fire.png";
+import Leaf from "../../../assets/elements/Leaf.png";
+import Water from "../../../assets/elements/Water.png";
+import Stone from "../../../assets/elements/Stone.png";
+import Iron from "../../../assets/elements/Iron.png";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
 import axios from "axios";
+import logger from "../../logger";
 
+const ELEMENT_SYMBOL: { [index: string]: any } = {
+  fire: Fire,
+  leaf: Leaf,
+  water: Water,
+  stone: Stone,
+  iron: Iron,
+};
 export default function DetailOfPet(props: any) {
   const [data, setData] = useState({ ...props.route.params });
 
@@ -18,7 +30,7 @@ export default function DetailOfPet(props: any) {
   const navigate = useCustomNavigation();
 
   useEffect(() => {
-    console.error("data ", data);
+    logger.error("data ", data);
   }, []);
 
   axios;
@@ -31,15 +43,22 @@ export default function DetailOfPet(props: any) {
         display: "flex",
       }}
     >
+      <Image
+        resizeMode="stretch"
+        source={require("../../../assets/backGroundForInventory.png")}
+        style={{
+          position: "absolute",
+          width: ConstantsResponsive.MAX_WIDTH,
+        }}
+      />
       <View
         style={{
           width: "100%",
           height: "40%",
           display: "flex",
           flexDirection: "row",
-          justifyContent: "flex-start",
+          justifyContent: "center",
           alignItems: "center",
-          backgroundColor: COLOR.LIGHT_GREEN,
           borderBottomLeftRadius: 10,
           borderBottomRightRadius: 10,
         }}
@@ -52,7 +71,7 @@ export default function DetailOfPet(props: any) {
       </View>
       <CustomText
         style={{
-          color: COLOR.YELLOW,
+          color: COLOR.WHITE,
           fontSize: 30,
           fontWeight: "bold",
           textAlign: "right",
@@ -80,31 +99,18 @@ export default function DetailOfPet(props: any) {
         <CustomText
           style={{ fontSize: 20, color: COLOR.WHITE, fontWeight: "bold" }}
         >
-          Level {data.level ? data.level : 1}
+          Level {data.level}
         </CustomText>
-        <View
-          style={{
-            width: "50%",
-            height: ConstantsResponsive.MAX_HEIGHT / 30,
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-evenly",
-          }}
-        >
+
+        {data.element ? (
           <Image
-            source={Fire}
+            source={ELEMENT_SYMBOL[data.element]}
             style={{
-              width: "20%",
+              width: "10%",
               aspectRatio: 1,
             }}
           />
-          <CustomText
-            style={{ fontSize: 20, color: COLOR.WHITE, fontWeight: "bold" }}
-          >
-            {data.element ? data.element : "Fire"}
-          </CustomText>
-        </View>
+        ) : null}
       </View>
       <View
         style={{
@@ -200,7 +206,7 @@ export default function DetailOfPet(props: any) {
             alignSelf: "center",
           }}
           onPress={() => {
-            navigate.navigate("Home");
+            navigate.goBack();
           }}
           width={ConstantsResponsive.MAX_WIDTH * 0.7}
           height={ConstantsResponsive.MAX_HEIGHT * 0.1}
