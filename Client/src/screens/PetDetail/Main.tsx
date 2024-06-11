@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import Damage from "../../../assets/thunder.svg";
 import Heart from "../../../assets/Healthpoint.svg";
 
@@ -15,8 +15,9 @@ import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
 import axios from "axios";
 import logger from "../../logger";
-import { useDispatch, useSelector } from "react-redux";
-import petSlice, { updatePet } from "../../redux/petSlice";
+import { useDispatch } from "react-redux";
+import { updatePet } from "../../redux/petSlice";
+import Fight from "../../../assets/Fight.svg";
 const ELEMENT_SYMBOL: { [index: string]: any } = {
   fire: Fire,
   leaf: Leaf,
@@ -195,7 +196,11 @@ export default function DetailOfPet(props: any) {
         </View>
       </View>
 
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          dispatch(updatePet(data));
+          navigate.goBack();
+        }}
         style={{
           position: "absolute",
           bottom: 0,
@@ -203,33 +208,11 @@ export default function DetailOfPet(props: any) {
           marginBottom: 20,
         }}
       >
-        <AwesomeButton
-          style={{
-            justifyContent: "center",
-            alignSelf: "center",
-          }}
-          onPress={() => {
-            //
-            dispatch(updatePet(data));
-            navigate.goBack();
-          }}
+        <Fight
           width={ConstantsResponsive.MAX_WIDTH * 0.7}
           height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-          borderRadius={20}
-          backgroundColor={COLOR.YELLOW}
-        >
-          <CustomText
-            style={{
-              textAlign: "center",
-              color: COLOR.BLACK,
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            Pick to fight
-          </CustomText>
-        </AwesomeButton>
-      </View>
+        />
+      </TouchableOpacity>
     </View>
   );
 }
