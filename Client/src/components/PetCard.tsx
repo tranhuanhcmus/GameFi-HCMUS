@@ -23,6 +23,12 @@ interface PetCardProps {
   rarityPet: string;
   isBreed: boolean; // CHECK IF THIS PET CHOOSE TO BREED
   tokenUri: string;
+  attributes: {
+    element: string;
+    eye: string;
+    fur: string;
+    item: string;
+  };
   onPress: (item: any) => void;
 }
 
@@ -34,6 +40,7 @@ const PetCard: React.FC<PetCardProps> = ({
   rarityPet,
   isBreed,
   tokenUri,
+  attributes,
   onPress,
 }) => {
   const navigate = useCustomNavigation();
@@ -51,6 +58,7 @@ const PetCard: React.FC<PetCardProps> = ({
             name,
             rarityPet,
             tokenUri,
+            attributes,
           });
         }
       }}

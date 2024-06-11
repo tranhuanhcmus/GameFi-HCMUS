@@ -15,7 +15,8 @@ import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
 import axios from "axios";
 import logger from "../../logger";
-
+import { useDispatch, useSelector } from "react-redux";
+import petSlice, { updatePet } from "../../redux/petSlice";
 const ELEMENT_SYMBOL: { [index: string]: any } = {
   fire: Fire,
   leaf: Leaf,
@@ -28,6 +29,8 @@ export default function DetailOfPet(props: any) {
 
   const [isStaticModalVisible, setIsStaticModalVisible] = useState(false);
   const navigate = useCustomNavigation();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     logger.error("data ", data);
@@ -206,6 +209,8 @@ export default function DetailOfPet(props: any) {
             alignSelf: "center",
           }}
           onPress={() => {
+            //
+            dispatch(updatePet(data));
             navigate.goBack();
           }}
           width={ConstantsResponsive.MAX_WIDTH * 0.7}
