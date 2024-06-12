@@ -8,7 +8,8 @@ import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import logger from "../../logger";
 import { COLOR } from "../../utils/color";
-
+import UnknownCard from "../../../assets/UnknowCard.svg";
+import Card from "../../../assets/BearCard.svg";
 const BearCard = (props: any) => {
   useEffect(() => {
     logger.warn("BearCard ", props);
@@ -20,70 +21,57 @@ const BearCard = (props: any) => {
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
         height: ConstantsResponsive.MAX_HEIGHT * 0.4,
-        backgroundColor: COLOR.SKY,
-        borderWidth: 4,
-        borderColor: COLOR.LIGHT_PURPLE,
-        borderRadius: 15,
-        elevation: 100,
+        position: "relative",
+        alignContent: "center",
       }}
     >
-      <AwesomeButton
-        onPress={() => {}}
-        backgroundDarker={COLOR.DARKER_PURPLE}
-        backgroundColor={COLOR.PURPLE1}
-        width={ConstantsResponsive.MAX_WIDTH * 0.4 - 8}
-        height={ConstantsResponsive.MAX_HEIGHT * 0.08}
-        borderRadius={10}
+      <Card width={"100%"} height={"100%"} />
+      <CustomText
+        style={{
+          position: "absolute",
+          top: "10%",
+          left: ConstantsResponsive.MAX_WIDTH * 0.1,
+          fontWeight: "bold",
+          color: COLOR.WHITE,
+        }}
       >
         {props.name ? props.name : "FIRE BEAR"}
-      </AwesomeButton>
-      <View
+      </CustomText>
+      <CustomText
         style={{
-          width: "100%",
-          height: "60%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          color: "#972E28",
+          fontWeight: "bold",
+          textAlign: "center",
+          position: "absolute",
+          top: "28%",
+          left: ConstantsResponsive.MAX_WIDTH * 0.15,
         }}
       >
-        <CustomText
-          style={{
-            color: COLOR.PURPLE,
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          {props.rarity ? props.rarity : "EPIC"}
-        </CustomText>
-        <Image
-          source={props.image ? { uri: props.image } : Pet}
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.2,
-            height: ConstantsResponsive.MAX_WIDTH * 0.2,
-            borderRadius: 100,
-          }}
-        />
-      </View>
-      <View
+        {props.rarity ? props.rarity : "EPIC"}
+      </CustomText>
+      <Image
+        source={props.image ? { uri: props.image } : Pet}
         style={{
-          width: "100%",
-          flexGrow: 1,
-          backgroundColor: COLOR.BLUE1,
-          justifyContent: "center",
-          borderBottomLeftRadius: 15,
-          borderBottomRightRadius: 15,
+          width: ConstantsResponsive.MAX_WIDTH * 0.2,
+          height: ConstantsResponsive.MAX_WIDTH * 0.2,
+          borderRadius: 100,
+          position: "absolute",
+          top: "40%",
+          left: ConstantsResponsive.MAX_WIDTH * 0.1,
+        }}
+      />
+      <CustomText
+        style={{
+          textAlign: "center",
+          fontWeight: "900",
+          position: "absolute",
+          top: "80%",
+          left: ConstantsResponsive.MAX_WIDTH * 0.135,
+          color: COLOR.WHITE,
         }}
       >
-        <CustomText
-          style={{
-            textAlign: "center",
-            fontWeight: "900",
-            color: COLOR.WHITE,
-          }}
-        >
-          LEVEL {props.level ? props.level : 1}
-        </CustomText>
-      </View>
+        LEVEL {props.level ? props.level : 1}
+      </CustomText>
     </View>
   ) : (
     <TouchableOpacity
@@ -93,17 +81,9 @@ const BearCard = (props: any) => {
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
         height: ConstantsResponsive.MAX_HEIGHT * 0.4,
-        backgroundColor: COLOR.DARKER_PURPLE,
-        borderWidth: 4,
-        borderColor: COLOR.LIGHT_PURPLE,
-        borderRadius: 10,
-        elevation: 100,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
       }}
     >
-      <Plus width="60%" height="60%" fill={COLOR.PURPLE} />
+      <UnknownCard width={"100%"} height={"100%"} />
     </TouchableOpacity>
   );
 };
