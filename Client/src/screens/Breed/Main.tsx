@@ -8,9 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import AwesomeButton from "react-native-really-awesome-button";
-import PetAvatar from "../../../assets/Pet.png";
-import backGroundImage from "../../../assets/background3.png";
+import { StatusBarHeight } from "../../function/CalculateStatusBar";
+
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
@@ -73,10 +72,10 @@ export function BreedScreen() {
   };
 
   return (
-    <ScrollView
+    <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
-        height: ConstantsResponsive.MAX_HEIGHT * 0.7,
+        height: ConstantsResponsive.MAX_HEIGHT,
       }}
     >
       <Image
@@ -87,7 +86,11 @@ export function BreedScreen() {
           width: ConstantsResponsive.MAX_WIDTH,
         }}
       />
-      <SafeAreaView>
+      <SafeAreaView
+        style={{
+          marginTop: StatusBarHeight,
+        }}
+      >
         <View
           style={{
             width: "100%",
@@ -95,7 +98,6 @@ export function BreedScreen() {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-around",
-            marginTop: 40,
           }}
         >
           <BearCard
@@ -164,7 +166,7 @@ export function BreedScreen() {
           </CustomText>
         </View>
       </SafeAreaView>
-    </ScrollView>
+    </View>
   );
 }
 

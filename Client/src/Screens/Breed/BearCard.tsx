@@ -20,53 +20,82 @@ const BearCard = (props: any) => {
     <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
-        height: ConstantsResponsive.MAX_HEIGHT * 0.4,
+        height: ConstantsResponsive.MAX_HEIGHT * 0.3,
         position: "relative",
-        alignContent: "center",
       }}
     >
       <Card width={"100%"} height={"100%"} />
-      <CustomText
+      <View
         style={{
+          width: "100%",
           position: "absolute",
-          top: "10%",
-          left: ConstantsResponsive.MAX_WIDTH * 0.1,
-          fontWeight: "bold",
-          color: COLOR.WHITE,
+          height: "20%",
+
+          alignItems: "center",
+
+          justifyContent: "center",
         }}
       >
-        {props.name ? props.name : "FIRE BEAR"}
-      </CustomText>
-      <CustomText
+        <CustomText
+          style={{
+            fontWeight: "bold",
+            color: COLOR.WHITE,
+            fontSize: ConstantsResponsive.YR * 20,
+          }}
+        >
+          {props.name ? props.name : "FIRE BEAR"}
+        </CustomText>
+      </View>
+
+      <View
         style={{
-          color: "#972E28",
-          fontWeight: "bold",
-          textAlign: "center",
           position: "absolute",
-          top: "28%",
-          left: ConstantsResponsive.MAX_WIDTH * 0.15,
+          top: "25%",
+          width: "100%",
+          alignItems: "center",
         }}
       >
-        {props.rarity ? props.rarity : "EPIC"}
-      </CustomText>
-      <Image
-        source={props.image ? { uri: props.image } : Pet}
+        <CustomText
+          style={{
+            color: "#972E28",
+            fontWeight: "bold",
+            fontSize: ConstantsResponsive.YR * 20,
+          }}
+        >
+          {props.rarity ? props.rarity : "EPIC"}
+        </CustomText>
+      </View>
+
+      <View
         style={{
-          width: ConstantsResponsive.MAX_WIDTH * 0.2,
-          height: ConstantsResponsive.MAX_WIDTH * 0.2,
-          borderRadius: 100,
+          width: "100%",
+          height: "35%",
+
           position: "absolute",
+          alignItems: "center",
+          justifyContent: "center",
+
           top: "40%",
-          left: ConstantsResponsive.MAX_WIDTH * 0.1,
         }}
-      />
+      >
+        <Image
+          source={props.image ? { uri: props.image } : Pet}
+          style={{
+            width: ConstantsResponsive.MAX_HEIGHT * 0.3 * 0.25,
+            height: ConstantsResponsive.MAX_HEIGHT * 0.3 * 0.25,
+            borderRadius: 100,
+          }}
+        />
+      </View>
+
       <CustomText
         style={{
           textAlign: "center",
           fontWeight: "900",
           position: "absolute",
           top: "80%",
-          left: ConstantsResponsive.MAX_WIDTH * 0.135,
+          alignSelf: "center",
+          fontSize: ConstantsResponsive.YR * 20,
           color: COLOR.WHITE,
         }}
       >
