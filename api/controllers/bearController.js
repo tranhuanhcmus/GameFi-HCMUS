@@ -1,9 +1,10 @@
 const { BearFactory, Bear } = require('../bears');
-const { STATUS_CODES } = require('../constants');
+const { STATUS_CODES, BEAR_GATEWAY_IPFS } = require('../constants');
 const models = require('../database/models');
 
 const breedBear = async (req, res) => {
 	try {
+		let gateway=BEAR_GATEWAY_IPFS
 		const { dad, mom } = req.body;
 		const factory = new BearFactory();
 		const bearDad = new Bear(dad.eye, dad.fur, dad.element, dad.item);
@@ -14,10 +15,12 @@ const breedBear = async (req, res) => {
 		let random = Math.random();
 		let myBear = random < 0.5 ? bears[0] : bears[1];
 		myBear = factory.getMutateBear(myBear).mutateBear;
-		myBear.__name = 'Test Breeded Bear';
+		let my_bear_id=myBear.getId()
+		myBear.__name = `bear-${my_bear_id}`;
 		myBear.__rarity = 'Normal';
-		myBear.__image = '/uploads/gem.jpg';
-		return res.sendResponse(myBear, 'Breed bear success', STATUS_CODES.OK);
+		myBear.__image = `${gateway}/${my_bear_id}.jpg`;
+		myBear.__asset = `${gateway}/sprite-${my_bear_id}.png`;
+		return res.sendResponse(myBear.getInfo(), 'Breed bear success', STATUS_CODES.OK);
 	} catch (error) {
 		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
 	}
