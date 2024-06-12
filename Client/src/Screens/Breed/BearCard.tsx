@@ -15,7 +15,7 @@ const BearCard = (props: any) => {
   }, []);
 
   const navigate = useCustomNavigation();
-  return props && props.name ? (
+  return props ? (
     <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
