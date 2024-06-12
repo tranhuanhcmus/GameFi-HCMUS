@@ -102,7 +102,8 @@ class Bear {
         item = undefined,
         name = undefined,
         rarity = undefined,
-        image = undefined
+        image = undefined,
+        asset = undefined
     ) {
         this.__eye = eye;
         this.__fur = fur;
@@ -111,6 +112,7 @@ class Bear {
         this.__name = name;
         this.__rarity = rarity;
         this.__image = image;
+        this.__asset = asset;
     }
     getInfo() {
         return {
@@ -121,7 +123,11 @@ class Bear {
             name: this.__name,
             rarity: this.__rarity,
             image: this.__image,
+            asset: this.__asset,
         };
+    }
+    getId(){
+        return `${this.__eye}${this.__fur}${this.__element}${this.__item}`
     }
     importBear(bear) {
         this.__eye = bear.eye;
@@ -131,6 +137,7 @@ class Bear {
         this.__name = bear.name;
         this.__rarity = bear.rarity;
         this.__image = bear.image;
+        this.__asset = bear.asset;
     }
     getAttrs() {
         // return Object.keys(this);
