@@ -18,22 +18,20 @@ import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { useAppDispatch } from "../../redux/store";
 import { selectUser } from "../../redux/userSlice";
 
-import AwesomeButton from "react-native-really-awesome-button";
 // import SpriteSheet from "rn-sprite-sheet";
 import SpriteSheet from "../../components/SpriteSheet";
-import Damage from "../../../assets/damage.svg";
 import LoadingModal from "../../components/Game/LoadingModal";
 import { COLOR } from "../../utils/color";
-import { setAddress } from "../../redux/userSlice";
 import { useIsFocused } from "@react-navigation/native";
-import Coin from "../../../assets/coin.svg";
 import Inventory from "../../../assets/inventory.svg";
 import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
 
-import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
+import { updatePet } from "../../redux/petSlice";
+import { UserService } from "../../services/UserService";
+import logger from "../../logger";
 type Props = {};
 
 const HomeScreen = () => {
@@ -52,10 +50,9 @@ const HomeScreen = () => {
   const [fps, setFps] = useState<string>("10");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [pet, setPet] = useState();
 
   /** useAccount */
-  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+  const { address } = useAccount();
 
   /** useSelector */
   const userState = useSelector(selectUser);
@@ -163,6 +160,35 @@ const HomeScreen = () => {
       stop();
     }
   }, [isFocused]);
+
+  const fetchData = async () => {
+    try {
+      const res: any[] = await UserService.getNFTsByOwner(address);
+
+      const data = res[0].data; // SET DEFAULT THE FIRST
+      dispatch(updatePet(data));
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!name || !type || !image || !title || !tokenId || !attributes || !level)
+      fetchData();
+  }, []);
+
+  useEffect(() => {
+    logger.warn(
+      "name, type, image, title, tokenId, attributes, level  ",
+      name,
+      type,
+      image,
+      title,
+      tokenId,
+      attributes,
+      level,
+    );
+  }, [name, type, image, title, tokenId, attributes, level]);
 
   return (
     <View
