@@ -24,10 +24,34 @@ import SpriteSheet from "rn-sprite-sheet";
 import Breed from "../../../assets/breed.svg";
 import BearCard from "./BearCard";
 import { BreedService } from "../../services/BreedService";
+import NormalButton from "../../components/Button/NormalButton";
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
+const TIME_TO_BREED = 10;
 export function BreedScreen() {
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
+
+  const [isShowTime, setIsShowTime] = useState(false);
+
+  const [remainingTime, setRemainingTime] = useState(TIME_TO_BREED);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    let intervalId: any;
+    if (isActive) {
+      intervalId = setInterval(() => {
+        setRemainingTime((prevTime) => Math.max(0, prevTime - 1));
+      }, 1000);
+    }
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, [isActive]);
+
+  useEffect(() => {
+    if (remainingTime === 0) {
+      setIsActive(false); // Reset isActive state when time finishes
+    }
+  }, [remainingTime]);
 
   const navigate = useCustomNavigation();
 
@@ -43,7 +67,7 @@ export function BreedScreen() {
    */
 
   const breedFunction = async (father: any, mother: any) => {
-    if (!father || !mother) {
+    if (!father.tokenUri || !mother.tokenUri) {
       log.error("Invalid father or mother data for breeding");
       return; // Or handle the error differently
     }
@@ -71,11 +95,14 @@ export function BreedScreen() {
     }
   };
 
+  const minutes = Math.floor(remainingTime / 60);
+  const seconds = remainingTime % 60;
+
   return (
     <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
-        height: ConstantsResponsive.MAX_HEIGHT,
+        height: ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 120,
       }}
     >
       <Image
@@ -86,7 +113,7 @@ export function BreedScreen() {
           width: ConstantsResponsive.MAX_WIDTH,
         }}
       />
-      <SafeAreaView
+      <ScrollView
         style={{
           marginTop: StatusBarHeight,
         }}
@@ -140,32 +167,63 @@ export function BreedScreen() {
             height: "auto",
           }}
         >
-          <BearCard />
+          <BearCard disabled={true} />
         </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            marginTop: 20,
-          }}
-        >
-          <Image
-            source={Hourglass}
+        {isShowTime && (
+          <View
             style={{
-              width: ConstantsResponsive.MAX_WIDTH / 20,
-              height: ConstantsResponsive.MAX_HEIGHT / 20,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              alignItems: "center",
+              marginTop: 20,
             }}
-          />
-          <CustomText
-            style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
           >
-            10 min
-          </CustomText>
+            <Image
+              source={Hourglass}
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH / 20,
+                height: ConstantsResponsive.MAX_HEIGHT / 20,
+              }}
+            />
+            <CustomText
+              style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
+            >
+              10 min
+            </CustomText>
+          </View>
+        )}
+        <View style={{ display: "flex", alignItems: "center" }}>
+          <NormalButton
+            onPress={() => {
+              if (fatherPet.tokenUri && motherPet.tokenUri) setIsActive(true);
+            }}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.3,
+              height: ConstantsResponsive.MAX_WIDTH * 0.2,
+              backgroundColor: COLOR.RED,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 15,
+              marginTop: 10,
+            }}
+            disabled={isActive}
+          >
+            {remainingTime > 0 ? (
+              <CustomText style={{ color: COLOR.WHITE, textAlign: "center" }}>
+                COMBINE {minutes > 0 ? `${minutes} m ` : ""}:
+                {seconds.toString().padStart(2, "0")} s
+              </CustomText>
+            ) : (
+              <CustomText style={{ color: COLOR.WHITE, textAlign: "center" }}>
+                PICK UP
+              </CustomText>
+            )}
+          </NormalButton>
         </View>
-      </SafeAreaView>
+      </ScrollView>
     </View>
   );
 }
