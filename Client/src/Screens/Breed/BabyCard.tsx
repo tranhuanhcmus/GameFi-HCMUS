@@ -10,11 +10,11 @@ import logger from "../../logger";
 import { COLOR } from "../../utils/color";
 import UnknownCard from "../../../assets/UnknowCard.svg";
 import Card from "../../../assets/BearCard.svg";
-const BearCard = (props: any) => {
+const BabyCard = (props: any) => {
   useEffect(() => {
     logger.warn("BearCard ", props);
-  }, []);
-
+  }, [props]);
+  const [isVisble, setIsVisble] = useState(false);
   const [animatedValue] = useState(new Animated.Value(0));
   const [scaleAnimatedValue] = useState(new Animated.Value(1)); // Create an Animated value
   const navigate = useCustomNavigation();
@@ -46,34 +46,17 @@ const BearCard = (props: any) => {
         }),
       ]),
     ]).start(() => {
-      // Callback function after the sequence finishes
-      setTimeout(startShakeAnimation, 100); // Restart after 2 seconds
+      setIsVisble(true);
     });
   };
 
-  // const scaleAnimation = () => {
-  //   Animated.timing(scale, {
-  //     toValue: 1.2, // Scale up to 1.2
-  //     duration: 300, // Animation duration in milliseconds
-  //     useNativeDriver: true, // Use native animations for smoother performance
-  //   }).start(() => {
-  //     Animated.timing(scale, {
-  //       toValue: 1, // Scale back down to 1
-  //       duration: 300,
-  //       useNativeDriver: true,
-  //     }).start();
-  //   });
-  // };
   useEffect(() => {
+    if (props.isOpen) startShakeAnimation();
+    if (props.eye) logger.warn("props");
     // Start the animation with a 2-second delay
-    setTimeout(startShakeAnimation, 2000);
-  }, []);
+  }, [props]);
 
-  // useEffect(() => {
-  //   logger.warn("props ahahah ", props);
-  //   if (props.disabled && props.name) scaleAnimation();
-  // }, [props]);
-  return props && props.name ? (
+  return isVisble ? (
     <Animated.View
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
@@ -164,21 +147,19 @@ const BearCard = (props: any) => {
       </CustomText>
     </Animated.View>
   ) : (
-    <Animated.View>
-      <TouchableOpacity
-        disabled={props.disabled}
-        onPress={() => {
-          navigate.navigate("Play", { isBreed: true });
-        }}
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH * 0.4,
-          height: ConstantsResponsive.MAX_HEIGHT * 0.3,
-        }}
-      >
-        <UnknownCard width={"100%"} height={"100%"} />
-      </TouchableOpacity>
+    <Animated.View
+      style={{
+        width: ConstantsResponsive.MAX_WIDTH * 0.4,
+        height: ConstantsResponsive.MAX_HEIGHT * 0.3,
+        transform: [
+          { translateY: animatedValue },
+          { scale: scaleAnimatedValue },
+        ],
+      }}
+    >
+      <UnknownCard width={"100%"} height={"100%"} />
     </Animated.View>
   );
 };
 
-export default BearCard;
+export default BabyCard;
