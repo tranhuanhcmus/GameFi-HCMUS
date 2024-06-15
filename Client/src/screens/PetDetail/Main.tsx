@@ -1,24 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import Damage from "../../../assets/thunder.svg";
 import Heart from "../../../assets/Healthpoint.svg";
 
 import Fire from "../../../assets/elements/Fire.png";
+import Leaf from "../../../assets/elements/Leaf.png";
+import Water from "../../../assets/elements/Water.png";
+import Stone from "../../../assets/elements/Stone.png";
+import Iron from "../../../assets/elements/Iron.png";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import AwesomeButton from "react-native-really-awesome-button";
 import { COLOR } from "../../utils/color";
 import axios from "axios";
-
+import logger from "../../logger";
+import { useDispatch } from "react-redux";
+import { updatePet } from "../../redux/petSlice";
+import Fight from "../../../assets/Fight.svg";
+const ELEMENT_SYMBOL: { [index: string]: any } = {
+  fire: Fire,
+  leaf: Leaf,
+  water: Water,
+  stone: Stone,
+  iron: Iron,
+};
 export default function DetailOfPet(props: any) {
   const [data, setData] = useState({ ...props.route.params });
 
   const [isStaticModalVisible, setIsStaticModalVisible] = useState(false);
   const navigate = useCustomNavigation();
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    console.error("data ", data);
+    logger.error("data ", data);
   }, []);
 
   axios;
@@ -31,15 +47,22 @@ export default function DetailOfPet(props: any) {
         display: "flex",
       }}
     >
+      <Image
+        resizeMode="stretch"
+        source={require("../../../assets/backGroundForInventory.png")}
+        style={{
+          position: "absolute",
+          width: ConstantsResponsive.MAX_WIDTH,
+        }}
+      />
       <View
         style={{
           width: "100%",
           height: "40%",
           display: "flex",
           flexDirection: "row",
-          justifyContent: "flex-start",
+          justifyContent: "center",
           alignItems: "center",
-          backgroundColor: COLOR.LIGHT_GREEN,
           borderBottomLeftRadius: 10,
           borderBottomRightRadius: 10,
         }}
@@ -52,7 +75,7 @@ export default function DetailOfPet(props: any) {
       </View>
       <CustomText
         style={{
-          color: COLOR.YELLOW,
+          color: COLOR.WHITE,
           fontSize: 30,
           fontWeight: "bold",
           textAlign: "right",
@@ -80,31 +103,18 @@ export default function DetailOfPet(props: any) {
         <CustomText
           style={{ fontSize: 20, color: COLOR.WHITE, fontWeight: "bold" }}
         >
-          Level {data.level ? data.level : 1}
+          Level {data.level}
         </CustomText>
-        <View
-          style={{
-            width: "50%",
-            height: ConstantsResponsive.MAX_HEIGHT / 30,
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-evenly",
-          }}
-        >
+
+        {data.element ? (
           <Image
-            source={Fire}
+            source={ELEMENT_SYMBOL[data.element]}
             style={{
-              width: "20%",
+              width: "10%",
               aspectRatio: 1,
             }}
           />
-          <CustomText
-            style={{ fontSize: 20, color: COLOR.WHITE, fontWeight: "bold" }}
-          >
-            {data.element ? data.element : "Fire"}
-          </CustomText>
-        </View>
+        ) : null}
       </View>
       <View
         style={{
@@ -186,7 +196,11 @@ export default function DetailOfPet(props: any) {
         </View>
       </View>
 
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          dispatch(updatePet(data));
+          navigate.goBack();
+        }}
         style={{
           position: "absolute",
           bottom: 0,
@@ -194,31 +208,11 @@ export default function DetailOfPet(props: any) {
           marginBottom: 20,
         }}
       >
-        <AwesomeButton
-          style={{
-            justifyContent: "center",
-            alignSelf: "center",
-          }}
-          onPress={() => {
-            navigate.navigate("Home");
-          }}
+        <Fight
           width={ConstantsResponsive.MAX_WIDTH * 0.7}
           height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-          borderRadius={20}
-          backgroundColor={COLOR.YELLOW}
-        >
-          <CustomText
-            style={{
-              textAlign: "center",
-              color: COLOR.BLACK,
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            Pick to fight
-          </CustomText>
-        </AwesomeButton>
-      </View>
+        />
+      </TouchableOpacity>
     </View>
   );
 }
