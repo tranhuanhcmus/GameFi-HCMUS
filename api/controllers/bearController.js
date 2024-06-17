@@ -14,7 +14,7 @@ const breedBear = async (req, res) => {
 		const bears = factory.crossover(bearDad, bearMom);
 		let random = Math.random();
 		let myBear = random < 0.5 ? bears[0] : bears[1];
-		myBear = factory.getMutateBear(myBear).mutateBear;
+		// myBear = factory.getMutateBear(myBear).mutateBear;
 		let my_bear_id=myBear.getId()
 		myBear.__name = `bear-${my_bear_id}`;
 		myBear.__rarity = 'Normal';
