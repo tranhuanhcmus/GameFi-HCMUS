@@ -9,7 +9,10 @@ interface PetState {
   tokenId: String;
   level: number;
   attributes: {
-    type: String;
+    element: string;
+    eye: string;
+    fur: string;
+    item: string;
   };
 }
 
@@ -21,7 +24,10 @@ const initialState: PetState = {
   tokenId: "",
   level: 0,
   attributes: {
-    type: "",
+    element: "",
+    eye: "",
+    fur: "",
+    item: "",
   },
 };
 
@@ -36,13 +42,14 @@ const petSlice = createSlice({
       state.image = attribute.image;
       state.title = attribute.title;
       state.tokenId = attribute.tokenId;
-      state.attributes.type = attribute.attributes.type;
+      state.attributes.element = attribute.attributes.element;
+      state.attributes.eye = attribute.attributes.eye;
+      state.attributes.fur = attribute.attributes.fur;
+      state.attributes.item = attribute.attributes.item;
     },
   },
 });
 
-export const {} = petSlice.actions;
-
-export const selectAlert = (state: RootState) => state.alert;
+export const { updatePet } = petSlice.actions;
 
 export default petSlice.reducer;

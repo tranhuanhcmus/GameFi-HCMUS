@@ -8,9 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import AwesomeButton from "react-native-really-awesome-button";
-import PetAvatar from "../../../assets/Pet.png";
-import backGroundImage from "../../../assets/background3.png";
+import { StatusBarHeight } from "../../function/CalculateStatusBar";
+
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
@@ -25,10 +24,40 @@ import SpriteSheet from "rn-sprite-sheet";
 import Breed from "../../../assets/breed.svg";
 import BearCard from "./BearCard";
 import { BreedService } from "../../services/BreedService";
+import NormalButton from "../../components/Button/NormalButton";
+import AwesomeButton from "react-native-really-awesome-button";
+import BabyCard from "./BabyCard";
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
+const TIME_TO_BREED = 10;
 export function BreedScreen() {
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
+  const [childPet, setChildPet] = useState<any>(null);
+  const [isShowTime, setIsShowTime] = useState(false);
+
+  const [remainingTime, setRemainingTime] = useState(TIME_TO_BREED);
+  const [isActive, setIsActive] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    let intervalId: any;
+    if (isActive) {
+      intervalId = setInterval(() => {
+        setRemainingTime((prevTime) => Math.max(0, prevTime - 1));
+      }, 1000);
+    }
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, [isActive]);
+
+  useEffect(() => {
+    if (remainingTime === 0) {
+      if (fatherPet.tokenUri && fatherPet.tokenUri) {
+        breedFunction(fatherPet, motherPet);
+        setIsOpen(true);
+      }
+      setIsActive(false); // Reset isActive state when time finishes
+    }
+  }, [remainingTime]);
 
   const navigate = useCustomNavigation();
 
@@ -44,7 +73,7 @@ export function BreedScreen() {
    */
 
   const breedFunction = async (father: any, mother: any) => {
-    if (!father || !mother) {
+    if (!father.tokenUri || !mother.tokenUri) {
       log.error("Invalid father or mother data for breeding");
       return; // Or handle the error differently
     }
@@ -65,6 +94,7 @@ export function BreedScreen() {
       log.error("dad", dad);
       log.error("mom", mom);
       const response = await BreedService.breed(dad, mom);
+      if (response) setChildPet(response);
 
       log.warn("POST request successful:", response);
     } catch (postError: any) {
@@ -72,11 +102,14 @@ export function BreedScreen() {
     }
   };
 
+  const minutes = Math.floor(remainingTime / 60);
+  const seconds = remainingTime % 60;
+
   return (
-    <ScrollView
+    <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
-        height: ConstantsResponsive.MAX_HEIGHT * 0.7,
+        height: ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 120,
       }}
     >
       <Image
@@ -87,7 +120,11 @@ export function BreedScreen() {
           width: ConstantsResponsive.MAX_WIDTH,
         }}
       />
-      <SafeAreaView>
+      <ScrollView
+        style={{
+          marginTop: StatusBarHeight,
+        }}
+      >
         <View
           style={{
             width: "100%",
@@ -95,7 +132,6 @@ export function BreedScreen() {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-around",
-            marginTop: 40,
           }}
         >
           <BearCard
@@ -115,11 +151,7 @@ export function BreedScreen() {
             tokenUri={fatherPet.tokenUri}
           />
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            if (fatherPet.tokenUri && fatherPet.tokenUri)
-              breedFunction(fatherPet, motherPet);
-          }}
+        <View
           style={{
             display: "flex",
             justifyContent: "center",
@@ -130,7 +162,7 @@ export function BreedScreen() {
             height={ConstantsResponsive.MAX_HEIGHT * 0.1}
             width={ConstantsResponsive.MAX_WIDTH * 0.1}
           />
-        </TouchableOpacity>
+        </View>
         <View
           style={{
             alignItems: "center",
@@ -138,33 +170,76 @@ export function BreedScreen() {
             height: "auto",
           }}
         >
-          <BearCard />
+          <BabyCard
+            disabled={true}
+            element={childPet?.element}
+            level={childPet?.level}
+            image={childPet?.petImg}
+            name={childPet?.name}
+            rarity={childPet?.rarityPet}
+            tokenUri={childPet?.tokenUri}
+            isOpen={isOpen}
+          />
         </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            marginTop: 20,
-          }}
-        >
-          <Image
-            source={Hourglass}
+        {isShowTime && (
+          <View
             style={{
-              width: ConstantsResponsive.MAX_WIDTH / 20,
-              height: ConstantsResponsive.MAX_HEIGHT / 20,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              alignItems: "center",
+              marginTop: 20,
             }}
-          />
-          <CustomText
-            style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
           >
-            10 min
-          </CustomText>
+            <Image
+              source={Hourglass}
+              style={{
+                width: ConstantsResponsive.MAX_WIDTH / 20,
+                height: ConstantsResponsive.MAX_HEIGHT / 20,
+              }}
+            />
+            <CustomText
+              style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
+            >
+              10 min
+            </CustomText>
+          </View>
+        )}
+        <View style={{ display: "flex", alignItems: "center" }}>
+          <AwesomeButton
+            onPress={() => {
+              if (fatherPet.tokenUri && motherPet.tokenUri) {
+                setIsActive(true);
+              }
+            }}
+            width={ConstantsResponsive.MAX_WIDTH * 0.3}
+            height={ConstantsResponsive.MAX_WIDTH * 0.2}
+            backgroundColor={COLOR.RED}
+            backgroundDarker={COLOR.BROWN}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 15,
+              marginTop: 10,
+            }}
+            disabled={isActive}
+          >
+            {remainingTime > 0 ? (
+              <CustomText style={{ color: COLOR.WHITE, textAlign: "center" }}>
+                COMBINE {minutes > 0 ? `${minutes} m ` : ""}:
+                {seconds.toString().padStart(2, "0")} s
+              </CustomText>
+            ) : (
+              <CustomText style={{ color: COLOR.WHITE, textAlign: "center" }}>
+                PICK UP
+              </CustomText>
+            )}
+          </AwesomeButton>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

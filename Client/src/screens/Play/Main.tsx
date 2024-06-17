@@ -31,6 +31,12 @@ type NFTData = {
   name: string;
   rarityPet: string;
   tokenUri: string;
+  attributes: {
+    element: string;
+    eye: string;
+    fur: string;
+    item: string;
+  };
 };
 
 const petArray: NFTData[] = [];
@@ -57,7 +63,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
     try {
       const res: NFT[] = await UserService.getNFTsByOwner(address);
       const mappedData: any[] = res.map((nft: any) => {
-        // console.log("nft ", nft);
+        console.log("nft ", nft);
         return {
           id: nft.tokenid,
           element: ELEMENT.FIRE,
@@ -134,6 +140,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
               rarityPet={item.rarityPet}
               isBreed={isBreed}
               tokenUri={item.tokenUri}
+              attributes={item.attributes}
               onPress={() => onPress(item)}
             ></PetCard>
           )}
