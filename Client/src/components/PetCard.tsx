@@ -66,7 +66,7 @@ const PetCard: React.FC<PetCardProps> = ({
       <View
         style={{
           width: Dimensions.get("window").width / 2 - 20,
-          backgroundColor: COLOR.SKY,
+          backgroundColor: COLOR.BRIGHT_YELLOW,
         }}
         className="rounded-[20px] p-[10px] "
       >
