@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Animated,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import PetCard from "../../components/PetCard";
@@ -16,11 +18,12 @@ import CustomText from "../../components/CustomText";
 import { NFT, UserService } from "../../services/UserService";
 import { COLOR } from "../../utils/color";
 import { getLevel } from "../../utils/pet";
-
+import Breed from "../../../assets/breed.svg";
 import log from "../../logger/index";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import breedSlice, { setFatherPet, setMotherPet } from "../../redux/breedSlice";
 import { useAccount } from "wagmi";
+import { useIsFocused } from "@react-navigation/native";
 type Props = {};
 
 type NFTData = {
@@ -48,8 +51,9 @@ const PlayScreen: React.FC<Props> = (props: any) => {
   const [data, setData] = useState<NFTData[]>(petArray);
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
+  const isFocused = useIsFocused();
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
-
+  const translateYValue = new Animated.Value(0);
   useEffect(() => {
     // Example: Dispatch an alert when the PlayScreen component mounts
     // dispatch(showAlert("This is an alert from PlayScreen"));
@@ -114,9 +118,43 @@ const PlayScreen: React.FC<Props> = (props: any) => {
         resizeMode="stretch"
         source={require("../../../assets/backGroundHome_3.png")}
       />
+      <Animated.View
+        style={{
+          flex: 1,
+          marginTop: ConstantsResponsive.YR * 150,
+          zIndex: 90,
+          position: "absolute",
+          right: 0,
+          transform: [{ translateY: translateYValue }],
+        }}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Animated.sequence([
+              Animated.timing(translateYValue, {
+                toValue: 10,
+                duration: 150,
+                useNativeDriver: true,
+              }),
+              Animated.timing(translateYValue, {
+                toValue: 0,
+                duration: 150,
+                useNativeDriver: true,
+              }),
+            ]).start(() => {
+              navigate.navigate("Breed");
+            });
+          }}
+        >
+          <Breed
+            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+            height={ConstantsResponsive.MAX_WIDTH * 0.1}
+          />
+        </TouchableWithoutFeedback>
+      </Animated.View>
       <View
         style={styles.playArea}
-        className="h-[90%] w-[100%] items-center justify-center "
+        className="h-[95%] w-[100%] items-center justify-center "
       >
         <FlatList
           className="flex-1"
@@ -296,7 +334,7 @@ const styles = StyleSheet.create({
     height:
       ConstantsResponsive.MAX_HEIGHT -
       ConstantsResponsive.YR * 150 -
-      ConstantsResponsive.YR * 112,
+      ConstantsResponsive.YR * 70,
     flexDirection: "column",
   },
   playRow: {

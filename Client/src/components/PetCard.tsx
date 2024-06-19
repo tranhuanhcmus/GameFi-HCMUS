@@ -5,6 +5,8 @@ import {
   Dimensions,
   StyleSheet,
   Image,
+  Animated,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React from "react";
 
@@ -44,29 +46,43 @@ const PetCard: React.FC<PetCardProps> = ({
   onPress,
 }) => {
   const navigate = useCustomNavigation();
-
+  const translateYValue = new Animated.Value(0);
   return (
-    <TouchableOpacity
+    <TouchableWithoutFeedback
       onPress={() => {
-        if (isBreed) {
-          onPress(null);
-        } else {
-          navigate.navigate("DetailOfPet", {
-            petImg,
-            element,
-            level,
-            name,
-            rarityPet,
-            tokenUri,
-            attributes,
-          });
-        }
+        Animated.sequence([
+          Animated.timing(translateYValue, {
+            toValue: 10,
+            duration: 150,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateYValue, {
+            toValue: 0,
+            duration: 150,
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          if (isBreed) {
+            onPress(null);
+          } else {
+            navigate.navigate("DetailOfPet", {
+              petImg,
+              element,
+              level,
+              name,
+              rarityPet,
+              tokenUri,
+              attributes,
+            });
+          }
+        });
       }}
     >
-      <View
+      <Animated.View
         style={{
           width: Dimensions.get("window").width / 2 - 20,
-          backgroundColor: COLOR.SKY,
+          backgroundColor: COLOR.LIGHT_GREEN,
+          transform: [{ translateY: translateYValue }],
         }}
         className="rounded-[20px] p-[10px] "
       >
@@ -149,8 +165,8 @@ const PetCard: React.FC<PetCardProps> = ({
         >
           {rarityPet}
         </CustomText>
-      </View>
-    </TouchableOpacity>
+      </Animated.View>
+    </TouchableWithoutFeedback>
   );
 };
 
