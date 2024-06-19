@@ -63,15 +63,15 @@ const navArr: NavItem[] = [
     svg: <Thunder height="100%" width="100%" />,
   },
   {
-    name: "BreedScreen",
-    component: BreedScreen,
-    content: "Breed",
-    svg: <Breed height="100%" width="100%" />,
+    name: "LeagueScreen",
+    component: LeagueScreen,
+    content: "League",
+    svg: <Trophy height="100%" width="100%" />,
   },
 
   {
-    name: "PlayScreen",
-    component: PlayScreen,
+    name: "DetailOfPet",
+    component: DetailOfPet,
     content: "Pet",
     header: true,
     svg: <Bear height="100%" width="100%" />,

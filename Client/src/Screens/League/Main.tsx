@@ -1,10 +1,11 @@
-import { ScrollView, View, Image } from "react-native";
+import { ScrollView, View, Image, Animated } from "react-native";
 import ConstantsResponsive from "../../constants/Constanst";
 import { COLOR } from "../../utils/color";
 import CustomText from "../../components/CustomText";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "../../../assets/avatar.png";
 import Trophy from "../../../assets/Trophy.png";
+import { useIsFocused } from "@react-navigation/native";
 const LeagueScreen = () => {
   const [data, setData] = useState([
     { id: 1, rank: 2, name: "You", point: 320 },
@@ -14,6 +15,23 @@ const LeagueScreen = () => {
     { id: 5, rank: 5, name: "Jake", point: 90 },
     { id: 6, rank: 6, name: "Cheryl", point: 90 },
   ]);
+  const translateXValue = new Animated.Value(0);
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    Animated.sequence([
+      Animated.spring(translateXValue, {
+        toValue: 10,
+        tension: 10,
+        useNativeDriver: true,
+      }),
+      Animated.spring(translateXValue, {
+        toValue: 0,
+        tension: 10,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [isFocused]);
+
   return (
     <View
       style={{
@@ -29,7 +47,7 @@ const LeagueScreen = () => {
           position: "absolute",
         }}
         resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
+        source={require("../../../assets/backGroundHome_2.jpeg")}
       /> */}
       <View
         style={{
@@ -48,6 +66,9 @@ const LeagueScreen = () => {
             // fontFamily: "mt-2",
             fontWeight: "bold",
             color: COLOR.YELLOW,
+            textShadowColor: "rgba(0, 0, 0, 0.75)",
+            textShadowOffset: { width: -1, height: 1 },
+            textShadowRadius: 15,
           }}
         >
           ROOKIE
@@ -57,6 +78,9 @@ const LeagueScreen = () => {
             fontSize: 35,
             // fontFamily: "mt-2",
             color: COLOR.YELLOW,
+            textShadowColor: "rgba(0, 0, 0, 0.75)",
+            textShadowOffset: { width: -1, height: 1 },
+            textShadowRadius: 15,
           }}
         >
           LEAGUE
@@ -65,7 +89,7 @@ const LeagueScreen = () => {
       <ScrollView>
         {data
           ? data.map((item, index) => (
-              <View
+              <Animated.View
                 key={index}
                 style={{
                   display: "flex",
@@ -73,6 +97,8 @@ const LeagueScreen = () => {
                   justifyContent: "space-between",
                   marginHorizontal: 20,
                   marginBottom: 10,
+                  borderRadius: 20,
+                  transform: [{ translateX: translateXValue }],
                 }}
               >
                 <View
@@ -118,7 +144,7 @@ const LeagueScreen = () => {
                     {item.point}
                   </CustomText>
                 </View>
-              </View>
+              </Animated.View>
             ))
           : null}
       </ScrollView>

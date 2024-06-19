@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Damage from "../../../assets/thunder.svg";
 import Heart from "../../../assets/Healthpoint.svg";
 
@@ -18,6 +24,7 @@ import logger from "../../logger";
 import { useDispatch } from "react-redux";
 import { updatePet } from "../../redux/petSlice";
 import Fight from "../../../assets/Fight.svg";
+import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 const ELEMENT_SYMBOL: { [index: string]: any } = {
   fire: Fire,
   leaf: Leaf,
@@ -33,6 +40,8 @@ export default function DetailOfPet(props: any) {
 
   const dispatch = useDispatch();
 
+  const translateYValue = new Animated.Value(0);
+
   useEffect(() => {
     logger.error("data ", data);
   }, []);
@@ -42,8 +51,8 @@ export default function DetailOfPet(props: any) {
     <View
       style={{
         backgroundColor: COLOR.PURPLE,
-        height: ConstantsResponsive.MAX_HEIGHT,
         width: ConstantsResponsive.MAX_WIDTH,
+        height: ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 120,
         display: "flex",
       }}
     >
@@ -55,6 +64,7 @@ export default function DetailOfPet(props: any) {
           width: ConstantsResponsive.MAX_WIDTH,
         }}
       />
+
       <View
         style={{
           width: "100%",
@@ -196,23 +206,55 @@ export default function DetailOfPet(props: any) {
         </View>
       </View>
 
-      <TouchableOpacity
-        onPress={() => {
-          dispatch(updatePet(data));
-          navigate.goBack();
-        }}
+      <View
         style={{
-          position: "absolute",
-          bottom: 0,
-          alignSelf: "center",
-          marginBottom: 20,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          marginTop: 10,
         }}
       >
-        <Fight
-          width={ConstantsResponsive.MAX_WIDTH * 0.7}
-          height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-        />
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            Animated.sequence([
+              Animated.timing(translateYValue, {
+                toValue: 10,
+                duration: 100,
+                useNativeDriver: true,
+              }),
+              Animated.timing(translateYValue, {
+                toValue: 0,
+                duration: 100,
+                useNativeDriver: true,
+              }),
+            ]).start(() => {
+              // dispatch(updatePet(data));
+              navigate.goBack();
+            });
+          }}
+        >
+          <Animated.View
+            style={{ transform: [{ translateY: translateYValue }] }}
+          >
+            <Fight
+              width={ConstantsResponsive.MAX_WIDTH * 0.2}
+              height={ConstantsResponsive.MAX_HEIGHT * 0.1}
+            />
+          </Animated.View>
+        </TouchableOpacity>
+        <AwesomeButton
+          onPress={() => {
+            navigate.navigate("Play");
+          }}
+          width={ConstantsResponsive.MAX_WIDTH * 0.4}
+          backgroundColor={COLOR.YELLOW}
+          backgroundDarker={COLOR.BROWN}
+        >
+          <CustomText style={{ color: COLOR.WHITE, fontWeight: "bold" }}>
+            MY BEASTS
+          </CustomText>
+        </AwesomeButton>
+      </View>
     </View>
   );
 }
