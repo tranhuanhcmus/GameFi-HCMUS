@@ -41,6 +41,7 @@ import Match3Game from "../Screens/Match3Game/Main";
 import { flare } from "viem/chains";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import ConstantsResponsive from "../constants/Constanst";
+
 const navArr: NavItem[] = [
   {
     name: "ShopScreen",
@@ -71,9 +72,9 @@ const navArr: NavItem[] = [
   },
 
   {
-    name: "DetailOfPet",
-    component: DetailOfPet,
-    content: "Pet",
+    name: "Pets",
+    component: PetScreen,
+    content: "Pets",
     header: false,
     svg: <Bear height="100%" width="100%" />,
   },
@@ -153,7 +154,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Connect">
+    <Stack.Navigator initialRouteName="MainTab">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}

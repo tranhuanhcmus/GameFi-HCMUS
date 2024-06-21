@@ -7,10 +7,10 @@ export class ItemAppService {
    * @param address
    * @returns
    */
-  static async getCurrency(address: `0x${string}` | undefined) {
+  static async getAllItems() {
     return new Promise<any[]>(async (resolve, reject) => {
       try {
-        const response = await api.get(API.NFT + `/${address}`);
+        const response = await api.get(API.ITEM_APP);
 
         console.log("response ", response.data);
         resolve(response.data.data);
