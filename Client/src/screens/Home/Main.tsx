@@ -224,22 +224,23 @@ const HomeScreen = () => {
           flexDirection: "column",
           alignItems: "center",
           height: ConstantsResponsive.YR * 120,
-          marginTop: ConstantsResponsive.YR * 120,
+          marginTop: ConstantsResponsive.YR * 150,
         }}
       >
         <CustomText
           style={{
             // fontFamily: "mt-2",
             fontWeight: "bold",
+            fontFamily: "rexlia",
             fontSize: 40,
-            color: COLOR.BROWN,
+            color: COLOR.RED_BG_BUTTON,
           }}
         >
           LEVEL {level}
         </CustomText>
-        <View style={styles.healthBar}>
+        {/* <View style={styles.healthBar}>
           <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.playArea}>
@@ -249,7 +250,7 @@ const HomeScreen = () => {
             source={require("../../../assets/spritesSheet_18.png")}
             columns={60}
             rows={1}
-            height={ConstantsResponsive.MAX_HEIGHT * 0.25}
+            height={ConstantsResponsive.MAX_HEIGHT * 0.3}
             animations={{
               walk: [
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
@@ -294,7 +295,6 @@ const HomeScreen = () => {
             setIsChooseGameModalVisible(true);
           }}
           style={styles.btnChooseGame}
-          shadowColor={COLOR.BROWN}
         >
           <Image
             style={{
@@ -316,7 +316,6 @@ const HomeScreen = () => {
 
             socket.emitFindMatch(gameName);
           }}
-          shadowColor={COLOR.RED_BG_BUTTON}
           style={styles.btnPlay}
         >
           <Image
@@ -370,6 +369,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    shadowColor: COLOR.RED_BG_BUTTON,
     justifyContent: "center",
     width: ConstantsResponsive.MAX_WIDTH * 0.6,
     height: ConstantsResponsive.MAX_HEIGHT * 0.09,
@@ -378,6 +378,7 @@ const styles = StyleSheet.create({
     position: "relative",
     display: "flex",
     flexDirection: "row",
+    shadowColor: COLOR.BROWN,
     alignItems: "center",
     justifyContent: "center",
     width: ConstantsResponsive.MAX_WIDTH * 0.3,
@@ -520,7 +521,7 @@ const styles = StyleSheet.create({
     marginTop: ConstantsResponsive.YR * 10,
     backgroundColor: COLOR.WHITE,
     borderWidth: 2,
-    borderColor: COLOR.BROWN,
+    borderColor: COLOR.RED_BG_BUTTON,
     borderRadius: ConstantsResponsive.YR * 10,
   },
   healthBarInner: {

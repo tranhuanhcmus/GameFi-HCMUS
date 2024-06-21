@@ -10,8 +10,8 @@ interface settingGameState {
 }
 
 const initialState: settingGameState = {
-  sound: false,
-  music: false,
+  sound: true,
+  music: true,
   isVisable: false,
 };
 

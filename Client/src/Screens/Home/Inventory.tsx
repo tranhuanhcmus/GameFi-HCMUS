@@ -13,52 +13,52 @@ const InventoryModal = ({
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
 }) => {
-  // const [data, setData] = useState([
-  //   {
-  //     id: 1,
-  //     image: require("../../../assets/medicine.png"),
-  //     quantity: 2,
-  //   },
-  //   {
-  //     id: 2,
-  //     image: require("../../../assets/healing_potion.png"),
-  //     quantity: 2,
-  //   },
-  //   {
-  //     id: 3,
-  //     image: require("../../../assets/candy/17.png"),
-  //     quantity: 2,
-  //   },
-  //   {
-  //     id: 4,
-  //     image: require("../../../assets/candy/14.png"),
-  //     quantity: 2,
-  //   },
-  //   {
-  //     id: 5,
-  //     image: require("../../../assets/candy/19.png"),
-  //     quantity: 2,
-  //   },
-  // ]);
+  const [data, setData] = useState([
+    {
+      id: 1,
+      image: require("../../../assets/banana.png"),
+      quantity: 2,
+    },
+    {
+      id: 2,
+      image: require("../../../assets/healing_potion.png"),
+      quantity: 2,
+    },
+    {
+      id: 3,
+      image: require("../../../assets/candy/17.png"),
+      quantity: 2,
+    },
+    {
+      id: 4,
+      image: require("../../../assets/candy/14.png"),
+      quantity: 2,
+    },
+    {
+      id: 5,
+      image: require("../../../assets/candy/19.png"),
+      quantity: 2,
+    },
+  ]);
 
   /** useState */
-  const [data, setData] = useState<any[]>([]);
+  // const [data, setData] = useState<any[]>([]);
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
-  const fetchData = async () => {
-    try {
-      const res: any[] = await ItemGameOwnerService.getItems(address);
-      setData([...res]);
-    } catch (error) {
-      console.error("ItemGameOwnerService.getItems", error);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const res: any[] = await ItemGameOwnerService.getItems(address);
+  //     setData([...res]);
+  //   } catch (error) {
+  //     console.error("ItemGameOwnerService.getItems", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, [address]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [address]);
 
   const InventoryItem = ({
     image,

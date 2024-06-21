@@ -13,6 +13,7 @@ import Bear from "../../assets/iconBear.svg";
 // import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
 // import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../Screens/Connect/Main";
+import PetScreen from "../Screens/Pet/Main";
 import GameScreen from "../Screens/Game/Main";
 import PlayScreen from "../Screens/Play/Main";
 import ShopScreen from "../Screens/Shop/Main";
@@ -70,10 +71,10 @@ const navArr: NavItem[] = [
   },
 
   {
-    name: "PlayScreen",
-    component: PlayScreen,
+    name: "PetScreen",
+    component: PetScreen,
     content: "Pet",
-    header: true,
+    header: false,
     svg: <Bear height="100%" width="100%" />,
   },
 ];
@@ -133,7 +134,7 @@ type LocalRootStackParamList = {
   HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
-  Shop: undefined;
+
   Play: undefined;
   League: undefined;
   Event: undefined;
@@ -204,13 +205,7 @@ const Route = () => (
         }}
         component={MainTab}
       />
-      <Stack.Screen
-        name="Shop"
-        options={{
-          headerShown: false,
-        }}
-        component={ShopScreen}
-      />
+
       <Stack.Screen
         name="TrendMarket"
         options={{
