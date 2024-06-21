@@ -4,7 +4,21 @@ const getAll = async (req, res, next) => {
   try {
     const list = await models.ItemApp.findAll();
 
-    return res.sendResponse(list, "Get All Success", STATUS_CODES.OK);
+    if (!list || list.length === 0) {
+      return res.sendResponse(null, "No items found", STATUS_CODES.NOT_FOUND);
+    }
+
+    // Group results by category
+    const groupedResults = list.reduce((acc, item) => {
+      const category = item.dataValues.category;
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(item.dataValues);
+      return acc;
+    }, {});
+
+    return res.sendResponse(groupedResults, "Get All Success", STATUS_CODES.OK);
   } catch (error) {
     return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
   }

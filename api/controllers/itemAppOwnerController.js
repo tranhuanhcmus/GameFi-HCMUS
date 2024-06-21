@@ -34,18 +34,19 @@ const getByOwner = async (req, res, next) => {
             return res.sendResponse(null, `Not Found Owner ${owner}`, STATUS_CODES.NOT_FOUND);
         }
 
-        // Lặp qua mảng kết quả
+        const groupedResults = {};
+
+        // Iterate through the results array
         for (const result of results) {
-            // console.log(result.dataValues.id);
-            // Gọi hàm getById để lấy thông tin chi tiết của mỗi id
-            const detailedResult = await models.ItemApp.findOne({ where: { id: result.dataValues.id } })
-            // console.log(detailedResult.dataValues.description);
-            // Kiểm tra kết quả từ hàm getById và xử lý phản hồi
+            // Fetch detailed information for each ID
+            const detailedResult = await models.ItemApp.findOne({ where: { id: result.dataValues.id } });
+
+            // Check the result of the detailed fetch
             if (!detailedResult) {
-                // Nếu không tìm thấy hoặc có lỗi, trả về lỗi tương ứng
-                return res.sendResponse(null, `Error fetching details for ID ${result.dataValues.id}`, detailedResult ? detailedResult.status : STATUS_CODES.INTERNAL_ERROR);
+                return res.sendResponse(null, `Error fetching details for ID ${result.dataValues.id}`, STATUS_CODES.INTERNAL_ERROR);
             }
-            // Nếu thành công, gắn thông tin chi tiết vào mảng kết quả
+
+            // Attach detailed information to the result
             result.dataValues.name = detailedResult.dataValues.name;
             result.dataValues.description = detailedResult.dataValues.description;
             result.dataValues.category = detailedResult.dataValues.category;
@@ -54,17 +55,21 @@ const getByOwner = async (req, res, next) => {
             result.dataValues.gemcost = detailedResult.dataValues.gemcost;
             result.dataValues.goldcost = detailedResult.dataValues.goldcost;
             result.dataValues.image = detailedResult.dataValues.image;
-            console.log(result);
+
+            // Group results by category
+            const category = detailedResult.dataValues.category;
+            if (!groupedResults[category]) {
+                groupedResults[category] = [];
+            }
+            groupedResults[category].push(result.dataValues);
         }
 
-        // Trả về kết quả đã được mapping thông tin chi tiết
-        return res.sendResponse(results, `Get Owner ${owner} App Items Success`, STATUS_CODES.OK);
+        // Return the grouped results
+        return res.sendResponse(groupedResults, `Get Owner ${owner} App Items Success`, STATUS_CODES.OK);
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
-
-
 const deleteById = async(req, res, next) => {
     try {
 

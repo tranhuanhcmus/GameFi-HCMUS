@@ -33,6 +33,8 @@ const getByOwner = async (req, res, next) => {
             return res.sendResponse(null, `Not Found Owner ${owner}`, STATUS_CODES.NOT_FOUND);
         }
 
+        const groupedResults = {};
+
         // Lặp qua mảng kết quả
         for (const result of results) {
             // console.log(result.dataValues.id);
@@ -53,11 +55,17 @@ const getByOwner = async (req, res, next) => {
             result.dataValues.gemcost = detailedResult.dataValues.gemcost;
             result.dataValues.goldcost = detailedResult.dataValues.goldcost;
             result.dataValues.image = detailedResult.dataValues.image;
-            console.log(result);
+
+            // Group results by category
+            const category = detailedResult.dataValues.category;
+            if (!groupedResults[category]) {
+                groupedResults[category] = [];
+            }
+            groupedResults[category].push(result.dataValues);
         }
 
-        // Trả về kết quả đã được mapping thông tin chi tiết
-        return res.sendResponse(results, `Get Owner ${owner} Game Items Success`, STATUS_CODES.OK);
+        // Trả về kết quả đã được grouping theo category
+        return res.sendResponse(groupedResults, `Get Owner ${owner} Game Items Success`, STATUS_CODES.OK);
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
     }
