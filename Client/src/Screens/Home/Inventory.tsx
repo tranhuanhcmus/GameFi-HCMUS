@@ -83,7 +83,7 @@ const InventoryModal = ({
         <Image
           source={
             image
-              ? { uri: `http://192.168.1.12:4500${image}` }
+              ? { uri: `http://192.168.1.11:4500${image}` }
               : require("../../../assets/candy/19.png")
           }
           style={{ width: 50, height: 50 }}

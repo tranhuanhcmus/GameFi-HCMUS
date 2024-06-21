@@ -7,6 +7,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
@@ -18,22 +19,20 @@ import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { useAppDispatch } from "../../redux/store";
 import { selectUser } from "../../redux/userSlice";
 
-import AwesomeButton from "react-native-really-awesome-button";
 // import SpriteSheet from "rn-sprite-sheet";
 import SpriteSheet from "../../components/SpriteSheet";
-import Damage from "../../../assets/damage.svg";
 import LoadingModal from "../../components/Game/LoadingModal";
 import { COLOR } from "../../utils/color";
-import { setAddress } from "../../redux/userSlice";
 import { useIsFocused } from "@react-navigation/native";
-import Coin from "../../../assets/coin.svg";
 import Inventory from "../../../assets/inventory.svg";
 import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
 
-import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
+import { updatePet } from "../../redux/petSlice";
+import { UserService } from "../../services/UserService";
+import logger from "../../logger";
 type Props = {};
 
 const HomeScreen = () => {
@@ -52,10 +51,9 @@ const HomeScreen = () => {
   const [fps, setFps] = useState<string>("10");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [pet, setPet] = useState();
 
   /** useAccount */
-  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+  const { address } = useAccount();
 
   /** useSelector */
   const userState = useSelector(selectUser);
@@ -98,6 +96,9 @@ const HomeScreen = () => {
     setResetAfterFinish(true);
   };
 
+  const inventoryTranslateYValue = new Animated.Value(0);
+  const changeGameBtnTranslateYValue = new Animated.Value(0);
+  const playGameBtnTranslateYValue = new Animated.Value(0);
   let healthBarWidth =
     ((ConstantsResponsive.MAX_WIDTH -
       ConstantsResponsive.XR * 200 -
@@ -164,6 +165,35 @@ const HomeScreen = () => {
     }
   }, [isFocused]);
 
+  const fetchData = async () => {
+    try {
+      const res: any[] = await UserService.getNFTsByOwner(address);
+
+      const data = res[0].data; // SET DEFAULT THE FIRST
+      dispatch(updatePet(data));
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!name || !type || !image || !title || !tokenId || !attributes || !level)
+      fetchData();
+  }, []);
+
+  useEffect(() => {
+    logger.warn(
+      "name, type, image, title, tokenId, attributes, level  ",
+      name,
+      type,
+      image,
+      title,
+      tokenId,
+      attributes,
+      level,
+    );
+  }, [name, type, image, title, tokenId, attributes, level]);
+
   return (
     <View
       style={{
@@ -206,16 +236,35 @@ const HomeScreen = () => {
           top: ConstantsResponsive.YR * 2 * 120,
         }}
       >
-        <TouchableOpacity
+        <TouchableWithoutFeedback
           onPress={() => {
-            setIsInventoryModalVisible(true);
+            Animated.sequence([
+              Animated.timing(inventoryTranslateYValue, {
+                toValue: 10,
+                duration: 150,
+                useNativeDriver: true,
+              }),
+              Animated.timing(inventoryTranslateYValue, {
+                toValue: 0,
+                duration: 150,
+                useNativeDriver: true,
+              }),
+            ]).start(() => {
+              setIsInventoryModalVisible(true);
+            });
           }}
         >
-          <Inventory
-            height={ConstantsResponsive.YR * 120}
-            width={ConstantsResponsive.XR * 120}
-          />
-        </TouchableOpacity>
+          <Animated.View
+            style={{
+              transform: [{ translateY: inventoryTranslateYValue }],
+            }}
+          >
+            <Inventory
+              height={ConstantsResponsive.YR * 120}
+              width={ConstantsResponsive.XR * 120}
+            />
+          </Animated.View>
+        </TouchableWithoutFeedback>
       </View>
 
       <View
@@ -290,67 +339,100 @@ const HomeScreen = () => {
           paddingHorizontal: ConstantsResponsive.MAX_WIDTH * 0.03,
         }}
       >
-        <NormalButton
-          onPress={() => {
-            setIsChooseGameModalVisible(true);
-          }}
-          style={styles.btnChooseGame}
+        <Animated.View
+          style={{ transform: [{ translateY: changeGameBtnTranslateYValue }] }}
         >
-          <Image
-            style={{
-              position: "absolute",
-              width: ConstantsResponsive.MAX_WIDTH * 0.3,
-              height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+          <NormalButton
+            onPress={() => {
+              Animated.sequence([
+                Animated.timing(changeGameBtnTranslateYValue, {
+                  toValue: 10,
+                  duration: 150,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(changeGameBtnTranslateYValue, {
+                  toValue: 0,
+                  duration: 150,
+                  useNativeDriver: true,
+                }),
+              ]).start(() => {
+                setIsChooseGameModalVisible(true);
+              });
             }}
-            resizeMode="stretch"
-            source={require("../../../assets/backGroundButtonBrown.png")}
-          />
-          <Text style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}>
-            CHANGE GAME
-          </Text>
-        </NormalButton>
-
-        <NormalButton
-          onPress={() => {
-            if (!isVisible) setIsVisible(true);
-
-            socket.emitFindMatch(gameName);
-          }}
-          style={styles.btnPlay}
-        >
-          <Image
-            style={{
-              position: "absolute",
-              width: ConstantsResponsive.MAX_WIDTH * 0.6,
-              height: ConstantsResponsive.MAX_HEIGHT * 0.09,
-            }}
-            resizeMode="stretch"
-            source={require("../../../assets/backGroundButtonRed.png")}
-          />
-          <View
-            style={{
-              height: "100%",
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-
-              columnGap: 20,
-            }}
+            style={styles.btnChooseGame}
           >
             <Image
-              source={gameName === "HangManGame" ? HangmanBg : DiamondGameBg}
               style={{
-                height: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
-                width: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
-                resizeMode: "cover",
-                borderRadius: 10,
+                position: "absolute",
+                width: ConstantsResponsive.MAX_WIDTH * 0.3,
+                height: ConstantsResponsive.MAX_HEIGHT * 0.09,
               }}
+              resizeMode="stretch"
+              source={require("../../../assets/backGroundButtonBrown.png")}
             />
-            <Text style={styles.textSize}>Play</Text>
-          </View>
-        </NormalButton>
+            <Text style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}>
+              CHANGE GAME
+            </Text>
+          </NormalButton>
+        </Animated.View>
+        <Animated.View
+          style={{ transform: [{ translateY: playGameBtnTranslateYValue }] }}
+        >
+          <NormalButton
+            onPress={() => {
+              Animated.sequence([
+                Animated.timing(playGameBtnTranslateYValue, {
+                  toValue: 10,
+                  duration: 150,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(playGameBtnTranslateYValue, {
+                  toValue: 0,
+                  duration: 150,
+                  useNativeDriver: true,
+                }),
+              ]).start(() => {
+                if (!isVisible) setIsVisible(true);
+
+                socket.emitFindMatch(gameName);
+              });
+            }}
+            style={styles.btnPlay}
+          >
+            <Image
+              style={{
+                position: "absolute",
+                width: ConstantsResponsive.MAX_WIDTH * 0.6,
+                height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+              }}
+              resizeMode="stretch"
+              source={require("../../../assets/backGroundButtonRed.png")}
+            />
+            <View
+              style={{
+                height: "100%",
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+
+                columnGap: 20,
+              }}
+            >
+              <Image
+                source={gameName === "HangManGame" ? HangmanBg : DiamondGameBg}
+                style={{
+                  height: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
+                  width: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
+                  resizeMode: "cover",
+                  borderRadius: 10,
+                }}
+              />
+              <Text style={styles.textSize}>Play</Text>
+            </View>
+          </NormalButton>
+        </Animated.View>
       </View>
     </View>
   );

@@ -64,15 +64,15 @@ const navArr: NavItem[] = [
     svg: <Thunder height="100%" width="100%" />,
   },
   {
-    name: "BreedScreen",
-    component: BreedScreen,
-    content: "Breed",
-    svg: <Breed height="100%" width="100%" />,
+    name: "LeagueScreen",
+    component: LeagueScreen,
+    content: "League",
+    svg: <Trophy height="100%" width="100%" />,
   },
 
   {
-    name: "PetScreen",
-    component: PetScreen,
+    name: "DetailOfPet",
+    component: DetailOfPet,
     content: "Pet",
     header: false,
     svg: <Bear height="100%" width="100%" />,
@@ -153,7 +153,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="MainTab">
+    <Stack.Navigator initialRouteName="Connect">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}

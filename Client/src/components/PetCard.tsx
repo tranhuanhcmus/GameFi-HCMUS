@@ -5,6 +5,8 @@ import {
   Dimensions,
   StyleSheet,
   Image,
+  Animated,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React from "react";
 
@@ -45,23 +47,36 @@ const PetCard: React.FC<PetCardProps> = ({
   onPress,
 }) => {
   const navigate = useCustomNavigation();
-
+  const translateYValue = new Animated.Value(0);
   return (
     <TouchableOpacity
       onPress={() => {
-        if (isBreed) {
-          onPress(null);
-        } else {
-          navigate.navigate("DetailOfPet", {
-            petImg,
-            element,
-            level,
-            name,
-            rarityPet,
-            tokenUri,
-            attributes,
-          });
-        }
+        Animated.sequence([
+          Animated.timing(translateYValue, {
+            toValue: 10,
+            duration: 150,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateYValue, {
+            toValue: 0,
+            duration: 150,
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          if (isBreed) {
+            onPress(null);
+          } else {
+            navigate.navigate("DetailOfPet", {
+              petImg,
+              element,
+              level,
+              name,
+              rarityPet,
+              tokenUri,
+              attributes,
+            });
+          }
+        });
       }}
       style={{
         display: "flex",

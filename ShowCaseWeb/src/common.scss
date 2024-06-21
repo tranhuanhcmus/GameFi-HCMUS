@@ -130,7 +130,7 @@ html {
 }
 
 .page_wrapper {
-	height: 200vh;
+	min-height: 100vh;
 	padding: 60px 80px;
 }
 
@@ -261,6 +261,19 @@ html {
 	}
 }
 
+.make_offer{
+	line-height: 40px;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	.text_bold{
+		color: $primary6;
+		font-weight: 700;
+		cursor: pointer;
+		animation: bubble 5s infinite;
+	}
+	
+}
 @keyframes rotate {
 	0% {
 		transform: rotate(0);
@@ -268,6 +281,23 @@ html {
 
 	100% {
 		transform: rotate(360deg);
+	}
+}
+@keyframes bubble {
+	0% {
+		transform: scale(1);
+	}
+	25% {
+		transform: scale(1.15);
+	}
+	50% {
+		transform: scale(1.05);
+	}
+	75% {
+		transform: scale(1.1);
+	}
+	100% {
+		transform: scale(1);
 	}
 }
 
