@@ -12,5 +12,6 @@ module.exports={
 	itemAppController:require("./itemAppController"),
 	itemGameOwnerController:require("./itemGameOwnerController"),
 	itemAppOwnerController:require("./itemAppOwnerController"),
+	boostEffectController:require("./boostEffectController"),
 
 }
