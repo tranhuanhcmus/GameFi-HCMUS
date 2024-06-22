@@ -35,6 +35,8 @@ type NFTData = {
   petImg: string;
   element: string;
   level: number;
+  atk: number;
+  hp: number;
   name: string;
   rarityPet: string;
   tokenUri: string;
@@ -80,19 +82,20 @@ const PetsModal = ({
       const res: NFT[] = await UserService.getNFTsByOwner(
         "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
       );
-
+      console.log("nft ", res[0]);
       const mappedData: any[] = res.map((nft: any) => {
-        console.log("nft ", nft);
         return {
-          id: nft.tokenid,
+          id: nft.data.tokenId,
           element: ELEMENT.FIRE,
+          hp: nft.data.hp,
+          atk: nft.data.atk,
           level: getLevel(nft.exp),
           petImg:
             nft.data.image ||
             "https://ipfs.io/ipfs/QmUZx2uesJStmL97rzHH8kkP3qCJSou9qpbR8w4ws1kK3r/1113.jpg",
           name: nft.data.name,
           rarityPet: "special",
-          tokenUri: nft.tokenUri,
+          tokenUri: nft.data.tokenUri,
           attributes: {
             element: nft.data.attributes.element,
             eye: nft.data.attributes.eye,
@@ -121,8 +124,6 @@ const PetsModal = ({
     } catch (e) {
       console.log("Loi");
     }
-
-    navigate.goBack();
   };
 
   return (
@@ -172,6 +173,7 @@ const PetsModal = ({
             numColumns={2}
             renderItem={({ item }) => (
               <PetCard
+                item={{ ...item }}
                 petImg={item.petImg}
                 element={item.element}
                 level={item.level}
