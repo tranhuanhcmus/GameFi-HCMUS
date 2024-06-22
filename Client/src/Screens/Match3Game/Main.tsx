@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import {
-  StyleSheet,
-  ImageBackground,
   Dimensions,
-  Pressable,
-  View,
-  Text,
+  ImageBackground,
   SafeAreaView,
+  StyleSheet,
+  View,
 } from "react-native";
 // import SwappableGrid from '../components/SwappableGrid';
-import SwappableGrid from "./components/SwappableGrid";
-import Timer from "./components/ProgressTimer";
+import { useIsFocused } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 import GameHeader from "../../components/Game/Header";
 import ConstantsResponsive from "../../constants/Constanst";
-import Button from "react-native-really-awesome-button";
+import { StatusBarHeight } from "../../function/CalculateStatusBar";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
-import { height, width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
+import logger from "../../logger";
+import TimingLine from "../HangManGame/TimingLine";
+import SwappableGrid from "./components/SwappableGrid";
 
 // import Images from '../lib/Images';
 
@@ -27,24 +27,35 @@ const GameScreen = () => {
   const [moveCount, setMoveCount] = useState(0);
   const [score, setScore] = useState(0);
   const navigate = useCustomNavigation();
+  const [timing, setTiming] = useState(30);
+  const [gameOver, setGameOver] = useState(false);
+  const isFocused = useIsFocused();
+  const { turn, damage } = useSelector((state: any) => state.player);
+
+  const handleEndTime = () => {
+    logger.debug("Hello");
+    // dispatch(swapTurn());
+  };
+
   return (
     <ImageBackground source={justClouds} style={styles.backGroundImage}>
-      <GameHeader />
-
       <SafeAreaView style={styles.scoreBoard}>
-        {/* <Timer
-          setMoveCount={setMoveCount}
-          moveCount={moveCount}
-          score={score}
-        /> */}
-        {/* <View style={styles.scoreElement}>
-          <Text>{score}</Text>
+        <View
+          style={{
+            height: ConstantsResponsive.MAX_HEIGHT * 0.35 - StatusBarHeight,
+          }}
+        >
+          <GameHeader />
         </View>
-        <View style={styles.scoreElement}>
-          <Text>{moveCount}</Text>
-        </View> */}
+        <TimingLine
+          gameOver={gameOver}
+          turn={turn}
+          leaveScreen={!isFocused}
+          duration={timing}
+          onCompletion={handleEndTime}
+        />
+        <SwappableGrid setMoveCount={setMoveCount} setScore={setScore} />
       </SafeAreaView>
-      <SwappableGrid setMoveCount={setMoveCount} setScore={setScore} />
     </ImageBackground>
   );
 };
@@ -64,14 +75,14 @@ let styles = StyleSheet.create({
     justifyContent: "center",
   },
   scoreBoard: {
-    position: "absolute",
-    top: 0,
-    flex: 3,
-    flexDirection: "row",
-    width: windowWidth,
-    height: windowHeight / 6,
     alignItems: "center",
-    marginTop: 15,
+    display: "flex",
+
+    height: ConstantsResponsive.MAX_HEIGHT * 0.85,
+    width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 105,
+    flexDirection: "column",
+
+    marginHorizontal: ConstantsResponsive.XR * 50,
     // backgroundColor: red,
   },
   scoreElement: {
