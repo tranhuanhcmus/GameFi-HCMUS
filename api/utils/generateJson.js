@@ -112,45 +112,65 @@ function getFiles(dir, files = []) {
     return files
 }
 async function run() {
-    const gateway= `${BEAR_GATEWAY_IPFS}/QmPcvN9XUUPFuu8HG5uC8jHEiWWk5xa8sLUfaqHnmyVHf5`
+    const gateway = `${BEAR_GATEWAY_IPFS}/QmPcvN9XUUPFuu8HG5uC8jHEiWWk5xa8sLUfaqHnmyVHf5`
     const folderPath = 'C:\\Users\\Acer\\Desktop\\DOAN\\nftData\\json';
     const filesInTheFolder = getFiles(folderPath)
     for (let file of filesInTheFolder) {
-        let atkMapping={
-            1:50,
-            2:40,
-            3:30,
-            4:30,
-            5:25,
-            6:45,
+        let atkMapping = {
+            1: 50,
+            2: 40,
+            3: 30,
+            4: 30,
+            5: 25,
+            6: 45,
         }
-        let hpMapping={
-            1:100,
-            2:120,
-            3:150,
-            4:150,
-            5:200,
-            6:100,
+        let hpMapping = {
+            1: 100,
+            2: 120,
+            3: 150,
+            4: 150,
+            5: 200,
+            6: 100,
         }
-        let scaleMapping={
-            1:14,
-            2:12,
-            3:15,
-            4:15,
-            5:10,
-            6:18,
+        let scaleMapping = {
+            1: 14,
+            2: 12,
+            3: 15,
+            4: 15,
+            5: 10,
+            6: 18,
         }
-       let content = await fs.readFileSync(file, 'utf8');
-       content=JSON.parse(content)
-       let id=content.tokenId
-       const elementId=id[0]
-       content.image=`${gateway}/bear_${id}.png`
-       content.assets=`${gateway}/sprites_${id}.png`
-       content.atk=atkMapping[elementId]
-       content.hp=hpMapping[elementId]
-       content.scale_level=scaleMapping[elementId]
-       await writeFile(file,JSON.stringify(content))
+        let content = await fs.readFileSync(file, 'utf8');
+        content = JSON.parse(content)
+        let id = content.tokenId
+        const elementId = id[0]
+        content.image = `${gateway}/bear_${id}.png`
+        content.assets = `${gateway}/sprites_${id}.png`
+        content.atk = atkMapping[elementId]
+        content.hp = hpMapping[elementId]
+        content.scale_level = scaleMapping[elementId]
+        await writeFile(file, JSON.stringify(content))
     }
 }
 
-run()
+// run()
+function getLevel(exp) {
+    let constant = 100
+    let level = 0
+    while (exp > 0) {
+        let increase_level_exp_require = (level + 1) * constant
+        let remaining_exp = exp - increase_level_exp_require
+        let increase_level = 0
+        if (remaining_exp > 0) {
+            increase_level = 1
+        } else {
+            increase_level= (remaining_exp + increase_level_exp_require) / increase_level_exp_require
+        }
+        level += increase_level
+        exp=remaining_exp
+    }
+    return level
+}
+let exp =10000
+
+console.log(getLevel(exp));
