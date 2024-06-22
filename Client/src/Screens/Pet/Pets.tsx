@@ -75,151 +75,37 @@ const PetsModal = ({
     fetchData();
   }, []);
 
-  const fetchData = () => {
-    // try {
-    //   // const res: NFT[] = await UserService.getNFTsByOwner(address);
+  const fetchData = async () => {
+    try {
+      const res: NFT[] = await UserService.getNFTsByOwner(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
 
-    //   const res: NFT[] = [
-    //     {
-    //       tokenid: "111",
-    //       owner: "1111",
-    //       tokenuri: "1111",
-    //       exp: 325,
-    //       JSONdata: {
-    //         name: "",
-    //         image: "",
-    //         type: "",
-    //         title: undefined,
-    //         tokenId: "",
-    //         attributes: {},
-    //         description: "",
-    //       },
-    //     },
-    //   ];
-    //   const mappedData: any[] = res.map((nft: any) => {
-    //     console.log("nft ", nft);
-    //     return {
-    //       id: nft.tokenid,
-    //       element: ELEMENT.FIRE,
-    //       level: getLevel(nft.exp),
-    //       petImg:
-    //         nft.data.image ||
-    //         "https://ipfs.io/ipfs/QmUZx2uesJStmL97rzHH8kkP3qCJSou9qpbR8w4ws1kK3r/1113.jpg",
-    //       name: nft.data.name,
-    //       rarityPet: "special",
-    //       tokenUri: nft.tokenUri,
-    //       attributes: {
-    //         element: nft.data.attributes.element,
-    //         eye: nft.data.attributes.eye,
-    //         fur: nft.data.attributes.fur,
-    //         item: nft.data.attributes.item,
-    //       },
-    //     };
-    //   });
-
-    //   setData(mappedData);
-    // } catch (error) {
-    //   console.error("Error fetching NFTs:", error);
-    // }
-    const res: NFT[] = [
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-    ];
-    const mappedData: any[] = res.map((nft: any) => {
-      console.log("nft ", nft);
-      return {
-        id: nft.tokenid,
-        element: ELEMENT.FIRE,
-        level: getLevel(nft.exp),
-        petImg:
-          nft?.data?.image ||
-          "https://ipfs.io/ipfs/QmUZx2uesJStmL97rzHH8kkP3qCJSou9qpbR8w4ws1kK3r/1113.jpg",
-        name: nft?.JSONdata?.name,
-        rarityPet: "special",
-        tokenUri: nft.tokenUri,
-        attributes: {
-          element: nft.data?.attributes.element,
-          eye: nft.data?.attributes.eye,
-          fur: nft.data?.attributes.fur,
-          item: nft.data?.attributes.item,
-        },
-      };
-    });
-
-    setData(mappedData);
+      const mappedData: any[] = res.map((nft: any) => {
+        console.log("nft ", nft);
+        return {
+          id: nft.tokenid,
+          element: ELEMENT.FIRE,
+          level: getLevel(nft.exp),
+          petImg:
+            nft.data.image ||
+            "https://ipfs.io/ipfs/QmUZx2uesJStmL97rzHH8kkP3qCJSou9qpbR8w4ws1kK3r/1113.jpg",
+          name: nft.data.name,
+          rarityPet: "special",
+          tokenUri: nft.tokenUri,
+          attributes: {
+            element: nft.data.attributes.element,
+            eye: nft.data.attributes.eye,
+            fur: nft.data.attributes.fur,
+            item: nft.data.attributes.item,
+          },
+        };
+      });
+      console.log(res);
+      setData(mappedData);
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+    }
   };
 
   const onPress = (item: any) => {

@@ -35,9 +35,11 @@ import ListFood from "../../components/ListFood";
 import { useNavigation } from "@react-navigation/native";
 import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 import StatsModal from "./Stats";
+import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
+import { API } from "../../apis/constants";
 type Props = {};
 interface FeedState {
-  feed: ImageSourcePropType | null;
+  feed: string | null;
   pageX: number;
   pageY: number;
 }
@@ -50,8 +52,6 @@ const PetScreen = () => {
 
   const [isVisibleStats, setIsVisibleStats] = useState(false);
 
-  const isFocused = useIsFocused();
-
   const [gameName, setGameName] = useState<string>("");
   const [fps, setFps] = useState<string>("10");
   const [loop, setLoop] = useState<boolean>(false);
@@ -61,6 +61,8 @@ const PetScreen = () => {
   const { isVisable, sound, music } = useSelector(
     (state: any) => state.settingGame,
   );
+
+  const isFocused = useIsFocused();
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
@@ -107,28 +109,25 @@ const PetScreen = () => {
     pageX: 0,
     pageY: 0,
   });
-  const [foodArray, setFoodArray] = useState([
-    {
-      id: 1,
-      image: require("../../../assets/banana.png"),
-    },
-    {
-      id: 2,
-      image: require("../../../assets/grapes.png"),
-    },
-    {
-      id: 3,
-      image: require("../../../assets/comboCandy.png"),
-    },
-    {
-      id: 4,
-      image: require("../../../assets/cookie.png"),
-    },
-    {
-      id: 5,
-      image: require("../../../assets/donut.png"),
-    },
-  ]);
+
+  const [foodArray, setFoodArray] = useState<any>([]);
+
+  const fetchData = async () => {
+    try {
+      const res: any[] = await ItemGameOwnerService.getItems(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
+      const data = res.filter((item) => item.category == "food");
+      console.log(data);
+      setFoodArray(data);
+    } catch (error) {
+      console.error("ItemGameOwnerService.getItems", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [address, isFocused]);
 
   let healthBarWidth =
     ((ConstantsResponsive.MAX_WIDTH -
@@ -153,28 +152,40 @@ const PetScreen = () => {
     }
   }, [isFocused]);
   const removeFoodItem = (id: number, pageX: number, pageY: number) => {
-    const foodImage = foodArray.find((food) => food.id === id)?.image;
+    const foodImage = foodArray.find((food: any) => food.id === id)?.image;
+    console.log(foodImage);
     setFeed({ feed: foodImage, pageX: pageX, pageY: pageY });
-    playSound(sound, "eatingSound");
-    setFoodArray((prevArray) => prevArray.filter((item) => item.id !== id));
+    setTimeout(() => {
+      playSound(sound, "eatingSound");
+    }, 500);
+    setFoodArray((prevArray: any) =>
+      prevArray.filter((item: any) => item.id !== id),
+    );
   };
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     let timer: NodeJS.Timeout | null = null;
+    const startTime = Date.now();
+    const middleX = ConstantsResponsive.MAX_WIDTH / 3;
+    const a = 30; // Adjust this to change the curvature of the parabola
 
     if (feed.feed) {
-      // Interval to adjust pageX every second
+      // Interval to adjust pageX and pageY every 200ms
       interval = setInterval(() => {
-        setFeed((prevFeed) => ({
-          ...prevFeed,
-          pageX:
-            prevFeed.pageX + ConstantsResponsive.MAX_WIDTH / 2 - prevFeed.pageX,
-          pageY: prevFeed.pageY - 190, // Subtract 100 from pageX every second
-        }));
-      }, 150);
+        const elapsedTime = (Date.now() - startTime) / 1000; // Time in seconds
+        setFeed((prevFeed) => {
+          const newPageY = prevFeed.pageY - ConstantsResponsive.YR * 40;
+          const newPageX = a * Math.pow(elapsedTime, 2) + middleX;
+          return {
+            ...prevFeed,
+            pageX: newPageX,
+            pageY: newPageY,
+          };
+        });
+      }, 100);
 
-      // Timeout to hide the image after 4 seconds
+      // Timeout to hide the image after 1500ms
       timer = setTimeout(() => {
         setFeed({
           feed: null,
@@ -182,7 +193,7 @@ const PetScreen = () => {
           pageY: 0,
         });
         if (interval) clearInterval(interval); // Clear the interval if it exists
-      }, 300); // Hide the image after 4 seconds
+      }, 1000); // Hide the image after 1500ms
     }
 
     return () => {
@@ -190,7 +201,6 @@ const PetScreen = () => {
       if (timer) clearTimeout(timer); // Clear the timeout on cleanup
     };
   }, [feed.feed]);
-
   return (
     <View
       style={{
@@ -219,7 +229,7 @@ const PetScreen = () => {
             left: ConstantsResponsive.XR * feed.pageX,
             top: ConstantsResponsive.YR * feed.pageY + StatusBarHeight,
           }}
-          source={feed?.feed}
+          source={{ uri: API.server + feed?.feed }}
         ></Image>
       )}
       <Image

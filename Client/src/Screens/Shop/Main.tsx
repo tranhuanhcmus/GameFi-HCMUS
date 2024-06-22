@@ -20,184 +20,37 @@ import Lucky from "../../../assets/medicine.png";
 import Medicine from "../../../assets/medicine.svg";
 import { ItemAppService } from "../../services/ItemAppService";
 type Props = {};
-const itemArray = [
-  {
-    id: "1",
-    title: "Lucky",
-    data: [
-      {
-        id: "1",
-        itemImg: Lucky,
-        itemColor: COLOR.GREEN,
-        price: 100,
-        imgPrice: 250,
-        itemAmount: 50,
-        itemType: "1",
-      },
-      {
-        id: "2",
-        itemImg: Lucky,
-        itemColor: COLOR.GREEN,
-        price: 300,
-        imgPrice: 250,
-        itemAmount: 250,
-        itemType: "1",
-      },
-      {
-        id: "3",
-        itemImg: Lucky,
-        itemColor: COLOR.GREEN,
-        price: 950,
-        imgPrice: 100,
-        itemAmount: 1000,
-        itemType: "1",
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Energy",
-    data: [
-      {
-        id: "1",
-        itemImg: Medicine,
-        itemColor: COLOR.PINK,
-        price: 20,
-        imgPrice: 250,
-        itemAmount: 1,
-        itemType: "2",
-      },
-      {
-        id: "2",
-        itemImg: Medicine,
-        itemColor: COLOR.PINK,
-        price: 50,
-        imgPrice: 250,
-        itemAmount: 5,
-        itemType: "2",
-      },
-      {
-        id: "3",
-        itemImg: Medicine,
-        itemColor: COLOR.PINK,
-        price: 100,
-        imgPrice: 250,
-        itemAmount: 10,
-        itemType: "2",
-      },
-    ],
-  },
-  {
-    id: "3",
-    title: "Pet Food",
-    data: [
-      {
-        id: "1",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 100,
-        imgPrice: 250,
-        itemAmount: 0,
-        itemType: "3",
-      },
-      {
-        id: "2",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 200,
-        imgPrice: 250,
-        itemAmount: 0,
-        itemType: "3",
-      },
-      {
-        id: "3",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 300,
-        imgPrice: 250,
-        itemAmount: 0,
-        itemType: "3",
-      },
-    ],
-  },
-  {
-    id: "4",
-    title: "Gem",
-    data: [
-      {
-        id: "1",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 200,
-        imgPrice: 250,
-        itemAmount: 50,
-        itemType: "4",
-      },
-      {
-        id: "2",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 520,
-        imgPrice: 250,
-        itemAmount: 200,
-        itemType: "4",
-      },
-      {
-        id: "3",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 1450,
-        imgPrice: 250,
-        itemAmount: 1000,
-        itemType: "4",
-      },
-    ],
-  },
-  {
-    id: "5",
-    title: "Energy",
-    data: [
-      {
-        id: "1",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 100,
-        imgPrice: 250,
-        itemAmount: 1,
-        itemType: "5",
-      },
-      {
-        id: "2",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 300,
-        imgPrice: 250,
-        itemAmount: 5,
-        itemType: "5",
-      },
-      {
-        id: "1",
-        itemImg: Lucky,
-        itemColor: COLOR.DARKER_PURPLE,
-        price: 1000,
-        imgPrice: 250,
-        itemAmount: 100,
-        itemType: "5",
-      },
-    ],
-  },
-];
+
+interface Item {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  quality: string;
+  quantity: number;
+  gemcost: number;
+  goldcost: number;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Items {
+  [key: string]: Item[]; // This defines an object where keys are strings and values are arrays of Item
+}
 
 const ShopScreen = (props: Props) => {
   const [clickItem, setClickItem] = useState(false);
-  const [item, setItem] = useState({ message: "", description: "" });
+  const [item, setItem] = useState<Item>();
+  const [items, setItems] = useState<Items[]>([]);
 
   const fetchItems = async () => {
     try {
-      const items = await ItemAppService.getAllItems();
-      console.log("itemsApp", items);
-    } catch {
-      console.log("error fetching items");
+      const fetchedItems = await ItemAppService.getAllItems();
+      // console.log(fetchedItems);
+      setItems(fetchedItems);
+    } catch (error) {
+      console.log("Error fetching items:", error);
     }
   };
 
@@ -207,7 +60,7 @@ const ShopScreen = (props: Props) => {
 
   const onClickItem = (item: any) => {
     setClickItem(true);
-    setItem({ message: "Item", description: "" });
+    setItem(item);
   };
   const onSetClose = () => {
     setClickItem(false);
@@ -241,9 +94,12 @@ const ShopScreen = (props: Props) => {
       <AlertBuyComponent
         isVisible={clickItem}
         onClose={onSetClose}
-        message={item.message}
-        description={item.description}
-      ></AlertBuyComponent>
+        gemcost={item?.gemcost}
+        name={item?.name}
+        goldcost={item?.goldcost}
+        message={item?.quality}
+        description={item?.description}
+      />
       <View
         style={{
           display: "flex",
@@ -257,11 +113,11 @@ const ShopScreen = (props: Props) => {
       >
         <FlatList
           ref={flatListRef}
-          data={itemArray}
+          data={Object.values(items)}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ gap: 20 }}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+          keyExtractor={(item) => item}
+          renderItem={({ item, index }) => (
             <View className="mb-2 flex items-center justify-center  rounded-md  px-2">
               <View className="relative " style={styles.img}>
                 <Image
@@ -290,7 +146,7 @@ const ShopScreen = (props: Props) => {
                       },
                     ]}
                   >
-                    {item.title}
+                    {Object.keys(items)[index].toUpperCase()}
                   </CustomText>
                 </View>
               </View>
@@ -300,21 +156,21 @@ const ShopScreen = (props: Props) => {
                   gap: 10,
                   width: "100%",
                 }}
-                data={item.data}
+                data={item}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
                 numColumns={3}
                 renderItem={({ item }) => (
                   <View className="mt-3">
                     <ItemComponent
-                      itemColor={item.itemColor}
-                      itemAmount={item.itemAmount}
-                      price={item.price}
-                      imgPrice={item.imgPrice}
+                      itemAmount={item.quantity}
+                      gemcost={item.gemcost}
+                      itemName={item.name}
+                      goldcost={item.goldcost}
+                      itemImg={item.image}
                       onPress={() => {
                         onClickItem(item);
                       }}
-                      itemType={item.itemType}
                     />
                   </View>
                 )}

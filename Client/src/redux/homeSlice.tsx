@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
-interface PetState {
+interface homeState {
   name: string;
   type: string;
   image: string;
   title: string;
-  active: boolean;
+
   tokenId: String;
   level: number;
   attributes: {
@@ -17,12 +17,12 @@ interface PetState {
   };
 }
 
-const initialState: PetState = {
+const initialState: homeState = {
   name: "",
   type: "",
   image: "",
   title: "",
-  active: false,
+
   tokenId: "",
   level: 0,
   attributes: {
@@ -33,15 +33,15 @@ const initialState: PetState = {
   },
 };
 
-const petSlice = createSlice({
-  name: "pet",
+const homeSlice = createSlice({
+  name: "home",
   initialState,
   reducers: {
-    updatePet(state, action) {
+    updatehome(state, action) {
       const attribute = action.payload;
       state.name = attribute.name;
       state.type = attribute.type;
-      state.active = attribute.active;
+
       state.image = attribute.image;
       state.title = attribute.title;
       state.tokenId = attribute.tokenId;
@@ -53,6 +53,6 @@ const petSlice = createSlice({
   },
 });
 
-export const { updatePet } = petSlice.actions;
+export const { updatehome } = homeSlice.actions;
 
-export default petSlice.reducer;
+export default homeSlice.reducer;
