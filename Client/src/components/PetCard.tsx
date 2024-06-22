@@ -16,6 +16,7 @@ import { ELEMENT } from "../constants/types";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 import CustomText from "./CustomText";
 import { COLOR } from "../utils/color";
+import ConstantsResponsive from "../constants/Constanst";
 
 interface PetCardProps {
   petImg: string;
@@ -48,7 +49,7 @@ const PetCard: React.FC<PetCardProps> = ({
   const navigate = useCustomNavigation();
   const translateYValue = new Animated.Value(0);
   return (
-    <TouchableWithoutFeedback
+    <TouchableOpacity
       onPress={() => {
         Animated.sequence([
           Animated.timing(translateYValue, {
@@ -77,44 +78,75 @@ const PetCard: React.FC<PetCardProps> = ({
           }
         });
       }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: styles.borderContainer.height,
+        width: styles.borderContainer.width,
+      }}
     >
-      <Animated.View
+      <Image
+        source={require("../../assets/border.png")}
+        resizeMode="stretch"
+        style={styles.borderContainer}
+      />
+      <View
         style={{
-          width: Dimensions.get("window").width / 2 - 20,
-          backgroundColor: COLOR.LIGHT_GREEN,
-          transform: [{ translateY: translateYValue }],
+          width:
+            ConstantsResponsive.MAX_WIDTH / 2 - ConstantsResponsive.XR * 70,
+          height:
+            ConstantsResponsive.MAX_WIDTH / 2 -
+            ConstantsResponsive.XR * 70 +
+            ConstantsResponsive.YR * 30,
+          borderRadius: ConstantsResponsive.XR * 20,
+          padding: ConstantsResponsive.XR * 20,
+          backgroundColor: COLOR.BROWN_BORDER,
         }}
-        className="rounded-[20px] p-[10px] "
       >
-        <View className="mb-2 flex flex-row items-center justify-between">
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            height: "15%",
+            width: "100%",
+            marginBottom: 5,
+          }}
+        >
           {ELEMENT.FIRE === element && (
             <Image
+              resizeMode="contain"
               source={require("../../assets/elements/Fire.png")}
-              style={{ width: 20, height: 20 }}
+              style={{ width: "20%", height: "100%" }}
             />
           )}
           {ELEMENT.IRON === element && (
             <Image
+              resizeMode="contain"
               source={require("../../assets/elements/Iron.png")}
-              style={{ width: 20, height: 20 }}
+              style={{ width: "20%", height: "100%" }}
             />
           )}
           {ELEMENT.LEAF === element && (
             <Image
+              resizeMode="contain"
               source={require("../../assets/elements/Leaf.png")}
-              style={{ width: 20, height: 20 }}
+              style={{ width: "20%", height: "100%" }}
             />
           )}
           {ELEMENT.STONE === element && (
             <Image
+              resizeMode="contain"
               source={require("../../assets/elements/Stone.png")}
-              style={{ width: 20, height: 20 }}
+              style={{ width: "20%", height: "100%" }}
             />
           )}
           {ELEMENT.WATER === element && (
             <Image
+              resizeMode="contain"
               source={require("../../assets/elements/Water.png")}
-              style={{ width: 20, height: 20 }}
+              style={{ width: 19, height: 19 }}
             />
           )}
           <View
@@ -122,57 +154,66 @@ const PetCard: React.FC<PetCardProps> = ({
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
+              height: ConstantsResponsive.YR * 35,
+              width: ConstantsResponsive.XR * 35,
             }}
           >
-            <Egg></Egg>
+            <Egg
+              height={ConstantsResponsive.YR * 35}
+              width={ConstantsResponsive.XR * 35}
+            ></Egg>
             <CustomText
               style={{
                 // fontFamily: "mt-2",
                 position: "absolute",
                 fontWeight: "bold",
-                fontSize: 16,
+                fontSize: ConstantsResponsive.YR * 20,
               }}
             >
               {level}
             </CustomText>
           </View>
         </View>
-        <View className="overflow-hidden rounded-[10px]">
+        <View
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Image
-            className=" aspect-square w-[100%]  "
+            style={{ width: "100%", height: "70%" }}
+            resizeMode="contain"
             source={petImg !== "" ? { uri: petImg } : { uri: petImg }}
           />
+          <CustomText
+            style={{
+              // fontFamily: "mrt-mid",
+              fontFamily: "rexlia",
+              fontWeight: "bold",
+              color: COLOR.WHITE,
+              fontSize: ConstantsResponsive.YR * 25,
+              marginTop: 5,
+            }}
+          >
+            {name}
+          </CustomText>
         </View>
-
-        <CustomText
-          style={{
-            // fontFamily: "mrt-mid",
-            color: COLOR.WHITE,
-            fontSize: 18,
-            marginTop: 5,
-          }}
-        >
-          {name}
-        </CustomText>
-        <CustomText
-          style={{
-            // fontFamily: "mrt-mid ",
-            color: COLOR.WHITE,
-            fontSize: 14,
-            fontWeight: "100",
-            textAlign: "right",
-          }}
-        >
-          {rarityPet}
-        </CustomText>
-      </Animated.View>
-    </TouchableWithoutFeedback>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  listContainer: {
-    width: Dimensions.get("window").width / 2 - 20,
+  borderContainer: {
+    width: ConstantsResponsive.MAX_WIDTH / 2 - ConstantsResponsive.XR * 30,
+    height:
+      ConstantsResponsive.MAX_WIDTH / 2 -
+      ConstantsResponsive.XR * 30 +
+      ConstantsResponsive.YR * 30,
+    position: "absolute",
   },
 });
 

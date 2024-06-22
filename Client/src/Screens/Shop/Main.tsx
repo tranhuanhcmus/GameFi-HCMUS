@@ -18,6 +18,7 @@ import { flare } from "viem/chains";
 import { COLOR } from "../../utils/color";
 import Lucky from "../../../assets/medicine.png";
 import Medicine from "../../../assets/medicine.svg";
+import { ItemAppService } from "../../services/ItemAppService";
 type Props = {};
 const itemArray = [
   {
@@ -186,9 +187,24 @@ const itemArray = [
     ],
   },
 ];
+
 const ShopScreen = (props: Props) => {
   const [clickItem, setClickItem] = useState(false);
   const [item, setItem] = useState({ message: "", description: "" });
+
+  const fetchItems = async () => {
+    try {
+      const items = await ItemAppService.getAllItems();
+      console.log("itemsApp", items);
+    } catch {
+      console.log("error fetching items");
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
   const onClickItem = (item: any) => {
     setClickItem(true);
     setItem({ message: "Item", description: "" });

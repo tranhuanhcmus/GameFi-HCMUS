@@ -13,6 +13,7 @@ import Bear from "../../assets/iconBear.svg";
 // import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
 // import SVGTrophy from "../../assets/SVGTrophy.svg";
 import ConnectScreen from "../Screens/Connect/Main";
+import PetScreen from "../Screens/Pet/Main";
 import GameScreen from "../Screens/Game/Main";
 import PlayScreen from "../Screens/Play/Main";
 import ShopScreen from "../Screens/Shop/Main";
@@ -40,6 +41,7 @@ import Match3Game from "../Screens/Match3Game/Main";
 import { flare } from "viem/chains";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import ConstantsResponsive from "../constants/Constanst";
+
 const navArr: NavItem[] = [
   {
     name: "ShopScreen",
@@ -70,10 +72,10 @@ const navArr: NavItem[] = [
   },
 
   {
-    name: "DetailOfPet",
-    component: DetailOfPet,
-    content: "Pet",
-    header: true,
+    name: "Pets",
+    component: PetScreen,
+    content: "Pets",
+    header: false,
     svg: <Bear height="100%" width="100%" />,
   },
 ];
@@ -133,7 +135,7 @@ type LocalRootStackParamList = {
   HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
-  Shop: undefined;
+
   Play: undefined;
   League: undefined;
   Event: undefined;
@@ -152,7 +154,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Connect">
+    <Stack.Navigator initialRouteName="MainTab">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
@@ -204,13 +206,7 @@ const Route = () => (
         }}
         component={MainTab}
       />
-      <Stack.Screen
-        name="Shop"
-        options={{
-          headerShown: false,
-        }}
-        component={ShopScreen}
-      />
+
       <Stack.Screen
         name="TrendMarket"
         options={{

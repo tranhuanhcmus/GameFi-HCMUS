@@ -107,6 +107,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
 
     navigate.goBack();
   };
+
   return (
     <View style={styles.backgroundImage} className="bg-[#210035]">
       <Image

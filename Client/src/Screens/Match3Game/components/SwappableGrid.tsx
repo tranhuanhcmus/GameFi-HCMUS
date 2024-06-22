@@ -1,41 +1,40 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  StyleSheet,
-  Dimensions,
   Animated,
-  LayoutChangeEvent,
-  View,
-  Text,
+  Dimensions,
   Easing,
+  LayoutChangeEvent,
   PanResponderGestureState,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 
-import {
-  getRandomInt,
-  getAllMatches,
-  markAsMatch,
-  condenseColumns,
-  flattenArrayToPairs,
-  findMoves,
-  sleep,
-} from "../lib/GridApi";
-import { BEAN_OBJS } from "../lib/Images";
-import { TileData, TileDataType } from "../lib/TileData";
-import Tile from "./Tile";
-import { ROW, COLUMN } from "../lib/spec";
+import { useDispatch, useSelector } from "react-redux";
+import { DataSocketTransfer } from "../../../../socket";
 import ConstantsResponsive from "../../../constants/Constanst";
-import { COLOR } from "../../../utils/color";
+import useCustomNavigation from "../../../hooks/useCustomNavigation";
 import {
   updateComponentHp,
   updateComponentTurn,
   updateHp,
 } from "../../../redux/playerSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { initSocket } from "../../../redux/socketSlice";
-import { DataSocketTransfer } from "../../../../socket";
 import StatusPopup from "../../HangManGame/StatusPopup";
-import useCustomNavigation from "../../../hooks/useCustomNavigation";
+import {
+  condenseColumns,
+  findMoves,
+  flattenArrayToPairs,
+  getAllMatches,
+  getRandomInt,
+  markAsMatch,
+  sleep,
+} from "../lib/GridApi";
+import { BEAN_OBJS } from "../lib/Images";
+import { TileData, TileDataType } from "../lib/TileData";
+import { COLUMN, ROW } from "../lib/spec";
+import Tile from "./Tile";
 
 // react-native-swipe-gestures swipeDirections type
 export enum swipeDirections {
@@ -64,7 +63,7 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
   /** ====================================================== */
   /** variable */
   let invalidSwap = false;
-  const config = { velocityThreshold: 0.1, directionalOffsetThreshold: 60 };
+  const config = { velocityThreshold: 0.001, directionalOffsetThreshold: 10 };
 
   /** ====================================================== */
   /** useDispatch */
@@ -227,7 +226,6 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
       (initialGestureY - gridOrigin.current[1] - 0.5 * TILE_WIDTH) / TILE_WIDTH,
     );
 
-    console.error("i ", i, "j ", j);
     if (i > -1 && j > -1 && i < ROW && j < COLUMN) {
       switch (gestureName) {
         case SWIPE_UP:
@@ -333,6 +331,7 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
       >
         {renderTiles(tileDataSource)}
       </GestureRecognizer>
+
       {!!blockScreen.length && (
         <View style={styles.blindView}>
           <Text>{blockScreen}</Text>
@@ -382,7 +381,7 @@ let styles = StyleSheet.create({
     width: TILE_WIDTH * ROW,
     height: TILE_WIDTH * COLUMN,
     position: "absolute",
-    top: ConstantsResponsive.MAX_HEIGHT * 0.3,
+    top: ConstantsResponsive.MAX_HEIGHT * 0.34,
   },
   blindView: {
     position: "absolute",

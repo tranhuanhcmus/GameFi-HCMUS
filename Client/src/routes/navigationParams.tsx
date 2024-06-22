@@ -11,6 +11,7 @@ export type RootStackParamList = {
   Play: any;
   Home: any;
   Shop: any;
+  PetScreen: any;
   Profile: any;
   Match3Game: any;
 };

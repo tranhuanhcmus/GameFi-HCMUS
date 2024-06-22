@@ -6,5 +6,5 @@ export const API = {
   ITEM_GAME: "/itemGames",
   ITEM_APP: "/itemApps",
   BREED: "/bears/breed",
-  server: "http://192.168.1.11:4500",
+  server: "https://gamefi-hcmus.onrender.com",
 };
