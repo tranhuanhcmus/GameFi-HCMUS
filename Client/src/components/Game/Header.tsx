@@ -11,14 +11,19 @@ import {
   PanResponder,
 } from "react-native";
 import SpriteSheet from "rn-sprite-sheet";
-import Pet from "../../../assets/Pet.png";
+import { LinearGradient } from "expo-linear-gradient";
+
 import ConstantsResponsive from "../../constants/Constanst";
 import Avatar from "../../../assets/avatar.png";
 import { COLOR } from "../../utils/color";
+
 import GameLogic, { AnimatedValues } from "../../utils/game/game";
 import { HEADER } from "../../constants/header";
-import { useSelector } from "react-redux";
-import { LinearGradient } from "expo-linear-gradient";
+import { useDispatch, useSelector } from "react-redux";
+import { playerSlice } from "../../redux/playerSlice";
+
+import Setting from "../../../assets/setting.svg";
+import { setVisable } from "../../redux/settingGameSlice";
 
 interface props {
   hp: number;
@@ -26,19 +31,20 @@ interface props {
 
 const GameHeader = () => {
   const { hp, componentHp } = useSelector((state: any) => state.player);
+  const dispatch = useDispatch();
   return (
-    <View
-      style={{
-        position: "absolute",
-        top: 0,
-        height: 200,
-        width: "100%",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
+    <View style={styles.characterArea}>
+      <TouchableOpacity
+        style={styles.setting}
+        onPress={() => {
+          dispatch(setVisable(true));
+        }}
+      >
+        <Setting
+          height={styles.setting.height}
+          width={styles.setting.width}
+        ></Setting>
+      </TouchableOpacity>
       <User hp={hp} />
       <Component hp={componentHp} />
     </View>
@@ -54,7 +60,7 @@ const User: React.FC<props> = ({ hp }) => {
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
-
+  const isFirstRender = useRef(true);
   const floatingTextAnim = useRef(new Animated.Value(0)).current;
 
   // Call this function when the character receives damage
@@ -99,7 +105,6 @@ const User: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => {},
       });
     }
     setOffsetX(0);
@@ -114,16 +119,9 @@ const User: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => {},
       });
     }
   };
-  // useEffect(() => {
-  //   play("walk");
-  //   // const interval = setInterval(() => {
-  //   //   setOffsetX((prevOffsetX) => prevOffsetX + 10); // Update offsetX every interval
-  //   // }, 1000); // Change the interval as needed for desired animation speed
-  // }, []);
 
   const stop = () => {
     if (mummyRef.current) {
@@ -132,6 +130,13 @@ const User: React.FC<props> = ({ hp }) => {
   };
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      // Skip the effect on first render
+      play("default");
+      isFirstRender.current = false;
+      return;
+    }
+
     play("walk");
     setTimeout(() => {
       receiveDamage(10);
@@ -139,52 +144,42 @@ const User: React.FC<props> = ({ hp }) => {
   }, [hp]);
 
   return (
-    <View
-      style={{
-        position: "relative",
-        width: "50%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-around",
-        alignItems: "center",
-      }}
-    >
-      <View
-        style={{
-          height: "auto",
-          width: "auto",
-          display: "flex",
-          flexDirection: "row",
-          alignContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Image style={styles.avatarImage} source={Avatar}></Image>
+    <View style={styles.player}>
+      <View style={styles.playerHeader}>
+        <Image
+          style={styles.avatarImage}
+          source={Avatar}
+          resizeMode="contain"
+        ></Image>
         <Bar hp={hp} />
       </View>
-      <TouchableNativeFeedback onPress={() => receiveDamage(10)}>
-        <View>
+
+      <View style={styles.playerPet}>
+        <View style={{ transform: [{ scaleX: -1 }] }}>
           <SpriteSheet
             ref={mummyRef1}
-            source={require("../../../assets/spritesheet_6.png")}
-            columns={19}
+            source={require("../../../assets/spritesSheet_18.png")}
+            columns={60}
             rows={1}
-            height={ConstantsResponsive.YR * 150}
-            width={ConstantsResponsive.XR * 150}
+            height={ConstantsResponsive.YR * 250}
+            width={ConstantsResponsive.XR * 250}
             animations={{
               walk: [
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18,
+                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
               ],
             }}
           />
-          {/* Your Animated Text for displaying damage */}
-          <Animated.Text style={[styles.damageText, floatingTextStyle]}>
-            -10
-          </Animated.Text>
         </View>
-      </TouchableNativeFeedback>
+
+        {/* Your Animated Text for displaying damage */}
+        <Animated.Text style={[styles.damageText, floatingTextStyle]}>
+          -10
+        </Animated.Text>
+      </View>
+
       <View
         className="absolute bottom-0 "
         style={{
@@ -198,6 +193,7 @@ const User: React.FC<props> = ({ hp }) => {
           rows={1}
           width={ConstantsResponsive.XR * 2 * 80}
           animations={{
+            default: [20],
             walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           }}
         />
@@ -215,6 +211,8 @@ const Component: React.FC<props> = ({ hp }) => {
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
+  const isFirstRender = useRef(true);
+  const dispatch = useDispatch();
 
   const play = (type: string) => {
     const parsedFps = Number(fps);
@@ -225,11 +223,8 @@ const Component: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => {},
       });
     }
-    setOffsetX(0);
-    setOffsetY(0);
   };
   const play1 = (type: string) => {
     const parsedFps = Number(fps + 1);
@@ -240,7 +235,6 @@ const Component: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => {},
       });
     }
   };
@@ -277,6 +271,13 @@ const Component: React.FC<props> = ({ hp }) => {
   };
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      // Skip the effect on first render
+      play("default");
+      isFirstRender.current = false;
+      return;
+    }
+
     play("walk");
     setTimeout(() => {
       receiveDamage(10);
@@ -284,52 +285,38 @@ const Component: React.FC<props> = ({ hp }) => {
   }, [hp]);
 
   return (
-    <View
-      style={{
-        position: "relative",
-        width: "50%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-around",
-        alignItems: "center",
-      }}
-    >
-      <View
-        style={{
-          height: "auto",
-          width: "auto",
-          display: "flex",
-          flexDirection: "row",
-          alignContent: "center",
-          alignItems: "center",
-        }}
-      >
+    <View style={styles.playerComponent}>
+      <View style={styles.playerHeader}>
         <Bar hp={hp} />
-        <Image style={styles.avatarImage} source={Avatar}></Image>
+        <Image
+          style={styles.avatarImage}
+          source={Avatar}
+          resizeMode="contain"
+        ></Image>
       </View>
-      <TouchableNativeFeedback onPress={() => receiveDamage(10)}>
-        <View>
-          <SpriteSheet
-            ref={mummyRef1}
-            source={require("../../../assets/spritesheet_7.png")}
-            columns={19}
-            rows={1}
-            height={ConstantsResponsive.YR * 150}
-            width={ConstantsResponsive.XR * 150}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18,
-              ],
-            }}
-          />
-          {/* Your Animated Text for displaying damage */}
-          <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
-            -10
-          </Animated.Text>
-        </View>
-      </TouchableNativeFeedback>
+
+      <View style={styles.playerPet}>
+        <SpriteSheet
+          ref={mummyRef1}
+          source={require("../../../assets/spritesSheet_18.png")}
+          columns={60}
+          rows={1}
+          height={ConstantsResponsive.YR * 250}
+          width={ConstantsResponsive.XR * 250}
+          animations={{
+            walk: [
+              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+              19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+              35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+              51, 52, 53, 54, 55, 56, 57, 58, 59,
+            ],
+          }}
+        />
+        {/* Your Animated Text for displaying damage */}
+        <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
+          -10
+        </Animated.Text>
+      </View>
 
       <View
         className="absolute bottom-0 "
@@ -344,6 +331,7 @@ const Component: React.FC<props> = ({ hp }) => {
           rows={1}
           width={ConstantsResponsive.XR * 2 * 80}
           animations={{
+            default: [20],
             walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           }}
         />
@@ -351,9 +339,7 @@ const Component: React.FC<props> = ({ hp }) => {
     </View>
   );
 };
-
 const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
-
 //  HEALTH BAR AND DAMAGE BAR.
 const Bar: React.FC<props> = ({ hp }) => {
   const animatedWidth = useRef(new Animated.Value(0)).current;
@@ -392,44 +378,15 @@ const Bar: React.FC<props> = ({ hp }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  barContainer: {
-    width: "60%",
-    height: 30,
-    padding: 3,
-    backgroundColor: "rgba(255,255,255,0.3)",
-    borderRadius: 15,
-    justifyContent: "center",
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  healthBar: {
-    height: "100%",
-    borderRadius: 12,
-    overflow: "hidden",
-    position: "absolute",
-    left: 3,
-    top: 3,
-    bottom: 3,
-  },
-  barText: {
-    textAlign: "center",
-    color: "#fff",
-    fontWeight: "bold",
-  },
   characterArea: {
-    position: "absolute",
-    top: 0,
-    height: 200,
+    height: "100%",
+
     width: "100%",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
   },
 
   damageText: {
@@ -452,21 +409,71 @@ const styles = StyleSheet.create({
   },
 
   player: {
-    position: "relative",
-    width: "50%",
+    width: "40%",
+    height: "100%",
+
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  playerComponent: {
+    width: "40%",
+
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-around",
     alignItems: "center",
+  },
+
+  playerHeader: {
+    height: "30%",
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
+  setting: {
+    zIndex: 100,
+    position: "absolute",
+    height: ConstantsResponsive.XR * 50,
+    width: ConstantsResponsive.XR * 50,
+    top: ConstantsResponsive.YR * 80,
+    right: ConstantsResponsive.XR * 4,
+  },
+
+  playerPet: {
+    display: "flex",
+    height: "70%",
+
+    flexDirection: "column",
+    justifyContent: "center",
   },
 
   avatarImage: {
     width: 50,
     height: 50,
-    borderRadius: HEADER.BORDER_RADIUS,
+    borderRadius: 1,
   },
-
+  energyBar: {
+    width: GameLogic.HEALTH_POINT,
+    height: 20,
+    backgroundColor: "transparent",
+    borderTopRightRadius: 4,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 10,
+    marginBottom: 5,
+  },
+  damageBar: {
+    width: GameLogic.HEALTH_POINT,
+    height: 20,
+    backgroundColor: "#70A2FF",
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 4,
+  },
   bar: {
     height: "auto",
     width: "auto",
@@ -474,16 +481,15 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-around",
     alignItems: "center",
-  },
-  playerHeader: {
-    height: "auto",
-    width: "auto",
-    display: "flex",
-    flexDirection: "row",
-    alignContent: "center",
-    alignItems: "center",
+    marginHorizontal: 10,
   },
 
+  boardContainer: {
+    height: "auto",
+    width: "auto",
+    backgroundColor: COLOR.WHITE,
+    alignContent: "center",
+  },
   row: {
     height: "auto",
     width: "auto",
@@ -491,6 +497,41 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignContent: "center",
     justifyContent: "space-around",
+  },
+
+  imageInCell: {
+    width: "80%",
+    height: "80%",
+  },
+
+  barContainer: {
+    width: "60%",
+    height: 30,
+    padding: 3,
+    backgroundColor: "rgba(128,128,128,0.7)",
+    borderRadius: 15,
+    justifyContent: "center",
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  healthBar: {
+    height: "100%",
+    borderRadius: 12,
+    overflow: "hidden",
+    position: "absolute",
+    left: 3,
+    top: 3,
+    bottom: 3,
+  },
+
+  barText: {
+    textAlign: "center",
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 
