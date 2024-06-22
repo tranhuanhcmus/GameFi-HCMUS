@@ -1,5 +1,6 @@
 function renderItemGameList(data) {
-    let list = data.data
+    let list = itemListAdapter(data.data)
+    
     let itemList = $(".page--itemGame .itemList")
     itemList.empty()
     list.forEach(item => {
