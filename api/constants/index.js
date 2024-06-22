@@ -6,7 +6,7 @@ module.exports = {
         NOT_FOUND: 404,
         INTERNAL_ERROR: 500,
     },
-    BEAR_GATEWAY_IPFS:'https://ipfs.io/ipfs/QmUZx2uesJStmL97rzHH8kkP3qCJSou9qpbR8w4ws1kK3r',
+    BEAR_GATEWAY_IPFS:'https://ipfs.io/ipfs',
     ITEM_CATEGORY:["food","boost","treasure","energy","background"],
     ITEM_QUALITY:["normal","rare","super rare"]
 }
