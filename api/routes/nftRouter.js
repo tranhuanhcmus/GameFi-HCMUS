@@ -183,5 +183,6 @@ router.delete('/:id', nftController.deleteById);
  *         description: Internal server error
  */
 router.get('/owner/:owner', nftController.getALlByOwner);
+router.post('/migrate', nftController.migrate);
 
 module.exports = router;
