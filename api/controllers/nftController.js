@@ -4,9 +4,29 @@ const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
 const getAll = async(req, res, next) => {
     try {
-        const list = await models.NFT.findAll()
+        const rows = await models.NFT.findAll()
 
-        return res.sendResponse(list, "Get All Success", STATUS_CODES.OK)
+        
+        let result = []
+
+        for (let i = 0; i < rows.length; i++) {
+            let uri = rows[i].tokenUri;
+
+            let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: uri } })
+            if (tokenUri) {
+                result.push({
+                    tokenId: rows[i].tokenId,
+                    tokenUri: rows[i].tokenUri,
+                    owner: rows[i].owner,
+                    exp: rows[i].exp,
+                    lastTimePlayed: rows[i].lastTimePlayed,
+                    energy: rows[i].energy,
+                    data: tokenUri.data
+                });
+            }
+        }
+
+        return res.sendResponse(result, "Get All Success", STATUS_CODES.OK)
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
