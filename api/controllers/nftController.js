@@ -36,6 +36,8 @@ const getById = async(req, res, next) => {
 
         const { id } = req.params
         const result = await models.NFT.findOne({ where: { tokenId: id } })
+        let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.uri } })
+        result.data=tokenUri.data
 
         if (!result) {
             return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
