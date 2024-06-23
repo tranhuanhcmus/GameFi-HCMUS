@@ -12,4 +12,5 @@ module.exports={
 	itemAppRouter:require("./itemAppRouter"),
 	itemGameOwnerRouter:require("./itemGameOwnerRouter"),
 	itemAppOwnerRouter:require("./itemAppOwnerRouter"),
+	boostEffectRouter:require("./boostEffectRouter")
 }
