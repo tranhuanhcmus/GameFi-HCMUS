@@ -229,6 +229,7 @@ INSERT INTO "ItemGameOwners" (id, "owner", quantity, "createdAt", "updatedAt") V
 	('06f61bcc-9ac2-4865-8a25-fdcf1113648a', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 100, '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
 	('5579da2e-d4b9-4f2d-8475-3ed525c598da', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 100, '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
 	('97f378e4-4ba3-4a66-86b9-a2938b2a48ac', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 100, '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07');
+	('3f04dd95-0a0d-4e66-87a3-02d0edd58839', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 100, '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07');
 
 INSERT INTO "ItemGames" (id, "name", description, category, quality, quantity, gemcost, goldcost, image, "createdAt", "updatedAt") VALUES
 	('ad12ea88-44c8-4417-9e87-3954f3cc91be', 'Bronze Treasure', 'Bronze Treasure', 'treasure', 'normal', 1, 500, 5000, '/uploads/bronze_treasure.png', '2024-06-20 00:23:52.809+07', '2024-06-20 00:23:52.809+07'),
