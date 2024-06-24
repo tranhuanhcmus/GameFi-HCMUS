@@ -100,10 +100,7 @@ const useItemForOwner = async (req, res, next) => {
             totalpoint: quantity * itemApp.dataValues.quantity
         };
         console.log("detailedResult: \n", detailedResult);
-        // Update item quantity
-        const updatedQuantity = itemOwner.dataValues.quantity - quantity;
-        await itemOwner.update({ quantity: updatedQuantity });
-        await itemOwner.reload();
+
         // Update NFT exp
         if (detailedResult.category === "food" && tokenId) {
             const nftResult = await models.NFT.findOne({ where: { tokenId: tokenId } })
@@ -118,6 +115,10 @@ const useItemForOwner = async (req, res, next) => {
             await nftResult.update({ exp: updateExp });
             await nftResult.reload();
         }
+        // Update item quantity
+        const updatedQuantity = itemOwner.dataValues.quantity - quantity;
+        await itemOwner.update({ quantity: updatedQuantity });
+        await itemOwner.reload();
         // Prepare and return the response
         return res.sendResponse(detailedResult, `Used item ${itemApp.dataValues.name} for user ${owner} successfully.`, STATUS_CODES.OK);
     } catch (error) {
