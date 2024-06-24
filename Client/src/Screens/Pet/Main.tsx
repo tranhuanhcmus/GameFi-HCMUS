@@ -37,6 +37,7 @@ import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 import StatsModal from "./Stats";
 import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
 import { API } from "../../apis/constants";
+import Breed from "../../../assets/breed.svg";
 type Props = {};
 interface FeedState {
   feed: string | null;
@@ -440,6 +441,59 @@ const PetScreen = () => {
           }}
         >
           STATS
+        </CustomText>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          position: "absolute",
+          paddingHorizontal: ConstantsResponsive.XR * 10,
+          justifyContent: "center",
+
+          width: ConstantsResponsive.XR * 80,
+          borderRadius: ConstantsResponsive.XR * 30,
+          height: ConstantsResponsive.XR * 100,
+          left: ConstantsResponsive.XR * 10,
+          rowGap: 2,
+          top: ConstantsResponsive.YR * 3 * 150,
+        }}
+        onPress={() => {
+          navigate.navigate("Breed");
+        }}
+      >
+        <Image
+          style={{
+            position: "absolute",
+            borderRadius: ConstantsResponsive.XR * 30,
+            paddingVertical: ConstantsResponsive.YR * 20,
+            width: ConstantsResponsive.XR * 80,
+            height: ConstantsResponsive.XR * 100,
+          }}
+          resizeMode="stretch"
+          source={require("../../../assets/backGroundButtonBrown-1.png")}
+        />
+        <Breed
+          width={ConstantsResponsive.XR * 50}
+          height={ConstantsResponsive.XR * 70}
+          style={{
+            position: "absolute",
+            marginLeft: ConstantsResponsive.XR * 15,
+            marginTop: ConstantsResponsive.XR * 10,
+          }}
+        />
+        <CustomText
+          style={{
+            fontFamily: "rexlia",
+            color: COLOR.WHITE,
+            fontSize: ConstantsResponsive.XR * 20,
+            position: "absolute",
+            alignSelf: "center",
+            bottom: -4,
+          }}
+        >
+          BREED
         </CustomText>
       </TouchableOpacity>
 

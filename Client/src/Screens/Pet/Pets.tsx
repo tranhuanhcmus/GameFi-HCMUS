@@ -54,13 +54,14 @@ const PetsModal = ({
   isVisible,
   setIsVisible,
   route,
+  isBreed,
 }: {
   isVisible: boolean;
   route?: any;
-
+  isBreed?: boolean;
   setIsVisible: (value: boolean) => void;
 }) => {
-  const [isBreed, setIsBreed] = useState(route?.params);
+  // const [isBreed, setIsBreed] = useState(route?.params)
   // const { isBreed } = props.route.params;
   const { address, isConnecting, isDisconnected } = useAccount();
   const [data, setData] = useState<NFTData[]>(petArray);
@@ -114,10 +115,10 @@ const PetsModal = ({
   const onPress = (item: any) => {
     console.log("item ", item);
     try {
-      if (!fatherPet.tokenUri) {
+      if (!fatherPet.id) {
         log.warn("father chua co");
         dispatch(setFatherPet(item));
-      } else if (!motherPet.tokenUri) {
+      } else if (!motherPet.id) {
         log.warn("mother chua co");
         dispatch(setMotherPet(item));
       }

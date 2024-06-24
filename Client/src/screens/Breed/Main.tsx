@@ -137,7 +137,7 @@ export function BreedScreen() {
           <BearCard
             element={fatherPet.element}
             level={fatherPet.level}
-            petImg={fatherPet.petImg}
+            image={fatherPet.petImg}
             name={fatherPet.name}
             rarity={fatherPet.rarityPet}
             tokenUri={fatherPet.tokenUri}

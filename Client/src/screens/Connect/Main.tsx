@@ -27,7 +27,10 @@ export default function ConnectScreen() {
         backgroundColor: "#0C0113",
       }}
     >
-      <Image className="absolute inset-0 z-0" source={Moon} />
+      <Image
+        className="absolute inset-0 z-0"
+        source={require("../../../assets/backGroundHome_4.png")}
+      />
 
       <View className="absolute z-10 flex h-full w-full flex-col p-4">
         <CustomText className="mt-4 w-full py-4 text-center  text-lg font-bold text-white">
