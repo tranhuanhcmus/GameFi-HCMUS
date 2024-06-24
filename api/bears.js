@@ -96,9 +96,9 @@ class BearFactory {
 
 class Bear {
     constructor(
-        eye = undefined,
-        fur = undefined,
         element = undefined,
+        fur = undefined,
+        eye = undefined,
         item = undefined,
         name = undefined,
         rarity = undefined,
