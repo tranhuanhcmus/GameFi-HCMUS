@@ -176,7 +176,7 @@ const PetCard: React.FC<PetCardProps> = ({
                 fontSize: ConstantsResponsive.YR * 20,
               }}
             >
-              {level}
+              {Math.floor(level)}
             </CustomText>
           </View>
         </View>

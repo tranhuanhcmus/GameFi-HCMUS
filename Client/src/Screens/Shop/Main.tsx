@@ -17,6 +17,7 @@ import woodSign from "../../../assets/WoodSign3.png";
 import { flare } from "viem/chains";
 import { COLOR } from "../../utils/color";
 import Lucky from "../../../assets/medicine.png";
+import { useIsFocused } from "@react-navigation/native";
 import Medicine from "../../../assets/medicine.svg";
 import { ItemAppService } from "../../services/ItemAppService";
 type Props = {};
@@ -43,7 +44,7 @@ const ShopScreen = (props: Props) => {
   const [clickItem, setClickItem] = useState(false);
   const [item, setItem] = useState<Item>();
   const [items, setItems] = useState<Items[]>([]);
-
+  const isFocused = useIsFocused();
   const fetchItems = async () => {
     try {
       const fetchedItems = await ItemAppService.getAllItems();
@@ -56,7 +57,7 @@ const ShopScreen = (props: Props) => {
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [isFocused]);
 
   const onClickItem = (item: any) => {
     setClickItem(true);

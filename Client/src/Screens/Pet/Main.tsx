@@ -5,12 +5,14 @@ import {
   TouchableNativeFeedback,
   View,
   Image,
+  ActivityIndicator,
   TouchableWithoutFeedback,
   TouchableOpacity,
   ImageSourcePropType,
 } from "react-native";
 import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
+import { getFilenameFromUrl } from "../../function/DownLoadResource";
 import PetsModal from "./Pets";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { SocketIOClient } from "../../../socket";
@@ -37,6 +39,7 @@ import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 import StatsModal from "./Stats";
 import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
 import { API } from "../../apis/constants";
+import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 type Props = {};
 interface FeedState {
   feed: string | null;
@@ -161,6 +164,38 @@ const PetScreen = () => {
       prevArray.filter((item: any) => item.id !== id),
     );
   };
+
+  const [imageSource, setImageSource] = useState({
+    uri: "",
+    height: 600,
+    width: 600,
+  });
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsImageLoaded(false);
+    Image.getSize(
+      assets,
+      (width, height) => {
+        setIsImageLoaded(true);
+        const file = getFilenameFromUrl(assets);
+        console.log(file);
+        setImageSource({ height: height, width: width, uri: assets });
+        // if (file === "sprites_6537.png") {
+        //   const filename = require(`../../../assets/sprites_6537.png`);
+
+        //   setImageSource(filename);
+        // } else {
+        //   const filename = require(`../../../assets/spritesSheet_18.png`);
+
+        //   setImageSource(filename);
+        // }
+      },
+      (error) => {
+        console.error("Error loading image", error);
+      },
+    );
+  }, [assets]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -364,7 +399,7 @@ const PetScreen = () => {
                 fontFamily: "rexlia",
               }}
             >
-              LEVEL {level}
+              LEVEL {Math.floor(level)}
             </CustomText>
             <View style={styles.healthBar}>
               <View
@@ -444,22 +479,21 @@ const PetScreen = () => {
       </TouchableOpacity>
 
       <View style={styles.playArea}>
-        <View className="absolute bottom-0 left-0 right-0  items-center">
-          <SpriteSheet
-            ref={mummyRef}
-            source={require("../../../assets/spritesSheet_18.png")}
-            columns={60}
-            rows={1}
-            height={ConstantsResponsive.MAX_HEIGHT * 0.3}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-              ],
-            }}
-          />
+        <View className="absolute bottom-0 left-0 right-0  items-center ">
+          {isImageLoaded ? (
+            <SpriteSheet
+              ref={mummyRef}
+              source={imageSource}
+              columns={60}
+              rows={1}
+              height={ConstantsResponsive.MAX_HEIGHT * 0.3}
+              animations={{
+                walk: Array.from({ length: 60 }, (_, i) => i),
+              }}
+            />
+          ) : (
+            <ActivityIndicator size="large" color="#0000ff" />
+          )}
         </View>
       </View>
       <View

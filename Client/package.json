@@ -10,6 +10,8 @@
     "watch": "npx tailwindcss -i ./src/input.css -o ./src/dist/output.css --watch"
   },
   "dependencies": {
+    "@emotion/native": "^11.11.0",
+    "@emotion/react": "^11.11.4",
     "@expo/vector-icons": "^14.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
