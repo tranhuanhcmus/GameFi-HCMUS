@@ -124,7 +124,7 @@ const useItemForOwner = async (req, res, next) => {
             if (!nftResult) {
                 return res.sendResponse(null, `Error fetching NFT details for ID ${tokenId}`, STATUS_CODES.INTERNAL_ERROR);
             }
-            console.log(nftResult.dataValues);
+            console.log(nftResult);
             const currentEnergy = nftResult.dataValues.energy;
             let energy = currentEnergy < 3 ? Math.min(currentEnergy + detailedResult.totalpoint, 3) : currentEnergy;
 
