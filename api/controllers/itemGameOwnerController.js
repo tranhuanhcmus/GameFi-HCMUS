@@ -121,11 +121,10 @@ const useItemForOwner = async (req, res, next) => {
         // Update NFT energy
         if (detailedResult.category === "energy" && tokenId) {
             const nftResult = await models.NFT.findOne({ where: { tokenId: tokenId } })
-            // console.log(result.dataValues.tokenUri);
             if (!nftResult) {
                 return res.sendResponse(null, `Error fetching NFT details for ID ${tokenId}`, STATUS_CODES.INTERNAL_ERROR);
             }
-
+            console.log(nftResult.dataValues);
             const currentEnergy = nftResult.dataValues.energy;
             let energy = currentEnergy < 3 ? Math.min(currentEnergy + detailedResult.totalpoint, 3) : currentEnergy;
 
