@@ -36,7 +36,8 @@ const getById = async(req, res, next) => {
 
         const { id } = req.params
         const result = await models.NFT.findOne({ where: { tokenId: id } })
-        let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.uri } })
+        // console.log(result.dataValues.tokenUri);
+        let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.dataValues.tokenUri } })
         result.data=tokenUri.data
 
         if (!result) {
