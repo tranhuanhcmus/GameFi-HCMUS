@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:false,
       primaryKey:true,
     },
-    lastTimePlayed: {
+    lastTimeBoost: {
       type:DataTypes.DATE,
       defaultValue: new Date()
     },
