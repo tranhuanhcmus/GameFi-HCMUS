@@ -178,5 +178,6 @@ router.put('/', itemGameOwnerController.updateById);
  */
 router.delete('/:id', itemGameOwnerController.deleteById);
 router.post('/purchase', itemGameOwnerController.purchaseItem);
+router.post('/useItem', itemGameOwnerController.useItemForOwner);
 
 module.exports = router;
