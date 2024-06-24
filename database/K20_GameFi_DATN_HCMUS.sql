@@ -103,7 +103,7 @@ CREATE TABLE "BoostEffects" (
 	"owner" text NOT NULL,
 	"createdAt" timestamptz NOT NULL,
 	"updatedAt" timestamptz NOT NULL,
-	"lastTimeBoost" timestamptz NULL DEFAULT '2024-06-20 23:14:11.537+07'::timestamp with time zone,
+	"lastTimeBoost" timestamptz NULL,
 	CONSTRAINT "BoostEffects_pkey" PRIMARY KEY (id, "owner")
 );
 
