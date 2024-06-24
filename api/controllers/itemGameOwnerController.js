@@ -99,23 +99,20 @@ const useItemForOwner = async (req, res, next) => {
             totalpoint: quantity * itemGame.dataValues.quantity
         };
         console.log("detailedResult: \n", detailedResult);
-        // Update item quantity
-        const updatedQuantity = itemOwner.dataValues.quantity - quantity;
-        await itemOwner.update({ quantity: updatedQuantity });
-        await itemOwner.reload();
 
         // Update boost effect time
         if (detailedResult.category == "boost") {
             const existingRow = await models.BoostEffect.findOne({ where: { id, owner } });
             // Prepare the data for addOrUpdate
-            var updateData;
-            updateData.id = itemGame.dataValues.id;
-            updateData.owner = itemOwner.dataValues.owner;
             if (existingRow) {
-                await existingRow.update(updateData);
+                const lastUpdateTime = new Date();
+                await existingRow.update({ updatedAt: lastUpdateTime });
                 await existingRow.reload();
             } else {
-                const newRow = await models.BoostEffect.create(updateData);
+                var rowData;
+                rowData.id = id;
+                rowData.owner = owner;
+                const newRow = await models.BoostEffect.create(rowData);
             }
         }
         // Update NFT energy
@@ -126,15 +123,16 @@ const useItemForOwner = async (req, res, next) => {
             }
             console.log(nftResult);
             const currentEnergy = nftResult.dataValues.energy;
-            let energy = currentEnergy < 3 ? Math.min(currentEnergy + detailedResult.totalpoint, 3) : currentEnergy;
+            const updateEnergy = currentEnergy < 3 ? Math.min(currentEnergy + detailedResult.totalpoint, 3) : currentEnergy;
 
-            var updateData;
-            updateData.tokenId = nftResult.dataValues.tokenId;
-            updateData.energy = energy;
-            console.log(currentEnergy, energy)
-            await nftResult.update(updateData)
-            await nftResult.reload()
+            console.log(currentEnergy, updateEnergy);
+            await nftResult.update({ energy: updateEnergy });
+            await nftResult.reload();
         }
+        // Update item quantity
+        const updatedQuantity = itemOwner.dataValues.quantity - quantity;
+        await itemOwner.update({ quantity: updatedQuantity });
+        await itemOwner.reload();
         // Prepare and return the response
         return res.sendResponse(detailedResult, `Used item ${itemGame.dataValues.name} for user ${owner} successfully.`, STATUS_CODES.OK);
     } catch (error) {
