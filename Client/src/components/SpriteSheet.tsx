@@ -44,6 +44,7 @@ interface SpriteSheetState {
   imageHeight: number;
   imageWidth: number;
   defaultFrameHeight: number;
+  source: any;
   defaultFrameWidth: number;
   translateYInputRange: number[];
   translateYOutputRange: number[];
@@ -106,6 +107,7 @@ export default class SpriteSheet extends PureComponent<
       imageHeight: 0,
       imageWidth: 0,
       defaultFrameHeight: 0,
+      source: null,
       defaultFrameWidth: 0,
       translateYInputRange: [0, 1],
       translateYOutputRange: [0, 1],
@@ -151,23 +153,54 @@ export default class SpriteSheet extends PureComponent<
       frameWidth = (image.width / columns) * ratio;
     }
 
-    this.state = {
+    Object.assign(this.state, {
       imageHeight,
       imageWidth,
       frameHeight,
       frameWidth,
-      offsetX,
-      offsetY,
-      defaultFrameHeight: frameHeight,
-      defaultFrameWidth: frameWidth,
-      translateYInputRange: [0, 1],
-      translateYOutputRange: [0, 1],
-      translateXInputRange: [0, 1],
-      translateXOutputRange: [0, 1],
-      animationType: undefined,
-    };
+      source,
+    });
 
     this.generateInterpolationRanges();
+  }
+  updateData() {
+    const { source, height, width, rows, columns } = this.props;
+    const image = resolveAssetSource(source as ImageURISource);
+    let ratio = 1;
+
+    let imageHeight = image.height;
+    let imageWidth = image.width;
+    let frameHeight = image.height / rows;
+    let frameWidth = image.width / columns;
+
+    if (width) {
+      ratio = (width * columns) / image.width;
+      frameHeight = Math.floor((image.height / rows) * ratio);
+      frameWidth = width;
+      imageHeight = frameHeight * rows; //Math.floor(image.height * ratio);
+      imageWidth = frameWidth * columns; //Math.floor(width * columns);
+    } else if (height) {
+      ratio = (height * rows) / image.height;
+      imageHeight = height * rows;
+      imageWidth = image.width * ratio;
+      frameHeight = height;
+      frameWidth = (image.width / columns) * ratio;
+    }
+
+    this.setState({
+      imageHeight,
+      imageWidth,
+      frameHeight,
+      frameWidth,
+      source,
+    });
+
+    this.generateInterpolationRanges();
+  }
+  componentDidUpdate() {
+    if (this.state.source !== this.props.source) {
+      this.updateData();
+    }
   }
 
   render() {
@@ -235,7 +268,7 @@ export default class SpriteSheet extends PureComponent<
         const length = animations[key].length;
         const input: number[] = Array.from({ length }, (_, i) => [
           i,
-          i + 1,
+          i + 0.99999999999,
         ]).flat();
 
         this.interpolationRanges[key] = {

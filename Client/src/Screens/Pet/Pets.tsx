@@ -91,9 +91,8 @@ const PetsModal = ({
           hp: nft.data.hp,
           atk: nft.data.atk,
           level: getLevel(nft.exp),
-          petImg:
-            nft.data.image ||
-            "https://ipfs.io/ipfs/QmUZx2uesJStmL97rzHH8kkP3qCJSou9qpbR8w4ws1kK3r/1113.jpg",
+          petImg: nft.data.image,
+          assets: nft.data.assets,
           name: nft.data.name,
           rarityPet: "special",
           tokenUri: nft.data.tokenUri,
