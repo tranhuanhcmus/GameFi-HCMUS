@@ -1,6 +1,8 @@
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
 const { Op } = require('sequelize');
+const nft = require("./nftController")
+
 const getAll = async(req, res, next) => {
     try {
         const list = await models.ItemAppOwner.findAll()
@@ -103,7 +105,23 @@ const useItemForOwner = async (req, res, next) => {
         const updatedQuantity = itemOwner.dataValues.quantity - quantity;
         await itemOwner.update({ quantity: updatedQuantity });
         await itemOwner.reload();
+        // Update NFT exp
+        if (detailedResult.category === "food" && tokenId) {
+            const nftResult = await nft.getById({ params: { id: tokenId } }, res, next);
+            if (!nftResult) {
+                return res.sendResponse(null, `Error fetching NFT details for ID ${tokenId}`, STATUS_CODES.INTERNAL_ERROR);
+            }
 
+            const currentEnergy = nftResult.exp;
+            let exp = currentEnergy + detailedResult.totalpoint;
+
+            const updateData = {
+                tokenId: tokenId,
+                exp: exp
+            };
+
+            await nft.updateById({ body: updateData }, res, next);
+        }
         // Prepare and return the response
         return res.sendResponse(detailedResult, `Used item ${itemApp.dataValues.name} for user ${owner} successfully.`, STATUS_CODES.OK);
     } catch (error) {

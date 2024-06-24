@@ -210,8 +210,6 @@ INSERT INTO "ItemAppOwners" (id, "owner", quantity, "createdAt", "updatedAt") VA
 	('cbe36358-689e-4a74-b509-6ed7964cd096', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 1000000, '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07');
 
 INSERT INTO "ItemApps" (id, "name", description, category, quality, quantity, gemcost, goldcost, image, "createdAt", "updatedAt") VALUES
-	('7dc748d5-de7d-4a76-9a58-62463ee7be14', 'Gem', 'Gem', 'Currency', 'Normal', 1, 1, 1000, '/uploads/gem.jpg', '2024-05-07 22:22:05.251+07', '2024-05-07 22:22:05.251+07'),
-	('1a06543f-42c7-402f-a22a-32594b58c0e5', 'Gold', 'Gold', 'Currency', 'Normal', 1, 0, 1, '/uploads/gold.jpg', '2024-05-07 22:22:35.891+07', '2024-05-07 22:22:35.891+07'),
 	('28914bc0-f2be-471a-864f-b25b5ce9e6d6', 'Apple', 'Food for your pet', 'food', 'normal', 1, 10, 100, '/uploads/apple.png', '2024-06-20 00:02:13.906+07', '2024-06-20 00:02:13.906+07'),
 	('5ec90482-6111-4ed8-bc4b-6400b1f10f66', 'Banana', 'Food for your pet', 'food', 'normal', 1, 10, 100, '/uploads/banana.png', '2024-06-20 00:02:58.464+07', '2024-06-20 00:02:58.464+07'),
 	('50948ce8-ec90-4636-921e-a7cc3d2461ef', 'Grape', 'Food for your pet', 'food', 'normal', 1, 10, 100, '/uploads/grape.png', '2024-06-20 00:03:27.285+07', '2024-06-20 00:03:27.285+07'),
@@ -219,7 +217,9 @@ INSERT INTO "ItemApps" (id, "name", description, category, quality, quantity, ge
 	('233c9960-2ada-496b-8632-f4cdbd1bb04d', 'Combo Candy', 'Super rare food for your pet, good for their health', 'food', 'super rare', 1, 30, 300, '/uploads/combo_candy.png', '2024-06-20 00:05:16.491+07', '2024-06-20 00:05:16.491+07'),
 	('af305b84-9d9e-476e-a09d-31329b637194', 'Cookie', 'Rare food for your pet, recover fast', 'food', 'rare', 1, 20, 200, '/uploads/cookie.png', '2024-06-20 00:06:01.652+07', '2024-06-20 00:06:01.652+07'),
 	('4aa7bae0-de15-4ed9-ac4f-8df444670189', 'Donut', 'Rare food for your pet, recover fast', 'food', 'rare', 1, 20, 200, '/uploads/donut.png', '2024-06-20 00:06:18.908+07', '2024-06-20 00:06:18.908+07');
-
+	('7dc748d5-de7d-4a76-9a58-62463ee7be14', 'Gem', 'Gem', 'currency', 'normal', 1, 1, 0, '/uploads/gem.jpg', '2024-05-07 22:22:05.251+07', '2024-05-07 22:22:05.251+07'),
+    ('1a06543f-42c7-402f-a22a-32594b58c0e5', 'Gold', 'Gold', 'currency', 'normal', 1000, 1, 0, '/uploads/gold.jpg', '2024-05-07 22:22:35.891+07', '2024-05-07 22:22:35.891+07'),
+    
 INSERT INTO "BoostEffects" (id, "owner", "createdAt", "updatedAt") VALUES
 	('281fc328-8e1d-418a-a75c-13e423e28c16', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
 	('c6b19675-b258-447d-b5e0-69b3f6da2aad', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),

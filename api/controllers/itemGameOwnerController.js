@@ -1,5 +1,8 @@
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
+const boostEffect = require("./boostEffectController")
+const nft = require("./nftController")
+
 const getAll = async(req, res, next) => {
     try {
         const list = await models.ItemGameOwner.findAll()
@@ -64,7 +67,7 @@ const getByOwner = async (req, res, next) => {
 }
 const useItemForOwner = async (req, res, next) => {
     try {
-        const { owner, id, quantity } = req.body;
+        const { owner, id, quantity, tokenId } = req.body;
 
         // Fetch the ItemGameOwner entry
         const itemOwner = await models.ItemGameOwner.findOne({ where: { id, owner } });
@@ -103,6 +106,35 @@ const useItemForOwner = async (req, res, next) => {
         await itemOwner.update({ quantity: updatedQuantity });
         await itemOwner.reload();
 
+        // Update boost effect time
+        if (detailedResult.category == "boost") {
+            // Prepare the data for addOrUpdate
+            const boostEffectData = {
+                id: itemGame.dataValues.id,
+                owner: itemOwner.dataValues.owner,
+                // other fields as necessary
+            };
+
+            // Call addOrUpdate
+            await boostEffect.addOrUpdate({ body: boostEffectData }, res, next);
+        }
+        // Update NFT energy
+        if (detailedResult.category === "energy" && tokenId) {
+            const nftResult = await nft.getById({ params: { id: tokenId } }, res, next);
+            if (!nftResult) {
+                return res.sendResponse(null, `Error fetching NFT details for ID ${tokenId}`, STATUS_CODES.INTERNAL_ERROR);
+            }
+
+            const currentEnergy = nftResult.energy;
+            let energy = currentEnergy < 3 ? Math.min(currentEnergy + detailedResult.totalpoint, 3) : currentEnergy;
+
+            const updateData = {
+                tokenId: tokenId,
+                energy: energy
+            };
+
+            await nft.updateById({ body: updateData }, res, next);
+        }
         // Prepare and return the response
         return res.sendResponse(detailedResult, `Used item ${itemGame.dataValues.name} for user ${owner} successfully.`, STATUS_CODES.OK);
     } catch (error) {
