@@ -103,10 +103,10 @@ const useItemForOwner = async (req, res, next) => {
         // Update boost effect time
         if (detailedResult.category == "boost") {
             const existingRow = await models.BoostEffect.findOne({ where: { id, owner } });
+            console.log(existingRow);
             // Prepare the data for addOrUpdate
             if (existingRow) {
-                const lastUpdateTime = new Date();
-                await existingRow.update({ updatedAt: lastUpdateTime });
+                await existingRow.update({ id: id });
                 await existingRow.reload();
             } else {
                 var rowData;
