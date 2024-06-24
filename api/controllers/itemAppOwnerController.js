@@ -1,6 +1,7 @@
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
 const { Op } = require('sequelize');
+
 const getAll = async(req, res, next) => {
     try {
         const list = await models.ItemAppOwner.findAll()
@@ -63,8 +64,70 @@ const getByOwner = async (req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
+const useItemForOwner = async (req, res, next) => {
+    try {
+        const { owner, id, quantity, tokenId } = req.body;
 
+        // Fetch the ItemAppOwner entry
+        const itemOwner = await models.ItemAppOwner.findOne({ where: { id, owner } });
 
+        if (!itemOwner) {
+            return res.sendResponse(null, `Owner ${owner} does not own the selected item.`, STATUS_CODES.NOT_FOUND);
+        }
+
+        if (quantity > itemOwner.dataValues.quantity) {
+            return res.sendResponse(null, `Owner ${owner} does not have enough of the selected item.`, STATUS_CODES.NOT_FOUND);
+        }
+
+        // Fetch the ItemApp details
+        const itemApp = await models.ItemApp.findOne({ where: { id } });
+
+        if (!itemApp) {
+            return res.sendResponse(null, `Error fetching details for Item ID ${id}`, STATUS_CODES.INTERNAL_ERROR);
+        }
+
+        // Map detailed item data
+        const detailedResult = {
+            ...itemOwner.dataValues,
+            name: itemApp.dataValues.name,
+            description: itemApp.dataValues.description,
+            category: itemApp.dataValues.category,
+            quality: itemApp.dataValues.quality,
+            itemquantity: itemApp.dataValues.quantity,
+            gemcost: itemApp.dataValues.gemcost,
+            goldcost: itemApp.dataValues.goldcost,
+            image: itemApp.dataValues.image,
+            totalpoint: quantity * itemApp.dataValues.quantity
+        };
+        console.log("detailedResult: \n", detailedResult);
+        // Update item quantity
+        const updatedQuantity = itemOwner.dataValues.quantity - quantity;
+        await itemOwner.update({ quantity: updatedQuantity });
+        await itemOwner.reload();
+        // Update NFT exp
+        if (detailedResult.category === "food" && tokenId) {
+            const nftResult = await models.NFT.findOne({ where: { tokenId: tokenId } })
+            // console.log(result.dataValues.tokenUri);
+            if (!nftResult) {
+                return res.sendResponse(null, `Error fetching NFT details for ID ${tokenId}`, STATUS_CODES.INTERNAL_ERROR);
+            }
+
+            const currentEnergy = nftResult.dataValues.exp;
+            let exp = currentEnergy + detailedResult.totalpoint;
+
+            var updateData;
+            updateData.tokenId = nftResult.dataValues.tokenId;
+            updateData.exp = exp;
+
+            await nftResult.update(updateData)
+            await nftResult.reload()
+        }
+        // Prepare and return the response
+        return res.sendResponse(detailedResult, `Used item ${itemApp.dataValues.name} for user ${owner} successfully.`, STATUS_CODES.OK);
+    } catch (error) {
+        return res.sendResponse(null, error.message || error, STATUS_CODES.INTERNAL_ERROR);
+    }
+}
 const deleteById = async(req, res, next) => {
     try {
 
@@ -233,5 +296,5 @@ const getOwnerCurrency = async (req, res, next) => {
 }
 
 module.exports={
-	getAll,getById,purchaseItem,add,deleteById,updateById,getByOwner,getOwnerCurrency
+	getAll,getById,purchaseItem,add,deleteById,updateById,getByOwner,getOwnerCurrency,useItemForOwner
 }

@@ -1,5 +1,6 @@
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
+
 const getAll = async(req, res, next) => {
     try {
         const list = await models.ItemGameOwner.findAll()
@@ -60,6 +61,84 @@ const getByOwner = async (req, res, next) => {
         return res.sendResponse(results, `Get Owner ${owner} Game Items Success`, STATUS_CODES.OK);
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+    }
+}
+const useItemForOwner = async (req, res, next) => {
+    try {
+        const { owner, id, quantity, tokenId } = req.body;
+
+        // Fetch the ItemGameOwner entry
+        const itemOwner = await models.ItemGameOwner.findOne({ where: { id, owner } });
+
+        if (!itemOwner) {
+            return res.sendResponse(null, `Owner ${owner} does not own the selected item.`, STATUS_CODES.NOT_FOUND);
+        }
+
+        if (quantity > itemOwner.dataValues.quantity) {
+            return res.sendResponse(null, `Owner ${owner} does not have enough of the selected item.`, STATUS_CODES.NOT_FOUND);
+        }
+
+        // Fetch the ItemGame details
+        const itemGame = await models.ItemGame.findOne({ where: { id } });
+
+        if (!itemGame) {
+            return res.sendResponse(null, `Error fetching details for Item ID ${id}`, STATUS_CODES.INTERNAL_ERROR);
+        }
+
+        // Map detailed item data
+        const detailedResult = {
+            ...itemOwner.dataValues,
+            name: itemGame.dataValues.name,
+            description: itemGame.dataValues.description,
+            category: itemGame.dataValues.category,
+            quality: itemGame.dataValues.quality,
+            itemquantity: itemGame.dataValues.quantity,
+            gemcost: itemGame.dataValues.gemcost,
+            goldcost: itemGame.dataValues.goldcost,
+            image: itemGame.dataValues.image,
+            totalpoint: quantity * itemGame.dataValues.quantity
+        };
+        console.log("detailedResult: \n", detailedResult);
+        // Update item quantity
+        const updatedQuantity = itemOwner.dataValues.quantity - quantity;
+        await itemOwner.update({ quantity: updatedQuantity });
+        await itemOwner.reload();
+
+        // Update boost effect time
+        if (detailedResult.category == "boost") {
+            const existingRow = await models.BoostEffect.findOne({ where: { id, owner } });
+            // Prepare the data for addOrUpdate
+            var updateData;
+            updateData.id = itemGame.dataValues.id;
+            updateData.owner = itemOwner.dataValues.owner;
+            if (existingRow) {
+                await existingRow.update(updateData);
+                await existingRow.reload();
+            } else {
+                const newRow = await models.BoostEffect.create(updateData);
+            }
+        }
+        // Update NFT energy
+        if (detailedResult.category === "energy" && tokenId) {
+            const nftResult = await models.NFT.findOne({ where: { tokenId: tokenId } })
+            if (!nftResult) {
+                return res.sendResponse(null, `Error fetching NFT details for ID ${tokenId}`, STATUS_CODES.INTERNAL_ERROR);
+            }
+            console.log(nftResult);
+            const currentEnergy = nftResult.dataValues.energy;
+            let energy = currentEnergy < 3 ? Math.min(currentEnergy + detailedResult.totalpoint, 3) : currentEnergy;
+
+            var updateData;
+            updateData.tokenId = nftResult.dataValues.tokenId;
+            updateData.energy = energy;
+            console.log(currentEnergy, energy)
+            await nftResult.update(updateData)
+            await nftResult.reload()
+        }
+        // Prepare and return the response
+        return res.sendResponse(detailedResult, `Used item ${itemGame.dataValues.name} for user ${owner} successfully.`, STATUS_CODES.OK);
+    } catch (error) {
+        return res.sendResponse(null, error.message || error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const deleteById = async(req, res, next) => {
@@ -172,5 +251,5 @@ const updateById = async (req, res, next) => {
 
 
 module.exports={
-	getAll,getById,purchaseItem,add,deleteById,updateById,getByOwner
+	getAll,getById,purchaseItem,add,deleteById,updateById,getByOwner,useItemForOwner
 }
