@@ -167,7 +167,7 @@ CREATE TABLE "NFTs" (
 	"exp" int4 NULL DEFAULT 0,
 	"createdAt" timestamptz NOT NULL,
 	"updatedAt" timestamptz NOT NULL,
-	"lastTimePlayed" timestamptz NULL DEFAULT '2024-06-20 23:14:11.537+07'::timestamp with time zone,
+	"lastTimePlayed" timestamptz NULL,
 	energy int4 NULL DEFAULT 3,
 	CONSTRAINT "NFTs_pkey" PRIMARY KEY ("tokenId")
 );
