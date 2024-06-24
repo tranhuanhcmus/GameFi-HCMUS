@@ -108,7 +108,7 @@ const useItemForOwner = async (req, res, next) => {
         if (detailedResult.category == "boost") {
             const existingRow = await models.BoostEffect.findOne({ where: { id, owner } });
             // Prepare the data for addOrUpdate
-            var updateData = existingRow;
+            var updateData;
             updateData.id = itemGame.dataValues.id;
             updateData.owner = itemOwner.dataValues.owner;
             if (existingRow) {
@@ -126,12 +126,13 @@ const useItemForOwner = async (req, res, next) => {
                 return res.sendResponse(null, `Error fetching NFT details for ID ${tokenId}`, STATUS_CODES.INTERNAL_ERROR);
             }
 
-            const currentEnergy = nftResult.energy;
+            const currentEnergy = nftResult.dataValues.energy;
             let energy = currentEnergy < 3 ? Math.min(currentEnergy + detailedResult.totalpoint, 3) : currentEnergy;
 
-            var updateData = nftResult;
-            updateData.energy= energy;
-
+            var updateData;
+            updateData.tokenId = nftResult.dataValues.tokenId;
+            updateData.energy = energy;
+            console.log(currentEnergy, energy)
             await nftResult.update(updateData)
             await nftResult.reload()
         }

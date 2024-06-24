@@ -112,10 +112,11 @@ const useItemForOwner = async (req, res, next) => {
                 return res.sendResponse(null, `Error fetching NFT details for ID ${tokenId}`, STATUS_CODES.INTERNAL_ERROR);
             }
 
-            const currentEnergy = nftResult.exp;
+            const currentEnergy = nftResult.dataValues.exp;
             let exp = currentEnergy + detailedResult.totalpoint;
 
-            var updateData = nftResult;
+            var updateData;
+            updateData.tokenId = nftResult.dataValues.tokenId;
             updateData.exp = exp;
 
             await nftResult.update(updateData)
