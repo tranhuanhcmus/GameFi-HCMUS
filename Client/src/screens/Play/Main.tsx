@@ -172,6 +172,7 @@ const PlayScreen: React.FC<Props> = (props: any) => {
           numColumns={2}
           renderItem={({ item }) => (
             <PetCard
+              item={item}
               petImg={item.petImg}
               element={item.element}
               level={item.level}

@@ -69,9 +69,8 @@ const PetScreen = () => {
 
   /** useSelector */
   const userState = useSelector(selectUser);
-  const { name, type, image, title, tokenId, attributes, level } = useSelector(
-    (state: any) => state.pet,
-  );
+  const { name, type, image, assets, title, tokenId, attributes, level } =
+    useSelector((state: any) => state.pet);
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
@@ -342,7 +341,7 @@ const PetScreen = () => {
               color: COLOR.BLACK,
             }}
           >
-            MYTHBEARCUSTOM56
+            {name}
           </CustomText>
           <View
             style={{
