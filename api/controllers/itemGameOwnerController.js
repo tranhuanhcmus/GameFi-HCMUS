@@ -106,7 +106,7 @@ const useItemForOwner = async (req, res, next) => {
             console.log(existingRow);
             // Prepare the data for addOrUpdate
             if (existingRow) {
-                await existingRow.update({ id: id });
+                await existingRow.touch(); // Cập nhật updatedAt
                 await existingRow.reload();
             } else {
                 var rowData;
