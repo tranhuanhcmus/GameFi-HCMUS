@@ -102,6 +102,7 @@ const addOrUpdate = async (req, res, next) => {
             await existingRow.reload();
             return res.sendResponse(existingRow, `Update success for Item ID ${id}`, STATUS_CODES.OK);
         } else {
+            rowData.lastTimeBoost = new Date();
             const newRow = await models.BoostEffect.create(rowData);
             return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK);
         }

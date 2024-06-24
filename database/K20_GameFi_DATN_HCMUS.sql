@@ -103,6 +103,7 @@ CREATE TABLE "BoostEffects" (
 	"owner" text NOT NULL,
 	"createdAt" timestamptz NOT NULL,
 	"updatedAt" timestamptz NOT NULL,
+	"lastTimeBoost" timestamptz NULL DEFAULT '2024-06-20 23:14:11.537+07'::timestamp with time zone,
 	CONSTRAINT "BoostEffects_pkey" PRIMARY KEY (id, "owner")
 );
 
@@ -220,10 +221,10 @@ INSERT INTO "ItemApps" (id, "name", description, category, quality, quantity, ge
 	('7dc748d5-de7d-4a76-9a58-62463ee7be14', 'Gem', 'Gem', 'currency', 'normal', 1, 1, 0, '/uploads/gem.jpg', '2024-05-07 22:22:05.251+07', '2024-05-07 22:22:05.251+07'),
     ('1a06543f-42c7-402f-a22a-32594b58c0e5', 'Gold', 'Gold', 'currency', 'normal', 1000, 1, 0, '/uploads/gold.jpg', '2024-05-07 22:22:35.891+07', '2024-05-07 22:22:35.891+07'),
     
-INSERT INTO "BoostEffects" (id, "owner", "createdAt", "updatedAt") VALUES
-	('281fc328-8e1d-418a-a75c-13e423e28c16', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
-	('c6b19675-b258-447d-b5e0-69b3f6da2aad', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
-	('5579da2e-d4b9-4f2d-8475-3ed525c598da', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07');
+INSERT INTO "BoostEffects" (id, "owner", "lastTimeBoost", "createdAt", "updatedAt") VALUES
+	('281fc328-8e1d-418a-a75c-13e423e28c16', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
+	('c6b19675-b258-447d-b5e0-69b3f6da2aad', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
+	('5579da2e-d4b9-4f2d-8475-3ed525c598da', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07');
 
 INSERT INTO "ItemGameOwners" (id, "owner", quantity, "createdAt", "updatedAt") VALUES
 	('06f61bcc-9ac2-4865-8a25-fdcf1113648a', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 100, '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),

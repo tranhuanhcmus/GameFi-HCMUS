@@ -106,7 +106,7 @@ const useItemForOwner = async (req, res, next) => {
             console.log(existingRow);
             // Prepare the data for addOrUpdate
             if (existingRow) {
-                await existingRow.update({ updatedAt: new Date() });
+                await existingRow.update({ lastTimeBoost: new Date() });
                 await existingRow.reload();
             } else {
                 var rowData;
