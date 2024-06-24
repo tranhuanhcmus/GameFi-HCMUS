@@ -33,11 +33,10 @@ const getAll = async(req, res, next) => {
 }
 const getById = async(req, res, next) => {
     try {
-
         const { id } = req.params
         const result = await models.NFT.findOne({ where: { tokenId: id } })
-        let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.uri } })
-        result.data=tokenUri.data
+        let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.tokenUri } })
+        result.dataValues.data=tokenUri.data
 
         if (!result) {
             return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)

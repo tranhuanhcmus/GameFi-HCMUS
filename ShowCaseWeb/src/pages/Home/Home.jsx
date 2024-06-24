@@ -1,10 +1,12 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import "./Home.scss";
 import Menu from "components/Menu/Menu";
 import Dropdown from "components/Dropdown/Dropdown";
 import Button from "components/Button/Button";
 import NFTCard from "components/NFTCard/NFTCard";
 import { useNavigate } from "react-router-dom";
+import { NFTService } from "services/NFTService";
+import { getElementBgImg, NFTAdapter } from "utils";
 
 const section1_images = [
   "/images/nft_1.svg",
@@ -24,89 +26,48 @@ const filterOptions = [
   { value: "Item" },
 ];
 
-const nfts = [
-  {
-    id: 1,
-    type: "Monster",
-    name: "Dark knight",
-    image: "/images/bear1.jpg",
-    price: "1 ETH",
-    element: "dark",
-  },
-  {
-    id: 2,
-    type: "Monster",
-    name: "Fire Guy",
-    image: "/images/bear2.jpg",
-    element: "fire",
-    price: "2 ETH",
-  },
-  {
-    id: 3,
-    type: "Monster",
-    name: "Thunder knight",
-    image: "/images/bear3.jpg",
-    element: "thunder",
-    price: "3 ETH",
-  },
-  {
-    id: 4,
-    type: "Monster",
-    name: "Water knight",
-    image: "/images/bear4.jpg",
-    element: "water",
-    price: "4 ETH",
-  },
-  {
-    id: 5,
-    type: "Monster",
-    name: "Tree knight",
-    element: "dark",
-    image: "/images/bear5.jpg",
-    price: "3 ETH",
-  },
-  {
-    id: 6,
-    type: "Monster",
-    name: "Fire+Water knight",
-    image: "/images/bear6.jpg",
-    element: "fire",
-    price: "3 ETH",
-  },
-  {
-    id: 7,
-    type: "Monster",
-    name: "Special Dark knight",
-    image: "/images/bear7.jpg",
-    element: "dark",
-    price: "3 ETH",
-  },
-  {
-    id: 8,
-    type: "Monster",
-    element: "fire",
-    name: "Light knight",
-    image: "/images/bear8.jpg",
-    price: "3 ETH",
-  },
-];
-
 const Home = () => {
+  const [nfts, setNfts] = useState([]);
+
+  const fetchNFTs = async () => {
+    try {
+      const response = await NFTService.getList();
+      if (response.length) {
+        setNfts(response.map((item) => NFTAdapter(item)));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNFTs();
+  }, []);
 
   const navigate = useNavigate();
   const onClickCard = (item) => {
-    console.log(item);
-    navigate(`/nft/${item.id}`)
+    navigate(`/nft/${item.tokenId}`);
   };
+
   return (
     <div className="page_wrapper">
       <div className="page home_page">
         <div className="section carousel_section">
-          {section1_images.map((img, index) => (
-            <img key={index} src={img} alt="nft" />
-          ))}
+          {nfts &&
+            nfts
+              .slice(0, 5)
+              .map((item) => (
+                <img
+                  style={{
+                    background: `#fff url("/images/bg_v2.png")  no-repeat bottom / cover`,
+                  }}
+                  key={item.tokenId}
+                  src={item.image}
+                  alt="nft"
+                />
+              ))}
         </div>
-        <div className="section hot_section">
+        {/* <div className="section hot_section">
           <div className="section__header">
             <div className="section__title">Hot Collections</div>
             <div className="section__header__detail">View All</div>
@@ -158,12 +119,12 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="section discover_section">
           <div className="section__header">
             <div className="section__title">
               Discover
-              <p>151,146 items listed</p>
+              <p>{nfts.length} items listed</p>
             </div>
             <div className="section__header__controls">
               <Dropdown
@@ -187,13 +148,14 @@ const Home = () => {
             </div>
           </div>
           <div className="section__body">
-            {nfts.map((item, index) => (
-              <NFTCard
-                onClick={() => onClickCard(item)}
-                key={item.id}
-                data={item}
-              />
-            ))}
+            {nfts &&
+              nfts.map((item, index) => (
+                <NFTCard
+                  onClick={() => onClickCard(item)}
+                  key={item.tokenId}
+                  data={item}
+                />
+              ))}
           </div>
         </div>
       </div>
