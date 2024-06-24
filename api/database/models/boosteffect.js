@@ -29,7 +29,11 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.TEXT,
       allowNull:false,
       primaryKey:true,
-    }
+    },
+    lastTimePlayed: {
+      type:DataTypes.DATE,
+      defaultValue: new Date()
+    },
   }, {
     sequelize,
     modelName: 'BoostEffect',
