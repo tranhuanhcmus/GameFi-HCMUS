@@ -168,8 +168,13 @@
 			flex: 1;
 		}
 		.info_board__row__value{
+			text-transform: capitalize;
 			color: $gray2;
 			font-size: 20px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 70%;
 		}
 	}
 }

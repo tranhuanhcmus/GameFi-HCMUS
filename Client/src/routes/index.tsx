@@ -132,11 +132,11 @@ type LocalRootStackParamList = {
   HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
-
   Play: undefined;
   League: undefined;
   Event: undefined;
   Profile: undefined;
+  Pet: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -223,6 +223,13 @@ const Route = () => (
       <Stack.Screen
         name="Home"
         component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Pet"
+        component={PetScreen}
         options={{
           headerShown: false,
         }}

@@ -17,6 +17,8 @@ export default defineConfig({
       constants: "/src/constants",
       services: "/src/services",
       redux: "/src/redux",
+      apis: "/src/apis",
+      utils: "/src/utils",
     },
   }
 })

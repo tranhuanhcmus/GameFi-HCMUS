@@ -40,6 +40,7 @@ import StatsModal from "./Stats";
 import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
 import { API } from "../../apis/constants";
 import Breed from "../../../assets/breed.svg";
+import { setFatherPet, setMotherPet } from "../../redux/breedSlice";
 type Props = {};
 interface FeedState {
   feed: string | null;
@@ -494,6 +495,8 @@ const PetScreen = () => {
           top: ConstantsResponsive.YR * 3 * 150,
         }}
         onPress={() => {
+          dispatch(setFatherPet({ id: null, name: null, image: null }));
+          dispatch(setMotherPet({ id: null, name: null, image: null }));
           navigate.navigate("Breed");
         }}
       >

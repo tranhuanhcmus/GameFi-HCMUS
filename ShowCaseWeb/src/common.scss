@@ -186,7 +186,7 @@ html {
 		img {
 			flex: 1;
 			min-width: 200px;
-			height: auto;
+			height: 75%;
 			object-fit: contain;
 		}
 
@@ -212,8 +212,8 @@ html {
 		width: 100%;
 		img{
 			width: 100%;
-			height: 200px;
-			object-fit: cover;
+			height: 260px;
+			object-fit: contain;
 			transition: all .5s ease;
 		}
 	}
@@ -241,11 +241,18 @@ html {
 			margin-bottom: 5px;
 		}
 		.card__row__value{
-			
 			height: 16px;
 			display: flex;
 			gap: 10px;
 			align-items: center;
+			justify-content: space-between;
+			p{
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				font-size: 12px;
+				max-width: 200px;
+			}
 		}
 
 		img {

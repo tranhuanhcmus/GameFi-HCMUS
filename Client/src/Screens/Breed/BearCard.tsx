@@ -15,10 +15,6 @@ const BearCard = (props: any) => {
   /** useState */
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    logger.warn("BearCard ", props);
-  }, []);
-
   const [animatedValue] = useState(new Animated.Value(0));
   const [scaleAnimatedValue] = useState(new Animated.Value(1)); // Create an Animated value
   const navigate = useCustomNavigation();

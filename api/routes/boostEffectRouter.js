@@ -1,11 +1,11 @@
 const express = require('express');
-const { itemGameOwnerController } = require('../controllers');
+const { boostEffectController } = require('../controllers');
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: ItemGameOwner
+ *   name: BoostEffect
  *   description: API for managing item game owners
  */
 
@@ -13,7 +13,7 @@ const router = express.Router();
  * @swagger
  * components:
  *   schemas:
- *     ItemGameOwner:
+ *     BoostEffect:
  *       type: object
  *       required:
  *         - id
@@ -33,10 +33,10 @@ const router = express.Router();
 
 /**
  * @swagger
- * /itemGameOwners/:
+ * /BoostEffects/:
  *   get:
  *     summary: Get list of all item game owners
- *     tags: [ItemGameOwner]
+ *     tags: [BoostEffect]
  *     description: Returns a list of all item game owners.
  *     responses:
  *       200:
@@ -44,21 +44,21 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.get('/', itemGameOwnerController.getAll);
+router.get('/', boostEffectController.getAll);
 
 /**
  * @swagger
- * /itemGameOwners/:
+ * /BoostEffects/:
  *   post:
  *     summary: Add a new item game owner
- *     tags: [ItemGameOwner]
+ *     tags: [BoostEffect]
  *     description: Add a new item game owner to the system.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/ItemGameOwner'
+ *             $ref: '#/components/schemas/BoostEffect'
  *           examples:
  *             example1:
  *               summary: Example item game owner
@@ -74,14 +74,14 @@ router.get('/', itemGameOwnerController.getAll);
  *       500:
  *         description: Internal server error
  */
-router.post('/', itemGameOwnerController.add);
+router.post('/', boostEffectController.addOrUpdate);
 
 /**
  * @swagger
- * /itemGameOwners/{id}:
+ * /BoostEffects/{id}:
  *   get:
  *     summary: Get information of an item game owner by ID
- *     tags: [ItemGameOwner]
+ *     tags: [BoostEffect]
  *     description: Returns information of an item game owner based on the provided ID.
  *     parameters:
  *       - in: path
@@ -98,14 +98,14 @@ router.post('/', itemGameOwnerController.add);
  *       500:
  *         description: Internal server error
  */
-router.get('/:id', itemGameOwnerController.getById);
+router.get('/:id', boostEffectController.getById);
 
 /**
  * @swagger
- * /itemGameOwners/owner/{owner}:
+ * /BoostEffects/owner/{owner}:
  *   get:
  *     summary: Get information of an item game owner by owner name
- *     tags: [ItemGameOwner]
+ *     tags: [BoostEffect]
  *     description: Returns information of an item game owner based on the provided owner name.
  *     parameters:
  *       - in: path
@@ -122,21 +122,21 @@ router.get('/:id', itemGameOwnerController.getById);
  *       500:
  *         description: Internal server error
  */
-router.get('/owner/:owner', itemGameOwnerController.getByOwner);
+router.get('/owner/:owner', boostEffectController.getByOwner);
 
 /**
  * @swagger
- * /itemGameOwners/:
+ * /BoostEffects/:
  *   put:
  *     summary: Update information of an item game owner by ID
- *     tags: [ItemGameOwner]
+ *     tags: [BoostEffect]
  *     description: Update information of an item game owner based on the provided ID.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/ItemGameOwner'
+ *             $ref: '#/components/schemas/BoostEffect'
  *           examples:
  *             example1:
  *               summary: Example item game owner
@@ -152,14 +152,14 @@ router.get('/owner/:owner', itemGameOwnerController.getByOwner);
  *       500:
  *         description: Internal server error
  */
-router.put('/', itemGameOwnerController.updateById);
+router.put('/', boostEffectController.updateById);
 
 /**
  * @swagger
- * /itemGameOwners/{id}:
+ * /BoostEffects/{id}:
  *   delete:
  *     summary: Delete an item game owner by ID
- *     tags: [ItemGameOwner]
+ *     tags: [BoostEffect]
  *     description: Delete an item game owner based on the provided ID.
  *     parameters:
  *       - in: path
@@ -176,8 +176,6 @@ router.put('/', itemGameOwnerController.updateById);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', itemGameOwnerController.deleteById);
-router.post('/purchase', itemGameOwnerController.purchaseItem);
-router.post('/useItem', itemGameOwnerController.useItemForOwner);
+router.delete('/:id', boostEffectController.deleteById);
 
 module.exports = router;

@@ -4,25 +4,30 @@ const models = require('../database/models');
 
 const breedBear = async (req, res) => {
 	try {
-		let gateway=BEAR_GATEWAY_IPFS
-		const { dad, mom } = req.body;
+		let { dad, mom } = req.body;
+		dad=dad.toString()
+		mom=mom.toString()
+
 		const factory = new BearFactory();
-		const bearDad = new Bear(dad.eye, dad.fur, dad.element, dad.item);
-		console.log('bearDad ', bearDad);
+		const bearDad = new Bear(dad[0], dad[1], dad[2], dad[3]);
+		const bearMom = new Bear(mom[0], mom[1], mom[2], mom[3]);
 		// const bearDad = new Bear().importBear(dad);
-		const bearMom = new Bear(mom.eye, mom.fur, mom.element, mom.item);
 		const bears = factory.crossover(bearDad, bearMom);
 		let random = Math.random();
 		let myBear = random < 0.5 ? bears[0] : bears[1];
 		// myBear = factory.getMutateBear(myBear).mutateBear;
 		let my_bear_id=myBear.getId()
-		myBear.__name = `bear-${my_bear_id}`;
-		myBear.__rarity = 'Normal';
-		myBear.__image = `${gateway}/${my_bear_id}.jpg`;
-		myBear.__asset = `${gateway}/sprite-${my_bear_id}.png`;
-		return res.sendResponse(myBear.getInfo(), 'Breed bear success', STATUS_CODES.OK);
+		
+		const result = await models.NFT.findOne({ where: { tokenId: my_bear_id } })
+		if(!result){
+			return res.sendResponse(null, `Not found NFT with tokenID: ${my_bear_id}`, STATUS_CODES.NOT_FOUND);
+		}
+        let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.tokenUri } })
+        result.dataValues.data=tokenUri.data
+
+		return res.sendResponse(result, 'Breed bear success', STATUS_CODES.OK);
 	} catch (error) {
-		return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+		return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);
 	}
 };
 

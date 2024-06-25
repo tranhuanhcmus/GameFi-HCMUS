@@ -115,10 +115,10 @@ const PetsModal = ({
     console.log("item ", item);
     try {
       if (!fatherPet.id) {
-        log.warn("father chua co");
+        setIsVisible(false);
         dispatch(setFatherPet(item));
       } else if (!motherPet.id) {
-        log.warn("mother chua co");
+        setIsVisible(false);
         dispatch(setMotherPet(item));
       }
     } catch (e) {
