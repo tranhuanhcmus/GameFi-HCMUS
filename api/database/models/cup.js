@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     owner: {
       type:DataTypes.TEXT,
       allowNull:false,
+      primaryKey:true,
     },
     cup: {
       type:DataTypes.INTEGER,
