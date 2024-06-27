@@ -2,6 +2,8 @@ module.exports={
 	viewController:require("./ViewController"),
 	hangmanController:require("./hangmanController"),
 	bearController:require("./bearController"),
+	boostEffectController:require("./boostEffectController"),
+	cupController:require("./cupController"),
 	eyePoolController:require("./eyePoolController"),
 	elementPoolController:require("./elementPoolController"),
 	furPoolController:require("./furPoolController"),
@@ -12,6 +14,5 @@ module.exports={
 	itemAppController:require("./itemAppController"),
 	itemGameOwnerController:require("./itemGameOwnerController"),
 	itemAppOwnerController:require("./itemAppOwnerController"),
-	boostEffectController:require("./boostEffectController"),
 
 }
