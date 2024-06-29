@@ -162,9 +162,10 @@ const purchaseItem = async (req, res, next) => {
         const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"];    // 0 is gem, 1 is gold
         const rowData = req.body;
         const currency = rowData.currency;
+        console.log(currencyId[currency], rowData.owner)
         const userCurrencyBalance = await models.ItemAppOwner.findOne({ where: { id: currencyId[currency], owner: rowData.owner } });
-        if(rowData.id === currencyId[0] || rowData.id === currencyId[1]) {
-            return res.sendResponse(null, 'Cannot use one currency to purchase itself or another', STATUS_CODES.NOT_FOUND);
+        if(rowData.id === currencyId[0] && currencyId[currency] === currencyId[1]) {
+            return res.sendResponse(null, 'Cannot use gold to purchase gem.', STATUS_CODES.NOT_FOUND);
         }
         const totalPrice = (currency == 0) ? rowData.gemcost * rowData.quantity : rowData.goldcost * rowData.quantity;
         console.log(userCurrencyBalance.quantity, totalPrice);
