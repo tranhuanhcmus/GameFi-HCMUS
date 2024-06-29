@@ -6,5 +6,6 @@ export const API = {
   ITEM_GAME: "/itemGames",
   ITEM_APP: "/itemApps",
   BREED: "/bears/breed",
+  CUP: "/cups",
   server: "https://gamefi-hcmus.onrender.com",
 };
