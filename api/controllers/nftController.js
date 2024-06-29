@@ -2,6 +2,7 @@ const { default: axios } = require("axios")
 const { tokenUriController } = require(".")
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
+const { getInfoFromTokenURI } = require("./ContractController")
 const getAll = async(req, res, next) => {
     try {
         const rows = await models.NFT.findAll()
@@ -183,16 +184,6 @@ const migrate = async(req, res, next) => {
     return res.sendResponse(result, "Migrate success", STATUS_CODES.OK)
 }
 
-async function getInfoFromTokenURI(url) {
-    try {
-        const response = await axios.get(url);
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error; // Re-throw the error for handling at a higher level
-    }
-}
 
 module.exports = {
     getAll,

@@ -132,16 +132,7 @@ async function getInfoFromTokenURI(url) {
     }
 }
 
-const getTokenURI = async (tokenId) => {
-  try {
-    const web3 = new Web3(rpc);
-    const petContract = new web3.eth.Contract(PetABI, PetAddress);
-    const uri = await petContract.methods.tokenURI(tokenId).call();
-    return uri;
-  } catch (error) {
-    console.error('Error fetching token URI:', error);
-  }
-};
+
 
 
 function catchEventNFT() {
