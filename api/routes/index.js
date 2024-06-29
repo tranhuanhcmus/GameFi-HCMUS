@@ -2,6 +2,8 @@ module.exports={
 	adminRouter:require("./adminRouter"),
 	hangmanRouter:require("./hangmanRouter"), 
 	bearRouter:require("./bearRouter"), 
+	boostEffectRouter:require("./boostEffectRouter"),
+	cupRouter:require("./cupRouter"),
 	eyePoolRouter:require("./eyePoolRouter"), 
 	elementPoolRouter:require("./elementPoolRouter"), 
 	furPoolRouter:require("./furPoolRouter"), 
@@ -12,5 +14,4 @@ module.exports={
 	itemAppRouter:require("./itemAppRouter"),
 	itemGameOwnerRouter:require("./itemGameOwnerRouter"),
 	itemAppOwnerRouter:require("./itemAppOwnerRouter"),
-	boostEffectRouter:require("./boostEffectRouter")
 }

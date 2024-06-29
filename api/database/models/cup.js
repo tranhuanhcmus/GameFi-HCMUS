@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class BoostEffect extends Model {
+  class Cup extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,15 +13,16 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  BoostEffect.init({
+  Cup.init({
     id: {
       type:DataTypes.UUID,
       allowNull:false,
       primaryKey:true,
+      defaultValue: DataTypes.UUIDV4,
       validate:{
         notNull:{
           args:true,
-          msg:"BoostEffect id is not null"
+          msg:"Cup id is not null"
         }
       }
     },
@@ -30,13 +31,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:false,
       primaryKey:true,
     },
-    lastTimeBoost: {
-      type:DataTypes.DATE,
-      defaultValue: new Date()
+    cup: {
+      type:DataTypes.INTEGER,
+      allowNull:false
     },
+
   }, {
     sequelize,
-    modelName: 'BoostEffect',
+    modelName: 'Cup',
   });
-  return BoostEffect;
+  return Cup;
 };
