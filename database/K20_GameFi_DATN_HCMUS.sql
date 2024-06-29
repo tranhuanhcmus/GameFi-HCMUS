@@ -107,6 +107,19 @@ CREATE TABLE "BoostEffects" (
 	CONSTRAINT "BoostEffects_pkey" PRIMARY KEY (id, "owner")
 );
 
+-- "Cups" definition
+
+-- Drop table
+-- DROP TABLE "Cups";
+
+CREATE TABLE "Cups" (
+	id uuid NOT NULL,
+	"owner" text NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	"cup" int4 NOT NULL,
+	CONSTRAINT "Cups_pkey" PRIMARY KEY (id, "owner")
+);
 
 -- "ItemGameOwners" definition
 
@@ -225,6 +238,9 @@ INSERT INTO "BoostEffects" (id, "owner", "lastTimeBoost", "createdAt", "updatedA
 	('281fc328-8e1d-418a-a75c-13e423e28c16', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
 	('c6b19675-b258-447d-b5e0-69b3f6da2aad', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
 	('5579da2e-d4b9-4f2d-8475-3ed525c598da', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07');
+
+INSERT INTO "Cups" (id, "owner", "cup", "createdAt", "updatedAt") VALUES
+	('d1f2e245-3a6d-4e2a-a041-45fa0fb7c41e', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 10, '2024-04-27 15:52:28.105+07', '2024-04-27 15:52:28.105+07');
 
 INSERT INTO "ItemGameOwners" (id, "owner", quantity, "createdAt", "updatedAt") VALUES
 	('06f61bcc-9ac2-4865-8a25-fdcf1113648a', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 100, '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
