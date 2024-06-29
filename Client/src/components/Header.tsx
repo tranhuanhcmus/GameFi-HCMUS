@@ -11,6 +11,8 @@ import useCustomNavigation from "../hooks/useCustomNavigation";
 import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 import { useAccount } from "wagmi";
 import log from "../logger/index.js";
+import logger from "../logger/index.js";
+
 interface HeaderProps {
   name: string;
 }
@@ -22,6 +24,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+  logger.info("address ", address);
   const fetchData = async () => {
     try {
       const res: any[] = await ItemAppOwnerService.getCurrency(address);

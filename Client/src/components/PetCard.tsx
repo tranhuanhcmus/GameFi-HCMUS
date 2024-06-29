@@ -8,6 +8,7 @@ import {
   Animated,
   TouchableWithoutFeedback,
 } from "react-native";
+import { updatePet } from "../redux/petSlice";
 import React from "react";
 
 import Egg from "../../assets/SVGEgg.svg";
@@ -17,6 +18,7 @@ import useCustomNavigation from "../hooks/useCustomNavigation";
 import CustomText from "./CustomText";
 import { COLOR } from "../utils/color";
 import ConstantsResponsive from "../constants/Constanst";
+import { useDispatch } from "react-redux";
 
 interface PetCardProps {
   petImg: string;
@@ -24,8 +26,9 @@ interface PetCardProps {
   level: number;
   name: string;
   rarityPet: string;
-  isBreed: boolean; // CHECK IF THIS PET CHOOSE TO BREED
+  isBreed?: boolean; // CHECK IF THIS PET CHOOSE TO BREED
   tokenUri: string;
+  item: any;
   attributes: {
     element: string;
     eye: string;
@@ -42,12 +45,15 @@ const PetCard: React.FC<PetCardProps> = ({
   name,
   rarityPet,
   isBreed,
+  item,
   tokenUri,
   attributes,
   onPress,
 }) => {
   const navigate = useCustomNavigation();
+  const dispatch = useDispatch();
   const translateYValue = new Animated.Value(0);
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -64,17 +70,17 @@ const PetCard: React.FC<PetCardProps> = ({
           }),
         ]).start(() => {
           if (isBreed) {
-            onPress(null);
+            onPress(item);
           } else {
-            navigate.navigate("DetailOfPet", {
-              petImg,
-              element,
-              level,
-              name,
-              rarityPet,
-              tokenUri,
-              attributes,
-            });
+            console.log(item);
+            dispatch(
+              updatePet({
+                ...item,
+                active: false,
+
+                attributes: { ...item.attributes },
+              }),
+            );
           }
         });
       }}
@@ -170,7 +176,7 @@ const PetCard: React.FC<PetCardProps> = ({
                 fontSize: ConstantsResponsive.YR * 20,
               }}
             >
-              {level}
+              {Math.floor(level)}
             </CustomText>
           </View>
         </View>

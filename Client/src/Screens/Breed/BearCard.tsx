@@ -10,10 +10,10 @@ import logger from "../../logger";
 import { COLOR } from "../../utils/color";
 import UnknownCard from "../../../assets/UnknowCard.svg";
 import Card from "../../../assets/BearCard.svg";
+import PetsModal from "../Pet/Pets";
 const BearCard = (props: any) => {
-  useEffect(() => {
-    logger.warn("BearCard ", props);
-  }, []);
+  /** useState */
+  const [isVisible, setIsVisible] = useState(false);
 
   const [animatedValue] = useState(new Animated.Value(0));
   const [scaleAnimatedValue] = useState(new Animated.Value(1)); // Create an Animated value
@@ -51,19 +51,6 @@ const BearCard = (props: any) => {
     });
   };
 
-  // const scaleAnimation = () => {
-  //   Animated.timing(scale, {
-  //     toValue: 1.2, // Scale up to 1.2
-  //     duration: 300, // Animation duration in milliseconds
-  //     useNativeDriver: true, // Use native animations for smoother performance
-  //   }).start(() => {
-  //     Animated.timing(scale, {
-  //       toValue: 1, // Scale back down to 1
-  //       duration: 300,
-  //       useNativeDriver: true,
-  //     }).start();
-  //   });
-  // };
   useEffect(() => {
     // Start the animation with a 2-second delay
     setTimeout(startShakeAnimation, 2000);
@@ -73,111 +60,120 @@ const BearCard = (props: any) => {
   //   logger.warn("props ahahah ", props);
   //   if (props.disabled && props.name) scaleAnimation();
   // }, [props]);
-  return props && props.name ? (
-    <Animated.View
-      style={{
-        width: ConstantsResponsive.MAX_WIDTH * 0.4,
-        height: ConstantsResponsive.MAX_HEIGHT * 0.3,
-        position: "relative",
-        transform: [
-          { translateY: animatedValue },
-          { scale: scaleAnimatedValue },
-        ],
-      }}
-    >
-      <Card width={"100%"} height={"100%"} />
-      <View
-        style={{
-          width: "100%",
-          position: "absolute",
-          height: "20%",
-
-          alignItems: "center",
-
-          justifyContent: "center",
-        }}
-      >
-        <CustomText
+  return (
+    <>
+      <PetsModal
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        isBreed={true}
+      ></PetsModal>
+      {props && props.name ? (
+        <Animated.View
           style={{
-            fontWeight: "bold",
-            color: COLOR.WHITE,
-            fontSize: ConstantsResponsive.YR * 20,
+            width: ConstantsResponsive.MAX_WIDTH * 0.4,
+            height: ConstantsResponsive.MAX_HEIGHT * 0.3,
+            position: "relative",
+            transform: [
+              { translateY: animatedValue },
+              { scale: scaleAnimatedValue },
+            ],
           }}
         >
-          {props.name ? props.name : "FIRE BEAR"}
-        </CustomText>
-      </View>
+          <Card width={"100%"} height={"100%"} />
+          <View
+            style={{
+              width: "100%",
+              position: "absolute",
+              height: "20%",
 
-      <View
-        style={{
-          position: "absolute",
-          top: "25%",
-          width: "100%",
-          alignItems: "center",
-        }}
-      >
-        <CustomText
-          style={{
-            color: "#972E28",
-            fontWeight: "bold",
-            fontSize: ConstantsResponsive.YR * 20,
-          }}
-        >
-          {props.rarity ? props.rarity : "EPIC"}
-        </CustomText>
-      </View>
+              alignItems: "center",
 
-      <View
-        style={{
-          width: "100%",
-          height: "35%",
+              justifyContent: "center",
+            }}
+          >
+            <CustomText
+              style={{
+                fontWeight: "bold",
+                color: COLOR.WHITE,
+                fontSize: ConstantsResponsive.YR * 20,
+              }}
+            >
+              {props.name ? props.name : "FIRE BEAR"}
+            </CustomText>
+          </View>
 
-          position: "absolute",
-          alignItems: "center",
-          justifyContent: "center",
+          <View
+            style={{
+              position: "absolute",
+              top: "25%",
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <CustomText
+              style={{
+                color: "#972E28",
+                fontWeight: "bold",
+                fontSize: ConstantsResponsive.YR * 20,
+              }}
+            >
+              {props.element ? props.element : "FIRE"}
+            </CustomText>
+          </View>
 
-          top: "40%",
-        }}
-      >
-        <Image
-          source={props.image ? { uri: props.image } : Pet}
-          style={{
-            width: ConstantsResponsive.MAX_HEIGHT * 0.3 * 0.25,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.3 * 0.25,
-            borderRadius: 100,
-          }}
-        />
-      </View>
+          <View
+            style={{
+              width: "100%",
+              height: "35%",
 
-      <CustomText
-        style={{
-          textAlign: "center",
-          fontWeight: "900",
-          position: "absolute",
-          top: "80%",
-          alignSelf: "center",
-          fontSize: ConstantsResponsive.YR * 20,
-          color: COLOR.WHITE,
-        }}
-      >
-        LEVEL {props.level ? props.level : 1}
-      </CustomText>
-    </Animated.View>
-  ) : (
-    <Animated.View>
-      <TouchableOpacity
-        disabled={props.disabled}
-        onPress={() => {
-          navigate.navigate("Play", { isBreed: true });
-        }}
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH * 0.4,
-          height: ConstantsResponsive.MAX_HEIGHT * 0.3,
-        }}
-      >
-        <UnknownCard width={"100%"} height={"100%"} />
-      </TouchableOpacity>
-    </Animated.View>
+              position: "absolute",
+              alignItems: "center",
+              justifyContent: "center",
+
+              top: "40%",
+            }}
+          >
+            <Image
+              source={{ uri: props.image }}
+              style={{
+                width: ConstantsResponsive.MAX_HEIGHT * 0.3 * 0.25,
+                height: ConstantsResponsive.MAX_HEIGHT * 0.3 * 0.25,
+                borderRadius: 100,
+              }}
+            />
+          </View>
+
+          <CustomText
+            style={{
+              textAlign: "center",
+              fontWeight: "900",
+              position: "absolute",
+              top: "80%",
+              alignSelf: "center",
+              fontSize: ConstantsResponsive.YR * 20,
+              color: COLOR.WHITE,
+            }}
+          >
+            LEVEL {props.level ? props.level : 1}
+          </CustomText>
+        </Animated.View>
+      ) : (
+        <Animated.View>
+          <TouchableOpacity
+            disabled={props.disabled}
+            onPress={() => {
+              setIsVisible(true);
+            }}
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.4,
+              height: ConstantsResponsive.MAX_HEIGHT * 0.3,
+            }}
+          >
+            <UnknownCard width={"100%"} height={"100%"} />
+          </TouchableOpacity>
+        </Animated.View>
+      )}
+    </>
   );
 };
 

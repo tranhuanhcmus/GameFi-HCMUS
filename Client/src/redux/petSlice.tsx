@@ -6,7 +6,11 @@ interface PetState {
   type: string;
   image: string;
   title: string;
+  active: boolean;
+  hp: number;
+  atk: number;
   tokenId: String;
+  assets: string;
   level: number;
   attributes: {
     element: string;
@@ -21,6 +25,11 @@ const initialState: PetState = {
   type: "",
   image: "",
   title: "",
+  hp: 0,
+  atk: 0,
+  active: false,
+  assets:
+    "https://ipfs.io/ipfs/QmPcvN9XUUPFuu8HG5uC8jHEiWWk5xa8sLUfaqHnmyVHf5/sprites_1111.png",
   tokenId: "",
   level: 0,
   attributes: {
@@ -39,6 +48,11 @@ const petSlice = createSlice({
       const attribute = action.payload;
       state.name = attribute.name;
       state.type = attribute.type;
+      state.active = attribute.active;
+      state.assets = attribute.assets;
+      state.atk = attribute.atk;
+      state.hp = attribute.hp;
+      state.level = attribute.level;
       state.image = attribute.image;
       state.title = attribute.title;
       state.tokenId = attribute.tokenId;

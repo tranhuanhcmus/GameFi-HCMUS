@@ -40,15 +40,8 @@ const StatsModal = ({
 
   setIsVisible: (value: boolean) => void;
 }) => {
-  const health = 60;
+  const { hp, atk } = useSelector((state: any) => state.pet);
 
-  let healthBarWidth =
-    ((ConstantsResponsive.MAX_WIDTH -
-      ConstantsResponsive.XR * 300 -
-      ConstantsResponsive.XR * 60 -
-      ConstantsResponsive.XR * 6) *
-      health) /
-    100;
   return (
     <Modal animationType="slide" transparent={true} visible={isVisible}>
       <View style={styles.backgroundImage}>
@@ -95,9 +88,8 @@ const StatsModal = ({
             <CustomText style={styles.text}>Level 1</CustomText>
             <CustomText style={styles.text}>Common Pet</CustomText>
           </View>
-          <BarInfor color="red" title="Health" value={350} />
-          <BarInfor color="yellow" title="Damage" value={600} />
-          <BarInfor color="blue" title="Health" value={500} />
+          <BarInfor color="green" title="Health" value={hp} />
+          <BarInfor color="red" title="Damage" value={atk} />
         </View>
       </View>
     </Modal>

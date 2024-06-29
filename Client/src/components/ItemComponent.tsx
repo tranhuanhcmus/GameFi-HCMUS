@@ -2,32 +2,38 @@ import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import Coin from "../../assets/coin.svg";
+import Gem from "../../assets/diamond.svg";
 import Food from "../../assets/candy/14.png";
+import { API } from "../apis/constants";
 import Blood from "../../assets/medicine.svg";
-import Gem from "../../assets/diamond.png";
+
 import Lightning from "../../assets/lightning.svg";
 import Lucky from "../../assets/medicine.png";
 import ConstantsResponsive from "../constants/Constanst";
 import { COLOR } from "../utils/color";
 interface ItemProps {
   itemImg?: any;
-  itemColor?: string;
-  price?: any;
+
+  gemcost?: any;
+  goldcost?: number;
   onPress?: () => void;
-  imgPrice?: any;
+
   itemAmount?: number;
-  itemType?: any;
+
+  itemName?: string;
 }
 
 export const ItemComponent: React.FC<ItemProps> = ({
   itemImg,
-  itemColor,
-  price,
+
+  gemcost,
+  goldcost,
   onPress,
-  imgPrice,
-  itemAmount,
-  itemType,
+
+  itemName,
 }) => {
+  console.log(typeof gemcost, gemcost);
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -40,7 +46,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
         flexDirection: "column",
         height:
           ConstantsResponsive.MAX_HEIGHT / 3 - 120 * ConstantsResponsive.YR,
-        backgroundColor: itemColor,
+        backgroundColor: COLOR.BROWN_BORDER,
         paddingTop: 2,
       }}
     >
@@ -52,43 +58,11 @@ export const ItemComponent: React.FC<ItemProps> = ({
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "space-around",
+            justifyContent: "center",
             paddingHorizontal: 10,
           },
         ]}
       >
-        {itemType && itemType == "1" ? (
-          <Image
-            resizeMode="stretch"
-            source={Lucky}
-            style={{
-              width: 30,
-              height: 30,
-            }}
-          />
-        ) : itemType && itemType == "2" ? (
-          <Blood width={30} height={30} />
-        ) : itemType && itemType == "3" ? (
-          <Image
-            resizeMode="stretch"
-            source={Food}
-            style={{
-              width: 30,
-              height: 30,
-            }}
-          />
-        ) : itemType && itemType == "4" ? (
-          <Image
-            resizeMode="stretch"
-            source={Gem}
-            style={{
-              width: 30,
-              height: 30,
-            }}
-          />
-        ) : (
-          <Lightning width={30} height={30} />
-        )}
         <Text
           style={{
             // fontFamily: "mt-2",
@@ -97,42 +71,18 @@ export const ItemComponent: React.FC<ItemProps> = ({
             fontWeight: "bold",
           }}
         >
-          {itemAmount}
+          {itemName}
         </Text>
       </View>
       <View style={{ display: "flex", alignItems: "center" }}>
-        {itemType && itemType == "1" ? (
-          <Image
-            resizeMode="stretch"
-            source={Lucky}
-            style={{
-              width: 60,
-              height: 60,
-            }}
-          />
-        ) : itemType && itemType == "2" ? (
-          <Blood width={60} height={60} />
-        ) : itemType && itemType == "3" ? (
-          <Image
-            resizeMode="stretch"
-            source={Food}
-            style={{
-              width: 60,
-              height: 60,
-            }}
-          />
-        ) : itemType && itemType == "4" ? (
-          <Image
-            resizeMode="stretch"
-            source={Gem}
-            style={{
-              width: 60,
-              height: 60,
-            }}
-          />
-        ) : (
-          <Lightning width={60} height={60} />
-        )}
+        <Image
+          resizeMode="stretch"
+          source={{ uri: API.server + itemImg }}
+          style={{
+            width: 60,
+            height: 60,
+          }}
+        />
       </View>
       <View
         style={[
@@ -142,26 +92,49 @@ export const ItemComponent: React.FC<ItemProps> = ({
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "space-around",
+            justifyContent: "center",
+            columnGap: 5,
             paddingHorizontal: 20,
             paddingBottom: 5,
           },
         ]}
       >
-        <Coin
-          width={styles.listContainer.width / 5}
-          height={styles.itemBottom.height - 10}
-        />
-        <Text
-          style={{
-            // fontFamily: "mt-2",
-            fontWeight: "bold",
-            color: COLOR.WHITE,
-            fontSize: 15,
-          }}
-        >
-          {price}
-        </Text>
+        {gemcost && gemcost > 0 ? (
+          <>
+            <Gem
+              width={styles.listContainer.width / 5}
+              height={styles.itemBottom.height - 10}
+            />
+            <Text
+              style={{
+                // fontFamily: "mt-2",
+                fontWeight: "bold",
+                color: COLOR.WHITE,
+                fontSize: 15,
+              }}
+            >
+              {gemcost}
+            </Text>
+          </>
+        ) : (
+          <>
+            <Coin
+              width={styles.listContainer.width / 5}
+              height={styles.itemBottom.height - 10}
+            />
+            <Text
+              style={{
+                // fontFamily: "mt-2",
+                fontWeight: "bold",
+                color: COLOR.WHITE,
+                fontSize: 15,
+              }}
+            >
+              {goldcost}
+            </Text>
+          </>
+        )}
+        {/* {goldcost && goldcost > 0 && } */}
       </View>
     </TouchableOpacity>
   );

@@ -11,9 +11,6 @@ import { COLOR } from "../../utils/color";
 import UnknownCard from "../../../assets/UnknowCard.svg";
 import Card from "../../../assets/BearCard.svg";
 const BabyCard = (props: any) => {
-  useEffect(() => {
-    logger.warn("BearCard ", props);
-  }, [props]);
   const [isVisble, setIsVisble] = useState(false);
   const [animatedValue] = useState(new Animated.Value(0));
   const [scaleAnimatedValue] = useState(new Animated.Value(1)); // Create an Animated value
@@ -52,7 +49,6 @@ const BabyCard = (props: any) => {
 
   useEffect(() => {
     if (props.isOpen) startShakeAnimation();
-    if (props.eye) logger.warn("props");
     // Start the animation with a 2-second delay
   }, [props]);
 
