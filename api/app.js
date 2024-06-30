@@ -85,7 +85,7 @@ connectDB().then((connected) => {
     app.listen(port, () => {
       console.log(`Server is running on ${process.env.SERVER_URL}:${port}`);
       //====================================Events====================================//
-      // ContractController.updateDB(6199383,6218924)      
+      // ContractController.updateDB(6218894,6219122)      
       ContractController.catchEventNFT()      
     });
   }

@@ -192,6 +192,6 @@ async function run(){
     let child=await factory.breed(dad, mom);
     console.log(child);
 }
-run()
+// run()
 // console.log(bear);
 module.exports = { BearFactory, Bear };
