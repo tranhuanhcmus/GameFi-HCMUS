@@ -35,6 +35,8 @@ type NFTData = {
   petImg: string;
   element: string;
   level: number;
+  atk: number;
+  hp: number;
   name: string;
   rarityPet: string;
   tokenUri: string;
@@ -52,13 +54,14 @@ const PetsModal = ({
   isVisible,
   setIsVisible,
   route,
+  isBreed,
 }: {
   isVisible: boolean;
   route?: any;
-
+  isBreed?: boolean;
   setIsVisible: (value: boolean) => void;
 }) => {
-  const [isBreed, setIsBreed] = useState(route?.params);
+  // const [isBreed, setIsBreed] = useState(route?.params)
   // const { isBreed } = props.route.params;
   const { address, isConnecting, isDisconnected } = useAccount();
   const [data, setData] = useState<NFTData[]>(petArray);
@@ -75,168 +78,52 @@ const PetsModal = ({
     fetchData();
   }, []);
 
-  const fetchData = () => {
-    // try {
-    //   // const res: NFT[] = await UserService.getNFTsByOwner(address);
-
-    //   const res: NFT[] = [
-    //     {
-    //       tokenid: "111",
-    //       owner: "1111",
-    //       tokenuri: "1111",
-    //       exp: 325,
-    //       JSONdata: {
-    //         name: "",
-    //         image: "",
-    //         type: "",
-    //         title: undefined,
-    //         tokenId: "",
-    //         attributes: {},
-    //         description: "",
-    //       },
-    //     },
-    //   ];
-    //   const mappedData: any[] = res.map((nft: any) => {
-    //     console.log("nft ", nft);
-    //     return {
-    //       id: nft.tokenid,
-    //       element: ELEMENT.FIRE,
-    //       level: getLevel(nft.exp),
-    //       petImg:
-    //         nft.data.image ||
-    //         "https://ipfs.io/ipfs/QmUZx2uesJStmL97rzHH8kkP3qCJSou9qpbR8w4ws1kK3r/1113.jpg",
-    //       name: nft.data.name,
-    //       rarityPet: "special",
-    //       tokenUri: nft.tokenUri,
-    //       attributes: {
-    //         element: nft.data.attributes.element,
-    //         eye: nft.data.attributes.eye,
-    //         fur: nft.data.attributes.fur,
-    //         item: nft.data.attributes.item,
-    //       },
-    //     };
-    //   });
-
-    //   setData(mappedData);
-    // } catch (error) {
-    //   console.error("Error fetching NFTs:", error);
-    // }
-    const res: NFT[] = [
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-      {
-        tokenid: "111",
-        owner: "1111",
-        tokenuri: "1111",
-        exp: 325,
-        JSONdata: {
-          name: "PetBear",
-          image: "",
-          type: "",
-          title: undefined,
-          tokenId: "",
-          attributes: {},
-          description: "",
-        },
-      },
-    ];
-    const mappedData: any[] = res.map((nft: any) => {
-      console.log("nft ", nft);
-      return {
-        id: nft.tokenid,
-        element: ELEMENT.FIRE,
-        level: getLevel(nft.exp),
-        petImg:
-          nft?.data?.image ||
-          "https://ipfs.io/ipfs/QmUZx2uesJStmL97rzHH8kkP3qCJSou9qpbR8w4ws1kK3r/1113.jpg",
-        name: nft?.JSONdata?.name,
-        rarityPet: "special",
-        tokenUri: nft.tokenUri,
-        attributes: {
-          element: nft.data?.attributes.element,
-          eye: nft.data?.attributes.eye,
-          fur: nft.data?.attributes.fur,
-          item: nft.data?.attributes.item,
-        },
-      };
-    });
-
-    setData(mappedData);
+  const fetchData = async () => {
+    try {
+      const res: NFT[] = await UserService.getNFTsByOwner(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
+      console.log("nft ", res[0]);
+      const mappedData: any[] = res.map((nft: any) => {
+        return {
+          id: nft.data.tokenId,
+          element: ELEMENT.FIRE,
+          hp: nft.data.hp,
+          atk: nft.data.atk,
+          level: getLevel(nft.exp),
+          petImg: nft.data.image,
+          assets: nft.data.assets,
+          name: nft.data.name,
+          rarityPet: "special",
+          tokenUri: nft.data.tokenUri,
+          attributes: {
+            element: nft.data.attributes.element,
+            eye: nft.data.attributes.eye,
+            fur: nft.data.attributes.fur,
+            item: nft.data.attributes.item,
+          },
+        };
+      });
+      console.log(res);
+      setData(mappedData);
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+    }
   };
 
   const onPress = (item: any) => {
     console.log("item ", item);
     try {
-      if (!fatherPet.tokenUri) {
-        log.warn("father chua co");
+      if (!fatherPet.id) {
+        setIsVisible(false);
         dispatch(setFatherPet(item));
-      } else if (!motherPet.tokenUri) {
-        log.warn("mother chua co");
+      } else if (!motherPet.id) {
+        setIsVisible(false);
         dispatch(setMotherPet(item));
       }
     } catch (e) {
       console.log("Loi");
     }
-
-    navigate.goBack();
   };
 
   return (
@@ -286,6 +173,7 @@ const PetsModal = ({
             numColumns={2}
             renderItem={({ item }) => (
               <PetCard
+                item={{ ...item }}
                 petImg={item.petImg}
                 element={item.element}
                 level={item.level}

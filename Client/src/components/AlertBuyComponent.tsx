@@ -9,12 +9,15 @@ import {
   Button,
 } from "react-native";
 import { COLOR } from "../utils/color";
+
+import Coin from "../../assets/coin.svg";
+import Gem from "../../assets/diamond.svg";
 import ConstantsResponsive from "../constants/Constanst";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
 import { showAlert, hideAlert, selectAlert } from "../redux/alertSlice";
 import CustomText from "./CustomText";
-import medicine from "../../assets/backGroundItem.png";
+import backgroundShop from "../../assets/backGroundItem.png";
 import GradientButton from "./Button/GradientButton";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import NormalButton from "./Button/NormalButton";
@@ -22,6 +25,9 @@ import NormalButton from "./Button/NormalButton";
 interface AlertBuyComponentProps {
   isVisible?: boolean;
   onClose?: () => void;
+  gemcost?: number;
+  goldcost?: number;
+  name?: string;
   message?: string;
   description?: string;
 }
@@ -30,6 +36,9 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
   isVisible,
   onClose,
   message,
+  name,
+  gemcost,
+  goldcost,
   description,
 }) => {
   const dispatch = useDispatch();
@@ -49,12 +58,16 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
           style={styles.imgContainer}
           className="relative items-center justify-center"
         >
-          <Image resizeMode="stretch" source={medicine} style={styles.img} />
+          <Image
+            resizeMode="stretch"
+            source={backgroundShop}
+            style={styles.img}
+          />
           <CustomText
             className="absolute mt-3 text-start font-rexlia text-[40px]"
-            style={{ color: COLOR.BRIGHT_YELLOW }}
+            style={{ color: COLOR.DARKER_PURPLE }}
           >
-            {message || "Rare food"}
+            {name}
           </CustomText>
         </View>
         <View
@@ -73,7 +86,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
           />
           <CustomText
             className="mt-3 text-start font-rexlia  text-[20px]"
-            style={{ color: COLOR.BLACK }}
+            style={{ color: COLOR.WHITE }}
           >
             {description || "Use: up to 10 point per items"}
           </CustomText>
@@ -87,12 +100,21 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
                 resizeMode="stretch"
                 style={{ width: "100%", height: "100%", position: "absolute" }}
               />
-              <Text
-                className="text-center text-[20px]"
-                style={{ fontWeight: "bold", color: COLOR.WHITE }}
+
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                }}
               >
-                250
-              </Text>
+                <Text
+                  className="text-center text-[20px]"
+                  style={{ fontWeight: "bold", color: COLOR.WHITE }}
+                >
+                  BUY
+                </Text>
+              </View>
             </NormalButton>
           </View>
         </View>

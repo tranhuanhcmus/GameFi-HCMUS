@@ -11,14 +11,13 @@ interface Props {
 }
 
 const BarInfor: React.FC<Props> = ({ color, title, value }) => {
-  const health = value;
-
+  console.log(value);
   let healthBarWidth =
     ((ConstantsResponsive.MAX_WIDTH -
       ConstantsResponsive.XR * 300 -
       ConstantsResponsive.XR * 60 -
       ConstantsResponsive.XR * 6) *
-      health) /
+      90) /
     800;
 
   return (

@@ -33,7 +33,6 @@ const TIME_TO_BREED = 10;
 export function BreedScreen() {
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
   const [childPet, setChildPet] = useState<any>(null);
-  const [isShowTime, setIsShowTime] = useState(false);
 
   const [remainingTime, setRemainingTime] = useState(TIME_TO_BREED);
   const [isActive, setIsActive] = useState(false);
@@ -51,8 +50,8 @@ export function BreedScreen() {
 
   useEffect(() => {
     if (remainingTime === 0) {
-      if (fatherPet.tokenUri && fatherPet.tokenUri) {
-        breedFunction(fatherPet, motherPet);
+      if (fatherPet.id && fatherPet.id) {
+        breedFunction(fatherPet.id, fatherPet.id);
         setIsOpen(true);
       }
       setIsActive(false); // Reset isActive state when time finishes
@@ -73,30 +72,17 @@ export function BreedScreen() {
    */
 
   const breedFunction = async (father: any, mother: any) => {
-    if (!father.tokenUri || !mother.tokenUri) {
-      log.error("Invalid father or mother data for breeding");
-      return; // Or handle the error differently
-    }
+    log.error("father", father);
+    log.error("mother", mother);
 
     try {
-      const dad = {
-        item: father.attributes.item,
-        eye: father.attributes.eye,
-        fur: father.attributes.fur,
-        element: father.attributes.element,
-      };
-      const mom = {
-        item: mother.attributes.item,
-        eye: mother.attributes.eye,
-        fur: mother.attributes.fur,
-        element: mother.attributes.element,
-      };
-      log.error("dad", dad);
-      log.error("mom", mom);
-      const response = await BreedService.breed(dad, mom);
-      if (response) setChildPet(response);
-
-      log.warn("POST request successful:", response);
+      const response = await BreedService.breed(father, mother);
+      if (response) {
+        log.warn("A baby born ", response.data);
+        setChildPet(response.data);
+      } else {
+        log.warn("A baby is not born");
+      }
     } catch (postError: any) {
       log.error("Error making POST request:", postError);
     }
@@ -137,7 +123,7 @@ export function BreedScreen() {
           <BearCard
             element={fatherPet.element}
             level={fatherPet.level}
-            petImg={fatherPet.petImg}
+            image={fatherPet.petImg}
             name={fatherPet.name}
             rarity={fatherPet.rarityPet}
             tokenUri={fatherPet.tokenUri}
@@ -172,44 +158,26 @@ export function BreedScreen() {
         >
           <BabyCard
             disabled={true}
+            hp={childPet?.hp}
+            atk={childPet?.atk}
             element={childPet?.element}
-            level={childPet?.level}
-            image={childPet?.petImg}
+            description={childPet?.description}
+            image={childPet?.image}
             name={childPet?.name}
-            rarity={childPet?.rarityPet}
-            tokenUri={childPet?.tokenUri}
+            assets={childPet?.assets}
             isOpen={isOpen}
           />
         </View>
 
-        {isShowTime && (
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              alignItems: "center",
-              marginTop: 20,
-            }}
-          >
-            <Image
-              source={Hourglass}
-              style={{
-                width: ConstantsResponsive.MAX_WIDTH / 20,
-                height: ConstantsResponsive.MAX_HEIGHT / 20,
-              }}
-            />
-            <CustomText
-              style={{ textAlign: "center", color: COLOR.WHITE, fontSize: 20 }}
-            >
-              10 min
-            </CustomText>
-          </View>
-        )}
         <View style={{ display: "flex", alignItems: "center" }}>
           <AwesomeButton
             onPress={() => {
-              if (fatherPet.tokenUri && motherPet.tokenUri) {
+              if (remainingTime == 0) {
+                // navigate.navigate("Pet");
+                navigate.goBack();
+              }
+
+              if (fatherPet.id && motherPet.id) {
                 setIsActive(true);
               }
             }}

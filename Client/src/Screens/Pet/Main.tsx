@@ -5,12 +5,14 @@ import {
   TouchableNativeFeedback,
   View,
   Image,
+  ActivityIndicator,
   TouchableWithoutFeedback,
   TouchableOpacity,
   ImageSourcePropType,
 } from "react-native";
 import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
+import { getFilenameFromUrl } from "../../function/DownLoadResource";
 import PetsModal from "./Pets";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { SocketIOClient } from "../../../socket";
@@ -35,9 +37,13 @@ import ListFood from "../../components/ListFood";
 import { useNavigation } from "@react-navigation/native";
 import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 import StatsModal from "./Stats";
+import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
+import { API } from "../../apis/constants";
+import Breed from "../../../assets/breed.svg";
+import { setFatherPet, setMotherPet } from "../../redux/breedSlice";
 type Props = {};
 interface FeedState {
-  feed: ImageSourcePropType | null;
+  feed: string | null;
   pageX: number;
   pageY: number;
 }
@@ -50,8 +56,6 @@ const PetScreen = () => {
 
   const [isVisibleStats, setIsVisibleStats] = useState(false);
 
-  const isFocused = useIsFocused();
-
   const [gameName, setGameName] = useState<string>("");
   const [fps, setFps] = useState<string>("10");
   const [loop, setLoop] = useState<boolean>(false);
@@ -62,14 +66,15 @@ const PetScreen = () => {
     (state: any) => state.settingGame,
   );
 
+  const isFocused = useIsFocused();
+
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
   /** useSelector */
   const userState = useSelector(selectUser);
-  const { name, type, image, title, tokenId, attributes, level } = useSelector(
-    (state: any) => state.pet,
-  );
+  const { name, type, image, assets, title, tokenId, attributes, level } =
+    useSelector((state: any) => state.pet);
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
@@ -107,28 +112,25 @@ const PetScreen = () => {
     pageX: 0,
     pageY: 0,
   });
-  const [foodArray, setFoodArray] = useState([
-    {
-      id: 1,
-      image: require("../../../assets/banana.png"),
-    },
-    {
-      id: 2,
-      image: require("../../../assets/grapes.png"),
-    },
-    {
-      id: 3,
-      image: require("../../../assets/comboCandy.png"),
-    },
-    {
-      id: 4,
-      image: require("../../../assets/cookie.png"),
-    },
-    {
-      id: 5,
-      image: require("../../../assets/donut.png"),
-    },
-  ]);
+
+  const [foodArray, setFoodArray] = useState<any>([]);
+
+  const fetchData = async () => {
+    try {
+      const res: any[] = await ItemGameOwnerService.getItems(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
+      const data = res.filter((item) => item.category == "food");
+      console.log(data);
+      setFoodArray(data);
+    } catch (error) {
+      console.error("ItemGameOwnerService.getItems", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [address, isFocused]);
 
   let healthBarWidth =
     ((ConstantsResponsive.MAX_WIDTH -
@@ -153,28 +155,72 @@ const PetScreen = () => {
     }
   }, [isFocused]);
   const removeFoodItem = (id: number, pageX: number, pageY: number) => {
-    const foodImage = foodArray.find((food) => food.id === id)?.image;
+    const foodImage = foodArray.find((food: any) => food.id === id)?.image;
+    console.log(foodImage);
     setFeed({ feed: foodImage, pageX: pageX, pageY: pageY });
-    playSound(sound, "eatingSound");
-    setFoodArray((prevArray) => prevArray.filter((item) => item.id !== id));
+    setTimeout(() => {
+      playSound(sound, "eatingSound");
+    }, 500);
+    setFoodArray((prevArray: any) =>
+      prevArray.filter((item: any) => item.id !== id),
+    );
   };
+
+  const [imageSource, setImageSource] = useState({
+    uri: "",
+    height: 600,
+    width: 600,
+  });
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsImageLoaded(false);
+    Image.getSize(
+      assets,
+      (width, height) => {
+        setIsImageLoaded(true);
+        const file = getFilenameFromUrl(assets);
+        console.log(file);
+        setImageSource({ height: height, width: width, uri: assets });
+        // if (file === "sprites_6537.png") {
+        //   const filename = require(`../../../assets/sprites_6537.png`);
+
+        //   setImageSource(filename);
+        // } else {
+        //   const filename = require(`../../../assets/spritesSheet_18.png`);
+
+        //   setImageSource(filename);
+        // }
+      },
+      (error) => {
+        console.error("Error loading image", error);
+      },
+    );
+  }, [assets]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     let timer: NodeJS.Timeout | null = null;
+    const startTime = Date.now();
+    const middleX = ConstantsResponsive.MAX_WIDTH / 3;
+    const a = 30; // Adjust this to change the curvature of the parabola
 
     if (feed.feed) {
-      // Interval to adjust pageX every second
+      // Interval to adjust pageX and pageY every 200ms
       interval = setInterval(() => {
-        setFeed((prevFeed) => ({
-          ...prevFeed,
-          pageX:
-            prevFeed.pageX + ConstantsResponsive.MAX_WIDTH / 2 - prevFeed.pageX,
-          pageY: prevFeed.pageY - 190, // Subtract 100 from pageX every second
-        }));
-      }, 150);
+        const elapsedTime = (Date.now() - startTime) / 1000; // Time in seconds
+        setFeed((prevFeed) => {
+          const newPageY = prevFeed.pageY - ConstantsResponsive.YR * 40;
+          const newPageX = a * Math.pow(elapsedTime, 2) + middleX;
+          return {
+            ...prevFeed,
+            pageX: newPageX,
+            pageY: newPageY,
+          };
+        });
+      }, 100);
 
-      // Timeout to hide the image after 4 seconds
+      // Timeout to hide the image after 1500ms
       timer = setTimeout(() => {
         setFeed({
           feed: null,
@@ -182,7 +228,7 @@ const PetScreen = () => {
           pageY: 0,
         });
         if (interval) clearInterval(interval); // Clear the interval if it exists
-      }, 300); // Hide the image after 4 seconds
+      }, 1000); // Hide the image after 1500ms
     }
 
     return () => {
@@ -190,7 +236,6 @@ const PetScreen = () => {
       if (timer) clearTimeout(timer); // Clear the timeout on cleanup
     };
   }, [feed.feed]);
-
   return (
     <View
       style={{
@@ -219,7 +264,7 @@ const PetScreen = () => {
             left: ConstantsResponsive.XR * feed.pageX,
             top: ConstantsResponsive.YR * feed.pageY + StatusBarHeight,
           }}
-          source={feed?.feed}
+          source={{ uri: API.server + feed?.feed }}
         ></Image>
       )}
       <Image
@@ -332,7 +377,7 @@ const PetScreen = () => {
               color: COLOR.BLACK,
             }}
           >
-            MYTHBEARCUSTOM56
+            {name}
           </CustomText>
           <View
             style={{
@@ -355,7 +400,7 @@ const PetScreen = () => {
                 fontFamily: "rexlia",
               }}
             >
-              LEVEL {level}
+              LEVEL {Math.floor(level)}
             </CustomText>
             <View style={styles.healthBar}>
               <View
@@ -434,23 +479,77 @@ const PetScreen = () => {
         </CustomText>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          position: "absolute",
+          paddingHorizontal: ConstantsResponsive.XR * 10,
+          justifyContent: "center",
+
+          width: ConstantsResponsive.XR * 80,
+          borderRadius: ConstantsResponsive.XR * 30,
+          height: ConstantsResponsive.XR * 100,
+          left: ConstantsResponsive.XR * 10,
+          rowGap: 2,
+          top: ConstantsResponsive.YR * 3 * 150,
+        }}
+        onPress={() => {
+          dispatch(setFatherPet({ id: null, name: null, image: null }));
+          dispatch(setMotherPet({ id: null, name: null, image: null }));
+          navigate.navigate("Breed");
+        }}
+      >
+        <Image
+          style={{
+            position: "absolute",
+            borderRadius: ConstantsResponsive.XR * 30,
+            paddingVertical: ConstantsResponsive.YR * 20,
+            width: ConstantsResponsive.XR * 80,
+            height: ConstantsResponsive.XR * 100,
+          }}
+          resizeMode="stretch"
+          source={require("../../../assets/backGroundButtonBrown-1.png")}
+        />
+        <Breed
+          width={ConstantsResponsive.XR * 50}
+          height={ConstantsResponsive.XR * 70}
+          style={{
+            position: "absolute",
+            marginLeft: ConstantsResponsive.XR * 15,
+            marginTop: ConstantsResponsive.XR * 10,
+          }}
+        />
+        <CustomText
+          style={{
+            fontFamily: "rexlia",
+            color: COLOR.WHITE,
+            fontSize: ConstantsResponsive.XR * 20,
+            position: "absolute",
+            alignSelf: "center",
+            bottom: -4,
+          }}
+        >
+          BREED
+        </CustomText>
+      </TouchableOpacity>
+
       <View style={styles.playArea}>
-        <View className="absolute bottom-0 left-0 right-0  items-center">
-          <SpriteSheet
-            ref={mummyRef}
-            source={require("../../../assets/spritesSheet_18.png")}
-            columns={60}
-            rows={1}
-            height={ConstantsResponsive.MAX_HEIGHT * 0.3}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-              ],
-            }}
-          />
+        <View className="absolute bottom-0 left-0 right-0  items-center ">
+          {isImageLoaded ? (
+            <SpriteSheet
+              ref={mummyRef}
+              source={imageSource}
+              columns={60}
+              rows={1}
+              height={ConstantsResponsive.MAX_HEIGHT * 0.3}
+              animations={{
+                walk: Array.from({ length: 60 }, (_, i) => i),
+              }}
+            />
+          ) : (
+            <ActivityIndicator size="large" color="#0000ff" />
+          )}
         </View>
       </View>
       <View

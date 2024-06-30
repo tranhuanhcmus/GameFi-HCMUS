@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Modal, TouchableOpacity, View } from "react-native";
 import { useAccount } from "wagmi";
+import { API } from "../../apis/constants";
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
@@ -13,52 +14,27 @@ const InventoryModal = ({
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
 }) => {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      image: require("../../../assets/banana.png"),
-      quantity: 2,
-    },
-    {
-      id: 2,
-      image: require("../../../assets/healing_potion.png"),
-      quantity: 2,
-    },
-    {
-      id: 3,
-      image: require("../../../assets/candy/17.png"),
-      quantity: 2,
-    },
-    {
-      id: 4,
-      image: require("../../../assets/candy/14.png"),
-      quantity: 2,
-    },
-    {
-      id: 5,
-      image: require("../../../assets/candy/19.png"),
-      quantity: 2,
-    },
-  ]);
-
   /** useState */
-  // const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]);
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
-  // const fetchData = async () => {
-  //   try {
-  //     const res: any[] = await ItemGameOwnerService.getItems(address);
-  //     setData([...res]);
-  //   } catch (error) {
-  //     console.error("ItemGameOwnerService.getItems", error);
-  //   }
-  // };
+  const fetchData = async () => {
+    try {
+      const res: any[] = await ItemGameOwnerService.getItems(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
+      console.log(res);
+      setData([...res]);
+    } catch (error) {
+      console.error("ItemGameOwnerService.getItems", error);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, [address]);
+  useEffect(() => {
+    fetchData();
+  }, [address]);
 
   const InventoryItem = ({
     image,
@@ -70,9 +46,9 @@ const InventoryModal = ({
     return (
       <View
         style={{
-          width: ConstantsResponsive.MAX_WIDTH * 0.3,
+          width: ConstantsResponsive.MAX_WIDTH * 0.4,
           height: ConstantsResponsive.MAX_WIDTH * 0.4,
-          backgroundColor: "white",
+          backgroundColor: COLOR.BROWN_BORDER,
           borderRadius: 20,
           display: "flex",
           flexDirection: "column",
@@ -81,12 +57,20 @@ const InventoryModal = ({
         }}
       >
         <Image
-          source={
-            image
-              ? { uri: `http://192.168.1.11:4500${image}` }
-              : require("../../../assets/candy/19.png")
-          }
-          style={{ width: 50, height: 50 }}
+          style={{
+            width: ConstantsResponsive.MAX_WIDTH * 0.4 + 10,
+            height: ConstantsResponsive.MAX_WIDTH * 0.4 + 10,
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+            position: "absolute",
+          }}
+          resizeMode="stretch"
+          source={require("../../../assets/border.png")}
+        />
+        <Image
+          source={{ uri: `${API.server + image}` }}
+          style={{ width: "80%", height: "80%" }}
+          resizeMode="contain"
         />
         <View
           style={{
@@ -115,6 +99,7 @@ const InventoryModal = ({
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           height: ConstantsResponsive.MAX_HEIGHT * 0.7,
+          paddingHorizontal: ConstantsResponsive.XR * 10,
 
           position: "absolute",
           display: "flex",
@@ -159,9 +144,9 @@ const InventoryModal = ({
 
         <FlatList
           data={data}
-          numColumns={3}
+          numColumns={2}
           columnWrapperStyle={{
-            gap: 10,
+            gap: 30,
             width: "100%",
           }}
           contentContainerStyle={{

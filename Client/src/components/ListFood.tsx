@@ -13,6 +13,7 @@ import { COLOR } from "../utils/color";
 import ConstantsResponsive from "../constants/Constanst";
 import { ImageSourcePropType } from "react-native";
 import NormalButton from "./Button/NormalButton";
+import { API } from "../apis/constants";
 
 interface Food {
   id: number;
@@ -68,7 +69,7 @@ const ListFood: React.FC<Props> = (props: Props) => {
               source={require("../../assets/backGroundButtonBrown-1.png")}
             />
             <Image
-              source={food.image}
+              source={{ uri: API.server + food.image }}
               resizeMode="contain"
               style={styles.foodImage}
             />
