@@ -1,10 +1,11 @@
 const { BearFactory, Bear } = require('../bears');
 const { STATUS_CODES, BEAR_GATEWAY_IPFS } = require('../constants');
 const models = require('../database/models');
+const { ContractController, WALLET_PUBLIC_KEY } = require('./ContractController');
 
 const breedBear = async (req, res) => {
 	try {
-		let { dad, mom } = req.body;
+		let { dad, mom, owner } = req.body;
 		dad=dad.toString()
 		mom=mom.toString()
 
@@ -24,6 +25,9 @@ const breedBear = async (req, res) => {
 		}
         let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.tokenUri } })
         result.dataValues.data=tokenUri.data
+
+		// transfer to Owner
+		ContractController.transferFrom(WALLET_PUBLIC_KEY,owner,result.tokenId)
 
 		return res.sendResponse(result, 'Breed bear success', STATUS_CODES.OK);
 	} catch (error) {
