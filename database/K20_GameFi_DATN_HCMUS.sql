@@ -100,11 +100,12 @@ CREATE TABLE "ItemApps" (
 
 CREATE TABLE "BoostEffects" (
 	id uuid NOT NULL,
+	"tokenId" int4 NOT NULL,
 	"owner" text NOT NULL,
 	"createdAt" timestamptz NOT NULL,
 	"updatedAt" timestamptz NOT NULL,
 	"lastTimeBoost" timestamptz NULL,
-	CONSTRAINT "BoostEffects_pkey" PRIMARY KEY (id, "owner")
+	CONSTRAINT "BoostEffects_pkey" PRIMARY KEY (id, "tokenId", "owner")
 );
 
 -- "Cups" definition
@@ -234,10 +235,10 @@ INSERT INTO "ItemApps" (id, "name", description, category, quality, quantity, ge
 	('7dc748d5-de7d-4a76-9a58-62463ee7be14', 'Gem', 'Gem', 'currency', 'normal', 1, 1, 0, '/uploads/gem.jpg', '2024-05-07 22:22:05.251+07', '2024-05-07 22:22:05.251+07'),
     ('1a06543f-42c7-402f-a22a-32594b58c0e5', 'Gold', 'Gold', 'currency', 'normal', 1000, 1, 0, '/uploads/gold.jpg', '2024-05-07 22:22:35.891+07', '2024-05-07 22:22:35.891+07'),
     
-INSERT INTO "BoostEffects" (id, "owner", "lastTimeBoost", "createdAt", "updatedAt") VALUES
-	('281fc328-8e1d-418a-a75c-13e423e28c16', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
-	('c6b19675-b258-447d-b5e0-69b3f6da2aad', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
-	('5579da2e-d4b9-4f2d-8475-3ed525c598da', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07');
+INSERT INTO "BoostEffects" (id, "tokenId", "owner", "lastTimeBoost", "createdAt", "updatedAt") VALUES
+	('281fc328-8e1d-418a-a75c-13e423e28c16', 1111, '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
+	('c6b19675-b258-447d-b5e0-69b3f6da2aad', 1117, '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07'),
+	('5579da2e-d4b9-4f2d-8475-3ed525c598da', 1118, '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07', '2024-04-20 15:52:28.105+07');
 
 INSERT INTO "Cups" (id, "owner", "cup", "createdAt", "updatedAt") VALUES
 	('d1f2e245-3a6d-4e2a-a041-45fa0fb7c41e', '0xFe25C8BB510D24ab8B3237294D1A8fCC93241454', 10, '2024-04-27 15:52:28.105+07', '2024-04-27 15:52:28.105+07');
