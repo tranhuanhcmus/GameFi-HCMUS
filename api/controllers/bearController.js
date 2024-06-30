@@ -6,6 +6,11 @@ const { ContractController, WALLET_PUBLIC_KEY } = require('./ContractController'
 const breedBear = async (req, res) => {
 	try {
 		let { dad, mom, owner } = req.body;
+
+		if(!dad||!mom||!owner){
+			return res.sendResponse(null, 'require dad,mom,owner', STATUS_CODES.BAD_REQUEST);
+		}
+		
 		dad=dad.toString()
 		mom=mom.toString()
 
