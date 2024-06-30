@@ -1,4 +1,3 @@
-const { default: axios } = require("axios")
 const { tokenUriController } = require(".")
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")

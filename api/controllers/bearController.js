@@ -13,21 +13,18 @@ const breedBear = async (req, res) => {
 		const bearDad = new Bear(dad[0], dad[1], dad[2], dad[3]);
 		const bearMom = new Bear(mom[0], mom[1], mom[2], mom[3]);
 		// const bearDad = new Bear().importBear(dad);
-		const bears = factory.crossover(bearDad, bearMom);
-		let random = Math.random();
-		let myBear = random < 0.5 ? bears[0] : bears[1];
-		// myBear = factory.getMutateBear(myBear).mutateBear;
-		let my_bear_id=myBear.getId()
-		
-		const result = await models.NFT.findOne({ where: { tokenId: my_bear_id } })
-		if(!result){
-			return res.sendResponse(null, `Not found NFT with tokenID: ${my_bear_id}`, STATUS_CODES.NOT_FOUND);
+		let child= await factory.breed(bearDad,bearMom)
+
+		if(!child){
+			return res.sendResponse(null, `All children of this dad and mom already generated!`);
 		}
+		const result = await models.NFT.findOne({ where: { tokenId: child } })
+		
         let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.tokenUri } })
         result.dataValues.data=tokenUri.data
 
 		// transfer to Owner
-		ContractController.transferFrom(WALLET_PUBLIC_KEY,owner,result.tokenId)
+		// ContractController.transferFrom(WALLET_PUBLIC_KEY,owner,result.tokenId)
 
 		return res.sendResponse(result, 'Breed bear success', STATUS_CODES.OK);
 	} catch (error) {

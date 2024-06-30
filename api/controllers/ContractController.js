@@ -6,7 +6,7 @@ const { STATUS_CODES } = require("../constants");
 const { PetABI, PetAddress } = require('../abis/Pet.js');
 
 
-export const WALLET_PUBLIC_KEY = process.env.WALLET_PUBLIC_KEY || ''
+const WALLET_PUBLIC_KEY = process.env.WALLET_PUBLIC_KEY || ''
 const WALLET_PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || ''
 
 const rpc = `wss://ethereum-sepolia-rpc.publicnode.com`;
@@ -234,5 +234,5 @@ const ContractController = {
 
 
 module.exports = {
-   ContractController
+   ContractController,WALLET_PUBLIC_KEY
 }
