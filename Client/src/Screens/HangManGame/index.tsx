@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateHp } from "../../redux/playerSlice";
 import TimingLine from "./TimingLine";
 import { SocketIOClient } from "../../../socket";
+
 import { Animated } from "react-native";
 import {
   updateComponentHp,
@@ -35,10 +36,6 @@ import { playSound } from "../../function/SoundGame";
 import { NativeModules } from "react-native";
 
 // ...
-
-const { StatusBarManager } = NativeModules;
-
-const height = StatusBarManager.HEIGHT;
 
 const Index = () => {
   const { hp, componentHp, gameRoom } = useSelector(
@@ -201,7 +198,7 @@ const Index = () => {
         style={styles.bgHeader}
       />
 
-      <SafeAreaView>
+      <SafeAreaView style={{ marginTop: StatusBarHeight }}>
         <View style={styles.playArea}>
           <View style={styles.containHeader}>
             <Header></Header>

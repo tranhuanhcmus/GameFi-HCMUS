@@ -15,7 +15,6 @@ import Bear from "../../assets/iconBear.svg";
 import ConnectScreen from "../Screens/Connect/Main";
 import PetScreen from "../Screens/Pet/Main";
 import GameScreen from "../Screens/Game/Main";
-import PlayScreen from "../Screens/Play/Main";
 import ShopScreen from "../Screens/Shop/Main";
 import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
@@ -26,7 +25,6 @@ import HangManGame from "../Screens/HangManGame/index";
 import Breed from "../../assets/breed.svg";
 
 import { BreedScreen } from "../Screens/Breed/Main";
-import DetailOfPet from "../Screens/PetDetail/Main";
 import HomeScreen from "../Screens/Home/Main";
 import TrendMarketScreen from "../Screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
@@ -127,7 +125,6 @@ const renderNavElement = (data: NavItem[]) => {
 
 type LocalRootStackParamList = {
   Breed: undefined;
-  DetailOfPet: undefined;
   Connect: undefined;
   MainTab: undefined;
   Game: undefined;
@@ -135,11 +132,11 @@ type LocalRootStackParamList = {
   HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
-
   Play: undefined;
   League: undefined;
   Event: undefined;
   Profile: undefined;
+  Pet: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -154,7 +151,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="MainTab">
+    <Stack.Navigator initialRouteName="Connect">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
@@ -192,13 +189,7 @@ const Route = () => (
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="DetailOfPet"
-        component={DetailOfPet}
-        options={{
-          headerShown: false,
-        }}
-      />
+
       <Stack.Screen
         name="MainTab"
         options={{
@@ -213,13 +204,6 @@ const Route = () => (
           headerShown: false,
         }}
         component={TrendMarketScreen}
-      />
-      <Stack.Screen
-        name="Play"
-        options={{
-          headerShown: false,
-        }}
-        component={PlayScreen}
       />
 
       <Stack.Screen
@@ -239,6 +223,13 @@ const Route = () => (
       <Stack.Screen
         name="Home"
         component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Pet"
+        component={PetScreen}
         options={{
           headerShown: false,
         }}

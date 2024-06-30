@@ -40,7 +40,10 @@ const getCupSumByOwner = async (req, res, next) => {
         [Sequelize.fn('sum', Sequelize.col('cup')), 'total_cups']
       ],
       group: ['owner', groupByColumn],
-      order: [['owner', 'ASC'], [groupByColumn, 'ASC']]
+      order: [
+        [groupByColumn, 'DESC'], // Order by groupByColumn from newest to oldest
+        [Sequelize.fn('sum', Sequelize.col('cup')), 'DESC'], // Order by total_cups in descending order
+      ]
     });
 
     if (!cupsByTimePeriod || cupsByTimePeriod.length === 0) {
@@ -93,7 +96,10 @@ const getCupSumBySpecificOwner = async (req, res, next) => {
         owner: owner
       },
       group: ['owner', groupByColumn],
-      order: [['owner', 'ASC'], [groupByColumn, 'ASC']]
+      order: [
+        [groupByColumn, 'DESC'], // Order by groupByColumn from newest to oldest
+        [Sequelize.fn('sum', Sequelize.col('cup')), 'DESC'], // Order by total_cups in descending order
+      ]
     });
     if (!results) {
       return res.sendResponse(null, `Not Found Data for owner ${owner} in time period ${timePeriod}`, STATUS_CODES.NOT_FOUND);

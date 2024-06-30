@@ -54,7 +54,7 @@ const ProfileScreen = () => {
           width: ConstantsResponsive.MAX_WIDTH,
         }}
       />
-      {isConnected && <W3mAccountButton balance="show" />}
+
       <View
         id="image_info"
         style={{
@@ -107,7 +107,6 @@ const ProfileScreen = () => {
           style={{
             width: ConstantsResponsive.MAX_WIDTH * 0.9,
             height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-            backgroundColor: COLOR.DARKER_PURPLE,
             justifyContent: "flex-start",
             display: "flex",
             alignItems: "center",
@@ -116,6 +115,15 @@ const ProfileScreen = () => {
             paddingLeft: 10,
           }}
         >
+          <Image
+            source={require("../../../assets/backGroundForTableQuestion.png")}
+            resizeMode="stretch"
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+            }}
+          />
           <Image
             source={require("../../../assets/avatar.png")}
             style={{
@@ -136,7 +144,7 @@ const ProfileScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <View
+      {/* <View
         id="in_game_currency"
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
@@ -188,7 +196,8 @@ const ProfileScreen = () => {
             </View>
           )}
         />
-      </View>
+      </View> */}
+
       <View
         id="inventory"
         style={{
@@ -214,7 +223,6 @@ const ProfileScreen = () => {
           style={{
             width: ConstantsResponsive.MAX_WIDTH * 0.9,
             height: "auto",
-            backgroundColor: COLOR.DARKER_PURPLE,
             borderRadius: 20,
           }}
         >
@@ -225,7 +233,6 @@ const ProfileScreen = () => {
             style={{
               width: ConstantsResponsive.MAX_WIDTH * 0.9,
               height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-              backgroundColor: COLOR.DARKER_PURPLE,
               justifyContent: "flex-start",
               display: "flex",
               alignItems: "center",
@@ -234,8 +241,18 @@ const ProfileScreen = () => {
               paddingLeft: 10,
               borderBottomWidth: 0.5,
               borderBottomColor: COLOR.WHITE,
+              marginBottom: 5,
             }}
           >
+            <Image
+              source={require("../../../assets/backGroundForTableQuestion.png")}
+              resizeMode="stretch"
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+              }}
+            />
             <Image
               source={require("../../../assets/avatar.png")}
               style={{
@@ -261,7 +278,6 @@ const ProfileScreen = () => {
             style={{
               width: ConstantsResponsive.MAX_WIDTH * 0.9,
               height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-              backgroundColor: COLOR.DARKER_PURPLE,
               justifyContent: "flex-start",
               display: "flex",
               alignItems: "center",
@@ -270,8 +286,18 @@ const ProfileScreen = () => {
               paddingLeft: 10,
               borderBottomWidth: 0.5,
               borderBottomColor: COLOR.WHITE,
+              marginBottom: 5,
             }}
           >
+            <Image
+              source={require("../../../assets/backGroundForTableQuestion.png")}
+              resizeMode="stretch"
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+              }}
+            />
             <Image
               source={require("../../../assets/avatar.png")}
               style={{
@@ -295,17 +321,27 @@ const ProfileScreen = () => {
               navigation.goBack();
             }}
             style={{
-              width: ConstantsResponsive.MAX_WIDTH * 0.8,
+              width: ConstantsResponsive.MAX_WIDTH * 0.9,
               height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-              backgroundColor: COLOR.DARKER_PURPLE,
               justifyContent: "flex-start",
               display: "flex",
               alignItems: "center",
               flexDirection: "row",
               borderRadius: 20,
               paddingLeft: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: COLOR.WHITE,
             }}
           >
+            <Image
+              source={require("../../../assets/backGroundForTableQuestion.png")}
+              resizeMode="stretch"
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+              }}
+            />
             <Image
               source={require("../../../assets/avatar.png")}
               style={{
@@ -326,6 +362,9 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      {isConnected && <W3mAccountButton balance="show" />}
+
       <View
         id="bottom_button"
         style={{
@@ -338,7 +377,11 @@ const ProfileScreen = () => {
       >
         <AwesomeButton
           onPress={() => {
-            setIsConnected(true);
+            if (isConnected) {
+              setIsConnected(false);
+            } else {
+              setIsConnected(true);
+            }
           }}
           width={ConstantsResponsive.MAX_WIDTH * 0.8}
           backgroundColor={COLOR.BLUE}
