@@ -29,10 +29,12 @@ import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
+import Thunder from "../../../assets/thunder.svg";
 
 import { updatePet } from "../../redux/petSlice";
 import { UserService } from "../../services/UserService";
 import logger from "../../logger";
+import { BoostEffectsService } from "../../services/BoostEffectsService";
 type Props = {};
 
 const HomeScreen = () => {
@@ -44,7 +46,7 @@ const HomeScreen = () => {
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
-
+  const [boostEffects, setBoostEffects] = useState([1]);
   const isFocused = useIsFocused();
 
   const [gameName, setGameName] = useState<string>("");
@@ -96,6 +98,7 @@ const HomeScreen = () => {
     setResetAfterFinish(true);
   };
 
+  const healthBarScaleValue = new Animated.Value(1);
   const inventoryTranslateYValue = new Animated.Value(0);
   const changeGameBtnTranslateYValue = new Animated.Value(0);
   const playGameBtnTranslateYValue = new Animated.Value(0);
@@ -156,6 +159,22 @@ const HomeScreen = () => {
   //     dispatch(setAddress(address));
   //   }
   // }, [isConnected]);
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.spring(healthBarScaleValue, {
+        toValue: 1.1,
+        tension: 10,
+        useNativeDriver: true,
+      }),
+      Animated.spring(healthBarScaleValue, {
+        toValue: 1,
+        tension: 10,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [isFocused, boostEffects]);
+
   useEffect(() => {
     if (isFocused) {
       play("walk");
@@ -165,6 +184,22 @@ const HomeScreen = () => {
     }
   }, [isFocused]);
 
+  const fetchBoostEffects = async () => {
+    try {
+      const res: any[] = await BoostEffectsService.getBoostEffects(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
+
+      console.log("Successfully fetchBoostEffects ", res);
+    } catch (error) {
+      console.error("Error fetchBoostEffects:", error);
+    }
+  };
+
+  useEffect(() => {
+    logger.debug("eheheh fetchBoostEffects");
+    fetchBoostEffects();
+  }, []);
   const fetchData = async () => {
     try {
       const res: any[] = await UserService.getNFTsByOwner(address);
@@ -241,12 +276,12 @@ const HomeScreen = () => {
             Animated.sequence([
               Animated.timing(inventoryTranslateYValue, {
                 toValue: 10,
-                duration: 150,
+                duration: 100,
                 useNativeDriver: true,
               }),
               Animated.timing(inventoryTranslateYValue, {
                 toValue: 0,
-                duration: 150,
+                duration: 100,
                 useNativeDriver: true,
               }),
             ]).start(() => {
@@ -287,9 +322,25 @@ const HomeScreen = () => {
         >
           LEVEL {level}
         </CustomText>
-        {/* <View style={styles.healthBar}>
-          <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
-        </View> */}
+        <Animated.View
+          style={[
+            styles.healthBar,
+            { transform: [{ scale: healthBarScaleValue }] },
+          ]}
+        >
+          <Thunder
+            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+            height={ConstantsResponsive.MAX_WIDTH * 0.1}
+          />
+          <Thunder
+            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+            height={ConstantsResponsive.MAX_WIDTH * 0.1}
+          />
+          <Thunder
+            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+            height={ConstantsResponsive.MAX_WIDTH * 0.1}
+          />
+        </Animated.View>
       </View>
 
       <View style={styles.playArea}>
@@ -594,17 +645,19 @@ const styles = StyleSheet.create({
     height: ConstantsResponsive.YR * 40,
   },
   healthBar: {
-    height: ConstantsResponsive.YR * 20,
+    height: ConstantsResponsive.MAX_WIDTH * 0.1,
     width:
       ConstantsResponsive.MAX_WIDTH -
       ConstantsResponsive.XR * 200 -
       ConstantsResponsive.XR * 60,
     marginLeft: ConstantsResponsive.XR * 40,
     marginTop: ConstantsResponsive.YR * 10,
-    backgroundColor: COLOR.WHITE,
-    borderWidth: 2,
-    borderColor: COLOR.RED_BG_BUTTON,
     borderRadius: ConstantsResponsive.YR * 10,
+    paddingHorizontal: ConstantsResponsive.MAX_WIDTH * 0.1,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   healthBarInner: {
     position: "absolute",
