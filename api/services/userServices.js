@@ -1,6 +1,7 @@
 const db = require('../config.js');
 const crypto = require('crypto');
 const axios = require('axios');
+const { getInfoFromTokenURI } = require('../controllers/ContractController.js');
 
 const getNFTbyOwner = async (owner) => {
   try {
@@ -48,16 +49,6 @@ const updateNFTExp = async (tokenid, exp) => {
   }
 };
 
-const getInfoFromTokenURI = async (url) => {
-    try {
-        const response = await axios.get(url);
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return { message: 'Lỗi khi lấy dữ liệu từ url', apiCode: 500 };
-    }
-}
 
 const getAllTokenURIData = async () => {
     try {

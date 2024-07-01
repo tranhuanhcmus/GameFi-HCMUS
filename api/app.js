@@ -17,10 +17,12 @@ const {
   adminRouter, 
   hangmanRouter,
   bearRouter,
+  boostEffectRouter,
   elementPoolRouter,
   eyePoolRouter,
   furPoolRouter, 
-  itemPoolRouter 
+  itemPoolRouter,
+  cupRouter 
 } = require('./routes');
 
 const app = express();
@@ -45,6 +47,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/user', userRouter);
 app.use('/hangmans', hangmanRouter);
 app.use('/bears', bearRouter);
+app.use('/boostEffects', boostEffectRouter);
+app.use('/cups', cupRouter);
 app.use('/eyes', eyePoolRouter);
 app.use('/elements', elementPoolRouter);
 app.use('/furs', furPoolRouter);

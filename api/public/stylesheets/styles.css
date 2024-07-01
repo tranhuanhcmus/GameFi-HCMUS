@@ -129,7 +129,8 @@ header {
     overflow: hidden;
     background-color: #fff;
     cursor: pointer;
-    transition: all .2s ease-in-out; }
+    transition: all .2s ease-in-out;
+    min-height: 25vh; }
     .itemList .card:hover .card__info {
       opacity: 1;
       visibility: visible;

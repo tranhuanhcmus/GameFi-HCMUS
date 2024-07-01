@@ -27,7 +27,7 @@ interface PetCardProps {
   level: number;
   name: string;
   rarityPet: string;
-  isBreed: boolean; // CHECK IF THIS PET CHOOSE TO BREED
+  isBreed?: boolean; // CHECK IF THIS PET CHOOSE TO BREED
   tokenUri: string;
   item: any;
   attributes: {
@@ -72,7 +72,7 @@ const PetCard: React.FC<PetCardProps> = ({
           }),
         ]).start(() => {
           if (isBreed) {
-            onPress(null);
+            onPress(item);
           } else {
             console.log(item);
             dispatch(

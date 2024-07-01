@@ -1,9 +1,9 @@
 class BearFactory {
     constructor() {
-        this.eyePool = [1,2,3];
-        this.furPool = [1,2,3];
-        this.elementPool = [1,2,3];
-        this.itemPool = [1,2,3];
+        this.elementPool = [1,2,3,4,5,6]; 
+        this.furPool = [1,2,3,5,7,8,9]
+        this.eyePool = [1,2,3,6,7]; 
+        this.itemPool = [1,6,7,8];
     }
 
     getAttrs() {
@@ -96,9 +96,9 @@ class BearFactory {
 
 class Bear {
     constructor(
-        eye = undefined,
-        fur = undefined,
         element = undefined,
+        fur = undefined,
+        eye = undefined,
         item = undefined,
         name = undefined,
         rarity = undefined,
@@ -116,9 +116,9 @@ class Bear {
     }
     getInfo() {
         return {
-            eye: this.__eye,
-            fur: this.__fur,
             element: this.__element,
+            fur: this.__fur,
+            eye: this.__eye,
             item: this.__item,
             name: this.__name,
             rarity: this.__rarity,
@@ -127,7 +127,7 @@ class Bear {
         };
     }
     getId(){
-        return `${this.__eye}${this.__fur}${this.__element}${this.__item}`
+        return `${this.__element}${this.__fur}${this.__eye}${this.__item}`
     }
     importBear(bear) {
         this.__eye = bear.eye;

@@ -1,12 +1,86 @@
-const { STATUS_CODES } = require("../constants")
+const { Sequelize, Op } = require("sequelize");
+const { STATUS_CODES, ITEM_CATEGORY } = require("../constants")
 const models = require("../database/models")
-const getAll = async(req, res, next) => {
-    try {
-        const list = await models.ItemGame.findAll()
+// const getAll = async(req, res, next) => {
+//     try {
 
-        return res.sendResponse(list, "Get All Success", STATUS_CODES.OK)
+//         let category_filter = {};
+//         let quality_filter = {};
+
+//         if (req.query && req.query.category) {
+//             switch (req.query.category) {
+//                 case 'shop':
+//                     category_filter = { category: {
+//                             [Op.in]: ITEM_CATEGORY } };
+//                     break;
+//                 case 'boost':
+//                     category_filter = { category: 'boost' };
+//                     break;
+//                 case 'food':
+//                     category_filter = { category: 'food' };
+//                     break;
+//                 case 'treasure':
+//                     category_filter = { category: 'treasure' };
+//                     break;
+//                 case 'energy':
+//                     category_filter = { category: 'energy' };
+//                     break;
+//                 default:
+//                     // Handle unknown category, if needed
+//                     break;
+//             }
+//         }
+//         if (req.query && req.query.quality) {
+//             switch (req.query.quality) {
+//                 case 'normal':
+//                     quality_filter = { quality: 'normal' };
+//                     break;
+//                 case 'rare':
+//                     quality_filter = { quality: 'rare' };
+//                     break;
+//                 case 'super rare':
+//                     quality_filter = { quality: 'super rare' };
+//                     break;
+                
+//                 default:
+//                     // Handle unknown quality, if needed
+//                     break;
+//             }
+//         }
+
+//         let checkFilter = req.query ? true : false
+
+//         const whereClause = { where: {...category_filter,...quality_filter } };
+
+//         const list = await models.ItemGame.findAll(whereClause)
+
+//         return res.sendResponse(list, "Get All Success", STATUS_CODES.OK)
+//     } catch (error) {
+//         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+//     }
+// }
+const getAll = async (req, res, next) => {
+    try {
+        // Fetch all items without any filters
+        const list = await models.ItemGame.findAll();
+
+        if (!list || list.length === 0) {
+            return res.sendResponse(null, "No items found", STATUS_CODES.NOT_FOUND);
+        }
+
+        // Group results by category
+        const groupedResults = list.reduce((acc, item) => {
+            const category = item.dataValues.category;
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            acc[category].push(item.dataValues);
+            return acc;
+        }, {});
+
+        return res.sendResponse(groupedResults, "Get All Success", STATUS_CODES.OK);
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const getById = async(req, res, next) => {
@@ -45,7 +119,7 @@ const deleteById = async(req, res, next) => {
 
 const add = async(req, res, next) => {
     try {
-        let formData = { ...req.body, image: '/uploads/'+req.body?.imageName};
+        let formData = {...req.body, image: '/uploads/' + req.body.imageName };
         const newRow = await models.ItemGame.create(formData)
 
         return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
@@ -76,6 +150,10 @@ const updateById = async(req, res, next) => {
     }
 }
 
-module.exports={
-	getAll,getById,add,deleteById,updateById
+module.exports = {
+    getAll,
+    getById,
+    add,
+    deleteById,
+    updateById
 }

@@ -1,5 +1,6 @@
 function renderItemAppList(data) {
-    let list = data.data
+    let list = itemListAdapter(data.data)
+
     let itemList = $(".page--itemApp .itemList")
     itemList.empty()
     list.forEach(item => {

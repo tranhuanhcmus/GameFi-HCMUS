@@ -25,7 +25,6 @@ import HangManGame from "../Screens/HangManGame/index";
 import Breed from "../../assets/breed.svg";
 
 import { BreedScreen } from "../Screens/Breed/Main";
-import DetailOfPet from "../Screens/PetDetail/Main";
 import HomeScreen from "../Screens/Home/Main";
 import TrendMarketScreen from "../Screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
@@ -126,7 +125,6 @@ const renderNavElement = (data: NavItem[]) => {
 
 type LocalRootStackParamList = {
   Breed: undefined;
-  DetailOfPet: undefined;
   Connect: undefined;
   MainTab: undefined;
   Game: undefined;
@@ -134,11 +132,11 @@ type LocalRootStackParamList = {
   HangManGame: undefined;
   TrendMarket: undefined;
   Home: undefined;
-
   Play: undefined;
   League: undefined;
   Event: undefined;
   Profile: undefined;
+  Pet: undefined;
 };
 
 const Stack = createNativeStackNavigator<LocalRootStackParamList>();
@@ -153,7 +151,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="MainTab">
+    <Stack.Navigator initialRouteName="Connect">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}
@@ -191,13 +189,7 @@ const Route = () => (
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="DetailOfPet"
-        component={DetailOfPet}
-        options={{
-          headerShown: false,
-        }}
-      />
+
       <Stack.Screen
         name="MainTab"
         options={{
@@ -231,6 +223,13 @@ const Route = () => (
       <Stack.Screen
         name="Home"
         component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Pet"
+        component={PetScreen}
         options={{
           headerShown: false,
         }}
