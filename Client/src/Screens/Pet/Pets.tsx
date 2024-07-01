@@ -27,6 +27,7 @@ import { useAccount } from "wagmi";
 import AwesomeButton from "react-native-really-awesome-button";
 
 import CloseButton from "../../../assets/carbon_close-filled.svg";
+import useFetch from "../../hooks/useFetch";
 
 type Props = {};
 
@@ -68,23 +69,17 @@ const PetsModal = ({
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
+  const { apiData, serverError } = useFetch(() =>
+    UserService.getNFTsByOwner("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
+  );
 
   useEffect(() => {
-    // Example: Dispatch an alert when the PlayScreen component mounts
-    // dispatch(showAlert("This is an alert from PlayScreen"));
-  }, [dispatch]);
+    mappingData();
+  }, [apiData]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const res: NFT[] = await UserService.getNFTsByOwner(
-        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-      );
-      console.log("nft ", res[0]);
-      const mappedData: any[] = res.map((nft: any) => {
+  const mappingData = () => {
+    if (apiData) {
+      const mappedData: any[] = apiData.map((nft: any) => {
         return {
           id: nft.data.tokenId,
           element: ELEMENT.FIRE,
@@ -104,10 +99,8 @@ const PetsModal = ({
           },
         };
       });
-      console.log(res);
-      setData(mappedData);
-    } catch (error) {
-      console.error("Error fetching NFTs:", error);
+      console.log(apiData);
+      setData([...mappedData]);
     }
   };
 

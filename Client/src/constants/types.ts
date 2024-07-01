@@ -5,3 +5,9 @@ export const ELEMENT = {
   STONE: "stone",
   IRON: "iron",
 };
+
+export const CATEGORY = {
+  FOODPACK: "food pack",
+  PACK: "pack",
+
+}
