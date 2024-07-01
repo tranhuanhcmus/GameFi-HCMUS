@@ -17,3 +17,29 @@ export function getLevel(exp: number) {
   }
   return level;
 }
+
+export function calculateEnergy(lastTimeUpdated: string) {
+  // Get the current time in milliseconds
+  const now = new Date().getTime();
+
+  // Parse the lastTimeUpdated string into a Date object
+  const lastTimeUpdatedDate = new Date(lastTimeUpdated);
+
+  // Calculate the time difference in milliseconds
+  const timeDiff = now - lastTimeUpdatedDate.getTime();
+
+  // Convert time difference to minutes
+  const timeDiffInMinutes = timeDiff / (1000 * 60);
+
+  // Determine the number of energy units based on time difference
+  let energyUnits = 0;
+  if (timeDiffInMinutes >= 15) {
+    energyUnits = 3;
+  } else if (timeDiffInMinutes >= 10) {
+    energyUnits = 2;
+  } else if (timeDiffInMinutes >= 5) {
+    energyUnits = 1;
+  }
+
+  return energyUnits;
+}

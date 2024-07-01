@@ -7,6 +7,6 @@ export const API = {
   ITEM_APP: "/itemApps",
   BREED: "/bears/breed",
   CUP: "/cups",
-  BOOST_EFFECTS: "/boostEffects/owner",
+  BOOST_EFFECTS: "/boostEffects",
   server: "https://gamefi-hcmus.onrender.com",
 };

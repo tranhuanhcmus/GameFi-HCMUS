@@ -35,6 +35,7 @@ import { updatePet } from "../../redux/petSlice";
 import { UserService } from "../../services/UserService";
 import logger from "../../logger";
 import { BoostEffectsService } from "../../services/BoostEffectsService";
+import { calculateEnergy } from "../../utils/pet";
 type Props = {};
 
 const HomeScreen = () => {
@@ -46,7 +47,7 @@ const HomeScreen = () => {
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
-  const [boostEffects, setBoostEffects] = useState([1]);
+  const [boostEffects, setBoostEffects] = useState(3);
   const isFocused = useIsFocused();
 
   const [gameName, setGameName] = useState<string>("");
@@ -186,11 +187,14 @@ const HomeScreen = () => {
 
   const fetchBoostEffects = async () => {
     try {
-      const res: any[] = await BoostEffectsService.getBoostEffects(
-        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-      );
+      const res: any[] = await BoostEffectsService.getBoostEffects();
 
       console.log("Successfully fetchBoostEffects ", res);
+      const data = res.find((item: any) => item.tokenId === tokenId);
+      if (data) {
+        let energyCnt = calculateEnergy(data.lastTimeBoost);
+        setBoostEffects(energyCnt);
+      }
     } catch (error) {
       console.error("Error fetchBoostEffects:", error);
     }
@@ -198,8 +202,10 @@ const HomeScreen = () => {
 
   useEffect(() => {
     logger.debug("eheheh fetchBoostEffects");
-    fetchBoostEffects();
-  }, []);
+    if (tokenId !== "") {
+      fetchBoostEffects();
+    }
+  }, [tokenId]);
   const fetchData = async () => {
     try {
       const res: any[] = await UserService.getNFTsByOwner(address);
@@ -328,18 +334,42 @@ const HomeScreen = () => {
             { transform: [{ scale: healthBarScaleValue }] },
           ]}
         >
-          <Thunder
-            width={ConstantsResponsive.MAX_WIDTH * 0.1}
-            height={ConstantsResponsive.MAX_WIDTH * 0.1}
-          />
-          <Thunder
-            width={ConstantsResponsive.MAX_WIDTH * 0.1}
-            height={ConstantsResponsive.MAX_WIDTH * 0.1}
-          />
-          <Thunder
-            width={ConstantsResponsive.MAX_WIDTH * 0.1}
-            height={ConstantsResponsive.MAX_WIDTH * 0.1}
-          />
+          {boostEffects >= 3 ? (
+            <>
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+            </>
+          ) : boostEffects >= 2 ? (
+            <>
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+            </>
+          ) : boostEffects >= 1 ? (
+            <>
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+            </>
+          ) : (
+            <></>
+          )}
         </Animated.View>
       </View>
 
