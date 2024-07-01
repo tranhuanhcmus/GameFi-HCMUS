@@ -15,7 +15,6 @@ import Bear from "../../assets/iconBear.svg";
 import ConnectScreen from "../Screens/Connect/Main";
 import PetScreen from "../Screens/Pet/Main";
 import GameScreen from "../Screens/Game/Main";
-import PlayScreen from "../Screens/Play/Main";
 import ShopScreen from "../Screens/Shop/Main";
 import AlertComponent from "../components/AlertComponent";
 import ComponentNavElement from "../components/ComponentNavElement";
@@ -213,13 +212,6 @@ const Route = () => (
           headerShown: false,
         }}
         component={TrendMarketScreen}
-      />
-      <Stack.Screen
-        name="Play"
-        options={{
-          headerShown: false,
-        }}
-        component={PlayScreen}
       />
 
       <Stack.Screen

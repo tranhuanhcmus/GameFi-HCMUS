@@ -39,6 +39,7 @@ import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 import StatsModal from "./Stats";
 import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
 import { API } from "../../apis/constants";
+import { selectLoading } from "../../redux/loadingSlice";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 type Props = {};
 interface FeedState {
@@ -86,6 +87,8 @@ const PetScreen = () => {
   /** useAppDispatch */
   const dispatch = useAppDispatch();
   const socket = SocketIOClient.getInstance();
+
+  const { isLoading: isLoadingFetch } = useSelector(selectLoading);
 
   /** useRef */
   const mummyRef = useRef<SpriteSheet>(null);
@@ -174,22 +177,19 @@ const PetScreen = () => {
 
   useEffect(() => {
     setIsImageLoaded(false);
+
     Image.getSize(
       assets,
       (width, height) => {
-        setIsImageLoaded(true);
         const file = getFilenameFromUrl(assets);
         console.log(file);
-        setImageSource({ height: height, width: width, uri: assets });
-        // if (file === "sprites_6537.png") {
-        //   const filename = require(`../../../assets/sprites_6537.png`);
-
-        //   setImageSource(filename);
-        // } else {
-        //   const filename = require(`../../../assets/spritesSheet_18.png`);
-
-        //   setImageSource(filename);
-        // }
+        setImageSource({
+          height: height,
+          width: width,
+          uri: assets,
+        });
+        setIsImageLoaded(true);
+        play("walk");
       },
       (error) => {
         console.error("Error loading image", error);
@@ -492,7 +492,9 @@ const PetScreen = () => {
               }}
             />
           ) : (
-            <ActivityIndicator size="large" color="#0000ff" />
+            isLoadingFetch == false && (
+              <ActivityIndicator size="large" color="#0000ff" />
+            )
           )}
         </View>
       </View>

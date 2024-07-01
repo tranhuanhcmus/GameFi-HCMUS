@@ -1,5 +1,5 @@
 // AlertComponent.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -21,27 +21,75 @@ import backgroundShop from "../../assets/backGroundItem.png";
 import GradientButton from "./Button/GradientButton";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import NormalButton from "./Button/NormalButton";
+import useFetch from "../hooks/useFetch";
+import { ItemGameOwnerService } from "../services/ItemGameOwnerService";
+import { startLoading, stopLoading } from "../redux/loadingSlice";
+import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 
 interface AlertBuyComponentProps {
   isVisible?: boolean;
   onClose?: () => void;
+  onBuy: (buy: boolean, itemImg: string) => void;
   gemcost?: number;
-  goldcost?: number;
+  goldcost?: number | null;
   name?: string;
-  message?: string;
+  quantity?: number | null;
+  itemImg?: string;
+  quality?: string;
   description?: string;
+  id: string | undefined;
+}
+
+interface item {
+  id: string;
+  owner: string;
+  quantity: number;
+  gemcost: number;
+  goldcost: number;
+  currency: number;
 }
 
 const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
   isVisible,
   onClose,
-  message,
+  onBuy,
+  quality,
+  id,
+  itemImg,
+  quantity,
   name,
+
   gemcost,
   goldcost,
   description,
 }) => {
   const dispatch = useDispatch();
+
+  const handleBuy = async () => {
+    if (id && quality && quality && goldcost && gemcost && itemImg) {
+      dispatch(startLoading());
+      try {
+        const body: item = {
+          id: id,
+          owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+          quantity: quantity || 0,
+          goldcost: goldcost || 0,
+          gemcost: gemcost || 0,
+          currency: 1,
+        };
+
+        const response = await ItemAppOwnerService.buyItem(body);
+
+        onClose?.();
+        onBuy(true, itemImg);
+
+        dispatch(stopLoading());
+      } catch (error) {
+        onBuy(false, itemImg || "");
+        dispatch(stopLoading());
+      }
+    }
+  };
 
   const handleCancel = () => {
     dispatch(hideAlert());
@@ -94,7 +142,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             className="flex w-full items-center justify-center "
             style={styles.containerBuy}
           >
-            <NormalButton onPress={handleCancel} style={styles.buttonBuy}>
+            <NormalButton onPress={handleBuy} style={styles.buttonBuy}>
               <Image
                 source={require("../../assets/backGroundButtonRed.png")}
                 resizeMode="stretch"

@@ -29,7 +29,6 @@ import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
-
 import { updatePet } from "../../redux/petSlice";
 import { UserService } from "../../services/UserService";
 import logger from "../../logger";

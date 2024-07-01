@@ -8,6 +8,7 @@ import {
   Animated,
   TouchableWithoutFeedback,
 } from "react-native";
+import FastImage from "react-native-fast-image";
 import { updatePet } from "../redux/petSlice";
 import React from "react";
 
@@ -53,7 +54,8 @@ const PetCard: React.FC<PetCardProps> = ({
   const navigate = useCustomNavigation();
   const dispatch = useDispatch();
   const translateYValue = new Animated.Value(0);
-
+  const placeholderImage = "https://via.placeholder.com/150";
+  console.log(petImg);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -192,7 +194,7 @@ const PetCard: React.FC<PetCardProps> = ({
           <Image
             style={{ width: "100%", height: "70%" }}
             resizeMode="contain"
-            source={petImg !== "" ? { uri: petImg } : { uri: petImg }}
+            source={{ uri: petImg || placeholderImage }}
           />
           <CustomText
             style={{
