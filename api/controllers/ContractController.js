@@ -9,9 +9,9 @@ const { PetABI, PetAddress } = require('../abis/Pet.js');
 const WALLET_PUBLIC_KEY = process.env.WALLET_PUBLIC_KEY || ''
 const WALLET_PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || ''
 
-const rpc = "wss://eth-sepolia.api.onfinality.io/public";
+const rpc = `wss://ethereum-sepolia-rpc.publicnode.com`;
 const web3 = new Web3(rpc);
-web3.eth.accounts.privateKeyToAccount(WALLET_PRIVATE_KEY);
+web3.eth.accounts.wallet.add(WALLET_PRIVATE_KEY);
 const petContract = new web3.eth.Contract(PetABI, PetAddress);
 
 const ContractController = {
@@ -19,7 +19,7 @@ const ContractController = {
     createNFT: async(tokenid, from, to) => {
         try {
             // Get TOKENURI from tokenid
-            const tokenURI = await getTokenURI(tokenid);
+            const tokenURI = await ContractController.getTokenURI(tokenid);
             console.log(tokenURI, tokenid);
 
             // Check if TOKENURI exists and is not empty
@@ -43,7 +43,7 @@ const ContractController = {
                     //create NFt
                     const newRow = await models.NFT.create(newRowData);
 
-                    let tokenData = await getInfoFromTokenURI(tokenURI)
+                    let tokenData = await ContractController.getInfoFromTokenURI(tokenURI)
 
                     if (tokenData) {
                         const newRowDataTokenUri = {
@@ -148,18 +148,17 @@ const ContractController = {
             console.error('Error in safeMint:', error);
         }
     },
-	getMethods:()=>{
-		try {
-            const result = petContract.methods
-           return result
-          
-        } catch (error) {
-            console.error( error);
-           
-        }
-	},
+	
 
-    transferFrom: async(from_address, to_address, tokenId) => {},
+    transferFrom: async(from_address, to_address, tokenId) => {
+        try {
+            const result = await petContract.methods.transferFrom(from_address,to_address,tokenId).send({ from: WALLET_PUBLIC_KEY });
+			return result
+        } catch (error) {
+            console.error('Error in safeMint:', error);
+        }
+    },
+    
     getTokenURI: async(tokenId) => {
         try {
             const uri = await petContract.methods.tokenURI(tokenId).call();
@@ -177,65 +176,63 @@ const ContractController = {
             return ''
         }
     },
-
+    updateDB:(from,to)=>{
+        petContract.getPastEvents('Transfer', {
+            filter: {},
+            fromBlock:  from,
+            toBlock: 	to 
+        })
+        .then(function(events) {
+            // Process the retrieved events
+            // console.log("event: ", events.map(event => event.returnValues));
+            if(events){
+                events.forEach(async item=>{
+                    const event = item.returnValues;
+                    let {from, to, tokenId} = event; 
+                    console.log(from, to, tokenId);
+                    tokenId=Number(tokenId)
+                    if (from === '0x0000000000000000000000000000000000000000') {
+                        await ContractController.createNFT(tokenId, from, to);
+                    }
+                    else {
+                        await ContractController.updateNFT(tokenId, to);
+                    }
+                })
+            }
+        })
+        .catch(function(error) {
+            // Handle errors
+            console.error("error when listen event: ", error);
+        });
+    },
     catchEventNFT: () => {
-
-        // var evMitter = petContract.events.Transfer({
-        //     filter: {},
-        //     fromBlock: "latest"
-        // }, (error, event) => {
-        //     console.log(event);
-        // })
-        // evMitter.on("connected", function(subscriptionId) {
-        //     console.log("connected success with subscriptionId:", subscriptionId);
-        // })
-        // evMitter.on('data', (event) => {
-        //     const {from, to, tokenId} = event.returnValues; 
-        //     console.log('from: ', from);
-        //     if (from === '0x0000000000000000000000000000000000000000') {
-        //         createNFT(tokenId, from, to);
-        //     }
-        //     else {
-        //         updateNFT(tokenId, to);
-        //     }
-        // })
-        // evMitter.on('error', (error, receipt) => {
-        //     // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-        //     console.log("error on subscribe", error);
-        // });
-
-
-        // petContract.getPastEvents('Transfer', {
-        //     filter: {},
-        //     fromBlock:  5969058,
-        //     toBlock: 'latest' 
-        // })
-        // .then(function(events) {
-        //     // Process the retrieved events
-        //     // console.log("event: ", events.map(event => event.returnValues));
-        //     if(events){
-        //         events.forEach(item=>{
-        //             const event = item.returnValues;
-        //             const {from, to, tokenId} = event; 
-        //             console.log("event",event);
-        //             if (from === '0x0000000000000000000000000000000000000000') {
-        //                 createNFT(tokenId, from, to);
-        //             }
-        //             else {
-        //                 updateNFT(tokenId, to);
-        //             }
-        //         })
-        //     }
-        // })
-        // .catch(function(error) {
-        //     // Handle errors
-        //     console.error("error when listen event: ", error);
-        // });
+        var evMitter = petContract.events.Transfer({
+            filter: {},
+            fromBlock: "latest"
+        }, (error, event) => {
+            console.log(event);
+        })
+        evMitter.on("connected", function(subscriptionId) {
+            console.log("connected success with subscriptionId:", subscriptionId);
+        })
+        evMitter.on('data', async (event) => {
+            const {from, to, tokenId} = event.returnValues; 
+            if (from === '0x0000000000000000000000000000000000000000') {
+                await ContractController.createNFT(tokenId, from, to);
+            }
+            else {
+                await ContractController.updateNFT(tokenId, to);
+            }
+        })
+        evMitter.on('error', (error, receipt) => {
+            // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+            console.log("error on subscribe", error);
+        });
     }
 }
 
 
 
 module.exports = {
-   ContractController
+   ContractController,WALLET_PUBLIC_KEY
 }

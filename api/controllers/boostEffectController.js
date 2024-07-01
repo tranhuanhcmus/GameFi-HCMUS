@@ -44,6 +44,11 @@ const getByOwner = async (req, res, next) => {
                 // Nếu không tìm thấy hoặc có lỗi, trả về lỗi tương ứng
                 return res.sendResponse(null, `Error fetching details for ID ${result.dataValues.id}`, detailedResult ? detailedResult.status : STATUS_CODES.INTERNAL_ERROR);
             }
+            const detailedNFT = await models.NFT.findOne({ where: { tokenId: result.dataValues.tokenId } })
+            if (!detailedNFT) {
+                // Nếu không tìm thấy hoặc có lỗi, trả về lỗi tương ứng
+                return res.sendResponse(null, `Error fetching details for Token Id ${result.dataValues.tokenId}`, detailedResult ? detailedResult.status : STATUS_CODES.INTERNAL_ERROR);
+            }
             // Nếu thành công, gắn thông tin chi tiết vào mảng kết quả
             result.dataValues.name = detailedResult.dataValues.name;
             result.dataValues.description = detailedResult.dataValues.description;
@@ -53,6 +58,11 @@ const getByOwner = async (req, res, next) => {
             result.dataValues.gemcost = detailedResult.dataValues.gemcost;
             result.dataValues.goldcost = detailedResult.dataValues.goldcost;
             result.dataValues.image = detailedResult.dataValues.image;
+            result.dataValues.tokenUri = detailedNFT.dataValues.tokenUri;
+            result.dataValues.exp = detailedNFT.dataValues.exp;
+            result.dataValues.lastTimePlayed = detailedNFT.dataValues.lastTimePlayed;
+            result.dataValues.energy = detailedNFT.dataValues.energy;
+
             console.log(result);
         }
 
@@ -83,7 +93,7 @@ const deleteById = async(req, res, next) => {
 const addOrUpdate = async (req, res, next) => {
     try {
         const rowData = req.body;
-        const { id, owner } = rowData;
+        const { id, tokenId, owner } = rowData;
 
         // Check if the item game exists and validate its category
         const itemGame = await models.ItemGame.findOne({ where: { id } });
@@ -96,7 +106,7 @@ const addOrUpdate = async (req, res, next) => {
         }
 
         // Check if the boost effect already exists
-        const existingRow = await models.BoostEffect.findOne({ where: { id, owner } });
+        const existingRow = await models.BoostEffect.findOne({ where: { id, tokenId, owner } });
         if (existingRow) {
             await existingRow.update(rowData);
             await existingRow.reload();
@@ -117,7 +127,7 @@ const updateById = async (req, res, next) => {
         
         console.log("updateData: ", updateData.id);
         
-        const row = await models.BoostEffect.findOne({ where: { id: updateData.id, owner: updateData.owner } });
+        const row = await models.BoostEffect.findOne({ where: { id: updateData.id, tokenId: updateData.tokenId, owner: updateData.owner } });
         
         if (!row) {
             return res.sendResponse(null, `Not Found ID ${updateData.id}`, STATUS_CODES.NOT_FOUND);

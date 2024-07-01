@@ -1,9 +1,11 @@
+const { WALLET_PUBLIC_KEY } = require("./controllers/ContractController");
+const models = require("./database/models")
 class BearFactory {
     constructor() {
-        this.elementPool = [1,2,3,4,5,6]; 
-        this.furPool = [1,2,3,5,7,8,9]
-        this.eyePool = [1,2,3,6,7]; 
-        this.itemPool = [1,6,7,8];
+        this.elementPool = [1, 2, 3, 4, 5, 6];
+        this.furPool = [1, 2, 3, 5, 7, 8, 9]
+        this.eyePool = [1, 2, 3, 6, 7];
+        this.itemPool = [1, 6, 7, 8];
     }
 
     getAttrs() {
@@ -35,7 +37,7 @@ class BearFactory {
         }
 
         mutateBear[mutateAttrName] = newValue;
-        console.log(mutateBear,"atr\n" + mutateAttrName);
+        console.log(mutateBear, "atr\n" + mutateAttrName);
         return {
             mutateBear,
             mutateAttrName,
@@ -48,11 +50,11 @@ class BearFactory {
         const randomElement = this.getRandomIndex(this.elementPool);
         const randomItem = this.getRandomIndex(this.itemPool);
 
-        const name='RandomBear'
-        const imageID=[randomEye,randomFur, randomElement,randomItem].join("")
-        const image='bear'+`_${imageID}`+`.png`;
+        const name = 'RandomBear'
+        const imageID = [randomEye, randomFur, randomElement, randomItem].join("")
+        const image = 'bear' + `_${imageID}` + `.png`;
 
-        return new Bear(randomEye, randomFur, randomElement, randomItem,name,'Normal',image);
+        return new Bear(randomEye, randomFur, randomElement, randomItem, name, 'Normal', image);
     }
     getPoolBear() {
         const pool = [];
@@ -92,6 +94,43 @@ class BearFactory {
 
         return [son, daughter];
     }
+    async breed(mother, father) {
+        let momID = mother.getId()
+        let dadID = father.getId()
+
+       
+        let result = []
+        for (let i = 0; i < dadID.length; i++) {
+            let splitted_array = dadID.split('')
+            splitted_array[i] = momID[i]
+            result.push(splitted_array.join(''))
+        }
+        for (let i = 0; i < momID.length; i++) {
+            let splitted_array = momID.split('')
+            splitted_array[i] = dadID[i]
+            result.push(splitted_array.join(''))
+        }
+        // format 
+        result = result.filter(item => (item != dadID && item != momID))
+        result = [...new Set(result)]
+
+        let randomChildID
+        let is_valid = false
+        while (!is_valid) {
+            if (result.length === 0) {
+                randomChildID = null
+                is_valid = true
+                break
+            }
+            randomChildID = parseInt(result[Math.floor(Math.random() * result.length)])
+            let nft = await models.NFT.findOne({ where: { tokenId: randomChildID } })
+
+            if (nft?.owner == WALLET_PUBLIC_KEY)
+                is_valid = true
+            else result = result.filter(item => item != randomChildID)
+        }
+        return randomChildID;
+    }
 }
 
 class Bear {
@@ -126,7 +165,7 @@ class Bear {
             asset: this.__asset,
         };
     }
-    getId(){
+    getId() {
         return `${this.__element}${this.__fur}${this.__eye}${this.__item}`
     }
     importBear(bear) {
@@ -144,8 +183,15 @@ class Bear {
         return ['__eye', '__fur', '__element', '__item']
     }
 }
-// const factory = new BearFactory()
-// const bear = factory.getRandomBear()
 
+async function run(){
+    const factory = new BearFactory()
+    const dad = new Bear(1, 1, 1, 1)
+    const mom = new Bear(2, 2, 2, 7)
+    
+    let child=await factory.breed(dad, mom);
+    console.log(child);
+}
+// run()
 // console.log(bear);
 module.exports = { BearFactory, Bear };
