@@ -20,6 +20,8 @@ import Lucky from "../../../assets/medicine.png";
 import { useIsFocused } from "@react-navigation/native";
 import Medicine from "../../../assets/medicine.svg";
 import { ItemAppService } from "../../services/ItemAppService";
+import useFetch from "../../hooks/useFetch";
+import AlertBuyItemsSuccess from "../../components/AlertBuyItemsSuccess";
 type Props = {};
 
 interface Item {
@@ -45,23 +47,18 @@ const ShopScreen = (props: Props) => {
   const [item, setItem] = useState<Item>();
   const [items, setItems] = useState<Items[]>([]);
   const isFocused = useIsFocused();
-  const fetchItems = async () => {
-    try {
-      const fetchedItems = await ItemAppService.getAllItems();
-      // console.log(fetchedItems);
-      setItems(fetchedItems);
-    } catch (error) {
-      console.log("Error fetching items:", error);
-    }
-  };
-
+  const [buySuccess, setBuySuccess] = useState<boolean>(false);
+  const { apiData, serverError } = useFetch(() => ItemAppService.getAllItems());
+  const [itemImg, setItemImg] = useState<string>("");
   useEffect(() => {
-    fetchItems();
-  }, [isFocused]);
+    if (apiData) {
+      setItems({ ...apiData });
+    }
+  }, [apiData]);
 
   const onClickItem = (item: any) => {
     setClickItem(true);
-    setItem(item);
+    setItem({ ...item });
   };
   const onSetClose = () => {
     setClickItem(false);
@@ -75,9 +72,18 @@ const ShopScreen = (props: Props) => {
     }
   };
 
+  const onBuy = (buy: boolean, itemImg: string) => {
+    console.log(buy);
+    setTimeout(() => {
+      setBuySuccess(buy);
+      setItemImg(itemImg);
+    }, 500);
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, []);
+
   return (
     <View
       style={{
@@ -92,13 +98,28 @@ const ShopScreen = (props: Props) => {
         resizeMode="stretch"
         source={require("../../../assets/backGroundShop.png")}
       />
+
+      <AlertBuyItemsSuccess
+        name={item?.name || "error"}
+        category={item?.category || "default"}
+        quantity={item?.quantity || 0}
+        itemImg={itemImg}
+        isVisible={buySuccess}
+        onClose={() => {
+          setBuySuccess(false);
+        }}
+      />
       <AlertBuyComponent
         isVisible={clickItem}
         onClose={onSetClose}
+        onBuy={onBuy}
         gemcost={item?.gemcost}
         name={item?.name}
         goldcost={item?.goldcost}
-        message={item?.quality}
+        itemImg={item?.image}
+        id={item?.id}
+        quantity={item?.quantity}
+        quality={item?.quality}
         description={item?.description}
       />
       <View

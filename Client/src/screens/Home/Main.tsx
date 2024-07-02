@@ -29,10 +29,13 @@ import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
+import Thunder from "../../../assets/thunder.svg";
 
 import { updatePet } from "../../redux/petSlice";
 import { UserService } from "../../services/UserService";
 import logger from "../../logger";
+import { BoostEffectsService } from "../../services/BoostEffectsService";
+import { calculateEnergy } from "../../utils/pet";
 type Props = {};
 
 const HomeScreen = () => {
@@ -44,7 +47,7 @@ const HomeScreen = () => {
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
-
+  const [boostEffects, setBoostEffects] = useState(3);
   const isFocused = useIsFocused();
 
   const [gameName, setGameName] = useState<string>("");
@@ -96,6 +99,7 @@ const HomeScreen = () => {
     setResetAfterFinish(true);
   };
 
+  const healthBarScaleValue = new Animated.Value(1);
   const inventoryTranslateYValue = new Animated.Value(0);
   const changeGameBtnTranslateYValue = new Animated.Value(0);
   const playGameBtnTranslateYValue = new Animated.Value(0);
@@ -156,6 +160,22 @@ const HomeScreen = () => {
   //     dispatch(setAddress(address));
   //   }
   // }, [isConnected]);
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.spring(healthBarScaleValue, {
+        toValue: 1.1,
+        tension: 10,
+        useNativeDriver: true,
+      }),
+      Animated.spring(healthBarScaleValue, {
+        toValue: 1,
+        tension: 10,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [isFocused, boostEffects]);
+
   useEffect(() => {
     if (isFocused) {
       play("walk");
@@ -165,6 +185,27 @@ const HomeScreen = () => {
     }
   }, [isFocused]);
 
+  const fetchBoostEffects = async () => {
+    try {
+      const res: any[] = await BoostEffectsService.getBoostEffects();
+
+      console.log("Successfully fetchBoostEffects ", res);
+      const data = res.find((item: any) => item.tokenId === tokenId);
+      if (data) {
+        let energyCnt = calculateEnergy(data.lastTimeBoost);
+        setBoostEffects(energyCnt);
+      }
+    } catch (error) {
+      console.error("Error fetchBoostEffects:", error);
+    }
+  };
+
+  useEffect(() => {
+    logger.debug("eheheh fetchBoostEffects");
+    if (tokenId !== "") {
+      fetchBoostEffects();
+    }
+  }, [tokenId]);
   const fetchData = async () => {
     try {
       const res: any[] = await UserService.getNFTsByOwner(address);
@@ -241,12 +282,12 @@ const HomeScreen = () => {
             Animated.sequence([
               Animated.timing(inventoryTranslateYValue, {
                 toValue: 10,
-                duration: 150,
+                duration: 100,
                 useNativeDriver: true,
               }),
               Animated.timing(inventoryTranslateYValue, {
                 toValue: 0,
-                duration: 150,
+                duration: 100,
                 useNativeDriver: true,
               }),
             ]).start(() => {
@@ -287,9 +328,49 @@ const HomeScreen = () => {
         >
           LEVEL {level}
         </CustomText>
-        {/* <View style={styles.healthBar}>
-          <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
-        </View> */}
+        <Animated.View
+          style={[
+            styles.healthBar,
+            { transform: [{ scale: healthBarScaleValue }] },
+          ]}
+        >
+          {boostEffects >= 3 ? (
+            <>
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+            </>
+          ) : boostEffects >= 2 ? (
+            <>
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+            </>
+          ) : boostEffects >= 1 ? (
+            <>
+              <Thunder
+                width={ConstantsResponsive.MAX_WIDTH * 0.1}
+                height={ConstantsResponsive.MAX_WIDTH * 0.1}
+              />
+            </>
+          ) : (
+            <></>
+          )}
+        </Animated.View>
       </View>
 
       <View style={styles.playArea}>
@@ -594,17 +675,19 @@ const styles = StyleSheet.create({
     height: ConstantsResponsive.YR * 40,
   },
   healthBar: {
-    height: ConstantsResponsive.YR * 20,
+    height: ConstantsResponsive.MAX_WIDTH * 0.1,
     width:
       ConstantsResponsive.MAX_WIDTH -
       ConstantsResponsive.XR * 200 -
       ConstantsResponsive.XR * 60,
     marginLeft: ConstantsResponsive.XR * 40,
     marginTop: ConstantsResponsive.YR * 10,
-    backgroundColor: COLOR.WHITE,
-    borderWidth: 2,
-    borderColor: COLOR.RED_BG_BUTTON,
     borderRadius: ConstantsResponsive.YR * 10,
+    paddingHorizontal: ConstantsResponsive.MAX_WIDTH * 0.1,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   healthBarInner: {
     position: "absolute",

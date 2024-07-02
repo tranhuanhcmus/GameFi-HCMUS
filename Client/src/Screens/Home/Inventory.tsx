@@ -7,6 +7,7 @@ import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
 import { COLOR } from "../../utils/color";
+import useFetch from "../../hooks/useFetch";
 const InventoryModal = ({
   isVisible,
   setIsVisible,
@@ -19,22 +20,27 @@ const InventoryModal = ({
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+  const { apiData, serverError } = useFetch(() =>
+    ItemGameOwnerService.getItems("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
+  );
 
-  const fetchData = async () => {
-    try {
-      const res: any[] = await ItemGameOwnerService.getItems(
-        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-      );
-      console.log(res);
-      setData([...res]);
-    } catch (error) {
-      console.error("ItemGameOwnerService.getItems", error);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const res: any[] = await ItemGameOwnerService.getItems(
+  //       "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+  //     );
+  //     console.log(res);
+  //     setData([...res]);
+  //   } catch (error) {
+  //     console.error("ItemGameOwnerService.getItems", error);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchData();
-  }, [address]);
+    // fetchData();
+    // console.log("41", apiData);
+    // setData([apiData]);
+  }, []);
 
   const InventoryItem = ({
     image,
@@ -143,7 +149,7 @@ const InventoryModal = ({
         </View>
 
         <FlatList
-          data={data}
+          data={apiData}
           numColumns={2}
           columnWrapperStyle={{
             gap: 30,

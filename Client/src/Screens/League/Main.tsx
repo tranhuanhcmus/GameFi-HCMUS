@@ -107,68 +107,90 @@ const LeagueScreen = () => {
           LEAGUE
         </CustomText>
       </View>
-      <ScrollView>
-        {data
-          ? data.map((item: any, index) => (
-              <Animated.View
-                key={index}
+
+      {data && data.length ? (
+        <ScrollView>
+          {data.map((item: any, index) => (
+            <Animated.View
+              key={index}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+                marginBottom: 10,
+                borderRadius: 20,
+                transform: [{ translateX: translateXValue }],
+              }}
+            >
+              <View
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginHorizontal: 20,
-                  marginBottom: 10,
-                  borderRadius: 20,
-                  transform: [{ translateX: translateXValue }],
+                  alignItems: "center",
+                  width: "50%",
                 }}
               >
-                <View
+                <Image
+                  source={Avatar}
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    width: "50%",
+                    width: 50,
+                    height: 50,
+                    borderRadius: 20,
+                    marginEnd: 10,
                   }}
+                />
+                <CustomText
+                  style={{ color: COLOR.WHITE, fontSize: 20, marginEnd: 10 }}
                 >
-                  <Image
-                    source={Avatar}
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 20,
-                      marginEnd: 10,
-                    }}
-                  />
-                  <CustomText
-                    style={{ color: COLOR.WHITE, fontSize: 20, marginEnd: 10 }}
-                  >
-                    {item.rank}.
-                  </CustomText>
-                  <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
-                    {shortenString(item.owner)}
-                  </CustomText>
-                </View>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                    width: "25%",
-                  }}
-                >
-                  <Image
-                    source={Trophy}
-                    style={{ width: 25, height: 25, borderRadius: 20 }}
-                  />
-                  <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
-                    {item.total_cups}
-                  </CustomText>
-                </View>
-              </Animated.View>
-            ))
-          : null}
-      </ScrollView>
+                  {item.rank}.
+                </CustomText>
+                <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
+                  {shortenString(item.owner)}
+                </CustomText>
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  width: "25%",
+                }}
+              >
+                <Image
+                  source={Trophy}
+                  style={{ width: 25, height: 25, borderRadius: 20 }}
+                />
+                <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
+                  {item.total_cups}
+                </CustomText>
+              </View>
+            </Animated.View>
+          ))}
+        </ScrollView>
+      ) : (
+        <View
+          style={{
+            height: "80%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CustomText
+            style={{
+              fontSize: 35,
+              // fontFamily: "mt-2",
+              color: COLOR.YELLOW,
+              textShadowColor: "rgba(0, 0, 0, 0.75)",
+              textShadowOffset: { width: -1, height: 1 },
+              textShadowRadius: 15,
+            }}
+          >
+            No leagues here
+          </CustomText>
+        </View>
+      )}
     </View>
   );
 };
