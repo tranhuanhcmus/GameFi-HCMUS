@@ -494,6 +494,7 @@ const PetScreen = () => {
           left: ConstantsResponsive.XR * 10,
           rowGap: 2,
           top: ConstantsResponsive.YR * 3 * 150,
+          zIndex: 99,
         }}
         onPress={() => {
           dispatch(setFatherPet({ id: null, name: null, image: null }));
