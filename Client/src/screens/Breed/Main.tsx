@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 import log from "../../logger/index";
 import SpriteSheet from "rn-sprite-sheet";
 import Breed from "../../../assets/breed.svg";
-import BackIcon from "../../../assets/backIcon.svg";
+import BackIcon from "../../../assets/BackIcon.svg";
 import BearCard from "./BearCard";
 import { BreedService } from "../../services/BreedService";
 import NormalButton from "../../components/Button/NormalButton";
