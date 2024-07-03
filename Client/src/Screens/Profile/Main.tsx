@@ -27,12 +27,14 @@ import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
-import BackIcon from "../../../assets/backIcon.svg";
+import BackIcon from "../../../assets/BackIcon.svg";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
+import { useAccount, useDisconnect } from "wagmi";
 
 const ProfileScreen = () => {
-  const flatListRef = useRef<FlatList>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
+  const { isDisconnected } = useAccount();
   const navigation = useNavigation();
 
   const scrollToBottom = () => {
@@ -44,9 +46,25 @@ const ProfileScreen = () => {
   const backTranslateYValue = new Animated.Value(0);
   const navigate = useCustomNavigation();
 
+  const { disconnect } = useDisconnect();
+
+  const handleDisconnect = async () => {
+    try {
+      await disconnect();
+    } catch (error) {
+      console.error("Error disconnecting:", error);
+    }
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, []);
+
+  useEffect(() => {
+    if (isDisconnected) {
+      navigate.navigate("Connect");
+    }
+  }, [isDisconnected]);
   return (
     <ScrollView
       style={{
@@ -152,7 +170,7 @@ const ProfileScreen = () => {
           View wallet
         </AwesomeButton>
         <AwesomeButton
-          onPress={() => {}}
+          onPress={handleDisconnect}
           width={ConstantsResponsive.MAX_WIDTH * 0.8}
           backgroundColor={COLOR.RED_BG_BUTTON}
           backgroundDarker={COLOR.SHADOW_BROWN}
