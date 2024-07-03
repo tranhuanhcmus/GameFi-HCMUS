@@ -10,6 +10,8 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
+  Animated,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { ItemComponent } from "../../components/ItemComponent";
 import { ELEMENT } from "../../constants/types";
@@ -24,10 +26,15 @@ import AwesomeButton from "react-native-really-awesome-button";
 import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import { useNavigation } from "@react-navigation/native";
+import { StatusBarHeight } from "../../function/CalculateStatusBar";
+import BackIcon from "../../../assets/BackIcon.svg";
+import useCustomNavigation from "../../hooks/useCustomNavigation";
+import { useAccount, useDisconnect } from "wagmi";
 
 const ProfileScreen = () => {
-  const flatListRef = useRef<FlatList>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
+  const { isDisconnected } = useAccount();
   const navigation = useNavigation();
 
   const scrollToBottom = () => {
@@ -36,9 +43,28 @@ const ProfileScreen = () => {
     }
   };
 
+  const backTranslateYValue = new Animated.Value(0);
+  const navigate = useCustomNavigation();
+
+  const { disconnect } = useDisconnect();
+
+  const handleDisconnect = async () => {
+    try {
+      await disconnect();
+    } catch (error) {
+      console.error("Error disconnecting:", error);
+    }
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, []);
+
+  useEffect(() => {
+    if (isDisconnected) {
+      navigate.navigate("Connect");
+    }
+  }, [isDisconnected]);
   return (
     <ScrollView
       style={{
@@ -54,7 +80,40 @@ const ProfileScreen = () => {
           width: ConstantsResponsive.MAX_WIDTH,
         }}
       />
-
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Animated.sequence([
+            Animated.timing(backTranslateYValue, {
+              toValue: 10,
+              duration: 100,
+              useNativeDriver: true,
+            }),
+            Animated.timing(backTranslateYValue, {
+              toValue: 0,
+              duration: 100,
+              useNativeDriver: true,
+            }),
+          ]).start(() => {
+            navigate.goBack();
+          });
+        }}
+      >
+        <Animated.View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            marginTop: StatusBarHeight * 0.3,
+            paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+            transform: [{ translateY: backTranslateYValue }],
+          }}
+        >
+          <BackIcon
+            height={ConstantsResponsive.MAX_HEIGHT * 0.1}
+            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+          />
+        </Animated.View>
+      </TouchableWithoutFeedback>
       <View
         id="image_info"
         style={{
@@ -83,285 +142,6 @@ const ProfileScreen = () => {
           @username
         </CustomText>
       </View>
-      <View
-        id="progress"
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: ConstantsResponsive.MAX_HEIGHT * 0.2,
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "flex-start",
-          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
-          marginBottom: ConstantsResponsive.MAX_WIDTH * 0.05,
-        }}
-      >
-        <CustomText
-          style={{ color: COLOR.WHITE, fontWeight: "bold", fontSize: 17 }}
-        >
-          Secure your progress
-        </CustomText>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.9,
-            height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-            justifyContent: "flex-start",
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "row",
-            borderRadius: 20,
-            paddingLeft: 10,
-          }}
-        >
-          <Image
-            source={require("../../../assets/backGroundForTableQuestion.png")}
-            resizeMode="stretch"
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-            }}
-          />
-          <Image
-            source={require("../../../assets/avatar.png")}
-            style={{
-              width: ConstantsResponsive.MAX_WIDTH * 0.1,
-              height: ConstantsResponsive.MAX_WIDTH * 0.1,
-            }}
-          />
-          <CustomText
-            style={{
-              color: COLOR.WHITE,
-              fontWeight: "bold",
-              fontSize: 17,
-              marginLeft: 10,
-            }}
-          >
-            Update Avatar & Nickname
-          </CustomText>
-        </TouchableOpacity>
-      </View>
-
-      {/* <View
-        id="in_game_currency"
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: "auto",
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "flex-start",
-          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
-          marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.05,
-        }}
-      >
-        <CustomText
-          style={{
-            color: COLOR.WHITE,
-            fontWeight: "bold",
-            fontSize: 17,
-            marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.04,
-          }}
-        >
-          In-game currencies
-        </CustomText>
-        <FlatList
-          ref={flatListRef}
-          data={[
-            { id: 1, image: require("../../../assets/coin.svg"), quantity: 0 },
-          ]}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ gap: 20 }}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                width: ConstantsResponsive.MAX_WIDTH * 0.3,
-                height: ConstantsResponsive.MAX_WIDTH * 0.3,
-                backgroundColor: COLOR.DARKER_PURPLE,
-                borderRadius: 20,
-              }}
-            >
-              <View>
-                <Image
-                  source={item.image}
-                  style={{
-                    width: ConstantsResponsive.MAX_WIDTH * 0.2,
-                    height: ConstantsResponsive.MAX_WIDTH * 0.2,
-                  }}
-                />
-              </View>
-            </View>
-          )}
-        />
-      </View> */}
-
-      <View
-        id="inventory"
-        style={{
-          width: ConstantsResponsive.MAX_WIDTH,
-          height: "auto",
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "flex-start",
-          paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
-        }}
-      >
-        <CustomText
-          style={{
-            color: COLOR.WHITE,
-            fontWeight: "bold",
-            fontSize: 17,
-            marginBottom: ConstantsResponsive.MAX_HEIGHT * 0.04,
-          }}
-        >
-          Inventory
-        </CustomText>
-        <View
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.9,
-            height: "auto",
-            borderRadius: 20,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              width: ConstantsResponsive.MAX_WIDTH * 0.9,
-              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-              justifyContent: "flex-start",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "row",
-              borderRadius: 20,
-              paddingLeft: 10,
-              borderBottomWidth: 0.5,
-              borderBottomColor: COLOR.WHITE,
-              marginBottom: 5,
-            }}
-          >
-            <Image
-              source={require("../../../assets/backGroundForTableQuestion.png")}
-              resizeMode="stretch"
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-              }}
-            />
-            <Image
-              source={require("../../../assets/avatar.png")}
-              style={{
-                width: ConstantsResponsive.MAX_WIDTH * 0.1,
-                height: ConstantsResponsive.MAX_WIDTH * 0.1,
-              }}
-            />
-            <CustomText
-              style={{
-                color: COLOR.WHITE,
-                fontWeight: "bold",
-                fontSize: 17,
-                marginLeft: 10,
-              }}
-            >
-              Beasts
-            </CustomText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              width: ConstantsResponsive.MAX_WIDTH * 0.9,
-              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-              justifyContent: "flex-start",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "row",
-              borderRadius: 20,
-              paddingLeft: 10,
-              borderBottomWidth: 0.5,
-              borderBottomColor: COLOR.WHITE,
-              marginBottom: 5,
-            }}
-          >
-            <Image
-              source={require("../../../assets/backGroundForTableQuestion.png")}
-              resizeMode="stretch"
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-              }}
-            />
-            <Image
-              source={require("../../../assets/avatar.png")}
-              style={{
-                width: ConstantsResponsive.MAX_WIDTH * 0.1,
-                height: ConstantsResponsive.MAX_WIDTH * 0.1,
-              }}
-            />
-            <CustomText
-              style={{
-                color: COLOR.WHITE,
-                fontWeight: "bold",
-                fontSize: 17,
-                marginLeft: 10,
-              }}
-            >
-              Wallets & Token
-            </CustomText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              width: ConstantsResponsive.MAX_WIDTH * 0.9,
-              height: ConstantsResponsive.MAX_HEIGHT * 0.1,
-              justifyContent: "flex-start",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "row",
-              borderRadius: 20,
-              paddingLeft: 10,
-              borderBottomWidth: 0.5,
-              borderBottomColor: COLOR.WHITE,
-            }}
-          >
-            <Image
-              source={require("../../../assets/backGroundForTableQuestion.png")}
-              resizeMode="stretch"
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-              }}
-            />
-            <Image
-              source={require("../../../assets/avatar.png")}
-              style={{
-                width: ConstantsResponsive.MAX_WIDTH * 0.1,
-                height: ConstantsResponsive.MAX_WIDTH * 0.1,
-              }}
-            />
-            <CustomText
-              style={{
-                color: COLOR.WHITE,
-                fontWeight: "bold",
-                fontSize: 17,
-                marginLeft: 10,
-              }}
-            >
-              NFTs
-            </CustomText>
-          </TouchableOpacity>
-        </View>
-      </View>
 
       {isConnected && <W3mAccountButton balance="show" />}
 
@@ -388,6 +168,14 @@ const ProfileScreen = () => {
           backgroundDarker={COLOR.DARK_YELLOW}
         >
           View wallet
+        </AwesomeButton>
+        <AwesomeButton
+          onPress={handleDisconnect}
+          width={ConstantsResponsive.MAX_WIDTH * 0.8}
+          backgroundColor={COLOR.RED_BG_BUTTON}
+          backgroundDarker={COLOR.SHADOW_BROWN}
+        >
+          LOG OUT
         </AwesomeButton>
       </View>
     </ScrollView>

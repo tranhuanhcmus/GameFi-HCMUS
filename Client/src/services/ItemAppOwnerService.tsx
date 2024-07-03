@@ -1,6 +1,15 @@
 import { api } from "../apis";
 import { API } from "../apis/constants";
 
+interface item {
+  id: string;
+  owner: string;
+  quantity: number;
+  gemcost: number;
+  goldcost: number;
+  currency: number;
+}
+
 export class ItemAppOwnerService {
   /**
    * GET COIN ON HEADER
@@ -32,6 +41,18 @@ export class ItemAppOwnerService {
         const response = await api.get(API.NFT + `/${address}`);
 
         console.log("response ", response.data);
+        resolve(response.data.data);
+      } catch (error: any) {
+        reject(error.message);
+      }
+    });
+  }
+
+  static async buyItem(data: item) {
+    return new Promise<any[]>(async (resolve, reject) => {
+      try {
+        const response = await api.post(API.ITEM_APP_OWNER + `/purchase`, data);
+
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);

@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  TouchableHighlight,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
@@ -22,6 +25,7 @@ import { useSelector } from "react-redux";
 import log from "../../logger/index";
 import SpriteSheet from "rn-sprite-sheet";
 import Breed from "../../../assets/breed.svg";
+import BackIcon from "../../../assets/BackIcon.svg";
 import BearCard from "./BearCard";
 import { BreedService } from "../../services/BreedService";
 import NormalButton from "../../components/Button/NormalButton";
@@ -37,6 +41,12 @@ export function BreedScreen() {
   const [remainingTime, setRemainingTime] = useState(TIME_TO_BREED);
   const [isActive, setIsActive] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const backTranslateYValue = new Animated.Value(0);
+  const hourglassRotateValue = new Animated.Value(0);
+  const spin = hourglassRotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "180deg"],
+  });
   useEffect(() => {
     let intervalId: any;
     if (isActive) {
@@ -91,11 +101,26 @@ export function BreedScreen() {
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
 
+  useEffect(() => {
+    Animated.sequence([
+      Animated.spring(hourglassRotateValue, {
+        toValue: 1,
+        tension: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.spring(hourglassRotateValue, {
+        toValue: 0,
+        tension: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [remainingTime]);
+
   return (
     <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH,
-        height: ConstantsResponsive.MAX_HEIGHT - ConstantsResponsive.YR * 120,
+        height: ConstantsResponsive.MAX_HEIGHT,
       }}
     >
       <Image
@@ -106,11 +131,41 @@ export function BreedScreen() {
           width: ConstantsResponsive.MAX_WIDTH,
         }}
       />
-      <ScrollView
-        style={{
-          marginTop: StatusBarHeight,
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Animated.sequence([
+            Animated.timing(backTranslateYValue, {
+              toValue: 10,
+              duration: 100,
+              useNativeDriver: true,
+            }),
+            Animated.timing(backTranslateYValue, {
+              toValue: 0,
+              duration: 100,
+              useNativeDriver: true,
+            }),
+          ]).start(() => {
+            navigate.goBack();
+          });
         }}
       >
+        <Animated.View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            marginTop: StatusBarHeight * 0.3,
+            paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+            transform: [{ translateY: backTranslateYValue }],
+          }}
+        >
+          <BackIcon
+            height={ConstantsResponsive.MAX_HEIGHT * 0.1}
+            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+          />
+        </Animated.View>
+      </TouchableWithoutFeedback>
+      <ScrollView>
         <View
           style={{
             width: "100%",
@@ -145,8 +200,8 @@ export function BreedScreen() {
           }}
         >
           <Breed
-            height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+            height={ConstantsResponsive.MAX_HEIGHT * 0.12}
+            width={ConstantsResponsive.MAX_WIDTH * 0.12}
           />
         </View>
         <View
@@ -169,7 +224,52 @@ export function BreedScreen() {
           />
         </View>
 
-        <View style={{ display: "flex", alignItems: "center" }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 10,
+          }}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Animated.sequence([
+                Animated.timing(backTranslateYValue, {
+                  toValue: 10,
+                  duration: 100,
+                  useNativeDriver: true,
+                }),
+                Animated.timing(backTranslateYValue, {
+                  toValue: 0,
+                  duration: 100,
+                  useNativeDriver: true,
+                }),
+              ]).start(() => {
+                navigate.goBack();
+              });
+            }}
+          >
+            <Animated.View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                marginTop: StatusBarHeight * 0.3,
+                transform: [{ rotateX: spin }],
+                marginRight: ConstantsResponsive.MAX_WIDTH * 0.05,
+              }}
+            >
+              <Image
+                source={require("../../../assets/Hourglass.png")}
+                style={{
+                  height: ConstantsResponsive.MAX_HEIGHT * 0.09,
+                  width: ConstantsResponsive.MAX_WIDTH * 0.09,
+                }}
+              />
+            </Animated.View>
+          </TouchableWithoutFeedback>
           <AwesomeButton
             onPress={() => {
               if (remainingTime == 0) {
@@ -196,7 +296,7 @@ export function BreedScreen() {
           >
             {remainingTime > 0 ? (
               <CustomText style={{ color: COLOR.WHITE, textAlign: "center" }}>
-                COMBINE {minutes > 0 ? `${minutes} m ` : ""}:
+                BREED {minutes > 0 ? `${minutes} m ` : ""}:
                 {seconds.toString().padStart(2, "0")} s
               </CustomText>
             ) : (

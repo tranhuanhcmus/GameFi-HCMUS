@@ -25,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    tokenId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      primaryKey:true,
+    },
     owner: {
       type:DataTypes.TEXT,
       allowNull:false,
