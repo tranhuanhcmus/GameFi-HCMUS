@@ -2,6 +2,7 @@ const { tokenUriController } = require(".")
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
 const { getInfoFromTokenURI } = require("./ContractController")
+require('dotenv').config()
 const getAll = async(req, res, next) => {
     try {
         const rows = await models.NFT.findAll()
@@ -60,6 +61,13 @@ const getALlByOwner = async(req, res, next) => {
 
             let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: uri } })
             if (tokenUri) {
+                let client_gateway=process.env.CLIENT_IPFS_ID||null
+                let public_gateway=`ipfs.io`
+                if(client_gateway){
+                    tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
+                    tokenUri.data.assets=tokenUri.data.image.replace(public_gateway,client_gateway)
+                    rows[i].tokenUri=rows[i].tokenUri.replace(public_gateway,client_gateway)
+                }
                 result.push({
                     tokenId: rows[i].tokenId,
                     tokenUri: rows[i].tokenUri,

@@ -17,7 +17,6 @@ contract Pet is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     event SetPrice(uint256 indexed tokenId, uint256 price);
 
     mapping(uint256 => uint256) public petExp;
-    mapping(uint256 => uint256) public petPrice;
 
     constructor(
         address initialOwner
@@ -66,20 +65,5 @@ contract Pet is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     function getExp(uint256 tokenId) external view returns (uint256) {
        _requireOwned(tokenId);
         return petExp[tokenId];
-    }
-
-    function setPrice(
-        uint256 tokenId,
-        uint256 price
-    ) external {
-       _requireOwned(tokenId);
-        require(ownerOf(tokenId) == msg.sender, "Only owner can update price of this NFT");
-        petPrice[tokenId] = price;
-         emit SetPrice(tokenId, price); // Emitting setPrice event
-    }
-
-    function getPrice(uint256 tokenId) external view returns (uint256) {
-       _requireOwned(tokenId);
-        return petPrice[tokenId];
     }
 }

@@ -16,6 +16,6 @@ export const api = axios.create({
   // baseURL: "https://gamefi-hcmus.onrender.com",
   
 //   baseURL: "https://gamefi-hcmus.onrender.com",
-  baseURL: "http://localhost:4500",
+  baseURL: "https://gamefi-hcmus.onrender.com",
   timeout: 30000,
 });
