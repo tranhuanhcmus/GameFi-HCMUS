@@ -14,6 +14,14 @@ const getAll = async(req, res, next) => {
             let uri = rows[i].tokenUri;
 
             let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: uri } })
+            
+            let client_gateway=process.env.CLIENT_IPFS_ID||null
+            let public_gateway=`ipfs.io`
+            if(client_gateway){
+                tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
+                tokenUri.data.assets=tokenUri.data.image.replace(public_gateway,client_gateway)
+            }
+
             if (tokenUri) {
                 result.push({
                     tokenId: rows[i].tokenId,
@@ -37,6 +45,14 @@ const getById = async(req, res, next) => {
         const { id } = req.params
         const result = await models.NFT.findOne({ where: { tokenId: id } })
         let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.tokenUri } })
+
+        let client_gateway=process.env.CLIENT_IPFS_ID||null
+        let public_gateway=`ipfs.io`
+        if(client_gateway){
+            tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
+            tokenUri.data.assets=tokenUri.data.image.replace(public_gateway,client_gateway)
+        }
+
         result.dataValues.data=tokenUri.data
 
         if (!result) {
