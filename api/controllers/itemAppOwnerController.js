@@ -218,6 +218,8 @@ const purchaseItemPack = async (req, res, next) => {
                 }
             await userCurrencyBalance.update(updateCurrencyData);
             await userCurrencyBalance.reload();
+
+            randomItem.dataValues.quantity = rowData.quantity;
             return res.sendResponse(randomItem, `Random item found for category ${rowData.category} with quality ${randomQuality}`, STATUS_CODES.OK);
         }
     } catch (error) {
