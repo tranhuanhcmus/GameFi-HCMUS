@@ -150,10 +150,45 @@ const updateById = async(req, res, next) => {
     }
 }
 
+const getRandomQuality = () => {
+    const rand = Math.random() * 100;
+
+    if (rand < 70) {
+        return 'normal';
+    } else if (rand < 90) {
+        return 'rare';
+    } else {
+        return 'super rare';
+    }
+};
+
+const getByCategory = async (req, res, next) => {
+    try {
+        const { category } = req.params;
+        const randomQuality = getRandomQuality();
+        console.log(category, randomQuality);
+        const items = await models.ItemGame.findAll({
+            where: {
+                category: category,
+                quality: randomQuality
+            }
+        });
+
+        if (!items.length) {
+            return res.sendResponse(null, `No items found for category ${category} with quality ${randomQuality}`, STATUS_CODES.NOT_FOUND);
+        }
+
+        const randomItem = items[Math.floor(Math.random() * items.length)];
+        return res.sendResponse(randomItem, `Random item found for category ${category} with quality ${randomQuality}`, STATUS_CODES.OK);
+    } catch (error) {
+        return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);
+    }
+}
 module.exports = {
     getAll,
     getById,
     add,
     deleteById,
-    updateById
+    updateById,
+    getByCategory
 }
