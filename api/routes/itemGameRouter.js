@@ -184,6 +184,5 @@ router.put('/', itemGameController.updateById);
  *         description: Internal server error
  */
 router.delete('/:id', itemGameController.deleteById);
-router.get('/:category', itemGameController.getByCategory);
 
 module.exports = router;
