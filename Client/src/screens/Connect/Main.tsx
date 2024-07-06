@@ -14,6 +14,7 @@ export default function ConnectScreen() {
   const navigate = useCustomNavigation();
 
   useEffect(() => {
+    console.log("isConnected ", isConnected);
     if (isConnected) {
       navigate.replace("MainTab");
     }

@@ -12,7 +12,7 @@ const LoadingComponent: React.FC = () => {
 
   return (
     <View style={[styles.container, styles.horizontal]}>
-      <ActivityIndicator size="large" color="yellow" animating={true} />
+      <ActivityIndicator size="large" color="white" animating={true} />
     </View>
   );
 };

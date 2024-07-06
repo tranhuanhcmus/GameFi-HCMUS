@@ -32,8 +32,6 @@ export const ItemComponent: React.FC<ItemProps> = ({
 
   itemName,
 }) => {
-  console.log(typeof gemcost, gemcost);
-
   return (
     <TouchableOpacity
       onPress={onPress}

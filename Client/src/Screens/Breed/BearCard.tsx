@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Animated, Image, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import AwesomeButton from "react-native-really-awesome-button";
 import Pet from "../../../assets/avatar.png";
 import Plus from "../../../assets/plus.svg";
@@ -17,6 +23,7 @@ const BearCard = (props: any) => {
 
   const [animatedValue] = useState(new Animated.Value(0));
   const [scaleAnimatedValue] = useState(new Animated.Value(1)); // Create an Animated value
+  const bearCardTranslateYValue = new Animated.Value(0);
   const navigate = useCustomNavigation();
 
   const startShakeAnimation = () => {
@@ -158,20 +165,35 @@ const BearCard = (props: any) => {
           </CustomText>
         </Animated.View>
       ) : (
-        <Animated.View>
-          <TouchableOpacity
-            disabled={props.disabled}
-            onPress={() => {
+        <TouchableWithoutFeedback
+          disabled={props.disabled}
+          onPress={() => {
+            Animated.sequence([
+              Animated.timing(bearCardTranslateYValue, {
+                toValue: 10,
+                duration: 100,
+                useNativeDriver: true,
+              }),
+              Animated.timing(bearCardTranslateYValue, {
+                toValue: 0,
+                duration: 100,
+                useNativeDriver: true,
+              }),
+            ]).start(() => {
               setIsVisible(true);
-            }}
+            });
+          }}
+        >
+          <Animated.View
             style={{
               width: ConstantsResponsive.MAX_WIDTH * 0.4,
               height: ConstantsResponsive.MAX_HEIGHT * 0.3,
+              transform: [{ translateY: bearCardTranslateYValue }],
             }}
           >
             <UnknownCard width={"100%"} height={"100%"} />
-          </TouchableOpacity>
-        </Animated.View>
+          </Animated.View>
+        </TouchableWithoutFeedback>
       )}
     </>
   );

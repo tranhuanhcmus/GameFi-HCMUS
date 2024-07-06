@@ -1,4 +1,3 @@
-import { Log } from "ethers";
 import React, { useEffect, useState } from "react";
 
 const Dropdown = ({
