@@ -19,7 +19,7 @@ const getAll = async(req, res, next) => {
             let public_gateway=`ipfs.io`
             if(client_gateway){
                 tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
-                tokenUri.data.assets=tokenUri.data.image.replace(public_gateway,client_gateway)
+                tokenUri.data.assets=tokenUri.data.assets.replace(public_gateway,client_gateway)
             }
 
             if (tokenUri) {
@@ -50,7 +50,7 @@ const getById = async(req, res, next) => {
         let public_gateway=`ipfs.io`
         if(client_gateway){
             tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
-            tokenUri.data.assets=tokenUri.data.image.replace(public_gateway,client_gateway)
+            tokenUri.data.assets=tokenUri.data.assets.replace(public_gateway,client_gateway)
         }
 
         result.dataValues.data=tokenUri.data
@@ -81,7 +81,7 @@ const getALlByOwner = async(req, res, next) => {
                 let public_gateway=`ipfs.io`
                 if(client_gateway){
                     tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
-                    tokenUri.data.assets=tokenUri.data.image.replace(public_gateway,client_gateway)
+                    tokenUri.data.assets=tokenUri.data.assets.replace(public_gateway,client_gateway)
                     rows[i].tokenUri=rows[i].tokenUri.replace(public_gateway,client_gateway)
                 }
                 result.push({
