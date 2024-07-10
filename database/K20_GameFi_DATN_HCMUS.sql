@@ -290,4 +290,29 @@ INSERT INTO "TokenUris" (id, "tokenUri", "data", "createdAt", "updatedAt") VALUE
 	(1, 'https://bb069f0cd1c8ebfa80c6e64868cf1241.ipfscdn.io/ipfs/bafybeiea7xm3gla4bukzglbgbcjjm64qsjlf732segs4d2fbbdry24m2by/104.json', '{"name": "Harry", "type": "NFT", "image": "https://images.nightcafe.studio/jobs/ZmXUlD3BXhjV4i4wnWka/ZmXUlD3BXhjV4i4wnWka--1--zv5e8.jpg?tr=w-1600,c-at_max", "title": "Test", "tokenId": "104", "attributes": {"type": "Dragon"}, "description": "This is a normal Dragon"}', '2024-05-23 23:29:54.193+07', '2024-05-23 23:29:54.193+07'),
 	(3, 'https://ipfs.io/ipfs/QmP1Qnd9xTY8c1RsNPsSxeJCnrNkS9Wggs1mYRvcpdHx8E/998.json', '{"name": "First Bear 240524", "type": "NFT", "image": "https://ipfs.io/ipfs/QmcphtmQUFeZEMbxgiXgSJFqNwHizrLNrmWEoZzGKjNxcR/bear-998.jpg", "title": "Bear 998", "sprites": "https://ipfs.io/ipfs/QmcphtmQUFeZEMbxgiXgSJFqNwHizrLNrmWEoZzGKjNxcR/sprite-998.png", "tokenId": "998", "attributes": {"eye": 1, "fur": 1, "item": 1, "element": 1}, "properties": {}, "description": "First Bear 240524"}', '2024-05-24 22:45:46.995+07', '2024-05-24 22:45:46.995+07');
 
-
+INSERT INTO "Hangmans" (id,question,answer,"createdAt","updatedAt") VALUES
+	 ('e8724e05-1056-4798-9a0b-1cd3a91f8c70','What is the largest planet in our solar system?','JUPITER','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('ac032e2e-4db0-42d0-8c3e-50b52d15636b','What animal is known as the ''King of the Jungle''?','LION','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('8d3a0a0e-ee16-4849-b3e7-45612b825951','What do you call a shape with eight sides?','OCTAGON','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('9d8ff0e7-7e42-41de-aa9e-c4f1f45855cb','What is the capital of Italy?','ROME','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('f012784b-2a42-47f4-ba03-b26854688213','What is the smallest unit of life?','CELL','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('d95adccb-16cc-45c2-a417-11e6328c730e','What fruit is used to make wine?','GRAPE','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('f3f1661c-0e3b-43a3-8c14-1d8b5966f4b5','What is the hardest natural substance on Earth?','DIAMOND','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('58f58d5d-36c8-4fb4-8b44-5b59330fc98d','What is the largest mammal?','WHALE','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('f0bfb4f1-f1f1-4692-a283-0a5e6e1a93df','What is the common name for sodium chloride?','SALT','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('b32d9058-4e8d-4b7e-b6ad-8f3bca326c6e','What is the world''s longest river?','NILE','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('d8d9d0e8-29f5-4ff2-b32a-f04e61d10c58','What organ pumps blood through the body?','HEART','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('19de3335-d956-4c11-82b2-fc3e2a1f8a51','What is the term for a baby cat?','KITTEN','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('6cc725e8-b138-4654-8c54-05cf366a9321','What is the capital city of Japan?','TOKYO','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('02f14e65-0b3f-4c5e-a5b2-61f8b52d5225','What is the main gas found in the air we breathe?','NITROGEN','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('0ac9ee48-b23a-4abf-b4d2-1f1592f136fc','What is the smallest continent by land area?','AUSTRALIA','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('e2680792-812f-4e2d-b57d-7c8d71c92eb4','What do cows produce that humans commonly drink?','MILK','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('ee2f8ed3-919e-42e5-bf9f-f085c2fd75cc','What is the primary ingredient in bread?','FLOUR','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('60c90c02-4596-409b-95f0-184a58807a89','What is the term for frozen water?','ICE','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('6d4c1688-ff04-42c3-8b7c-bac125e07a4f','What is the main language spoken in Spain?','SPANISH','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('e8d0599b-f13a-4f89-bf38-06af646a8552','Hoang Sa, Truong Sa belong to?','VIETNAM','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('c1cfb0a9-fad9-48e5-b8f4-7077bc4d6c9f','What is the fastest land animal?','CHEETAH','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('1a9b25c8-aa0b-4fd7-8c0a-795c6d0e4b80','What is the currency of the United Kingdom?','POUND','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('7290e3b0-4188-4882-8db0-2a7ec5f61b32','What is the chemical symbol for oxygen?','O2','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('a1a5f107-eae5-4e77-8a3b-370597961e27','What is the currency of the United State?','USD','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07'),
+	 ('ff11d6c0-0d36-49a7-88c2-33e4e61b6da4','What is the chemical symbol for water?','H2O','2024-05-23 18:02:29.02+07','2024-05-23 18:02:29.02+07');

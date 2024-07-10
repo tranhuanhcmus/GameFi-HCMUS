@@ -149,11 +149,10 @@ const updateById = async(req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-
 module.exports = {
     getAll,
     getById,
     add,
     deleteById,
-    updateById
+    updateById,
 }

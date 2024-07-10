@@ -179,6 +179,7 @@ router.put('/', itemAppOwnerController.updateById);
 router.delete('/:id', itemAppOwnerController.deleteById);
 router.get('/currency/:owner', itemAppOwnerController.getOwnerCurrency);
 router.post('/purchase', itemAppOwnerController.purchaseItem);
+router.post('/purchasePack', itemAppOwnerController.purchaseItemPack);
 router.post('/useItem', itemAppOwnerController.useItemForOwner);
 
 module.exports = router;

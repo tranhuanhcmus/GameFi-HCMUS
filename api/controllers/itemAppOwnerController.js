@@ -143,6 +143,89 @@ const deleteById = async(req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
+const getRandomQuality = () => {
+    const rand = Math.random() * 100;
+    console.log(rand);
+    if (rand < 50) {
+        return 'normal';
+    } else if (rand < 80) {
+        return 'rare';
+    } else {
+        return 'super rare';
+    }
+};
+
+const purchaseItemPack = async (req, res, next) => {
+    try {
+        const rowData = req.body;
+        console.log(rowData);
+        const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"];    // 0 is gem, 1 is gold
+        const currency = rowData.currency;
+        console.log(currencyId[currency], rowData.owner)
+        const userCurrencyBalance = await models.ItemAppOwner.findOne({ where: { id: currencyId[currency], owner: rowData.owner } });
+        if(rowData.id === currencyId[0] && currencyId[currency] === currencyId[1]) {
+            return res.sendResponse(null, 'Cannot use gold to purchase gem.', STATUS_CODES.NOT_FOUND);
+        }
+        const totalPrice = (currency == 0) ? rowData.gemcost * rowData.quantity : rowData.goldcost * rowData.quantity;
+        console.log(userCurrencyBalance.quantity, totalPrice);
+        if (userCurrencyBalance.quantity < totalPrice){
+            return res.sendResponse(null, 'Your balance is not sufficient for this item', STATUS_CODES.NOT_FOUND);
+        }
+        else{
+            const itemCategory = ["food", "boost", "energy", "background"];
+            if (!itemCategory.includes(rowData.category)) {
+                return res.sendResponse(null, `Invalid category ${rowData.category} for open pack`, STATUS_CODES.NOT_FOUND);
+            } 
+            const randomQuality = getRandomQuality();
+            console.log(randomQuality);
+            const items = await models.ItemApp.findAll({
+                where: {
+                    category: rowData.category,
+                    quality: randomQuality
+                }
+            });
+
+            if (!items.length) {
+                return res.sendResponse(null, `No items found for category ${rowData.category} with quality ${randomQuality}`, STATUS_CODES.NOT_FOUND);
+            }
+
+            const randomItem = items[Math.floor(Math.random() * items.length)];
+            console.log("randomItem: ", randomItem.dataValues);
+            const row = await models.ItemAppOwner.findOne({ where: { id: randomItem.dataValues.id, owner: rowData.owner } });
+            if (row) {
+                const updateData = {
+                    id: randomItem.dataValues.id,
+                    owner: rowData.owner,
+                    quantity: row.dataValues.quantity + rowData.quantity
+                }
+                console.log("updateData: \n", updateData);
+
+                await row.update(updateData);
+                await row.reload();
+            } else {
+                const newRow = {
+                    id: randomItem.dataValues.id,
+                    owner: rowData.owner,
+                    quantity: rowData.quantity
+                }
+                console.log("newRow: \n", newRow);
+                const result = await models.ItemAppOwner.create(newRow);
+            }
+            const updateCurrencyData = {
+                    id: currencyId[currency],
+                    owner: rowData.owner,
+                    quantity: userCurrencyBalance.quantity - totalPrice
+                }
+            await userCurrencyBalance.update(updateCurrencyData);
+            await userCurrencyBalance.reload();
+
+            randomItem.dataValues.quantity = rowData.quantity;
+            return res.sendResponse(randomItem, `Random item found for category ${rowData.category} with quality ${randomQuality}`, STATUS_CODES.OK);
+        }
+    } catch (error) {
+        return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);
+    }
+}
 const purchaseItem = async (req, res, next) => {
     try {
         const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"];    // 0 is gem, 1 is gold
@@ -293,5 +376,5 @@ const getOwnerCurrency = async (req, res, next) => {
 }
 
 module.exports={
-	getAll,getById,purchaseItem,add,deleteById,updateById,getByOwner,getOwnerCurrency,useItemForOwner
+	getAll,getById,purchaseItem,add,deleteById,updateById,getByOwner,getOwnerCurrency,useItemForOwner,purchaseItemPack
 }
