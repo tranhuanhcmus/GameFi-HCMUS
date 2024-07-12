@@ -37,7 +37,7 @@ const getByOwner = async (req, res, next) => {
         for (const result of results) {
             // console.log(result.dataValues.id);
             // Gọi hàm getById để lấy thông tin chi tiết của mỗi id
-            const detailedResult = await models.ItemGame.findOne({ where: { id: result.dataValues.id } })
+            const detailedResult = await models.ItemApp.findOne({ where: { id: result.dataValues.id } })
             // console.log(detailedResult.dataValues.description);
             // Kiểm tra kết quả từ hàm getById và xử lý phản hồi
             if (!detailedResult) {
@@ -96,11 +96,11 @@ const addOrUpdate = async (req, res, next) => {
         const { id, tokenId, owner } = rowData;
 
         // Check if the item game exists and validate its category
-        const itemGame = await models.ItemGame.findOne({ where: { id } });
-        if (!itemGame) {
+        const itemApp = await models.ItemApp.findOne({ where: { id } });
+        if (!itemApp) {
             return res.sendResponse(null, `Not Found Item Game ID ${id}`, STATUS_CODES.NOT_FOUND);
         }
-        const category = itemGame.dataValues.category;
+        const category = itemApp.dataValues.category;
         if (category.toLowerCase() !== "boost") {
             return res.sendResponse(null, `Invalid item: Current item category (${category}) is not a boost item.`, STATUS_CODES.BAD_REQUEST);
         }

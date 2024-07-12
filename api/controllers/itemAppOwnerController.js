@@ -4,7 +4,15 @@ const { Op } = require('sequelize');
 
 const getAll = async(req, res, next) => {
     try {
-        const list = await models.ItemAppOwner.findAll()
+        const list = await models.ItemAppOwner.findAll(
+            {   
+                where: {
+                    quantity: {
+                        [Op.gt]: 0 // Sử dụng toán tử Op.gt để lấy các phần tử có quantity > 0
+                    }
+                }
+            }
+        );
 
         return res.sendResponse(list, "Get All Success", STATUS_CODES.OK)
     } catch (error) {
@@ -15,7 +23,17 @@ const getById = async(req, res, next) => {
     try {
 
         const { id } = req.params
-        const result = await models.ItemAppOwner.findOne({ where: { id: id } })
+        const result = await models.ItemAppOwner.findOne(
+            { 
+                where: 
+                { 
+                    id: id, 
+                    quantity: {
+                        [Op.gt]: 0 // Sử dụng toán tử Op.gt để lấy các phần tử có quantity > 0
+                    } 
+                } 
+            }
+        );
 
         if (!result) {
             return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
@@ -29,7 +47,17 @@ const getById = async(req, res, next) => {
 const getByOwner = async (req, res, next) => {
     try {
         const { owner } = req.params;
-        const results = await models.ItemAppOwner.findAll({ where: { owner: owner } });
+        const results = await models.ItemAppOwner.findAll(
+            { 
+                where: 
+                { 
+                    owner: owner, 
+                    quantity: {
+                        [Op.gt]: 0 // Sử dụng toán tử Op.gt để lấy các phần tử có quantity > 0
+                    } 
+                } 
+            }
+        );
 
         if (!results || results.length === 0) {
             return res.sendResponse(null, `Not Found Owner ${owner}`, STATUS_CODES.NOT_FOUND);
