@@ -7,11 +7,221 @@
 /*==============================================================*/
 
 -- Insert data into ACCOUNT table
-INSERT INTO public."ItemApps" (id,name,description,category,quality,quantity,gemcost,goldcost,image,"createdAt","updatedAt") VALUES
- ('7dc748d5-de7d-4a76-9a58-62463ee7be14','Gem','Gem','Currency','Normal',1,1,1000,'/uploads/gem.jpg','2024-05-07 22:22:05.251+07','2024-05-07 22:22:05.251+07'),
- ('1a06543f-42c7-402f-a22a-32594b58c0e5','Gold','Gold','Currency','Normal',1,0,1,'/uploads/gold.jpg','2024-05-07 22:22:35.891+07','2024-05-07 22:22:35.891+07');
+CREATE TABLE "ElementPools" (
+	id int4 NOT NULL,
+	description text NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "ElementPools_pkey" PRIMARY KEY (id)
+);
 
-INSERT INTO public."ItemGames" (id,name,description,category,quality,quantity,gemcost,goldcost,image,"createdAt","updatedAt") VALUES
-	 ('baebb924-5be9-4a6a-81d5-80fcc5c5ba48','Energy Poition','Energy restoration','Poition','Normal',10,1,1000,'/uploads/itemGame-item_game_energyPoition.svg','2024-05-09 22:27:48.417+07','2024-05-09 22:27:48.417+07'),
-	 ('b86e38fe-c9e2-4437-8f7e-08455b3e4c8e','HP Poition','HP restoration','Poition','Normal',10,1,1000,'/uploads/itemGame-item_game_hpPoition.png','2024-05-09 22:28:54.329+07','2024-05-09 22:28:54.329+07'),
-	 ('a8affeaf-f7ba-4374-b42a-32422c521b0c','Mana Poition','Mana restoration','Poition','Normal',10,1,1000,'/uploads/itemGame-item_game_manaPoition.png','2024-05-09 22:30:04.225+07','2024-05-09 22:30:04.225+07');
+-- "EyePools" definition
+
+-- Drop table
+-- DROP TABLE "EyePools";
+
+CREATE TABLE "EyePools" (
+	id int4 NOT NULL,
+	description text NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "EyePools_pkey" PRIMARY KEY (id)
+);
+
+-- "FurPools" definition
+
+-- Drop table
+-- DROP TABLE "FurPools";
+
+CREATE TABLE "FurPools" (
+	id int4 NOT NULL,
+	description text NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "FurPools_pkey" PRIMARY KEY (id)
+);
+
+-- "Hangmans" definition
+
+-- Drop table
+-- DROP TABLE "Hangmans";
+
+CREATE TABLE "Hangmans" (
+	id uuid NOT NULL,
+	question text NOT NULL,
+	answer text NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "Hangmans_pkey" PRIMARY KEY (id)
+);
+
+-- "ItemAppOwners" definition
+
+-- Drop table
+-- DROP TABLE "ItemAppOwners";
+
+CREATE TABLE "ItemAppOwners" (
+	id uuid NOT NULL,
+	"owner" text NOT NULL,
+	quantity int4 NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "ItemAppOwners_pkey" PRIMARY KEY (id, "owner")
+);
+
+-- "ItemApps" definition
+
+-- Drop table
+-- DROP TABLE "ItemApps";
+
+CREATE TABLE "ItemApps" (
+	id uuid NOT NULL,
+	"name" text NOT NULL,
+	description text NULL,
+	category text NULL,
+	quality text NULL,
+	quantity int4 NOT NULL,
+	gemcost int4 NULL DEFAULT 0,
+	goldcost int4 NULL DEFAULT 0,
+	image text NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "ItemApps_pkey" PRIMARY KEY (id)
+);
+
+-- "BoostEffects" definition
+
+-- Drop table
+-- DROP TABLE "BoostEffects";
+
+CREATE TABLE "BoostEffects" (
+	id uuid NOT NULL,
+	"tokenId" int4 NOT NULL,
+	"owner" text NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	"lastTimeBoost" timestamptz NULL,
+	CONSTRAINT "BoostEffects_pkey" PRIMARY KEY (id, "tokenId", "owner")
+);
+
+-- "Cups" definition
+
+-- Drop table
+-- DROP TABLE "Cups";
+
+CREATE TABLE "Cups" (
+	id uuid NOT NULL,
+	"owner" text NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	"cup" int4 NOT NULL,
+	CONSTRAINT "Cups_pkey" PRIMARY KEY (id, "owner")
+);
+
+-- "ItemGameOwners" definition
+
+-- Drop table
+-- DROP TABLE "ItemGameOwners";
+
+CREATE TABLE "ItemGameOwners" (
+	id uuid NOT NULL,
+	"owner" text NOT NULL,
+	quantity int4 NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "ItemGameOwners_pkey" PRIMARY KEY (id, "owner")
+);
+
+-- "ItemGames" definition
+
+-- Drop table
+-- DROP TABLE "ItemGames";
+
+CREATE TABLE "ItemGames" (
+	id uuid NOT NULL,
+	"name" text NOT NULL,
+	description text NULL,
+	category text NULL,
+	quality text NULL,
+	quantity int4 NOT NULL,
+	gemcost int4 NULL DEFAULT 0,
+	goldcost int4 NULL DEFAULT 0,
+	image text NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "ItemGames_pkey" PRIMARY KEY (id)
+);
+
+-- "ItemPools" definition
+
+-- Drop table
+-- DROP TABLE "ItemPools";
+
+CREATE TABLE "ItemPools" (
+	id int4 NOT NULL,
+	description text NOT NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "ItemPools_pkey" PRIMARY KEY (id)
+);
+
+-- "NFTs" definition
+
+-- Drop table
+-- DROP TABLE "NFTs";
+
+CREATE TABLE "NFTs" (
+	"tokenId" int4 NOT NULL,
+	"tokenUri" text NULL,
+	"owner" text NULL,
+	"exp" int4 NULL DEFAULT 0,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	"lastTimePlayed" timestamptz NULL,
+	energy int4 NULL DEFAULT 3,
+	CONSTRAINT "NFTs_pkey" PRIMARY KEY ("tokenId")
+);
+
+-- "TokenUris" definition
+
+-- Drop table
+-- DROP TABLE "TokenUris";
+
+CREATE TABLE "TokenUris" (
+	id serial NOT NULL,
+	"tokenUri" text NULL,
+	"data" jsonb NULL,
+	"createdAt" timestamptz NOT NULL,
+	"updatedAt" timestamptz NOT NULL,
+	CONSTRAINT "TokenUris_pkey" PRIMARY KEY (id)
+);
+
+-- NFTs and TokenUris relationship
+ALTER TABLE "NFTs"
+ADD CONSTRAINT fk_nfts_tokenuri
+FOREIGN KEY ("tokenUri")
+REFERENCES "TokenUris"("tokenUri");
+
+-- ItemAppOwners and ItemApps relationship
+ALTER TABLE "ItemAppOwners"
+ADD CONSTRAINT fk_itemappowners_itemapps
+FOREIGN KEY ("id")
+REFERENCES "ItemApps"("id");
+
+-- BoostEffects and NFTs relationship
+ALTER TABLE "BoostEffects"
+ADD CONSTRAINT fk_boosteffects_nfts
+FOREIGN KEY ("tokenId")
+REFERENCES "NFTs"("tokenId");
+
+-- BoostEffects and ItemGames relationship
+ALTER TABLE "BoostEffects"
+ADD CONSTRAINT fk_boosteffects_itemgames
+FOREIGN KEY ("id")
+REFERENCES "ItemGames"("id");
+
+-- ItemGameOwners and ItemGames relationship
+ALTER TABLE "ItemGameOwners"
+ADD CONSTRAINT fk_itemgameowners_itemgames
+FOREIGN KEY ("id")
+REFERENCES "ItemGames"("id");

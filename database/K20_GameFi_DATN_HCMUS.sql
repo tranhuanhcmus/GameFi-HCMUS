@@ -200,6 +200,36 @@ CREATE TABLE "TokenUris" (
 	CONSTRAINT "TokenUris_pkey" PRIMARY KEY (id)
 );
 
+-- NFTs and TokenUris relationship
+ALTER TABLE "NFTs"
+ADD CONSTRAINT fk_nfts_tokenuri
+FOREIGN KEY ("tokenUri")
+REFERENCES "TokenUris"("tokenUri");
+
+-- ItemAppOwners and ItemApps relationship
+ALTER TABLE "ItemAppOwners"
+ADD CONSTRAINT fk_itemappowners_itemapps
+FOREIGN KEY ("id")
+REFERENCES "ItemApps"("id");
+
+-- BoostEffects and NFTs relationship
+ALTER TABLE "BoostEffects"
+ADD CONSTRAINT fk_boosteffects_nfts
+FOREIGN KEY ("tokenId")
+REFERENCES "NFTs"("tokenId");
+
+-- BoostEffects and ItemGames relationship
+ALTER TABLE "BoostEffects"
+ADD CONSTRAINT fk_boosteffects_itemgames
+FOREIGN KEY ("id")
+REFERENCES "ItemGames"("id");
+
+-- ItemGameOwners and ItemGames relationship
+ALTER TABLE "ItemGameOwners"
+ADD CONSTRAINT fk_itemgameowners_itemgames
+FOREIGN KEY ("id")
+REFERENCES "ItemGames"("id");
+
 INSERT INTO "ElementPools" (id, description, "createdAt", "updatedAt") VALUES
 	(1, 'fire', '2024-05-23 23:29:54.205+07', '2024-05-23 23:29:54.205+07'),
 	(2, 'water', '2024-05-23 23:29:54.205+07', '2024-05-23 23:29:54.205+07'),

@@ -157,17 +157,35 @@ const deleteById = async(req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-const getRandomQuality = () => {
+const getRandomQuality = (quality) => {
     const rand = Math.random() * 100;
     console.log(rand);
-    if (rand < 50) {
+    
+    let thresholds;
+
+    switch (quality) {
+        case 'normal':
+            thresholds = [50, 80];
+            break;
+        case 'rare':
+            thresholds = [40, 70];
+            break;
+        case 'super rare':
+            thresholds = [30, 60];
+            break;
+        default:
+            throw new Error('Invalid quality value');
+    }
+
+    if (rand < thresholds[0]) {
         return 'normal';
-    } else if (rand < 80) {
+    } else if (rand < thresholds[1]) {
         return 'rare';
     } else {
         return 'super rare';
     }
 };
+
 
 const purchaseItemPack = async (req, res, next) => {
     try {
@@ -190,7 +208,11 @@ const purchaseItemPack = async (req, res, next) => {
             if (!itemCategory.includes(rowData.category)) {
                 return res.sendResponse(null, `Invalid category ${rowData.category} for open pack`, STATUS_CODES.NOT_FOUND);
             } 
-            const randomQuality = getRandomQuality();
+            const itemQuality = ["normal", "rare", "super rare"];
+            if (!itemQuality.includes(rowData.quality)) {
+                return res.sendResponse(null, `Invalid quality ${rowData.quality} for open pack`, STATUS_CODES.NOT_FOUND);
+            } 
+            const randomQuality = getRandomQuality(rowData.quality);
             console.log(randomQuality);
             const items = await models.ItemGame.findAll({
                 where: {
