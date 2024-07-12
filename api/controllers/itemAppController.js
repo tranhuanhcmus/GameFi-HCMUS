@@ -18,9 +18,11 @@ const getAll = async (req, res, next) => {
       return acc;
     }, {});
 
-    for (const key in groupedResults) {
-      if(!SHOP_CATEGORY.includes(key.toLowerCase()))
-        delete groupedResults[key]
+    if(req.query.category=='shop'){
+      for (const key in groupedResults) {
+        if(!SHOP_CATEGORY.includes(key.toLowerCase()))
+          delete groupedResults[key]
+      }
     }
 
     return res.sendResponse(groupedResults, "Get All Success", STATUS_CODES.OK);
