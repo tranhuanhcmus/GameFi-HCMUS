@@ -14,7 +14,6 @@ interface IPet {
 contract Pet is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     event SetExp(uint256 indexed tokenId, uint256 exp);
-    event SetPrice(uint256 indexed tokenId, uint256 price);
 
     mapping(uint256 => uint256) public petExp;
 

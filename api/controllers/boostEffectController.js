@@ -24,7 +24,7 @@ const getById = async(req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-const getByOwner = async (req, res, next) => {
+const getByOwner = async(req, res, next) => {
     try {
         const { owner } = req.params;
         const results = await models.BoostEffect.findAll({ where: { owner: owner } });
@@ -69,7 +69,7 @@ const getByOwner = async (req, res, next) => {
         // Trả về kết quả đã được mapping thông tin chi tiết
         return res.sendResponse(results, `Get Owner ${owner} Game Items Success`, STATUS_CODES.OK);
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const deleteById = async(req, res, next) => {
@@ -90,7 +90,7 @@ const deleteById = async(req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-const addOrUpdate = async (req, res, next) => {
+const addOrUpdate = async(req, res, next) => {
     try {
         const rowData = req.body;
         const { id, tokenId, owner } = rowData;
@@ -121,20 +121,20 @@ const addOrUpdate = async (req, res, next) => {
     }
 };
 
-const updateById = async (req, res, next) => {
+const updateById = async(req, res, next) => {
     try {
         const updateData = req.body;
-        
+
         console.log("updateData: ", updateData.id);
-        
+
         const row = await models.BoostEffect.findOne({ where: { id: updateData.id, tokenId: updateData.tokenId, owner: updateData.owner } });
-        
+
         if (!row) {
             return res.sendResponse(null, `Not Found ID ${updateData.id}`, STATUS_CODES.NOT_FOUND);
         } else {
             await row.update(updateData);
             await row.reload();
-            
+
             return res.sendResponse(row, `Update ID ${updateData.id} Success`, STATUS_CODES.OK);
         }
     } catch (error) {
@@ -143,6 +143,11 @@ const updateById = async (req, res, next) => {
 };
 
 
-module.exports={
-	getAll,getById,addOrUpdate,deleteById,updateById,getByOwner
+module.exports = {
+    getAll,
+    getById,
+    addOrUpdate,
+    deleteById,
+    updateById,
+    getByOwner
 }
