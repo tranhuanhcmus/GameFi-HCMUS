@@ -214,11 +214,11 @@ ADD CONSTRAINT fk_boosteffects_nfts
 FOREIGN KEY ("tokenId")
 REFERENCES "NFTs"("tokenId");
 
--- BoostEffects and ItemGames relationship
+-- BoostEffects and ItemApps relationship
 ALTER TABLE "BoostEffects"
-ADD CONSTRAINT fk_boosteffects_itemgames
+ADD CONSTRAINT fk_boosteffects_itemapps
 FOREIGN KEY ("id")
-REFERENCES "ItemGames"("id");
+REFERENCES "ItemApps"("id");
 
 -- ItemGameOwners and ItemGames relationship
 ALTER TABLE "ItemGameOwners"

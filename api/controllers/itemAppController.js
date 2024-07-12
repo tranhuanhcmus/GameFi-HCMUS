@@ -71,7 +71,22 @@ const deleteById = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   try {
-    let formData = { ...req.body, image: '/uploads/'+req.body?.imageName };
+    const itemQuality = ["normal", "rare", "super rare"];
+    const qualityValues = [10, 20, 50];
+
+    // Kiểm tra và chuyển đổi giá trị quality từ req.body
+    const qualityIndex = itemQuality.indexOf(req.body.quality);
+    const qualityValue = qualityIndex !== -1 ? qualityValues[qualityIndex] : null;
+
+    if (qualityValue === null) {
+      return res.sendResponse(null, 'Invalid quality value', STATUS_CODES.BAD_REQUEST);
+    }
+
+    let formData = { 
+      ...req.body, 
+      image: '/uploads/' + req.body?.imageName,
+      quantity: qualityValue
+    };
 
     const newRow = await models.ItemApp.create(formData);
 
