@@ -327,9 +327,13 @@ const purchaseItem = async(req, res, next) => {
                 // console.log("results: ", results);
 
                 if (created) {
-                    return res.sendResponse({ upsertedRow, created }, `Created new BoostEffect record successfully`, STATUS_CODES.OK);
-                } else {
-                    return res.sendResponse({ upsertedRow, created }, `Updated existing BoostEffect record successfully`, STATUS_CODES.OK);
+                    return res.sendResponse(created, `Created new BoostEffect record successfully`, STATUS_CODES.OK);
+                } 
+                else if (upsertedRow) {
+                    return res.sendResponse(upsertedRow, `Updated existing BoostEffect record successfully`, STATUS_CODES.OK);
+                }
+                else {
+                    return res.sendResponse(null, `Unexpected error appear while purchase a boost item`, STATUS_CODES.BAD_REQUEST);
                 }
             }
             else {
