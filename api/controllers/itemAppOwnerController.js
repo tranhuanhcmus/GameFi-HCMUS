@@ -300,23 +300,10 @@ const purchaseItem = async(req, res, next) => {
                 return res.sendResponse(null, `Error fetching details for Item ID ${id}`, STATUS_CODES.INTERNAL_ERROR);
             }
 
-            // Map detailed item data
-            const detailedResult = {
-                ...itemOwner.dataValues,
-                name: itemApp.dataValues.name,
-                description: itemApp.dataValues.description,
-                category: itemApp.dataValues.category,
-                quality: itemApp.dataValues.quality,
-                itemquantity: itemApp.dataValues.quantity,
-                gemcost: itemApp.dataValues.gemcost,
-                goldcost: itemApp.dataValues.goldcost,
-                image: itemApp.dataValues.image,
-                totalpoint: quantity * itemApp.dataValues.quantity
-            };
-            console.log("detailedResult: \n", detailedResult);
+            console.log("itemApp.dataValues: \n", itemApp.dataValues);
 
             // Update boost effect time
-            if (detailedResult.category == "boost") {
+            if (itemApp.dataValues.category == "boost") {
                 const existingRow = await models.BoostEffect.findOne({ where: { id: id, owner: owner } });
                 console.log(existingRow);
                 // Prepare the data for addOrUpdate
