@@ -18,6 +18,8 @@ const getAll = async (req, res, next) => {
       return acc;
     }, {});
 
+    groupedResults=groupedResults.filter(item=>SHOP_CATEGORY.includes(item.toLowerCase()))
+
     return res.sendResponse(groupedResults, "Get All Success", STATUS_CODES.OK);
   } catch (error) {
     return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);

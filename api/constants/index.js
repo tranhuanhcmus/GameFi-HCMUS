@@ -8,5 +8,6 @@ module.exports = {
     },
     BEAR_GATEWAY_IPFS:'https://ipfs.io/ipfs',
     ITEM_CATEGORY:["food","boost","treasure","energy","background"],
+    SHOP_CATEGORY:["food pack","boost","pack"],
     ITEM_QUALITY:["normal","rare","super rare"]
 }

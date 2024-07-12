@@ -78,6 +78,7 @@ const getAll = async (req, res, next) => {
             return acc;
         }, {});
 
+
         return res.sendResponse(groupedResults, "Get All Success", STATUS_CODES.OK);
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
