@@ -1,4 +1,4 @@
-const { STATUS_CODES } = require("../constants");
+const { STATUS_CODES, SHOP_CATEGORY } = require("../constants");
 const models = require("../database/models");
 const getAll = async (req, res, next) => {
   try {
@@ -18,7 +18,10 @@ const getAll = async (req, res, next) => {
       return acc;
     }, {});
 
-    groupedResults=groupedResults.filter(item=>SHOP_CATEGORY.includes(item.toLowerCase()))
+    for (const key in groupedResults) {
+      if(!SHOP_CATEGORY.includes(key.toLowerCase()))
+        delete groupedResults[key]
+    }
 
     return res.sendResponse(groupedResults, "Get All Success", STATUS_CODES.OK);
   } catch (error) {
