@@ -167,6 +167,18 @@ const ContractController = {
             console.error('Error fetching exp:', error);
         }
     },
+
+    addExp: async(tokenId,exp) => {
+        try {
+            const exp_result = await petContract.methods.addExp(tokenId,exp).send({ from: WALLET_PUBLIC_KEY })
+            return exp_result;
+        } catch (error) {
+            console.error('Error fetching exp:', error);
+        }
+    },
+
+    
+
     getTokenURI: async(tokenId) => {
         try {
             const uri = await petContract.methods.tokenURI(tokenId).call();

@@ -114,6 +114,9 @@ const useItemForOwner = async(req, res, next) => {
 
             await nftResult.update({ exp: updateExp });
             await nftResult.reload();
+
+            // ------- NFT Contract -------
+            // await ContractController.addExp(tokenId,detailedResult.totalpoint)
         }
         // Update item quantity
         const updatedQuantity = itemOwner.dataValues.quantity - quantity;
