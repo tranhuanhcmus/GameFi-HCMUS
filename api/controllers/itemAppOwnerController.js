@@ -323,7 +323,8 @@ const purchaseItem = async(req, res, next) => {
                 }
                 await userCurrencyBalance.update(updateCurrencyData);
                 await userCurrencyBalance.reload();
-                return res.sendResponse(result, `Purchase item boost success`, STATUS_CODES.OK);
+                const results = await models.BoostEffect.findAll({ where: { owner: owner } });
+                return res.sendResponse(results, `Purchase item boost success`, STATUS_CODES.OK);
             }
             else {
                 const row = await models.ItemAppOwner.findOne({ where: { id: id, owner: owner } });
