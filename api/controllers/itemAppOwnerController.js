@@ -26,7 +26,7 @@ const getById = async(req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-const getByOwner = async (req, res, next) => {
+const getByOwner = async(req, res, next) => {
     try {
         const { owner } = req.params;
         const results = await models.ItemAppOwner.findAll({ where: { owner: owner } });
@@ -40,8 +40,8 @@ const getByOwner = async (req, res, next) => {
             // console.log(result.dataValues.id);
             // Gọi hàm getById để lấy thông tin chi tiết của mỗi id
             const detailedResult = await models.ItemApp.findOne({ where: { id: result.dataValues.id } })
-            // console.log(detailedResult.dataValues.description);
-            // Kiểm tra kết quả từ hàm getById và xử lý phản hồi
+                // console.log(detailedResult.dataValues.description);
+                // Kiểm tra kết quả từ hàm getById và xử lý phản hồi
             if (!detailedResult) {
                 // Nếu không tìm thấy hoặc có lỗi, trả về lỗi tương ứng
                 return res.sendResponse(null, `Error fetching details for ID ${result.dataValues.id}`, detailedResult ? detailedResult.status : STATUS_CODES.INTERNAL_ERROR);
@@ -61,10 +61,10 @@ const getByOwner = async (req, res, next) => {
         // Trả về kết quả đã được mapping thông tin chi tiết
         return res.sendResponse(results, `Get Owner ${owner} App Items Success`, STATUS_CODES.OK);
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
-const useItemForOwner = async (req, res, next) => {
+const useItemForOwner = async(req, res, next) => {
     try {
         const { owner, id, quantity, tokenId } = req.body;
 
@@ -146,7 +146,7 @@ const deleteById = async(req, res, next) => {
 const getRandomQuality = (quality) => {
     const rand = Math.random() * 100;
     console.log(rand);
-    
+
     let thresholds;
 
     switch (quality) {
@@ -173,31 +173,30 @@ const getRandomQuality = (quality) => {
 };
 
 
-const purchaseItemPack = async (req, res, next) => {
+const purchaseItemPack = async(req, res, next) => {
     try {
         const rowData = req.body;
         console.log(rowData);
-        const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"];    // 0 is gem, 1 is gold
+        const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"]; // 0 is gem, 1 is gold
         const currency = rowData.currency;
         console.log(currencyId[currency], rowData.owner)
         const userCurrencyBalance = await models.ItemAppOwner.findOne({ where: { id: currencyId[currency], owner: rowData.owner } });
-        if(rowData.id === currencyId[0] && currencyId[currency] === currencyId[1]) {
+        if (rowData.id === currencyId[0] && currencyId[currency] === currencyId[1]) {
             return res.sendResponse(null, 'Cannot use gold to purchase gem.', STATUS_CODES.NOT_FOUND);
         }
         const totalPrice = (currency == 0) ? rowData.gemcost * rowData.quantity : rowData.goldcost * rowData.quantity;
         console.log(userCurrencyBalance.quantity, totalPrice);
-        if (userCurrencyBalance.quantity < totalPrice){
+        if (userCurrencyBalance.quantity < totalPrice) {
             return res.sendResponse(null, 'Your balance is not sufficient for this item', STATUS_CODES.NOT_FOUND);
-        }
-        else{
+        } else {
             const itemCategory = ["food", "boost", "energy", "background"];
             if (!itemCategory.includes(rowData.category)) {
                 return res.sendResponse(null, `Invalid category ${rowData.category} for open pack`, STATUS_CODES.NOT_FOUND);
-            } 
+            }
             const itemQuality = ["normal", "rare", "super rare"];
             if (!itemQuality.includes(rowData.quality)) {
                 return res.sendResponse(null, `Invalid quality ${rowData.quality} for open pack`, STATUS_CODES.NOT_FOUND);
-            } 
+            }
             const randomQuality = getRandomQuality(rowData.quality);
             console.log(randomQuality);
             const items = await models.ItemApp.findAll({
@@ -234,10 +233,10 @@ const purchaseItemPack = async (req, res, next) => {
                 const result = await models.ItemAppOwner.create(newRow);
             }
             const updateCurrencyData = {
-                    id: currencyId[currency],
-                    owner: rowData.owner,
-                    quantity: userCurrencyBalance.quantity - totalPrice
-                }
+                id: currencyId[currency],
+                owner: rowData.owner,
+                quantity: userCurrencyBalance.quantity - totalPrice
+            }
             await userCurrencyBalance.update(updateCurrencyData);
             await userCurrencyBalance.reload();
 
@@ -248,21 +247,20 @@ const purchaseItemPack = async (req, res, next) => {
         return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);
     }
 }
-const purchaseItem = async (req, res, next) => {
+const purchaseItem = async(req, res, next) => {
     try {
-        const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"];    // 0 is gem, 1 is gold
+        const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"]; // 0 is gem, 1 is gold
         const rowData = req.body;
         const currency = rowData.currency;
         const userCurrencyBalance = await models.ItemAppOwner.findOne({ where: { id: currencyId[currency], owner: rowData.owner } });
-        if(rowData.id === currencyId[0] && currencyId[currency] === currencyId[1]) {
+        if (rowData.id === currencyId[0] && currencyId[currency] === currencyId[1]) {
             return res.sendResponse(null, 'Cannot use gold to purchase gem.', STATUS_CODES.NOT_FOUND);
         }
         const totalPrice = (currency == 0) ? rowData.gemcost * rowData.quantity : rowData.goldcost * rowData.quantity;
         console.log(userCurrencyBalance.quantity, totalPrice);
-        if (userCurrencyBalance.quantity < totalPrice){
+        if (userCurrencyBalance.quantity < totalPrice) {
             return res.sendResponse(null, 'Your balance is not sufficient for this item', STATUS_CODES.NOT_FOUND);
-        }
-        else{
+        } else {
             const row = await models.ItemAppOwner.findOne({ where: { id: rowData.id, owner: rowData.owner } });
             if (row) {
                 const updateData = {
@@ -303,7 +301,7 @@ const purchaseItem = async (req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-const add = async (req, res, next) => {
+const add = async(req, res, next) => {
     try {
         const rowData = req.body;
         const row = await models.ItemAppOwner.findOne({ where: { id: rowData.id, owner: rowData.owner } });
@@ -317,27 +315,27 @@ const add = async (req, res, next) => {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
 }
-const updateById = async (req, res, next) => {
+const updateById = async(req, res, next) => {
     try {
         const updateData = req.body;
-        
+
         console.log("updateData: ", updateData.id);
-        
+
         const row = await models.ItemAppOwner.findOne({ where: { id: updateData.id, owner: updateData.owner } });
-        
+
         if (!row) {
             return res.sendResponse(null, `Not Found ID ${updateData.id}`, STATUS_CODES.NOT_FOUND);
         } else {
             await row.update(updateData);
             await row.reload();
-            
+
             return res.sendResponse(row, `Update ID ${updateData.id} Success`, STATUS_CODES.OK);
         }
     } catch (error) {
         return res.sendResponse(null, error.message || error, STATUS_CODES.INTERNAL_ERROR);
     }
 };
-const getOwnerCurrency = async (req, res, next) => {
+const getOwnerCurrency = async(req, res, next) => {
     try {
         const { owner } = req.params;
         const results = await models.ItemAppOwner.findAll({
@@ -365,7 +363,7 @@ const getOwnerCurrency = async (req, res, next) => {
                     ]
                 }
             });
-            
+
             // Check the result from getById and handle the response
             if (!detailedResult) {
                 // If not found or there's an error, continue to the next result
@@ -397,6 +395,15 @@ const getOwnerCurrency = async (req, res, next) => {
     }
 }
 
-module.exports={
-	getAll,getById,purchaseItem,add,deleteById,updateById,getByOwner,getOwnerCurrency,useItemForOwner,purchaseItemPack
+module.exports = {
+    getAll,
+    getById,
+    purchaseItem,
+    add,
+    deleteById,
+    updateById,
+    getByOwner,
+    getOwnerCurrency,
+    useItemForOwner,
+    purchaseItemPack
 }

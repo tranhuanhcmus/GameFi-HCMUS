@@ -25,7 +25,7 @@ const getAll = async (req, res, next) => {
 
     return res.sendResponse(groupedResults, "Get All Success", STATUS_CODES.OK);
   } catch (error) {
-    return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+    return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
   }
 };
 const getById = async (req, res, next) => {
@@ -43,7 +43,7 @@ const getById = async (req, res, next) => {
 
     return res.sendResponse(result, `Get ID ${id} Success`, STATUS_CODES.OK);
   } catch (error) {
-    return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+    return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
   }
 };
 const deleteById = async (req, res, next) => {
@@ -63,7 +63,7 @@ const deleteById = async (req, res, next) => {
       return res.sendResponse(null, `Delete ID ${id} success`, STATUS_CODES.OK);
     }
   } catch (error) {
-    return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+    return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
   }
 };
 
@@ -75,7 +75,7 @@ const add = async (req, res, next) => {
 
     return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK);
   } catch (error) {
-    return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+    return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
   }
 };
 const updateById = async (req, res, next) => {
@@ -97,7 +97,7 @@ const updateById = async (req, res, next) => {
       return res.sendResponse(row, `Update ID ${id} Success`, STATUS_CODES.OK);
     }
   } catch (error) {
-    return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+    return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
   }
 };
 

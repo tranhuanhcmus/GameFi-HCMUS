@@ -1,8 +1,8 @@
 const { Sequelize, Op } = require("sequelize");
 const { STATUS_CODES, ITEM_CATEGORY } = require("../constants")
 const models = require("../database/models")
-// const getAll = async(req, res, next) => {
-//     try {
+    // const getAll = async(req, res, next) => {
+    //     try {
 
 //         let category_filter = {};
 //         let quality_filter = {};
@@ -41,7 +41,7 @@ const models = require("../database/models")
 //                 case 'super rare':
 //                     quality_filter = { quality: 'super rare' };
 //                     break;
-                
+
 //                 default:
 //                     // Handle unknown quality, if needed
 //                     break;
@@ -59,7 +59,7 @@ const models = require("../database/models")
 //         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
 //     }
 // }
-const getAll = async (req, res, next) => {
+const getAll = async(req, res, next) => {
     try {
         // Fetch all items without any filters
         const list = await models.ItemGame.findAll();
@@ -81,7 +81,7 @@ const getAll = async (req, res, next) => {
 
         return res.sendResponse(groupedResults, "Get All Success", STATUS_CODES.OK);
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR);
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const getById = async(req, res, next) => {
