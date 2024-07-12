@@ -304,18 +304,21 @@ const purchaseItem = async(req, res, next) => {
 
             // Update boost effect time
             if (itemApp.dataValues.category == "boost") {
-                const existingRow = await models.BoostEffect.findOne({ where: { id: id, owner: owner } });
-                console.log(existingRow);
+                // const existingRow = await models.BoostEffect.findOne({ where: { id: id, owner: owner } });
+                const upsertRow = await models.BoostEffect.upsertRow({ where: { id: id, owner: owner } });
+                console.log("upsertRow: ", upsertRow);
                 // Prepare the data for addOrUpdate
-                if (existingRow) {
-                    await existingRow.update({ lastTimeBoost: new Date() });
-                    await existingRow.reload();
-                } else {
-                    var newData;
-                    newData.id = id;
-                    newData.owner = owner;
-                    const newRow = await models.BoostEffect.create(newData);
-                }
+                // if (existingRow) {
+                //     await existingRow.update({ lastTimeBoost: new Date() });
+                //     await existingRow.reload();
+                // } 
+                // else {
+                //     const newData = {
+                //         id: id,
+                //         owner: owner
+                //     }
+                //     const newRow = await models.BoostEffect.create(newData);
+                // }
                 const updateCurrencyData = {
                     id: currencyId[currency],
                     owner: owner,
@@ -324,6 +327,7 @@ const purchaseItem = async(req, res, next) => {
                 await userCurrencyBalance.update(updateCurrencyData);
                 await userCurrencyBalance.reload();
                 const results = await models.BoostEffect.findAll({ where: { owner: owner } });
+                console.log("results: ", results);
                 return res.sendResponse(results, `Purchase item boost success`, STATUS_CODES.OK);
             }
             else {

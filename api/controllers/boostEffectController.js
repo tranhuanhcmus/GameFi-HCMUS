@@ -93,12 +93,12 @@ const deleteById = async(req, res, next) => {
 const addOrUpdate = async(req, res, next) => {
     try {
         const rowData = req.body;
-        const { id, tokenId, owner } = rowData;
+        const { id, owner } = rowData;
 
         // Check if the item game exists and validate its category
         const itemApp = await models.ItemApp.findOne({ where: { id } });
         if (!itemApp) {
-            return res.sendResponse(null, `Not Found Item Game ID ${id}`, STATUS_CODES.NOT_FOUND);
+            return res.sendResponse(null, `Not Found Item App ID ${id}`, STATUS_CODES.NOT_FOUND);
         }
         const category = itemApp.dataValues.category;
         if (category.toLowerCase() !== "boost") {
@@ -106,7 +106,7 @@ const addOrUpdate = async(req, res, next) => {
         }
 
         // Check if the boost effect already exists
-        const existingRow = await models.BoostEffect.findOne({ where: { id, tokenId, owner } });
+        const existingRow = await models.BoostEffect.findOne({ where: { id, owner } });
         if (existingRow) {
             await existingRow.update(rowData);
             await existingRow.reload();
@@ -127,7 +127,7 @@ const updateById = async(req, res, next) => {
 
         console.log("updateData: ", updateData.id);
 
-        const row = await models.BoostEffect.findOne({ where: { id: updateData.id, tokenId: updateData.tokenId, owner: updateData.owner } });
+        const row = await models.BoostEffect.findOne({ where: { id: updateData.id, owner: updateData.owner } });
 
         if (!row) {
             return res.sendResponse(null, `Not Found ID ${updateData.id}`, STATUS_CODES.NOT_FOUND);
