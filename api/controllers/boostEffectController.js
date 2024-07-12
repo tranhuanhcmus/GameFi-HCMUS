@@ -27,6 +27,7 @@ const getById = async(req, res, next) => {
 const getByOwner = async(req, res, next) => {
     try {
         const { owner } = req.params;
+        console.log(owner);
         const results = await models.BoostEffect.findAll({ where: { owner: owner } });
 
         if (!results || results.length === 0) {
@@ -35,7 +36,7 @@ const getByOwner = async(req, res, next) => {
 
         // Lặp qua mảng kết quả
         for (const result of results) {
-            // console.log(result.dataValues.id);
+            console.log(result.dataValues.id);
             // Gọi hàm getById để lấy thông tin chi tiết của mỗi id
             const detailedResult = await models.ItemApp.findOne({ where: { id: result.dataValues.id } })
             // console.log(detailedResult.dataValues.description);
@@ -43,11 +44,6 @@ const getByOwner = async(req, res, next) => {
             if (!detailedResult) {
                 // Nếu không tìm thấy hoặc có lỗi, trả về lỗi tương ứng
                 return res.sendResponse(null, `Error fetching details for ID ${result.dataValues.id}`, detailedResult ? detailedResult.status : STATUS_CODES.INTERNAL_ERROR);
-            }
-            const detailedNFT = await models.NFT.findOne({ where: { tokenId: result.dataValues.tokenId } })
-            if (!detailedNFT) {
-                // Nếu không tìm thấy hoặc có lỗi, trả về lỗi tương ứng
-                return res.sendResponse(null, `Error fetching details for Token Id ${result.dataValues.tokenId}`, detailedResult ? detailedResult.status : STATUS_CODES.INTERNAL_ERROR);
             }
             // Nếu thành công, gắn thông tin chi tiết vào mảng kết quả
             result.dataValues.name = detailedResult.dataValues.name;
@@ -58,10 +54,6 @@ const getByOwner = async(req, res, next) => {
             result.dataValues.gemcost = detailedResult.dataValues.gemcost;
             result.dataValues.goldcost = detailedResult.dataValues.goldcost;
             result.dataValues.image = detailedResult.dataValues.image;
-            result.dataValues.tokenUri = detailedNFT.dataValues.tokenUri;
-            result.dataValues.exp = detailedNFT.dataValues.exp;
-            result.dataValues.lastTimePlayed = detailedNFT.dataValues.lastTimePlayed;
-            result.dataValues.energy = detailedNFT.dataValues.energy;
 
             console.log(result);
         }
