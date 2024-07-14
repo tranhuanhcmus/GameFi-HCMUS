@@ -336,6 +336,26 @@ const purchaseItem = async(req, res, next) => {
                     return res.sendResponse(null, `Unexpected error appear while purchase a boost item`, STATUS_CODES.BAD_REQUEST);
                 }
             }
+            else if (itemApp.dataValues.category === "energy") {// Update NFT energy
+                const result = await models.OwnerEnergy.findOne({ where: { owner: owner } });
+                console.log(result.dataValues);
+                const currentEnergy = result.dataValues.energy;
+                const updateEnergy = currentEnergy + quantity;
+                const newRemainingTime = updateEnergy >= 3 ? null : new Date(result.dataValues.remainingTime.getTime() + (3 - updateEnergy) * 60 * 60 * 1000);
+                console.log(currentEnergy, updateEnergy, result.dataValues.remainingTime, newRemainingTime);
+                await result.update({ energy: updateEnergy, remainingTime: newRemainingTime });
+                await result.reload();
+
+                const updateCurrencyData = {
+                    id: currencyId[currency],
+                    owner: owner,
+                    quantity: userCurrencyBalance.quantity - totalPrice
+                };
+
+                await userCurrencyBalance.update(updateCurrencyData);
+                await userCurrencyBalance.reload();
+                return res.sendResponse(result, `Used item ${itemApp.dataValues.name} for user ${owner} successfully.`, STATUS_CODES.OK);
+            }
             else {
                 const row = await models.ItemAppOwner.findOne({ where: { id: id, owner: owner } });
                 if (row) {
