@@ -2,8 +2,9 @@ require('dotenv').config()
 const { Web3 } = require('web3');
 const axios = require('axios');
 const models = require("../database/models")
-const { STATUS_CODES } = require("../constants");
-const { PetABI, PetAddress } = require('../abis/Pet.js');
+const { STATUS_CODES, MAX_OWNER_ENERGY } = require("../constants");
+const { PetABI, PetAddress, PetABIv1,PetAddressv1 } = require('../abis/Pet.js');
+const moment = require('moment/moment');
 
 
 const WALLET_PUBLIC_KEY = process.env.WALLET_PUBLIC_KEY || ''
@@ -12,7 +13,7 @@ const WALLET_PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || ''
 const rpc = `wss://ethereum-sepolia-rpc.publicnode.com`;
 const web3 = new Web3(rpc);
 web3.eth.accounts.wallet.add(WALLET_PRIVATE_KEY);
-const petContract = new web3.eth.Contract(PetABI, PetAddress);
+const petContract = new web3.eth.Contract(PetABIv1, PetAddressv1);
 
 const ContractController = {
 
@@ -56,6 +57,17 @@ const ContractController = {
                     }
 
                     console.log(`Add NFT success`);
+
+                    let new_owner=await models.OwnerEnergy.findOne({owner: newRow.owner})
+
+                    if(!new_owner){
+                        await models.OwnerEnergy.create({
+                            owner: to,
+                            energy: MAX_OWNER_ENERGY,
+                            lastTimePlayed: new Date()
+                        })
+                    }
+                    
                     return {
                         data: newRow,
                         message: 'Add NFT success',

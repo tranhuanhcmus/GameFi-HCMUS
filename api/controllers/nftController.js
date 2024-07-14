@@ -7,19 +7,19 @@ const getAll = async(req, res, next) => {
     try {
         const rows = await models.NFT.findAll()
 
-        
+
         let result = []
 
         for (let i = 0; i < rows.length; i++) {
             let uri = rows[i].tokenUri;
 
             let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: uri } })
-            
-            let client_gateway=process.env.CLIENT_IPFS_ID||null
-            let public_gateway=`ipfs.io`
-            if(client_gateway){
-                tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
-                tokenUri.data.assets=tokenUri.data.assets.replace(public_gateway,client_gateway)
+
+            let client_gateway = process.env.CLIENT_IPFS_ID || null
+            let public_gateway = `ipfs.io`
+            if (client_gateway) {
+                tokenUri.data.image = tokenUri.data.image.replace(public_gateway, client_gateway)
+                tokenUri.data.assets = tokenUri.data.assets.replace(public_gateway, client_gateway)
             }
 
             if (tokenUri) {
@@ -37,7 +37,7 @@ const getAll = async(req, res, next) => {
 
         return res.sendResponse(result, "Get All Success", STATUS_CODES.OK)
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const getById = async(req, res, next) => {
@@ -46,14 +46,14 @@ const getById = async(req, res, next) => {
         const result = await models.NFT.findOne({ where: { tokenId: id } })
         let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.tokenUri } })
 
-        let client_gateway=process.env.CLIENT_IPFS_ID||null
-        let public_gateway=`ipfs.io`
-        if(client_gateway){
-            tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
-            tokenUri.data.assets=tokenUri.data.assets.replace(public_gateway,client_gateway)
+        let client_gateway = process.env.CLIENT_IPFS_ID || null
+        let public_gateway = `ipfs.io`
+        if (client_gateway) {
+            tokenUri.data.image = tokenUri.data.image.replace(public_gateway, client_gateway)
+            tokenUri.data.assets = tokenUri.data.assets.replace(public_gateway, client_gateway)
         }
 
-        result.dataValues.data=tokenUri.data
+        result.dataValues.data = tokenUri.data
 
         if (!result) {
             return res.sendResponse(null, `Not Found ID ${id} `, STATUS_CODES.NOT_FOUND)
@@ -61,7 +61,7 @@ const getById = async(req, res, next) => {
 
         return res.sendResponse(result, `Get ID ${id} Success`, STATUS_CODES.OK)
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const getALlByOwner = async(req, res, next) => {
@@ -77,12 +77,12 @@ const getALlByOwner = async(req, res, next) => {
 
             let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: uri } })
             if (tokenUri) {
-                let client_gateway=process.env.CLIENT_IPFS_ID||null
-                let public_gateway=`ipfs.io`
-                if(client_gateway){
-                    tokenUri.data.image=tokenUri.data.image.replace(public_gateway,client_gateway)
-                    tokenUri.data.assets=tokenUri.data.assets.replace(public_gateway,client_gateway)
-                    rows[i].tokenUri=rows[i].tokenUri.replace(public_gateway,client_gateway)
+                let client_gateway = process.env.CLIENT_IPFS_ID || null
+                let public_gateway = `ipfs.io`
+                if (client_gateway) {
+                    tokenUri.data.image = tokenUri.data.image.replace(public_gateway, client_gateway)
+                    tokenUri.data.assets = tokenUri.data.assets.replace(public_gateway, client_gateway)
+                    rows[i].tokenUri = rows[i].tokenUri.replace(public_gateway, client_gateway)
                 }
                 result.push({
                     tokenId: rows[i].tokenId,
@@ -96,7 +96,7 @@ const getALlByOwner = async(req, res, next) => {
 
         return res.sendResponse(result, `Get by Owner ${owner} Success`, STATUS_CODES.OK)
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const deleteById = async(req, res, next) => {
@@ -114,7 +114,7 @@ const deleteById = async(req, res, next) => {
         }
 
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 
@@ -134,7 +134,7 @@ const add = async(req, res, next) => {
             return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK)
         }
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const updateById = async(req, res, next) => {
@@ -155,7 +155,7 @@ const updateById = async(req, res, next) => {
         }
 
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 
@@ -180,7 +180,7 @@ const migrate = async(req, res, next) => {
                 result.push(`existed NFT: ${nft}`)
                 continue
             }
-            
+
             try {
                 let new_NFT = {
                         tokenId,

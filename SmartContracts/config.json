@@ -3,7 +3,7 @@
   "arbitrumSepolia": {
     "Floppy": "0xd11875cE6854da3518273cF16Ab2FC399224Bed9",
     "Vault": "0xe0e651d4B298C8c654A4F4C83CBE1E13f071Eac0",
-    "Pet": "0x7C35F8b75C98B89C4f9955E1f950a129BC07dcc8",
+    "Pet": "0xc91b5FeE9A426c1D4b68D3A9203D2D978A9c08B1",
     "MarketPlace": "0x934C726049B9e0b846B6BD0690489EBCb4457783"
   },
   "main": {},
@@ -19,5 +19,8 @@
   "localhost": {
     "Pet": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     "Floppy": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  },
+  "backup":{
+    "Pet": "0x7C35F8b75C98B89C4f9955E1f950a129BC07dcc8"
   }
 }

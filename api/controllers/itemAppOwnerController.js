@@ -8,7 +8,7 @@ const getAll = async(req, res, next) => {
 
         return res.sendResponse(list, "Get All Success", STATUS_CODES.OK)
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const getById = async(req, res, next) => {
@@ -23,7 +23,7 @@ const getById = async(req, res, next) => {
 
         return res.sendResponse(result, `Get ID ${id} Success`, STATUS_CODES.OK)
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const getByOwner = async(req, res, next) => {
@@ -143,7 +143,7 @@ const deleteById = async(req, res, next) => {
         }
 
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const getRandomQuality = (quality) => {
@@ -301,7 +301,7 @@ const purchaseItem = async(req, res, next) => {
         }
     } catch (error) {
         console.log(error);
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const add = async(req, res, next) => {
@@ -315,7 +315,7 @@ const add = async(req, res, next) => {
             return res.sendResponse(newRow, `Add success`, STATUS_CODES.OK);
         }
     } catch (error) {
-        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }
 const updateById = async(req, res, next) => {

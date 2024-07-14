@@ -45,7 +45,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
 
 // Routes
-app.use('/user', userRouter);
+app.use('/users', userRouter);
 app.use('/hangmans', hangmanRouter);
 app.use('/bears', bearRouter);
 app.use('/boostEffects', boostEffectRouter);
