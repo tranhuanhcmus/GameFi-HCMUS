@@ -38,7 +38,7 @@ const updateNFTOwner = async(req, res) => {
 const getEnergyNFT = async(req, res) => {
     const { tokenId } = req.params;
     try {
-        const result = await models.NFT.findOne({ where: { owner: owner } })
+        const result = await models.NFT.findOne({ where: { tokenId: tokenId} })
         let new_energy
         let lastTimePlayed = result.lastTimePlayed
         let current_time = new Date()
@@ -56,11 +56,9 @@ const getEnergyNFT = async(req, res) => {
                 const hours = Math.floor(time_diff / (1000 * 60 * 60));
                 const minutes = Math.floor((time_diff % (1000 * 60 * 60)) / (1000 * 60));
 
-                if (minutes > 0 && hours < 1) {
-                    new_energy = 2
-                } else {
-                    new_energy = result.energy - hours / COUNTDOWN_OWNER_ENERGY
-                }
+                let minus = minutes > 0 ? 1 : 0
+                new_energy = MAX_OWNER_ENERGY - hours / COUNTDOWN_OWNER_ENERGY
+                new_energy = new_energy - minus
             }
         }
         result.energy = new_energy;
@@ -95,11 +93,9 @@ const getEnergyOwner = async(req, res) => {
                 const hours = Math.floor(time_diff / (1000 * 60 * 60));
                 const minutes = Math.floor((time_diff % (1000 * 60 * 60)) / (1000 * 60));
 
-                if (minutes > 0 && hours < 1) {
-                    new_energy = 2
-                } else {
-                    new_energy = result.energy - hours / COUNTDOWN_OWNER_ENERGY
-                }
+                let minus = minutes > 0 ? 1 : 0
+                new_energy = MAX_OWNER_ENERGY - hours / COUNTDOWN_OWNER_ENERGY
+                new_energy = new_energy - minus
             }
         }
         result.energy = new_energy;
@@ -161,7 +157,8 @@ const updateEnergyOwner = async(req, res) => {
         await nft.reload();
 
         return res.sendResponse({
-          nft, result
+            nft,
+            result
         }, 'get energy success', STATUS_CODES.OK);
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
