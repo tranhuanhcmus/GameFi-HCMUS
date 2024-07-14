@@ -32,7 +32,6 @@ const ListFood: React.FC<Props> = (props: Props) => {
     const handle = findNodeHandle(refs.current[id]);
     if (handle) {
       UIManager.measure(handle, (x, y, width, height, pageX, pageY) => {
-        console.log(`ID: ${id}, X: ${pageX}, Y: ${pageY}`);
         props.onPress(id, pageX, pageY);
       });
     }

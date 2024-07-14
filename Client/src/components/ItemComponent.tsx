@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import Coin from "../../assets/coin.svg";
+import Coin from "../../assets/navIcon/coin.svg";
 import Gem from "../../assets/diamond.svg";
 import Food from "../../assets/candy/14.png";
 import { API } from "../apis/constants";

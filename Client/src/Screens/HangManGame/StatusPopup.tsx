@@ -14,7 +14,7 @@ import Defeat from "../../../assets/defeat.svg";
 import Victory from "../../../assets/victory.svg";
 import ConstantsResponsive from "../../constants/Constanst";
 import profile from "../../../assets/avatar.png";
-import Cup from "../../../assets/Trophy.png";
+import Cup from "../../../assets/navIcon/trophy.svg";
 
 interface props {
   status: string;

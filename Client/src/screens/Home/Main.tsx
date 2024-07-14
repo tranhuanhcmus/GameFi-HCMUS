@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
@@ -32,6 +33,14 @@ import HangmanBg from "../../../assets/HangmanBg.png";
 import { updatePet } from "../../redux/petSlice";
 import { UserService } from "../../services/UserService";
 import logger from "../../logger";
+import useFetch from "../../hooks/useFetch";
+import { GameService } from "../../services/GameService";
+import { selectLoading } from "../../redux/loadingSlice";
+import { getLevel } from "../../utils/pet";
+import { BoostService } from "../../services/BoostService";
+import { calculateTimeDifference } from "../../function/DownLoadResource";
+import { updateBoost } from "../../redux/petActiveSlice";
+import { setHp, updateHp } from "../../redux/playerSlice";
 type Props = {};
 
 const HomeScreen = () => {
@@ -42,12 +51,16 @@ const HomeScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
+
+  const { apiData: statusBoost, serverError } = useFetch(() =>
+    BoostService.getStatusBoost("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
+  );
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
 
   const isFocused = useIsFocused();
 
   const [gameName, setGameName] = useState<string>("");
-  const [fps, setFps] = useState<string>("10");
+  const [fps, setFps] = useState<string>("12");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
 
@@ -56,14 +69,27 @@ const HomeScreen = () => {
 
   /** useSelector */
   const userState = useSelector(selectUser);
-  const { name, type, image, title, tokenId, attributes, level } = useSelector(
-    (state: any) => state.pet,
-  );
+
+  const {
+    name,
+    type,
+    image,
+    assets,
+    boost,
+    title,
+    tokenUri,
+    attributes,
+    level,
+    hp,
+    atk,
+  } = useSelector((state: any) => state.petActive);
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
     address: userState.address,
   });
+
+  const { isLoading: isLoadingFetch } = useSelector(selectLoading);
 
   /** useDisconnect */
   const { disconnect } = useDisconnect(); // Add useDisconnect hook
@@ -119,7 +145,7 @@ const HomeScreen = () => {
   //     // const mappedData: any[] = res.map((nft: any) => {
   //     //   console.log("nft ", nft);
   //     //   return {
-  //     //     id: nft.tokenid,
+  //     //     id: nft.tokenUri,
   //     //     element: ELEMENT.FIRE,
   //     //     level: getLevel(nft.exp),
   //     //     petImg: nft.data.image || "",
@@ -176,22 +202,91 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    if (!name || !type || !image || !title || !tokenId || !attributes || !level)
+    if (
+      !name ||
+      !type ||
+      !image ||
+      !title ||
+      !tokenUri ||
+      !attributes ||
+      !level
+    )
       fetchData();
   }, []);
 
   useEffect(() => {
     logger.warn(
-      "name, type, image, title, tokenId, attributes, level  ",
+      "name, type, image, title, tokenUri, attributes, level  ",
       name,
       type,
       image,
       title,
-      tokenId,
+      tokenUri,
       attributes,
       level,
     );
-  }, [name, type, image, title, tokenId, attributes, level]);
+  }, [name, type, image, title, tokenUri, attributes, level]);
+
+  useEffect(() => {
+    console.log(statusBoost);
+  }, [statusBoost]);
+
+  const [imageSource, setImageSource] = useState({
+    uri: "",
+    height: 0,
+    width: 0,
+  });
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsImageLoaded(false);
+
+    Image.getSize(
+      assets,
+      (width, height) => {
+        setImageSource({
+          height: height,
+          width: width,
+          uri: assets,
+        });
+        setIsImageLoaded(true);
+        play("walk");
+      },
+      (error) => {
+        console.error("Error loading image", error);
+      },
+    );
+  }, [assets]);
+
+  const [timeBoost, setTimeBoost] = useState({
+    hours: 0,
+    minutes: 0,
+    timeDifference: 0,
+  });
+  const [currentDate, setCurrentDate] = useState(new Date());
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 60000); // Update every minute
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (statusBoost && statusBoost[0] && statusBoost[0].lastTimeBoost) {
+      const time = calculateTimeDifference(statusBoost[0].lastTimeBoost);
+      dispatch(
+        updateBoost({
+          boostType: statusBoost[0].name,
+          boostStatus: time.timeDifference > 0 ? true : false,
+        }),
+      );
+      setTimeBoost(time);
+      console.log(time);
+    }
+  }, [statusBoost, currentDate, isFocused, boost.boostStatus]);
 
   return (
     <View
@@ -229,9 +324,11 @@ const HomeScreen = () => {
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           position: "absolute",
-          justifyContent: "flex-end",
+
+          alignItems: "flex-end",
+
           top: ConstantsResponsive.YR * 2 * 120,
         }}
       >
@@ -269,9 +366,12 @@ const HomeScreen = () => {
       <View
         style={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
+          position: "relative",
           alignItems: "center",
+          justifyContent: "center",
           height: ConstantsResponsive.YR * 120,
+          width: ConstantsResponsive.MAX_WIDTH,
           marginTop: ConstantsResponsive.YR * 150,
         }}
       >
@@ -281,11 +381,50 @@ const HomeScreen = () => {
             fontWeight: "bold",
             fontFamily: "rexlia",
             fontSize: 40,
-            color: COLOR.RED_BG_BUTTON,
+            color: COLOR.BLACK,
           }}
         >
-          LEVEL {level}
+          LEVEL {Math.floor(getLevel(level))}
         </CustomText>
+        {timeBoost.timeDifference !== 0 && (
+          <View
+            style={{
+              position: "absolute",
+              left:
+                ConstantsResponsive.MAX_WIDTH / 2 +
+                ConstantsResponsive.XR * 150,
+              justifyContent: "center",
+              bottom: ConstantsResponsive.YR * 15,
+
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={require("../../../assets/boost.png")}
+              style={{
+                position: "absolute",
+                height: ConstantsResponsive.YR * 50,
+                width: ConstantsResponsive.XR * 70,
+              }}
+              resizeMode="contain"
+            />
+            <Text
+              style={{
+                marginTop: ConstantsResponsive.YR * 80,
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: ConstantsResponsive.XR * 22,
+                color: COLOR.WHITE,
+              }}
+            >
+              {timeBoost.hours}:
+              {timeBoost.minutes >= 10
+                ? `${timeBoost.minutes}`
+                : `0${timeBoost.minutes}`}
+            </Text>
+          </View>
+        )}
+
         {/* <View style={styles.healthBar}>
           <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
         </View> */}
@@ -293,36 +432,22 @@ const HomeScreen = () => {
 
       <View style={styles.playArea}>
         <View className="absolute bottom-0 left-0 right-0  items-center">
-          <SpriteSheet
-            ref={mummyRef}
-            source={require("../../../assets/spritesSheet_18.png")}
-            columns={60}
-            rows={1}
-            height={ConstantsResponsive.MAX_HEIGHT * 0.3}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-              ],
-            }}
-          />
-          {/* <SpriteSheet
-            ref={mummyRef}
-            source={require("../../../assets/spritesheet_5.png")}
-            columns={21}
-            offsetX={0}
-            offsetY={0}
-            rows={1}
-            height={ConstantsResponsive.MAX_HEIGHT * 0.2}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20,
-              ],
-            }}
-          /> */}
+          {isImageLoaded ? (
+            <SpriteSheet
+              ref={mummyRef}
+              source={imageSource}
+              columns={60}
+              height={ConstantsResponsive.YR * 300}
+              rows={1}
+              animations={{
+                walk: Array.from({ length: 60 }, (_, i) => i),
+              }}
+            />
+          ) : (
+            isLoadingFetch == false && (
+              <ActivityIndicator size="large" color="#0000ff" />
+            )
+          )}
         </View>
       </View>
       <View
@@ -393,7 +518,14 @@ const HomeScreen = () => {
               ]).start(() => {
                 if (!isVisible) setIsVisible(true);
 
-                socket.emitFindMatch(gameName);
+                dispatch(setHp(hp));
+
+                socket.emitFindMatch({
+                  gameName: gameName,
+                  hp: hp,
+                  assets: assets,
+                  atk: atk,
+                });
               });
             }}
             style={styles.btnPlay}
@@ -480,6 +612,8 @@ const styles = StyleSheet.create({
   textSizeChangGame: {
     fontSize: ConstantsResponsive.YR * 20,
     lineHeight: ConstantsResponsive.YR * 20,
+    width: ConstantsResponsive.MAX_WIDTH * 0.27,
+
     fontWeight: "900",
     textAlign: "center",
   },

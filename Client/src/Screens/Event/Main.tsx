@@ -2,8 +2,7 @@ import { ScrollView, View, Image } from "react-native";
 import CustomText from "../../components/CustomText";
 import { COLOR } from "../../utils/color";
 import ConstantsResponsive from "../../constants/Constanst";
-import Medicine from "../../../assets/medicine.svg";
-import Lucky from "../../../assets/medicine.png";
+
 const EventScreen = () => {
   return (
     <View
@@ -56,7 +55,6 @@ const EventScreen = () => {
                 padding: 10,
               }}
             >
-              <Medicine width={30} height={30} />
               <CustomText style={{ color: COLOR.WHITE, paddingStart: 5 }}>
                 230
               </CustomText>
@@ -141,7 +139,6 @@ const EventScreen = () => {
                 padding: 10,
               }}
             >
-              <Medicine width={30} height={30} />
               <CustomText style={{ color: COLOR.WHITE, paddingStart: 5 }}>
                 230
               </CustomText>
@@ -186,7 +183,7 @@ const EventScreen = () => {
               >
                 ENTER
               </CustomText>
-              <Image source={Lucky} style={{ width: 30, height: 30 }} />
+
               <CustomText
                 style={{
                   color: COLOR.WHITE,

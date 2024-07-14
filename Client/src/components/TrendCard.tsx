@@ -1,7 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-import Pet from "../../assets/bear.png";
 import {
   LineChart,
   BarChart,
@@ -51,7 +50,10 @@ const TrendCard: React.FC<Props> = ({ imgUrl, name, price, up, number }) => {
     <TouchableOpacity>
       <View className="z-0 flex flex-col rounded-2xl bg-color_card_trend p-3">
         <View className=" flex h-fit flex-row items-center gap-2">
-          <Image className="h-[40px] w-[40px]  " source={Pet} />
+          <Image
+            className="h-[40px] w-[40px]  "
+            source={require("../../assets/avatar.png")}
+          />
 
           <Text className="font-bold text-[#4B70FF]">{name}</Text>
         </View>

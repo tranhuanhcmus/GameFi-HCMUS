@@ -6,19 +6,18 @@ import ConstantsResponsive from "../../constants/Constanst";
 const WordBox = ({ wordData }) => {
   const [hint, toggleHint] = useReducer((s) => !s, false);
 
-  const startingLetter = wordData.answer[0];
   return (
     <View style={styles.container}>
-      <Text style={{ fontWeight: "500", color: "white" }}>
+      <Text
+        style={{
+          fontWeight: "700",
+          fontSize: ConstantsResponsive.YR * 19,
+          color: "white",
+        }}
+      >
         Answer the question:{" "}
       </Text>
-      <Text style={styles.word}>{wordData.word}</Text>
-
-      {hint && (
-        <View>
-          <Text>{`Starting letter is ${startingLetter}`}</Text>
-        </View>
-      )}
+      <Text style={styles.word}>{wordData.question}</Text>
     </View>
   );
 };
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   word: {
-    fontSize: ConstantsResponsive.YR * 24,
+    fontSize: ConstantsResponsive.YR * 20,
     color: "white",
     fontWeight: "700",
     marginVertical: 8,

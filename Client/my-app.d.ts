@@ -2,6 +2,9 @@
 declare module "*.png";
 declare module "*.svg";
 declare module "*.jpeg";
+
+declare module 'rn-dominant-color';
+
 declare module "*.jpg";
 declare module "*.mp3";
 declare module 'react-native/Libraries/Image/resolveAssetSource' {

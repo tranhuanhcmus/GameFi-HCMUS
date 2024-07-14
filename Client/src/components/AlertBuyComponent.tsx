@@ -29,11 +29,12 @@ import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 interface AlertBuyComponentProps {
   isVisible?: boolean;
   onClose?: () => void;
-  onBuy: (buy: boolean, itemImg: string) => void;
+  onBuy: (buy: boolean, itemImg: string, arrayItem?: any) => void;
   gemcost?: number;
-  goldcost?: number | null;
+  goldcost?: number;
   name?: string;
   quantity?: number | null;
+  category?: string;
   itemImg?: string;
   quality?: string;
   description?: string;
@@ -55,6 +56,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
   onBuy,
   quality,
   id,
+  category,
   itemImg,
   quantity,
   name,
@@ -66,25 +68,57 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
   const dispatch = useDispatch();
 
   const handleBuy = async () => {
-    if (id && quality && quality && goldcost && gemcost && itemImg) {
+    if (
+      id &&
+      quality &&
+      quality &&
+      category &&
+      gemcost &&
+      goldcost != null &&
+      goldcost >= 0 &&
+      itemImg
+    ) {
       dispatch(startLoading());
-      try {
-        const body: item = {
-          id: id,
-          owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-          quantity: quantity || 0,
-          goldcost: goldcost || 0,
-          gemcost: gemcost || 0,
-          currency: 1,
-        };
+      console.log(category);
+      const body: item = {
+        id: id,
+        owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+        quantity: quantity || 0,
+        goldcost: goldcost || 0,
+        gemcost: gemcost || 0,
+        currency: 1,
+      };
 
-        const response = await ItemAppOwnerService.buyItem(body);
+      try {
+        if (category.includes("pack")) {
+          const body1 = {
+            id: id,
+            quality: quality,
+            category: category.substring(0, category.indexOf(" ")),
+            owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+
+            quantity: quantity || 0,
+            goldcost: goldcost || 0,
+            gemcost: gemcost || 0,
+            currency: 1,
+          };
+          console.log(body1);
+          const response = await ItemAppOwnerService.buyItemPack(body1);
+          console.log(response);
+
+          onBuy(true, itemImg, [response]);
+        } else {
+          console.log(body);
+          await ItemAppOwnerService.buyItem(body);
+
+          onBuy(true, itemImg);
+        }
 
         onClose?.();
-        onBuy(true, itemImg);
 
         dispatch(stopLoading());
       } catch (error) {
+        console.log(error);
         onBuy(false, itemImg || "");
         dispatch(stopLoading());
       }

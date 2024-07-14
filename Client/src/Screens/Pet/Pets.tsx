@@ -42,7 +42,7 @@ type NFTData = {
   rarityPet: string;
   tokenUri: string;
   attributes: {
-    element: string;
+    element: number;
     eye: string;
     fur: string;
     item: string;
@@ -82,11 +82,12 @@ const PetsModal = ({
       const mappedData: any[] = apiData.map((nft: any) => {
         return {
           id: nft.data.tokenId,
-          element: ELEMENT.FIRE,
+
           hp: nft.data.hp,
           atk: nft.data.atk,
-          level: getLevel(nft.exp),
+          level: nft.exp,
           petImg: nft.data.image,
+          tokenId: nft.data.tokenId,
           assets: nft.data.assets,
           name: nft.data.name,
           rarityPet: "special",
@@ -99,13 +100,12 @@ const PetsModal = ({
           },
         };
       });
-      console.log(apiData);
+
       setData([...mappedData]);
     }
   };
 
   const onPress = (item: any) => {
-    console.log("item ", item);
     try {
       if (!fatherPet.id) {
         setIsVisible(false);
@@ -168,7 +168,6 @@ const PetsModal = ({
               <PetCard
                 item={{ ...item }}
                 petImg={item.petImg}
-                element={item.element}
                 level={item.level}
                 name={item.name}
                 rarityPet={item.rarityPet}

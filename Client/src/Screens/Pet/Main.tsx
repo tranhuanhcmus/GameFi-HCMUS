@@ -14,7 +14,9 @@ import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
 import { getFilenameFromUrl } from "../../function/DownLoadResource";
 import PetsModal from "./Pets";
+import { updatePetActive } from "../../redux/petActiveSlice";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
+import { updateLevel } from "../../redux/petSlice";
 import { SocketIOClient } from "../../../socket";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
@@ -22,6 +24,7 @@ import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { useAppDispatch } from "../../redux/store";
 import { selectUser } from "../../redux/userSlice";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
+import { FOODVALUE } from "../../utils/constantValue";
 
 // import SpriteSheet from "rn-sprite-sheet";
 import SpriteSheet from "../../components/SpriteSheet";
@@ -43,7 +46,18 @@ import { selectLoading } from "../../redux/loadingSlice";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import Breed from "../../../assets/breed.svg";
 import { setFatherPet, setMotherPet } from "../../redux/breedSlice";
+import { EatService } from "../../services/EatService";
+import { getLevel } from "../../utils/pet";
 type Props = {};
+
+interface item {
+  id: string;
+  owner: string;
+  quantity: number;
+
+  tokenId: number;
+}
+
 interface FeedState {
   feed: string | null;
   pageX: number;
@@ -75,8 +89,23 @@ const PetScreen = () => {
 
   /** useSelector */
   const userState = useSelector(selectUser);
-  const { name, type, image, assets, title, tokenId, attributes, level } =
-    useSelector((state: any) => state.pet);
+  const {
+    name,
+    type,
+    image,
+    assets,
+    active,
+    title,
+    tokenId,
+    attributes,
+    level,
+    hp,
+    atk,
+  } = useSelector((state: any) => state.pet);
+
+  const { tokenId: tokenIdActive, active: activeSet } = useSelector(
+    (state: any) => state.petActive,
+  );
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
@@ -113,19 +142,20 @@ const PetScreen = () => {
   };
   const [feed, setFeed] = useState<FeedState>({
     feed: null,
-    pageX: 0,
-    pageY: 0,
+    pageX: 600,
+    pageY: 600,
   });
 
   const [foodArray, setFoodArray] = useState<any>([]);
 
   const fetchData = async () => {
     try {
-      const res: any[] = await ItemGameOwnerService.getItems(
+      const res: any[] = await ItemAppOwnerService.getItems(
         "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
       );
+      console.log(res);
       const data = res.filter((item) => item.category == "food");
-      console.log(data);
+
       setFoodArray(data);
     } catch (error) {
       console.error("ItemGameOwnerService.getItems", error);
@@ -135,14 +165,6 @@ const PetScreen = () => {
   useEffect(() => {
     fetchData();
   }, [address, isFocused]);
-
-  let healthBarWidth =
-    ((ConstantsResponsive.MAX_WIDTH -
-      ConstantsResponsive.XR * 400 -
-      ConstantsResponsive.XR * 60 -
-      ConstantsResponsive.XR * 6) *
-      health) /
-    100;
 
   const stop = () => {
     if (mummyRef.current) {
@@ -158,22 +180,43 @@ const PetScreen = () => {
       stop();
     }
   }, [isFocused]);
-  const removeFoodItem = (id: number, pageX: number, pageY: number) => {
-    const foodImage = foodArray.find((food: any) => food.id === id)?.image;
-    console.log(foodImage);
-    setFeed({ feed: foodImage, pageX: pageX, pageY: pageY });
-    setTimeout(() => {
-      playSound(sound, "eatingSound");
-    }, 500);
-    setFoodArray((prevArray: any) =>
-      prevArray.filter((item: any) => item.id !== id),
-    );
+  const removeFoodItem = async (id: number, pageX: number, pageY: number) => {
+    try {
+      const foodItem = foodArray.find((food: any) => food.id === id);
+      const foodImage = foodItem.image;
+
+      setFeed({ feed: foodImage, pageX: pageX, pageY: pageY });
+      if (foodItem.quality === "normal") {
+        dispatch(updateLevel(FOODVALUE.normal));
+      } else if (foodItem.quality === "rare") {
+        dispatch(updateLevel(FOODVALUE.rare));
+      } else {
+        dispatch(updateLevel(FOODVALUE.superRare));
+      }
+
+      const food: item = {
+        id: id.toString(),
+        owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+        quantity: 1,
+        tokenId: tokenId,
+      };
+      setTimeout(() => {
+        playSound(sound, "eatingSound");
+      }, 100);
+
+      setFoodArray((prevArray: any) =>
+        prevArray.filter((item: any) => item.id !== id),
+      );
+      await EatService.Eat(food);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const [imageSource, setImageSource] = useState({
     uri: "",
-    height: 600,
-    width: 600,
+    height: 0,
+    width: 0,
   });
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
@@ -183,8 +226,6 @@ const PetScreen = () => {
     Image.getSize(
       assets,
       (width, height) => {
-        const file = getFilenameFromUrl(assets);
-        console.log(file);
         setImageSource({
           height: height,
           width: width,
@@ -211,7 +252,7 @@ const PetScreen = () => {
       interval = setInterval(() => {
         const elapsedTime = (Date.now() - startTime) / 1000; // Time in seconds
         setFeed((prevFeed) => {
-          const newPageY = prevFeed.pageY - ConstantsResponsive.YR * 40;
+          const newPageY = prevFeed.pageY - ConstantsResponsive.YR;
           const newPageX = a * Math.pow(elapsedTime, 2) + middleX;
           return {
             ...prevFeed,
@@ -237,6 +278,21 @@ const PetScreen = () => {
       if (timer) clearTimeout(timer); // Clear the timeout on cleanup
     };
   }, [feed.feed]);
+
+  const [healthBarWidth, setHealthBarWidth] = useState(0);
+
+  useEffect(() => {
+    setHealthBarWidth(
+      ((ConstantsResponsive.MAX_WIDTH -
+        ConstantsResponsive.XR * 400 -
+        ConstantsResponsive.XR * 60 -
+        ConstantsResponsive.XR * 10) *
+        (getLevel(level) - Math.floor(getLevel(level))) *
+        100) /
+        100,
+    );
+  }, [level]);
+
   return (
     <View
       style={{
@@ -314,38 +370,92 @@ const PetScreen = () => {
           />
           <CustomText style={styles.textSize}>MY PETS</CustomText>
         </NormalButton>
-        <NormalButton
-          style={{
-            width: ConstantsResponsive.MAX_WIDTH * 0.4,
-            height: ConstantsResponsive.YR * 60,
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "row",
-            columnGap: ConstantsResponsive.XR * 10,
-            borderRadius: ConstantsResponsive.YR * 20,
-            paddingVertical: ConstantsResponsive.YR * 20,
-            shadowColor: COLOR.RED_BG_BUTTON,
-          }}
-        >
-          <Image
+
+        {tokenId == tokenIdActive && activeSet == true ? (
+          <NormalButton
             style={{
-              position: "absolute",
-              borderRadius: ConstantsResponsive.YR * 20,
-              paddingVertical: ConstantsResponsive.YR * 20,
               width: ConstantsResponsive.MAX_WIDTH * 0.4,
               height: ConstantsResponsive.YR * 60,
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "row",
+              columnGap: ConstantsResponsive.XR * 10,
+              borderRadius: ConstantsResponsive.YR * 20,
+              paddingVertical: ConstantsResponsive.YR * 20,
             }}
-            resizeMode="stretch"
-            source={require("../../../assets/backGroundButtonRed_1.png")}
-          />
-          <Image
-            source={require("../../../assets/fight.png")}
-            style={{ height: "200%" }}
-            resizeMode="contain"
-          ></Image>
-          <CustomText style={styles.textSize}>SET AS ACTIVE</CustomText>
-        </NormalButton>
+          >
+            <Image
+              source={require("../../../assets/fightActive.png")}
+              style={{ height: "240%" }}
+              resizeMode="contain"
+            ></Image>
+            <CustomText
+              style={[
+                styles.textSize,
+                {
+                  color: COLOR.CREAM,
+                  fontWeight: "heavy",
+                  fontSize: ConstantsResponsive.YR * 26,
+                },
+              ]}
+            >
+              ACTIVE
+            </CustomText>
+          </NormalButton>
+        ) : (
+          <NormalButton
+            style={{
+              width: ConstantsResponsive.MAX_WIDTH * 0.4,
+              height: ConstantsResponsive.YR * 60,
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "row",
+              columnGap: ConstantsResponsive.XR * 10,
+              borderRadius: ConstantsResponsive.YR * 20,
+              paddingVertical: ConstantsResponsive.YR * 20,
+              shadowColor: COLOR.RED_BG_BUTTON,
+            }}
+            onPress={() => {
+              dispatch(
+                updatePetActive({
+                  name: name,
+                  type: type,
+                  image: image,
+                  title: title,
+                  hp: hp,
+                  atk: atk,
+                  active: true,
+                  assets: assets,
+                  tokenId: tokenId,
+                  level: level,
+                  attributes: {
+                    ...attributes,
+                  },
+                }),
+              );
+            }}
+          >
+            <Image
+              style={{
+                position: "absolute",
+                borderRadius: ConstantsResponsive.YR * 20,
+                paddingVertical: ConstantsResponsive.YR * 20,
+                width: ConstantsResponsive.MAX_WIDTH * 0.4,
+                height: ConstantsResponsive.YR * 60,
+              }}
+              resizeMode="stretch"
+              source={require("../../../assets/backGroundButtonRed_1.png")}
+            />
+            <Image
+              source={require("../../../assets/fight.png")}
+              style={{ height: "240%" }}
+              resizeMode="contain"
+            ></Image>
+            <CustomText style={styles.textSize}>SET AS ACTIVE</CustomText>
+          </NormalButton>
+        )}
       </View>
 
       <View
@@ -401,7 +511,7 @@ const PetScreen = () => {
                 fontFamily: "rexlia",
               }}
             >
-              LEVEL {Math.floor(level)}
+              LEVEL {Math.floor(getLevel(level))}
             </CustomText>
             <View style={styles.healthBar}>
               <View
@@ -487,13 +597,14 @@ const PetScreen = () => {
           position: "absolute",
           paddingHorizontal: ConstantsResponsive.XR * 10,
           justifyContent: "center",
+          zIndex: 100,
 
           width: ConstantsResponsive.XR * 80,
           borderRadius: ConstantsResponsive.XR * 30,
           height: ConstantsResponsive.XR * 100,
           left: ConstantsResponsive.XR * 10,
           rowGap: 2,
-          top: ConstantsResponsive.YR * 3 * 150,
+          top: ConstantsResponsive.YR * 3 * 155,
         }}
         onPress={() => {
           dispatch(setFatherPet({ id: null, name: null, image: null }));
@@ -542,8 +653,8 @@ const PetScreen = () => {
               ref={mummyRef}
               source={imageSource}
               columns={60}
+              height={ConstantsResponsive.YR * 300}
               rows={1}
-              height={ConstantsResponsive.MAX_HEIGHT * 0.3}
               animations={{
                 walk: Array.from({ length: 60 }, (_, i) => i),
               }}

@@ -61,9 +61,12 @@ const petSlice = createSlice({
       state.attributes.fur = attribute.attributes.fur;
       state.attributes.item = attribute.attributes.item;
     },
+    updateLevel(state, action: PayloadAction<number>) {
+      state.level = state.level + action.payload;
+    },
   },
 });
 
-export const { updatePet } = petSlice.actions;
+export const { updatePet, updateLevel } = petSlice.actions;
 
 export default petSlice.reducer;

@@ -10,12 +10,14 @@ interface PlayerState {
   hp: any;
   componentHp: any;
   gameRoom: any;
+  assets: string;
   isComponentTurn: any;
 }
 
 const initialState: PlayerState = {
   hp: GameLogic.HEALTH_POINT,
   componentHp: GameLogic.HEALTH_POINT,
+  assets: "",
   gameRoom: "",
   isComponentTurn: false,
 };
@@ -28,6 +30,11 @@ const playerSlice = createSlice({
       state.hp = state.hp - action.payload;
       return state;
     },
+    setAssets(state, action) {
+      state.assets = action.payload;
+      return state;
+    },
+
     setHp(state, action) {
       state.hp = action.payload;
       return state;
@@ -57,6 +64,7 @@ export { playerSlice };
 export const {
   updateHp,
   updateComponentHp,
+  setAssets,
   setHp,
   setComponentHp,
   setGameRoom,

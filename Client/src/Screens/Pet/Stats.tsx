@@ -8,25 +8,14 @@ import {
   Text,
   Modal,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import PetCard from "../../components/PetCard";
 import BarInfor from "../../components/barInfor";
 import ConstantsResponsive from "../../constants/Constanst";
-import { ELEMENT } from "../../constants/types";
-import { showAlert } from "../../redux/alertSlice";
 
 import CustomText from "../../components/CustomText";
-import { NFT, UserService } from "../../services/UserService";
+
 import { COLOR } from "../../utils/color";
-import { getLevel } from "../../utils/pet";
-
-import log from "../../logger/index";
-import useCustomNavigation from "../../hooks/useCustomNavigation";
-import breedSlice, { setFatherPet, setMotherPet } from "../../redux/breedSlice";
-import { useAccount } from "wagmi";
-
-import AwesomeButton from "react-native-really-awesome-button";
 
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 

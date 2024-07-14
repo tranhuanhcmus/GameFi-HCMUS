@@ -13,7 +13,6 @@ export class BreedService {
       try {
         const response = await api.post(API.BREED, { dad, mom });
 
-        console.log("response ", response);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);

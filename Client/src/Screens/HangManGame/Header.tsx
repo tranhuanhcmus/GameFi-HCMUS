@@ -9,8 +9,9 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   PanResponder,
+  ActivityIndicator,
 } from "react-native";
-import SpriteSheet from "rn-sprite-sheet";
+import SpriteSheet from "../../components/SpriteSheet";
 import { LinearGradient } from "expo-linear-gradient";
 
 import ConstantsResponsive from "../../constants/Constanst";
@@ -32,6 +33,7 @@ interface props {
 const GameHeader = () => {
   const { hp, componentHp } = useSelector((state: any) => state.player);
   const dispatch = useDispatch();
+
   return (
     <View style={styles.characterArea}>
       <TouchableOpacity
@@ -57,11 +59,39 @@ const User: React.FC<props> = ({ hp }) => {
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
   const [fps, setFps] = useState<string>("3");
   const mummyRef = useRef<SpriteSheet>(null);
+  const { assets } = useSelector((state: any) => state.petActive);
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
+
   const isFirstRender = useRef(true);
   const floatingTextAnim = useRef(new Animated.Value(0)).current;
+
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  const [imageSource, setImageSource] = useState({
+    uri: "",
+    height: 0,
+    width: 0,
+  });
+  useEffect(() => {
+    setIsImageLoaded(false);
+
+    Image.getSize(
+      assets,
+      (width, height) => {
+        setImageSource({
+          height: height,
+          width: width,
+          uri: assets,
+        });
+        setIsImageLoaded(true);
+      },
+      (error) => {
+        console.error("Error loading image", error);
+      },
+    );
+  }, [assets]);
 
   // Call this function when the character receives damage
   const receiveDamage = (damageAmount: number) => {
@@ -156,22 +186,20 @@ const User: React.FC<props> = ({ hp }) => {
 
       <View style={styles.playerPet}>
         <View style={{ transform: [{ scaleX: -1 }] }}>
-          <SpriteSheet
-            ref={mummyRef1}
-            source={require("../../../assets/spritesSheet_18.png")}
-            columns={60}
-            rows={1}
-            height={ConstantsResponsive.YR * 250}
-            width={ConstantsResponsive.XR * 250}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-              ],
-            }}
-          />
+          {isImageLoaded ? (
+            <SpriteSheet
+              ref={mummyRef}
+              source={imageSource}
+              columns={60}
+              height={ConstantsResponsive.YR * 2 * 80}
+              rows={1}
+              animations={{
+                walk: Array.from({ length: 60 }, (_, i) => i),
+              }}
+            />
+          ) : (
+            <ActivityIndicator size="large" color="#0000ff" />
+          )}
         </View>
 
         {/* Your Animated Text for displaying damage */}
@@ -211,6 +239,7 @@ const Component: React.FC<props> = ({ hp }) => {
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
+  const { assets } = useSelector((state: any) => state.player);
   const isFirstRender = useRef(true);
   const dispatch = useDispatch();
 
@@ -255,6 +284,32 @@ const Component: React.FC<props> = ({ hp }) => {
     }),
   };
 
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  const [imageSource, setImageSource] = useState({
+    uri: "",
+    height: 0,
+    width: 0,
+  });
+  useEffect(() => {
+    setIsImageLoaded(false);
+
+    Image.getSize(
+      assets,
+      (width, height) => {
+        setImageSource({
+          height: height,
+          width: width,
+          uri: assets,
+        });
+        setIsImageLoaded(true);
+      },
+      (error) => {
+        console.error("Error loading image", error);
+      },
+    );
+  }, [assets]);
+
   // Call this function when the character receives damage
   const receiveDamage = (damageAmount: number) => {
     // Trigger other damage effects like red flash or shake if you have
@@ -296,22 +351,20 @@ const Component: React.FC<props> = ({ hp }) => {
       </View>
 
       <View style={styles.playerPet}>
-        <SpriteSheet
-          ref={mummyRef1}
-          source={require("../../../assets/spritesSheet_18.png")}
-          columns={60}
-          rows={1}
-          height={ConstantsResponsive.YR * 250}
-          width={ConstantsResponsive.XR * 250}
-          animations={{
-            walk: [
-              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-              19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-              35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-              51, 52, 53, 54, 55, 56, 57, 58, 59,
-            ],
-          }}
-        />
+        {isImageLoaded ? (
+          <SpriteSheet
+            ref={mummyRef}
+            source={imageSource}
+            columns={60}
+            height={ConstantsResponsive.YR * 2 * 80}
+            rows={1}
+            animations={{
+              walk: Array.from({ length: 60 }, (_, i) => i),
+            }}
+          />
+        ) : (
+          <ActivityIndicator size="large" color="#0000ff" />
+        )}
         {/* Your Animated Text for displaying damage */}
         <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
           -10
@@ -329,7 +382,7 @@ const Component: React.FC<props> = ({ hp }) => {
           source={require("../../../assets/skill.png")}
           columns={12}
           rows={1}
-          width={ConstantsResponsive.XR * 2 * 80}
+          height={ConstantsResponsive.XR * 2 * 80}
           animations={{
             default: [20],
             walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -344,9 +397,15 @@ const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
 const Bar: React.FC<props> = ({ hp }) => {
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
+  const [hpDefaults, setHpDefaults] = useState(hp);
+
+  useEffect(() => {
+    setHpDefaults(hp);
+  }, []);
+
   useEffect(() => {
     Animated.timing(animatedWidth, {
-      toValue: (hp / GameLogic.HEALTH_POINT) * 100,
+      toValue: (hp / hpDefaults) * 100,
       duration: 700,
       useNativeDriver: false,
     }).start();

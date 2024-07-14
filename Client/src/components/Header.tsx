@@ -5,8 +5,8 @@ import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import ConstantsResponsive from "../constants/Constanst";
 import { COLOR } from "../utils/color";
 import CustomText from "./CustomText";
-import Thunder from "../../assets/thunder.svg";
-import Coin from "../../assets/coin.svg";
+import Thunder from "../../assets/navIcon/thunder.svg";
+import Coin from "../../assets/navIcon/coin.svg";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 import { useAccount } from "wagmi";
@@ -50,11 +50,13 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         flexDirection: "row",
         alignItems: "center",
 
-        justifyContent: "space-around",
+        justifyContent: "center",
+        columnGap: ConstantsResponsive.XR * 30,
+
         position: "relative",
 
         borderRadius: 20,
-        paddingVertical: ConstantsResponsive.XR * 4,
+        paddingHorizontal: ConstantsResponsive.XR * 10,
       }}
     >
       <Image

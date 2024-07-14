@@ -18,7 +18,12 @@ import { SocketIOClient } from "../../../socket";
 import ConstantsResponsive from "../../constants/Constanst";
 import AwesomeButton from "react-native-really-awesome-button";
 import useCustomNavigation from "../../hooks/useCustomNavigation/index";
-import { setGameRoom } from "../../redux/playerSlice";
+import {
+  setAssets,
+  setComponentHp,
+  setGameRoom,
+  updateComponentHp,
+} from "../../redux/playerSlice";
 import { useDispatch } from "react-redux";
 import BouncingText from "../BouncingText";
 
@@ -76,8 +81,11 @@ const LoadingModal = ({
     socket.onListenKeyRoom((data) => {
       console.log(data);
       setIsVisible(false);
-      if (data !== "NO ROOM") {
-        dispatch(setGameRoom(data));
+      if (data.gameRoom !== "NO ROOM") {
+        console.log(data.hpOpponent);
+        dispatch(setGameRoom(data.gameRoom));
+        dispatch(setAssets(data.assetsOpponent));
+        dispatch(setComponentHp(data.hpOpponent));
 
         if (gameName == "Match3Game") {
           navigate.navigate("Match3Game");

@@ -6,7 +6,7 @@ import { StatusBar } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
 import WordBox from "./WordBox";
-import { WordsArray } from "./data";
+
 import InputBox from "./InputBox";
 import Keyboard from "./Keyboard";
 import ConstantsResponsive from "../../constants/Constanst";
@@ -23,6 +23,7 @@ import {
   setComponentHp,
   setHp,
 } from "../../redux/playerSlice";
+import { WordsArray } from "./data";
 import { updateTurn } from "../../redux/hangManSlice";
 import { swapTurn } from "../../redux/hangManSlice";
 import { DataSocketTransfer } from "../../../socket";
@@ -34,6 +35,8 @@ import { setVisable } from "../../redux/settingGameSlice";
 import useAudioPlayer from "../../hooks/useMusicPlayer";
 import { playSound } from "../../function/SoundGame";
 import { NativeModules } from "react-native";
+import useFetch from "../../hooks/useFetch";
+import { GameService } from "../../services/GameService";
 
 // ...
 
@@ -46,6 +49,20 @@ const Index = () => {
   const { isVisable, sound, music } = useSelector(
     (state: any) => state.settingGame,
   );
+
+  const {
+    name,
+    type,
+    image,
+    assets,
+    title,
+    tokenUri,
+    attributes,
+    level,
+    hp: hpPet,
+    atk,
+  } = useSelector((state: any) => state.petActive);
+
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
   const socket = SocketIOClient.getInstance();
@@ -56,8 +73,19 @@ const Index = () => {
   const [timing, setTiming] = useState(30);
   const [gameOver, setGameOver] = useState(false);
   const isFocused = useIsFocused();
+  const { apiData, serverError, isLoading } = useFetch(() =>
+    GameService.questionGame(),
+  );
 
-  const correctWord = WordsArray[currentIndex].answer;
+  const [correctWord, setCorrectWords] = useState("");
+
+  useEffect(() => {
+    console.log(apiData);
+    if (apiData) {
+      console.log(apiData);
+      setCorrectWords(apiData[currentIndex].answer);
+    }
+  }, [currentIndex, apiData]);
 
   const handleDamage = useCallback((data: DataSocketTransfer) => {
     if (data?.event == "Defeat") {
@@ -181,16 +209,24 @@ const Index = () => {
       dispatch(updateTurn(data));
     });
 
+    socket.onListenDisConnect((data) => {
+      console.log(data);
+      setStatus("Victory");
+    });
+
     socket.onListenTakeDamage(handleDamage);
 
     return () => {
       // Remove the event listeners:
       socket.removeListenFristTurn();
+      socket.removeListenOppentDisconnect();
       socket.removeListenTakeDamage();
     };
   }, []);
 
-  return (
+  return isLoading && apiData === null ? (
+    <></>
+  ) : (
     <View style={styles.container}>
       <Image
         resizeMode="stretch"
@@ -216,7 +252,7 @@ const Index = () => {
               source={require("../../../assets/backGroundForTableQuestion.png")}
               style={{ position: "absolute", width: "100%", height: "100%" }}
             />
-            <WordBox wordData={WordsArray[currentIndex]} />
+            <WordBox wordData={apiData !== null && apiData[currentIndex]} />
           </View>
 
           <InputBox correctLetters={correctLetters} answer={correctWord} />
@@ -267,6 +303,6 @@ const styles = StyleSheet.create({
   WordBox: {
     display: "flex",
     width: "100%",
-    height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.12,
   },
 });
