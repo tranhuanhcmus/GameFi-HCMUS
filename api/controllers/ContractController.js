@@ -171,23 +171,23 @@ const ContractController = {
         }
     },
     
-    getExp: async(tokenId) => {
-        try {
-            const exp = await petContract.methods.getExp(tokenId).call();
-            return exp;
-        } catch (error) {
-            console.error('Error fetching exp:', error);
-        }
-    },
+    // getExp: async(tokenId) => {
+    //     try {
+    //         const exp = await petContract.methods.getExp(tokenId).call();
+    //         return exp;
+    //     } catch (error) {
+    //         console.error('Error fetching exp:', error);
+    //     }
+    // },
 
-    addExp: async(tokenId,exp) => {
-        try {
-            const exp_result = await petContract.methods.addExp(tokenId,exp).send({ from: WALLET_PUBLIC_KEY })
-            return exp_result;
-        } catch (error) {
-            console.error('Error fetching exp:', error);
-        }
-    },
+    // addExp: async(tokenId,exp) => {
+    //     try {
+    //         const exp_result = await petContract.methods.addExp(tokenId,exp).send({ from: WALLET_PUBLIC_KEY })
+    //         return exp_result;
+    //     } catch (error) {
+    //         console.error('Error fetching exp:', error);
+    //     }
+    // },
 
     
 
@@ -263,32 +263,32 @@ const ContractController = {
             console.log("error on subscribe", error);
         });
 
-        var evMitter_SetExp = petContract.events.SetExp({
-            filter: {},
-            fromBlock: "latest"
-        }, (error, event) => {
-            console.log('SetExp');
-            console.log(event);
-        })
-        evMitter_SetExp.on("connected", function(subscriptionId) {
-            console.log("connected success with subscriptionId:", subscriptionId);
-        })
-        evMitter_SetExp.on('data', async (event) => {
-            const {tokenId, exp} = event.returnValues; 
+        // var evMitter_SetExp = petContract.events.SetExp({
+        //     filter: {},
+        //     fromBlock: "latest"
+        // }, (error, event) => {
+        //     console.log('SetExp');
+        //     console.log(event);
+        // })
+        // evMitter_SetExp.on("connected", function(subscriptionId) {
+        //     console.log("connected success with subscriptionId:", subscriptionId);
+        // })
+        // evMitter_SetExp.on('data', async (event) => {
+        //     const {tokenId, exp} = event.returnValues; 
 
-            const row = await models.NFT.findOne({ where: { tokenId: tokenId } })
+        //     const row = await models.NFT.findOne({ where: { tokenId: tokenId } })
 
-            if (!row) {
-                console.log('not found NFT',tokenId);
-            } else {
-                await row.update({exp:Number(exp)})
-                await row.reload()
-            }
-        })
-        evMitter_SetExp.on('error', (error, receipt) => {
-            // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-            console.log("error on subscribe", error);
-        });
+        //     if (!row) {
+        //         console.log('not found NFT',tokenId);
+        //     } else {
+        //         await row.update({exp:Number(exp)})
+        //         await row.reload()
+        //     }
+        // })
+        // evMitter_SetExp.on('error', (error, receipt) => {
+        //     // fired if the subscribe transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+        //     console.log("error on subscribe", error);
+        // });
     }
 }
 

@@ -100,12 +100,11 @@ CREATE TABLE "ItemApps" (
 
 CREATE TABLE "BoostEffects" (
 	id uuid NOT NULL,
-	"tokenId" int4 NOT NULL,
 	"owner" text NOT NULL,
 	"createdAt" timestamptz NOT NULL,
 	"updatedAt" timestamptz NOT NULL,
 	"lastTimeBoost" timestamptz NULL,
-	CONSTRAINT "BoostEffects_pkey" PRIMARY KEY (id, "tokenId", "owner")
+	CONSTRAINT "BoostEffects_pkey" PRIMARY KEY (id, "owner")
 );
 
 -- "Cups" definition
@@ -212,17 +211,11 @@ ADD CONSTRAINT fk_itemappowners_itemapps
 FOREIGN KEY ("id")
 REFERENCES "ItemApps"("id");
 
--- BoostEffects and NFTs relationship
+-- BoostEffects and ItemApps relationship
 ALTER TABLE "BoostEffects"
-ADD CONSTRAINT fk_boosteffects_nfts
-FOREIGN KEY ("tokenId")
-REFERENCES "NFTs"("tokenId");
-
--- BoostEffects and ItemGames relationship
-ALTER TABLE "BoostEffects"
-ADD CONSTRAINT fk_boosteffects_itemgames
+ADD CONSTRAINT fk_boosteffects_itemapps
 FOREIGN KEY ("id")
-REFERENCES "ItemGames"("id");
+REFERENCES "ItemApps"("id");
 
 -- ItemGameOwners and ItemGames relationship
 ALTER TABLE "ItemGameOwners"
