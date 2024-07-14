@@ -39,6 +39,7 @@ app.use(express.static('public'));
 
 // Swagger configuration
 const swaggerOptions = require('./swaggerOptions');
+const { ContractController } = require('./controllers/ContractController');
 const specs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
@@ -84,8 +85,8 @@ connectDB().then((connected) => {
     app.listen(port, () => {
       console.log(`Server is running on ${process.env.SERVER_URL}:${port}`);
       //====================================Events====================================//
-      // Catch Events
-      // catchEventNFT();
+      // ContractController.updateDB(6218894,6219122)      
+      ContractController.catchEventNFT()      
     });
   }
 });

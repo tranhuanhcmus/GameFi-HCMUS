@@ -8,6 +8,7 @@ export const API = {
   HANG_MAN: "/hangmans",
   BREED: "/bears/breed",
   CUP: "/cups",
+  BOOST_EFFECTS: "/boostEffects",
   server: "https://gamefi-hcmus.onrender.com",
   BOOSTEFFECT: "/boostEffects",
 };
