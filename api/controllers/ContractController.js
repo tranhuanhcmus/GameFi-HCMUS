@@ -64,7 +64,7 @@ const ContractController = {
                         await models.OwnerEnergy.create({
                             owner: to,
                             energy: MAX_OWNER_ENERGY,
-                            lastTimePlayed: new Date()
+                            remainingTime: null
                         })
                     }
                     

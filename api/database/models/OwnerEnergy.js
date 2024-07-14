@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     remainingTime: {
       type:DataTypes.DATE,
-      defaultValue: new Date()
+      defaultValue: null,
     },
     energy: {
       type:DataTypes.INTEGER,
