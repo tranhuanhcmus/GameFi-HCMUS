@@ -96,8 +96,7 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
     // clear all stored data
     // replay
     // setStatus("");
-    // dispatch(setComponentHp(40));
-    // dispatch(setHp(40));
+
     // dispatch(updateTurn(false));
     socket.emitSuccess(gameRoom);
     socket.removeListenFristTurn();

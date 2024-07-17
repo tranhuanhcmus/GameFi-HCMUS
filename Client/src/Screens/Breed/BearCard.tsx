@@ -17,6 +17,7 @@ import { COLOR } from "../../utils/color";
 import UnknownCard from "../../../assets/UnknowCard.svg";
 import Card from "../../../assets/BearCard.svg";
 import PetsModal from "../Pet/Pets";
+import { getLevel } from "../../utils/pet";
 const BearCard = (props: any) => {
   /** useState */
   const [isVisible, setIsVisible] = useState(false);
@@ -161,7 +162,7 @@ const BearCard = (props: any) => {
               color: COLOR.WHITE,
             }}
           >
-            LEVEL {props.level ? props.level : 1}
+            LEVEL {props.level ? Math.floor(getLevel(props.level)) : 1}
           </CustomText>
         </Animated.View>
       ) : (

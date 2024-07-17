@@ -15,9 +15,10 @@ interface PetActiveState {
     boostStatus: boolean;
   };
   assets: string;
+  energy: number;
   level: number;
   attributes: {
-    element: string;
+    element: number;
     eye: string;
     fur: string;
     item: string;
@@ -38,9 +39,10 @@ const initialState: PetActiveState = {
   },
   assets: "",
   tokenId: "",
+  energy: 0,
   level: 0,
   attributes: {
-    element: "",
+    element: 0,
     eye: "",
     fur: "",
     item: "",
@@ -54,6 +56,7 @@ const petActiveSlice = createSlice({
     updatePetActive(state, action) {
       const attribute = action.payload;
       state.name = attribute.name;
+      state.energy = attribute.energy;
       state.type = attribute.type;
       state.active = attribute.active;
       state.assets = attribute.assets;
@@ -71,9 +74,14 @@ const petActiveSlice = createSlice({
     updateBoost(state, action) {
       state.boost = action.payload;
     },
+
+    updateEnergy(state, action: PayloadAction<number>) {
+      state.energy = action.payload;
+    },
   },
 });
 
-export const { updatePetActive, updateBoost } = petActiveSlice.actions;
+export const { updatePetActive, updateBoost, updateEnergy } =
+  petActiveSlice.actions;
 
 export default petActiveSlice.reducer;

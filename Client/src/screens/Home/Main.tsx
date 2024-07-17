@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
+
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { SocketIOClient } from "../../../socket";
 import CustomText from "../../components/CustomText";
@@ -39,8 +40,9 @@ import { selectLoading } from "../../redux/loadingSlice";
 import { getLevel } from "../../utils/pet";
 import { BoostService } from "../../services/BoostService";
 import { calculateTimeDifference } from "../../function/DownLoadResource";
-import { updateBoost } from "../../redux/petActiveSlice";
+import { updateBoost, updateEnergy } from "../../redux/petActiveSlice";
 import { setHp, updateHp } from "../../redux/playerSlice";
+import { UsersService } from "../../services/UsersService";
 type Props = {};
 
 const HomeScreen = () => {
@@ -76,13 +78,17 @@ const HomeScreen = () => {
     image,
     assets,
     boost,
+    energy,
     title,
+    tokenId,
     tokenUri,
     attributes,
     level,
     hp,
     atk,
   } = useSelector((state: any) => state.petActive);
+
+  const { energy: energyPlayer } = useSelector((state: any) => state.player);
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
@@ -181,6 +187,21 @@ const HomeScreen = () => {
   //     dispatch(setAddress(address));
   //   }
   // }, [isConnected]);
+
+  const FetchEnergy = async () => {
+    try {
+      const response = await UsersService.getEnergyNFT(tokenId);
+      console.log(response);
+      dispatch(updateEnergy(response.energy));
+    } catch (error) {
+      console.error("Error fetching)\n", error);
+    }
+  };
+
+  useEffect(() => {
+    FetchEnergy();
+  }, [energy]);
+
   useEffect(() => {
     if (isFocused) {
       play("walk");
@@ -190,46 +211,42 @@ const HomeScreen = () => {
     }
   }, [isFocused]);
 
-  const fetchData = async () => {
-    try {
-      const res: any[] = await UserService.getNFTsByOwner(address);
+  // const fetchData = async () => {
+  //   try {
+  //     const res: any[] = await UserService.getNFTsByOwner(address);
 
-      const data = res[0].data; // SET DEFAULT THE FIRST
-      dispatch(updatePet(data));
-    } catch (error) {
-      console.error("Error fetching NFTs:", error);
-    }
-  };
+  //     const data = res[0].data; // SET DEFAULT THE FIRST
+  //     dispatch(updatePet(data));
+  //   } catch (error) {
+  //     console.error("Error fetching NFTs:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (
-      !name ||
-      !type ||
-      !image ||
-      !title ||
-      !tokenUri ||
-      !attributes ||
-      !level
-    )
-      fetchData();
-  }, []);
+  // useEffect(() => {
+  //   if (
+  //     !name ||
+  //     !type ||
+  //     !image ||
+  //     !title ||
+  //     !tokenUri ||
+  //     !attributes ||
+  //     !level
+  //   )
+  //     fetchData();
+  // }, []);
 
-  useEffect(() => {
-    logger.warn(
-      "name, type, image, title, tokenUri, attributes, level  ",
-      name,
-      type,
-      image,
-      title,
-      tokenUri,
-      attributes,
-      level,
-    );
-  }, [name, type, image, title, tokenUri, attributes, level]);
-
-  useEffect(() => {
-    console.log(statusBoost);
-  }, [statusBoost]);
+  // useEffect(() => {
+  //   logger.warn(
+  //     "name, type, image, title, tokenUri, attributes, level  ",
+  //     name,
+  //     type,
+  //     image,
+  //     title,
+  //     tokenUri,
+  //     attributes,
+  //     level,
+  //   );
+  // }, [name, type, image, title, tokenUri, attributes, level]);
 
   const [imageSource, setImageSource] = useState({
     uri: "",
@@ -284,7 +301,6 @@ const HomeScreen = () => {
         }),
       );
       setTimeBoost(time);
-      console.log(time);
     }
   }, [statusBoost, currentDate, isFocused, boost.boostStatus]);
 
@@ -332,6 +348,38 @@ const HomeScreen = () => {
           top: ConstantsResponsive.YR * 2 * 120,
         }}
       >
+        {timeBoost.timeDifference !== 0 && (
+          <View
+            style={{
+              justifyContent: "flex-start",
+              flexDirection: "column",
+              width: ConstantsResponsive.XR * 120,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={require("../../../assets/boost.png")}
+              style={{
+                height: ConstantsResponsive.YR * 50,
+                width: ConstantsResponsive.XR * 70,
+              }}
+              resizeMode="contain"
+            />
+            <Text
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: ConstantsResponsive.XR * 22,
+                color: COLOR.WHITE,
+              }}
+            >
+              {timeBoost.hours}:
+              {timeBoost.minutes >= 10
+                ? `${timeBoost.minutes}`
+                : `0${timeBoost.minutes}`}
+            </Text>
+          </View>
+        )}
         <TouchableWithoutFeedback
           onPress={() => {
             Animated.sequence([
@@ -366,7 +414,7 @@ const HomeScreen = () => {
       <View
         style={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           position: "relative",
           alignItems: "center",
           justifyContent: "center",
@@ -386,48 +434,49 @@ const HomeScreen = () => {
         >
           LEVEL {Math.floor(getLevel(level))}
         </CustomText>
-        {timeBoost.timeDifference !== 0 && (
-          <View
-            style={{
-              position: "absolute",
-              left:
-                ConstantsResponsive.MAX_WIDTH / 2 +
-                ConstantsResponsive.XR * 150,
-              justifyContent: "center",
-              bottom: ConstantsResponsive.YR * 15,
 
-              alignItems: "center",
-            }}
-          >
-            <Image
-              source={require("../../../assets/boost.png")}
-              style={{
-                position: "absolute",
-                height: ConstantsResponsive.YR * 50,
-                width: ConstantsResponsive.XR * 70,
-              }}
-              resizeMode="contain"
-            />
-            <Text
-              style={{
-                marginTop: ConstantsResponsive.YR * 80,
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: ConstantsResponsive.XR * 22,
-                color: COLOR.WHITE,
-              }}
-            >
-              {timeBoost.hours}:
-              {timeBoost.minutes >= 10
-                ? `${timeBoost.minutes}`
-                : `0${timeBoost.minutes}`}
-            </Text>
+        {energy >= 0 && (
+          <View style={{ flexDirection: "row" }}>
+            {Array(3)
+              .fill({})
+              .map((item, index) =>
+                energy == 3 ? (
+                  <Image
+                    key={index}
+                    source={require("../../../assets/navIcon/thunderBlue.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 50,
+                      width: ConstantsResponsive.XR * 50,
+                      marginRight: 10, // Adjust spacing between images
+                    }}
+                  />
+                ) : index < energy ? (
+                  <Image
+                    key={index}
+                    source={require("../../../assets/navIcon/thunderBlue.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 50,
+                      width: ConstantsResponsive.XR * 50,
+                      marginRight: 10, // Adjust spacing between images
+                    }}
+                  />
+                ) : (
+                  <Image
+                    key={index}
+                    source={require("../../../assets/navIcon/thunderBlack.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 50,
+                      width: ConstantsResponsive.XR * 50,
+                      marginRight: 10, // Adjust spacing between images
+                    }}
+                  />
+                ),
+              )}
           </View>
         )}
-
-        {/* <View style={styles.healthBar}>
-          <View style={[styles.healthBarInner, { width: healthBarWidth }]} />
-        </View> */}
       </View>
 
       <View style={styles.playArea}>
@@ -516,16 +565,21 @@ const HomeScreen = () => {
                   useNativeDriver: true,
                 }),
               ]).start(() => {
-                if (!isVisible) setIsVisible(true);
+                if (energy == 0 || energyPlayer == 0) {
+                  console.log("khong dc choi");
+                } else {
+                  if (!isVisible) setIsVisible(true);
 
-                dispatch(setHp(hp));
+                  dispatch(setHp(hp));
 
-                socket.emitFindMatch({
-                  gameName: gameName,
-                  hp: hp,
-                  assets: assets,
-                  atk: atk,
-                });
+                  socket.emitFindMatch({
+                    gameName: gameName,
+                    hp: hp,
+                    assets: assets,
+                    atk: atk,
+                    element: attributes.element,
+                  });
+                }
               });
             }}
             style={styles.btnPlay}

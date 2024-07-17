@@ -12,6 +12,10 @@ import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 import { useAccount } from "wagmi";
 import log from "../logger/index.js";
 import logger from "../logger/index.js";
+import useFetch from "../hooks/useFetch";
+import { UsersService } from "../services/UsersService";
+import { useDispatch } from "react-redux";
+import { updateEnergy } from "../redux/playerSlice";
 
 interface HeaderProps {
   name: string;
@@ -21,6 +25,7 @@ const GEM = "Gem";
 
 const Header: React.FC<HeaderProps> = ({ name }) => {
   const [data, setData] = useState<any[]>([]);
+  const dispatch = useDispatch();
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
@@ -34,9 +39,18 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
     }
   };
 
+  const { apiData: energyUser, serverError } = useFetch(() =>
+    UsersService.getOwnerEnergy("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
+  );
+
   useEffect(() => {
     fetchData();
   }, [address]);
+
+  useEffect(() => {
+    dispatch(updateEnergy(energyUser?.energy || 0));
+  }, [energyUser?.energy]);
+
   const navigate = useCustomNavigation();
   return (
     <TouchableOpacity
@@ -114,9 +128,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             fontWeight: "bold",
           }}
         >
-          {data && data.length
-            ? data.find((item) => item.name == GEM).quantity
-            : 0}
+          {energyUser?.energy}
         </CustomText>
       </View>
     </TouchableOpacity>

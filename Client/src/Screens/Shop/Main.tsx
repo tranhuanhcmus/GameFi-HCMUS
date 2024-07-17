@@ -75,11 +75,9 @@ const ShopScreen = (props: Props) => {
   const onBuy = (buy: boolean, itemImg: any, arrayItem?: any) => {
     setTimeout(() => {
       if (typeof itemImg === "string" && !arrayItem) {
-        console.log(1);
         setBuySuccess(buy);
         setItemImg(itemImg);
       } else if (Array.isArray(arrayItem)) {
-        console.log(2);
         setBuySuccess(buy);
         setItemImg({ pack: itemImg, data: [...arrayItem] });
       } else {

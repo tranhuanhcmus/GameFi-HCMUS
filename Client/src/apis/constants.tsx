@@ -6,6 +6,7 @@ export const API = {
   ITEM_GAME: "/itemGames",
   ITEM_APP: "/itemApps",
   HANG_MAN: "/hangmans",
+  USERS: "users",
   BREED: "/bears/breed",
   CUP: "/cups",
   BOOST_EFFECTS: "/boostEffects",

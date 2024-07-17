@@ -1,20 +1,24 @@
-/**
- * @author: duy-nhan
- */
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { Animated } from "react-native";
 import GameLogic from "../utils/game/game";
 
 interface PlayerState {
+  energy: number;
   hp: any;
   componentHp: any;
+
+  atkOpponent: number;
+  elementOpponent: number;
   gameRoom: any;
   assets: string;
   isComponentTurn: any;
 }
 
 const initialState: PlayerState = {
+  energy: 0,
+  atkOpponent: 0,
+  elementOpponent: 0,
   hp: GameLogic.HEALTH_POINT,
   componentHp: GameLogic.HEALTH_POINT,
   assets: "",
@@ -28,6 +32,10 @@ const playerSlice = createSlice({
   reducers: {
     updateHp(state, action) {
       state.hp = state.hp - action.payload;
+      return state;
+    },
+    updateEnergy(state, action) {
+      state.energy = action.payload;
       return state;
     },
     setAssets(state, action) {
@@ -57,6 +65,13 @@ const playerSlice = createSlice({
       state.isComponentTurn = action.payload;
       return state;
     },
+
+    setOpponentValue(state, action) {
+      state.componentHp = action.payload.hpOpponent;
+      state.assets = action.payload.assetsOpponent;
+      state.elementOpponent = action.payload.elementOpponent;
+      state.atkOpponent = action.payload.atkOpponent;
+    },
   },
 });
 
@@ -64,6 +79,8 @@ export { playerSlice };
 export const {
   updateHp,
   updateComponentHp,
+  updateEnergy,
+  setOpponentValue,
   setAssets,
   setHp,
   setComponentHp,

@@ -23,7 +23,7 @@ interface props {
 
 const StatusPopup: React.FC<props> = ({ status, onPress }) => {
   const message = status === "Victory" ? "Victory" : "Defeat";
-  const buttonText = status === "Victory" ? "ok" : "ok";
+  const buttonText = status === "Victory" ? "Claim" : "ok";
   const resultColor = status === "Victory" ? "victoryColor" : "defeatColor";
 
   return (
@@ -33,10 +33,18 @@ const StatusPopup: React.FC<props> = ({ status, onPress }) => {
       transparent={true}
     >
       <View style={styles.modalContainer}>
+        <Image
+          source={require("../../../assets/backGroundForInventory.png")}
+          style={{
+            height: "100%",
+            width: "100%",
+            position: "absolute",
+          }}
+        />
         <Animatable.View
           animation={"zoomIn"}
           delay={400}
-          style={[styles.popup, { backgroundColor: colors[resultColor] }]}
+          style={[styles.popup]}
         >
           <SafeAreaView style={styles.containerContent}>
             {status === "Victory" ? (

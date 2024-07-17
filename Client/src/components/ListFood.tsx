@@ -14,10 +14,12 @@ import ConstantsResponsive from "../constants/Constanst";
 import { ImageSourcePropType } from "react-native";
 import NormalButton from "./Button/NormalButton";
 import { API } from "../apis/constants";
+import colors from "../../common/colors";
 
 interface Food {
   id: number;
   image: ImageSourcePropType;
+  quality: string;
 }
 
 interface Props {
@@ -41,32 +43,42 @@ const ListFood: React.FC<Props> = (props: Props) => {
       ? ConstantsResponsive.MAX_WIDTH * 0.425
       : ConstantsResponsive.MAX_WIDTH * 0.2;
 
+  console.log(props.arrayFood);
+
   return (
     <View style={[styles.container, { width: containerWidth }]}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {props.arrayFood.map((food, index) => (
           <TouchableOpacity
             key={food.id}
-            ref={(el) => (refs.current[food.id] = el)}
+            ref={(el: any) => (refs.current[food.id] = el)}
             onPress={() => {
               handlePress(food.id);
             }}
             style={[
               styles.foodItem,
+              {
+                backgroundColor:
+                  food.quality == "normal"
+                    ? COLOR.NORMAL
+                    : food.quality === "rare"
+                      ? COLOR.RARE
+                      : COLOR.SUPERRARE,
+              },
+
               index !== props?.arrayFood?.length - 1 && styles.foodItemMargin, // Apply margin except for the last item
             ]}
           >
-            <Image
+            {/* <Image
               style={{
                 position: "absolute",
                 borderRadius: ConstantsResponsive.YR * 30,
-                width: ConstantsResponsive.MAX_WIDTH * 0.2,
-                padding: ConstantsResponsive.XR * 10,
-                height: ConstantsResponsive.MAX_HEIGHT * 0.08,
+                width: ConstantsResponsive.MAX_WIDTH * 0.18,
+                height: ConstantsResponsive.MAX_HEIGHT * 0.075,
               }}
               resizeMode="stretch"
               source={require("../../assets/backGroundButtonBrown-1.png")}
-            />
+            /> */}
             <Image
               source={{ uri: API.server + food.image }}
               resizeMode="contain"
@@ -87,6 +99,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   foodItem: {
+    position: "relative",
+
     borderRadius: ConstantsResponsive.YR * 30,
     width: ConstantsResponsive.MAX_WIDTH * 0.2,
     padding: ConstantsResponsive.XR * 10,
@@ -98,7 +112,7 @@ const styles = StyleSheet.create({
     marginRight: ConstantsResponsive.MAX_WIDTH * 0.025, // Add margin to create the gap between items
   },
   foodImage: {
-    width: "100%",
-    height: "100%",
+    width: "70%",
+    height: "70%",
   },
 });

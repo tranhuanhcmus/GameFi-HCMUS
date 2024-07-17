@@ -10,6 +10,7 @@ import logger from "../../logger";
 import { COLOR } from "../../utils/color";
 import UnknownCard from "../../../assets/UnknowCard.svg";
 import Card from "../../../assets/BearCard.svg";
+import { getLevel } from "../../utils/pet";
 const BabyCard = (props: any) => {
   const [isVisble, setIsVisble] = useState(false);
   const [animatedValue] = useState(new Animated.Value(0));
@@ -139,7 +140,7 @@ const BabyCard = (props: any) => {
           color: COLOR.WHITE,
         }}
       >
-        LEVEL {props.level ? props.level : 1}
+        LEVEL {props.level ? Math.floor(getLevel(props.level)) : 1}
       </CustomText>
     </Animated.View>
   ) : (

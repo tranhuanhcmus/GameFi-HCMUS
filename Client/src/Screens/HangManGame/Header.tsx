@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   PanResponder,
   ActivityIndicator,
+  FlexAlignType,
 } from "react-native";
 import SpriteSheet from "../../components/SpriteSheet";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,9 +26,16 @@ import { playerSlice } from "../../redux/playerSlice";
 
 import Setting from "../../../assets/setting.svg";
 import { setVisable } from "../../redux/settingGameSlice";
+import { ELEMENT, formatElement } from "../../constants/types";
+import { ContraryElement } from "../../function/ContraryElement";
 
 interface props {
   hp: number;
+}
+interface propsBar {
+  hp: number;
+  element: number;
+  typleFlex: FlexAlignType;
 }
 
 const GameHeader = () => {
@@ -57,9 +65,14 @@ const GameHeader = () => {
 const User: React.FC<props> = ({ hp }) => {
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [fps, setFps] = useState<string>("3");
+  const [fps, setFps] = useState<string>("10");
   const mummyRef = useRef<SpriteSheet>(null);
-  const { assets } = useSelector((state: any) => state.petActive);
+  const { assets, attributes } = useSelector((state: any) => state.petActive);
+
+  const { atkOpponent, elementOpponent } = useSelector(
+    (state: any) => state.player,
+  );
+
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
@@ -181,7 +194,7 @@ const User: React.FC<props> = ({ hp }) => {
           source={Avatar}
           resizeMode="contain"
         ></Image>
-        <Bar hp={hp} />
+        <Bar hp={hp} element={attributes.element} typleFlex="flex-start" />
       </View>
 
       <View style={styles.playerPet}>
@@ -204,7 +217,7 @@ const User: React.FC<props> = ({ hp }) => {
 
         {/* Your Animated Text for displaying damage */}
         <Animated.Text style={[styles.damageText, floatingTextStyle]}>
-          -10
+          -{atkOpponent * ContraryElement(attributes.element, elementOpponent)}
         </Animated.Text>
       </View>
 
@@ -234,13 +247,16 @@ const User: React.FC<props> = ({ hp }) => {
 const Component: React.FC<props> = ({ hp }) => {
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [fps, setFps] = useState<string>("3");
+  const [fps, setFps] = useState<string>("10");
   const mummyRef = useRef<SpriteSheet>(null);
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
-  const { assets } = useSelector((state: any) => state.player);
+  const { assets, elementOpponent } = useSelector((state: any) => state.player);
   const isFirstRender = useRef(true);
+
+  const { attributes, atk } = useSelector((state: any) => state.petActive);
+
   const dispatch = useDispatch();
 
   const play = (type: string) => {
@@ -342,7 +358,7 @@ const Component: React.FC<props> = ({ hp }) => {
   return (
     <View style={styles.playerComponent}>
       <View style={styles.playerHeader}>
-        <Bar hp={hp} />
+        <Bar hp={hp} element={elementOpponent} typleFlex="flex-end" />
         <Image
           style={styles.avatarImage}
           source={Avatar}
@@ -367,7 +383,7 @@ const Component: React.FC<props> = ({ hp }) => {
         )}
         {/* Your Animated Text for displaying damage */}
         <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
-          -10
+          -{atk * ContraryElement(elementOpponent, attributes.element)}
         </Animated.Text>
       </View>
 
@@ -394,7 +410,7 @@ const Component: React.FC<props> = ({ hp }) => {
 };
 const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
 //  HEALTH BAR AND DAMAGE BAR.
-const Bar: React.FC<props> = ({ hp }) => {
+const Bar: React.FC<propsBar> = ({ hp, element, typleFlex }) => {
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
   const [hpDefaults, setHpDefaults] = useState(hp);
@@ -416,24 +432,71 @@ const Bar: React.FC<props> = ({ hp }) => {
   const colorLocations = [0, 1];
 
   return (
-    <View style={styles.barContainer}>
-      <AnimatedGradient
-        style={[
-          styles.healthBar,
-          {
-            width: animatedWidth.interpolate({
-              inputRange: [0, 100],
-              outputRange: ["0%", "100%"],
-            }),
-          },
-        ]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={barColors}
-        locations={colorLocations}
-      ></AnimatedGradient>
+    <View
+      style={{
+        width: "80%",
 
-      <Text style={styles.barText}>{`${hp}`}</Text>
+        flexDirection: "column",
+        height: 70,
+        rowGap: 3,
+      }}
+    >
+      <View style={styles.barContainer}>
+        <AnimatedGradient
+          style={[
+            styles.healthBar,
+            {
+              width: animatedWidth.interpolate({
+                inputRange: [0, 100],
+                outputRange: ["0%", "100%"],
+              }),
+            },
+          ]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={barColors}
+          locations={colorLocations}
+        ></AnimatedGradient>
+
+        <Text style={styles.barText}>{`${hp}`}</Text>
+      </View>
+      <View style={{ width: "100%", height: "35%", alignItems: typleFlex }}>
+        {ELEMENT.FIRE === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Fire.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.IRON === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Iron.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.LEAF === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Leaf.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.STONE === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Stone.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.WATER === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Water.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -564,7 +627,7 @@ const styles = StyleSheet.create({
   },
 
   barContainer: {
-    width: "60%",
+    width: "100%",
     height: 30,
     padding: 3,
     backgroundColor: "rgba(128,128,128,0.7)",

@@ -153,7 +153,7 @@ const PetScreen = () => {
       const res: any[] = await ItemAppOwnerService.getItems(
         "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
       );
-      console.log(res);
+
       const data = res.filter((item) => item.category == "food");
 
       setFoodArray(data);
@@ -252,7 +252,7 @@ const PetScreen = () => {
       interval = setInterval(() => {
         const elapsedTime = (Date.now() - startTime) / 1000; // Time in seconds
         setFeed((prevFeed) => {
-          const newPageY = prevFeed.pageY - ConstantsResponsive.YR;
+          const newPageY = prevFeed.pageY - StatusBarHeight / 2;
           const newPageX = a * Math.pow(elapsedTime, 2) + middleX;
           return {
             ...prevFeed,

@@ -9,11 +9,12 @@ interface PetState {
   active: boolean;
   hp: number;
   atk: number;
+  energy: number;
   tokenId: String;
   assets: string;
   level: number;
   attributes: {
-    element: string;
+    element: number;
     eye: string;
     fur: string;
     item: string;
@@ -25,6 +26,7 @@ const initialState: PetState = {
   type: "",
   image: "",
   title: "",
+  energy: 0,
   hp: 0,
   atk: 0,
   active: false,
@@ -33,7 +35,7 @@ const initialState: PetState = {
   tokenId: "",
   level: 0,
   attributes: {
-    element: "",
+    element: 0,
     eye: "",
     fur: "",
     item: "",
@@ -51,6 +53,7 @@ const petSlice = createSlice({
       state.active = attribute.active;
       state.assets = attribute.assets;
       state.atk = attribute.atk;
+      state.energy = attribute.energy;
       state.hp = attribute.hp;
       state.level = attribute.level;
       state.image = attribute.image;
@@ -64,9 +67,12 @@ const petSlice = createSlice({
     updateLevel(state, action: PayloadAction<number>) {
       state.level = state.level + action.payload;
     },
+    updateEnergy(state, action: PayloadAction<number>) {
+      state.energy = action.payload;
+    },
   },
 });
 
-export const { updatePet, updateLevel } = petSlice.actions;
+export const { updatePet, updateLevel, updateEnergy } = petSlice.actions;
 
 export default petSlice.reducer;

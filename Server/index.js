@@ -46,6 +46,8 @@ function findMatch(socket, data) {
         gameName: data.gameName,
         assetsOpponent: data.assets,
         hpOpponent: data.hp,
+        atkOpponent: data.atk,
+        elementOpponent: data.element,
       });
       socketPairs.set(key, {
         socket: value.socket,
@@ -53,6 +55,8 @@ function findMatch(socket, data) {
         gameName: value.gameName,
         assetsOpponent: value.assetsOpponent,
         hpOpponent: value.hpOpponent,
+        atkOpponent: value.atkOpponent,
+        elementOpponent: value.elementOpponent,
       });
       matchPairs.set(gameRoom, {
         [socket.id]: socket.id,
@@ -66,12 +70,16 @@ function findMatch(socket, data) {
         gameRoom: gameRoom,
         hpOpponent: value.hpOpponent,
         assetsOpponent: value.assetsOpponent,
+        atkOpponent: value.atkOpponent,
+        elementOpponent: value.elementOpponent,
       });
 
       io.to(key).emit(SOCKET.KEY_ROOM, {
         gameRoom: gameRoom,
         hpOpponent: data.hp,
         assetsOpponent: data.assets,
+        atkOpponent: data.atk,
+        elementOpponent: data.element,
       });
 
       // randomly first turn for any player
@@ -92,6 +100,8 @@ function findMatch(socket, data) {
       gameName: data.gameName,
       assetsOpponent: data.assets,
       hpOpponent: data.hp,
+      atkOpponent: data.atk,
+      elementOpponent: data.element,
     });
     console.log("waiting_for_opponent", "Waiting for an opponent...");
     socket.emit("waiting_for_opponent", "Waiting for an opponent...");
