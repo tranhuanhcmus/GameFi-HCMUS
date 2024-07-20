@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-interface IPet {
-    function mint(address to, uint256 pet_type) external returns (uint256);
-}
+// interface IPet {
+//     function mint(address to, uint256 pet_type) external returns (uint256);
+// }
 
 
 contract Pet is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
