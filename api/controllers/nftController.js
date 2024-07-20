@@ -89,6 +89,8 @@ const getALlByOwner = async(req, res, next) => {
                     tokenUri: rows[i].tokenUri,
                     owner: rows[i].owner,
                     exp: rows[i].exp,
+                    lastTimePlayed: rows[i].lastTimePlayed,
+                    energy: rows[i].energy,
                     data: tokenUri.data
                 });
             }
