@@ -341,7 +341,7 @@ const purchaseItem = async(req, res, next) => {
                 console.log(result.dataValues);
                 const currentEnergy = result.dataValues.energy;
                 const updateEnergy = currentEnergy + quantity;
-                const newRemainingTime = updateEnergy >= 3 ? null : new Date(result.dataValues.remainingTime.getHours() - 1);
+                const newRemainingTime = updateEnergy >= 3 ? null : new Date(result.dataValues.remainingTime.getHours() - quantity);
                 console.log(currentEnergy, updateEnergy, result.dataValues.remainingTime, newRemainingTime);
                 await result.update({ energy: updateEnergy, remainingTime: newRemainingTime });
                 await result.reload();
