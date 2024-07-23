@@ -79,7 +79,6 @@ const PetsModal = ({
 
   const mappingData = () => {
     if (apiData) {
-      console.log(apiData);
       const mappedData: any[] = apiData.map((nft: any) => {
         return {
           id: nft.data.tokenId,

@@ -63,9 +63,10 @@ export const ItemComponent: React.FC<ItemProps> = ({
       >
         <Text
           style={{
-            // fontFamily: "mt-2",
+            fontFamily: "mt-2",
             color: COLOR.WHITE,
-            fontSize: 15,
+            fontSize: 17,
+            textAlign: "center",
             fontWeight: "bold",
           }}
         >
@@ -125,7 +126,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
                 // fontFamily: "mt-2",
                 fontWeight: "bold",
                 color: COLOR.WHITE,
-                fontSize: 15,
+                fontSize: 17,
               }}
             >
               {goldcost}
@@ -151,6 +152,7 @@ const styles = StyleSheet.create({
     height: ConstantsResponsive.MAX_HEIGHT / 3 - 120 * ConstantsResponsive.YR,
   },
   itemTop: {
+    width: "100%",
     height: ConstantsResponsive.YR * 50,
     marginBottom: ConstantsResponsive.YR * 10,
   },

@@ -458,7 +458,7 @@ const Bar: React.FC<propsBar> = ({ hp, element, typleFlex }) => {
           locations={colorLocations}
         ></AnimatedGradient>
 
-        <Text style={styles.barText}>{`${hp}`}</Text>
+        <Text style={styles.barText}>{`${Math.floor(hp)}`}</Text>
       </View>
       <View style={{ width: "100%", height: "35%", alignItems: typleFlex }}>
         {ELEMENT.FIRE === formatElement(element) && (

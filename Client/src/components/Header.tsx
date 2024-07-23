@@ -48,6 +48,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
   }, [address]);
 
   useEffect(() => {
+    console.log(1, energyUser);
     dispatch(updateEnergy(energyUser?.energy || 0));
   }, [energyUser?.energy]);
 

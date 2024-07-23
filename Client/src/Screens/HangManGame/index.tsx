@@ -89,9 +89,7 @@ const Index = () => {
   }, [atk]);
 
   useEffect(() => {
-    console.log(apiData);
     if (apiData) {
-      console.log(apiData);
       setCorrectWords(apiData[currentIndex].answer);
     }
   }, [currentIndex, apiData]);
@@ -180,6 +178,7 @@ const Index = () => {
 
   const handleSurrender = () => {
     setStatus("Defeat");
+
     socket.emitEventGame({
       gameRoom: gameRoom,
       damage: null,
@@ -224,8 +223,11 @@ const Index = () => {
     });
 
     socket.onListenDisConnect((data) => {
-      console.log(data);
-      setStatus("Victory");
+      handleCloseModal();
+      setTimeout(() => {
+        console.log(data);
+        setStatus("Victory");
+      }, 500);
     });
 
     socket.onListenTakeDamage(handleDamage);

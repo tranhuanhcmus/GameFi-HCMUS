@@ -78,6 +78,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
       goldcost >= 0 &&
       itemImg
     ) {
+      onClose?.();
       dispatch(startLoading());
       console.log(category);
       const body: item = {

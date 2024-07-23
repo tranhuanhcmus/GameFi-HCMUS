@@ -43,6 +43,7 @@ import { calculateTimeDifference } from "../../function/DownLoadResource";
 import { updateBoost, updateEnergy } from "../../redux/petActiveSlice";
 import { setHp, updateHp } from "../../redux/playerSlice";
 import { UsersService } from "../../services/UsersService";
+import { BOOST } from "../../constants/types";
 type Props = {};
 
 const HomeScreen = () => {
@@ -200,7 +201,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     FetchEnergy();
-  }, [energy]);
+  }, [energy, assets, isFocused]);
 
   useEffect(() => {
     if (isFocused) {
@@ -357,14 +358,25 @@ const HomeScreen = () => {
               alignItems: "center",
             }}
           >
-            <Image
-              source={require("../../../assets/boost.png")}
-              style={{
-                height: ConstantsResponsive.YR * 50,
-                width: ConstantsResponsive.XR * 70,
-              }}
-              resizeMode="contain"
-            />
+            {statusBoost && statusBoost[0].name === BOOST.HEALTH ? (
+              <Image
+                source={require("../../../assets/boost/boostHealth.png")}
+                style={{
+                  height: ConstantsResponsive.YR * 50,
+                  width: ConstantsResponsive.XR * 70,
+                }}
+                resizeMode="contain"
+              />
+            ) : (
+              <Image
+                source={require("../../../assets/boost/boostAtk.png")}
+                style={{
+                  height: ConstantsResponsive.YR * 50,
+                  width: ConstantsResponsive.XR * 70,
+                }}
+                resizeMode="contain"
+              />
+            )}
             <Text
               style={{
                 textAlign: "center",

@@ -1,23 +1,26 @@
 export const ELEMENT = {
   FIRE: "fire",
-  LEAF: "leaf",
+  THUNDER: "thunder",
   WATER: "water",
-  STONE: "stone",
-  IRON: "iron",
+  FROZEN: "frozen",
+  DARK: "dark",
+  FOREST: "forest",
 };
 
 export const formatElement = (types: number) => {
   switch(types) {
     case 1:
-      return "fire";
+      return "thunder";
     case 2:
-      return "leaf";
+      return "fire";
     case 3:
       return "water";
     case 4:
-        return "stone";
+        return "frozen";
     case 5:
-          return "iron";
+          return "forest";
+    case 6:
+         return "dark";
     default:
       return "unknown";
   }
@@ -28,4 +31,10 @@ export const CATEGORY = {
   PACK: "pack",
   BOOST:"boost"
 
+}
+
+export const BOOST ={
+  HEALTH: "Boost Health 4h",
+  DAMAGE: "Boost Damage 4h",
+  
 }

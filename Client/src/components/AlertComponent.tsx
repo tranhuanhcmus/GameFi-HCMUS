@@ -24,7 +24,6 @@ const AlertComponent: React.FC<AlertComponentProps> = ({
   };
 
   const handleOk = () => {
-    console.log("OK Pressed");
     dispatch(hideAlert());
   };
 
