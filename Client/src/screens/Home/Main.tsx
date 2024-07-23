@@ -578,6 +578,8 @@ const HomeScreen = () => {
                 }),
               ]).start(() => {
                 if (energy == 0 || energyPlayer == 0) {
+                  console.log("energy ", energy);
+                  console.log("energyPlayer ", energyPlayer);
                   console.log("khong dc choi");
                 } else {
                   if (!isVisible) setIsVisible(true);

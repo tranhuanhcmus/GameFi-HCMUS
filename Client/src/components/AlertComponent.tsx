@@ -16,7 +16,11 @@ const AlertComponent: React.FC<AlertComponentProps> = ({
   onClose,
 }) => {
   const dispatch = useDispatch();
-  const { message, isVisible: isAlertVisible } = useSelector(selectAlert);
+  const {
+    title,
+    message,
+    isVisible: isAlertVisible,
+  } = useSelector(selectAlert);
 
   const handleCancel = () => {
     dispatch(hideAlert());
@@ -44,7 +48,7 @@ const AlertComponent: React.FC<AlertComponentProps> = ({
           // }}
           className="font-rexlia text-[40px] text-white"
         >
-          {message || "Custom Alert Title"}
+          {title || "Custom Alert Title"}
         </CustomText>
         <CustomText
           style={{
@@ -54,7 +58,7 @@ const AlertComponent: React.FC<AlertComponentProps> = ({
             fontFamily: "mrt-mid",
           }}
         >
-          Your custom alert message goes here.
+          {message || "Your custom alert message goes here."}
         </CustomText>
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
           <TouchableOpacity onPress={handleCancel} className="mr-2 p-[10px]">

@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
-
+import { showAlert, hideAlert, selectAlert } from "../../redux/alertSlice";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
@@ -21,9 +21,8 @@ import Egg from "../../../assets/Egg.png";
 import Hourglass from "../../../assets/Hourglass.png";
 import Plus from "../../../assets/Plus.png";
 import QuestionMark from "../../../assets/Question.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import log from "../../logger/index";
-import SpriteSheet from "rn-sprite-sheet";
 import Breed from "../../../assets/breed.svg";
 import BackIcon from "../../../assets/BackIcon.svg";
 import BearCard from "./BearCard";
@@ -47,6 +46,7 @@ export function BreedScreen() {
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
+  const dispatch = useDispatch();
   useEffect(() => {
     let intervalId: any;
     if (isActive) {
@@ -62,7 +62,6 @@ export function BreedScreen() {
     if (remainingTime === 0) {
       if (fatherPet.id && fatherPet.id) {
         breedFunction(fatherPet.id, fatherPet.id);
-        setIsOpen(true);
       }
       setIsActive(false); // Reset isActive state when time finishes
     }
@@ -90,11 +89,22 @@ export function BreedScreen() {
       if (response) {
         log.warn("A baby born ", response.data);
         setChildPet(response.data);
+        setIsOpen(true);
       } else {
-        log.warn("A baby is not born");
+        dispatch(
+          showAlert({
+            title: "Notice",
+            message: "This is not a good match",
+          }),
+        );
       }
     } catch (postError: any) {
-      log.error("Error making POST request:", postError);
+      dispatch(
+        showAlert({
+          title: "Notice",
+          message: "This is not a good match",
+        }),
+      );
     }
   };
 
