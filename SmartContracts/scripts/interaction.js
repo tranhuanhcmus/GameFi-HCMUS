@@ -692,34 +692,26 @@ async function interact(){
 	console.log('-----------------------------');
 
     //  ---------------------------SAFE MINT--------------------------------------
-    // let new_token_id=1118
-    // let new_token_uri=`https://ipfs.io/ipfs/QmcjDHADFoBHFfRemMqNyAFAUT9VKnQQBEYQqizm2Hx8YA/${new_token_id}.json`
+    let json_client_id='QmYXQ36GK4L5hiBdTBBKj96HMLr2zk1bNsagCLmW3Dnp6T'
+    let new_token_id=1111
+    let new_token_uri=`https://ipfs.io/ipfs/${json_client_id}/${new_token_id}.json`
 
     // const result = await petContract.methods.safeMint(myAddress, new_token_id, new_token_uri).send({ from: myAddress });
-	// let newNFT= await petContract.methods.tokenURI(new_token_id).call()
+	  // let newNFT= await petContract.methods.tokenURI(new_token_id).call()
     // console.log('New NFT is Mint success:',newNFT);
 
-    let exp_token_id=1111
+    let exp_token_id=1118
     
-    // // // --------------addExp---------------
-    // let addExp_result=await petContract.methods.addExp(exp_token_id,10000).send({ from: myAddress })
-    // // console.log(addExp_result);
+    // // --------------addExp---------------
+    let addExp_result=await petContract.methods.addExp(exp_token_id,10000).send({ from: myAddress })
+    console.log(addExp_result);
 
-    // // --------------getExp---------------
-    // let exp=await petContract.methods.getExp(exp_token_id).call()
-    // console.log('-----------------------------');
-	// console.log(`exp of ${exp_token_id}:`,Number(exp));
-	// console.log('-----------------------------');
-
-     // --------------setPrice---------------
-    // let setPrice_result=await petContract.methods.    setPrice(exp_token_id,30).send({ from: myAddress })
-    // console.log(setPrice_result);
-
-     // --------------getPrice---------------
-    let price=await petContract.methods.getPrice(exp_token_id).call()
+    // --------------getExp---------------
+    let exp=await petContract.methods.getExp(exp_token_id).call()
     console.log('-----------------------------');
-	console.log(`price of ${exp_token_id}:`,Number(price));
-	console.log('-----------------------------');
+    console.log(`exp of ${exp_token_id}:`,Number(exp));
+    console.log('-----------------------------');
+
 
 }
 
