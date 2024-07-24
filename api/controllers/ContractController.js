@@ -145,6 +145,10 @@ const ContractController = {
 
     getInfoFromTokenURI: async(url) => {
         try {
+
+            let client_gateway = process.env.CLIENT_IPFS_ID || null
+            let public_gateway = `ipfs.io`
+            url=url.replace(public_gateway, client_gateway)
             const response = await axios.get(url);
             return response.data;
         } catch (error) {
