@@ -202,8 +202,84 @@ const getRandomQuality = (quality) => {
         return 'super rare';
     }
 };
+const victoryReward = async (req, res, next) => {
+    try {
+        const  { ownerData } = req.params;
+        const itemCategory = ["food", "boost", "energy", "background"];
+        const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"]; // 0 is gem, 1 is gold
 
+        // Add item food
+        const randomQuality = getRandomQuality("super rare");
+        const randomCategory = "food";
+        console.log(randomQuality);
+        const items = await models.ItemApp.findAll({
+            where: {
+                category: randomCategory,
+                quality: randomQuality
+            }
+        });
 
+        if (!items.length) {
+            return res.sendResponse(null, `No items found for category ${randomCategory} with quality ${randomQuality}`, STATUS_CODES.NOT_FOUND);
+        }
+
+        const randomItem = items[Math.floor(Math.random() * items.length)];
+        console.log("randomItem: ", randomItem.dataValues);
+        const randomItemQuantity = Math.floor(Math.random() * 3) + 1;
+        const row = await models.ItemAppOwner.findOne({ where: { id: randomItem.dataValues.id, owner: ownerData } });
+
+        let result;
+        if (row) {
+            const updateData = {
+                id: randomItem.dataValues.id,
+                owner: ownerData,
+                quantity: row.dataValues.quantity + randomItemQuantity
+            };
+            console.log("updateData: \n", updateData);
+
+            await row.update(updateData);
+            await row.reload();
+            result = row;
+        } else {
+            const newRow = {
+                id: randomItem.dataValues.id,
+                owner: ownerData,
+                quantity: randomItemQuantity
+            };
+            console.log("newRow: \n", newRow);
+            result = await models.ItemAppOwner.create(newRow);
+        }
+
+        // Add cup
+        const randomCup = Math.floor(Math.random() * 6) + 5;
+        const upsertData = {
+            owner: ownerData,
+            cup: randomCup
+        };
+        const [response, created] = await models.Cup.upsert(upsertData);
+
+        // Add gold
+        const userCurrencyBalance = await models.ItemAppOwner.findOne({ where: { id: currencyId[1], owner: ownerData } });
+        const totalGold = Math.floor(Math.random() * 6) + 7;
+        const updateCurrencyData = {
+            id: currencyId[1],
+            owner: ownerData,
+            quantity: userCurrencyBalance.quantity + totalGold
+        };
+        await userCurrencyBalance.update(updateCurrencyData);
+        await userCurrencyBalance.reload();
+
+        const responseObj = {
+            currencyData: userCurrencyBalance,
+            itemData: result,
+            cupData: response
+        };
+        console.log(responseObj);
+        return res.sendResponse(responseObj, `Generated reward for user ${ownerData}`, STATUS_CODES.OK);
+    } catch (error) {
+        return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);
+    }
+};
 const purchaseItemPack = async(req, res, next) => {
     try {
         const rowData = req.body;
@@ -504,5 +580,6 @@ module.exports = {
     getByOwner,
     getOwnerCurrency,
     useItemForOwner,
-    purchaseItemPack
+    purchaseItemPack,
+    victoryReward
 }
