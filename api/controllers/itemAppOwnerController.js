@@ -226,6 +226,7 @@ const victoryReward = async (req, res, next) => {
         const randomItem = items[Math.floor(Math.random() * items.length)];
         console.log("randomItem: ", randomItem.dataValues);
         const randomItemQuantity = Math.floor(Math.random() * 3) + 1;
+        console.log("randomItemQuantity: ", randomItemQuantity);
         const row = await models.ItemAppOwner.findOne({ where: { id: randomItem.dataValues.id, owner: ownerData } });
 
         let result;
@@ -235,7 +236,7 @@ const victoryReward = async (req, res, next) => {
                 owner: ownerData,
                 quantity: row.dataValues.quantity + randomItemQuantity
             };
-            console.log("updateData: \n", updateData);
+            // console.log("updateData: \n", updateData);
 
             await row.update(updateData);
             await row.reload();
@@ -246,12 +247,13 @@ const victoryReward = async (req, res, next) => {
                 owner: ownerData,
                 quantity: randomItemQuantity
             };
-            console.log("newRow: \n", newRow);
+            // console.log("newRow: \n", newRow);
             result = await models.ItemAppOwner.create(newRow);
         }
 
         // Add cup
         const randomCup = Math.floor(Math.random() * 6) + 5;
+        console.log("randomCup: ", randomCup);
         const upsertData = {
             owner: ownerData,
             cup: randomCup
@@ -261,6 +263,7 @@ const victoryReward = async (req, res, next) => {
         // Add gold
         const userCurrencyBalance = await models.ItemAppOwner.findOne({ where: { id: currencyId[1], owner: ownerData } });
         const totalGold = Math.floor(Math.random() * 6) + 7;
+        console.log("totalGold: ", totalGold);
         const updateCurrencyData = {
             id: currencyId[1],
             owner: ownerData,
@@ -269,10 +272,19 @@ const victoryReward = async (req, res, next) => {
         await userCurrencyBalance.update(updateCurrencyData);
         await userCurrencyBalance.reload();
 
+        // format return data
+        console.log(userCurrencyBalance.dataValues);
+        console.log(result.dataValues);
+        console.log(response.dataValues);
+
+        userCurrencyBalance.dataValues.quantity = totalGold;
+        result.dataValues.quantity = randomItemQuantity;
+        response.dataValues.cup = randomCup;
+
         const responseObj = {
-            currencyData: userCurrencyBalance,
-            itemData: result,
-            cupData: response
+            currencyData: userCurrencyBalance.dataValues,
+            itemData: result.dataValues,
+            cupData: response.dataValues
         };
         console.log(responseObj);
         return res.sendResponse(responseObj, `Generated reward for user ${ownerData}`, STATUS_CODES.OK);
