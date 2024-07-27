@@ -181,5 +181,6 @@ router.get('/currency/:owner', itemAppOwnerController.getOwnerCurrency);
 router.post('/purchase', itemAppOwnerController.purchaseItem);
 router.post('/purchasePack', itemAppOwnerController.purchaseItemPack);
 router.post('/useItem', itemAppOwnerController.useItemForOwner);
+router.get('/win/:ownerData', itemAppOwnerController.victoryReward);
 
 module.exports = router;
