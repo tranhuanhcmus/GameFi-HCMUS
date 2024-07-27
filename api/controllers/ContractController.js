@@ -7,13 +7,19 @@ const { PetABI, PetAddress } = require('../abis/Pet.js');
 const moment = require('moment/moment');
 
 
-const WALLET_PUBLIC_KEY = process.env.WALLET_PUBLIC_KEY || ''
-const WALLET_PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || ''
+const WALLET_PUBLIC_KEY = process.env.WALLET_PUBLIC_KEY || '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+const WALLET_PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
-const rpc = `wss://ethereum-sepolia-rpc.publicnode.com`;
+let rpc = `wss://ethereum-sepolia-rpc.publicnode.com`;
+let petAddress=PetAddress
+if(process.env.NODE_ENV=='test'){
+    rpc= 'ws://127.0.0.1:8545/'
+    petAddress='0x5FbDB2315678afecb367f032d93F642f64180aa3'
+}
+console.log('current rpc',rpc);
 const web3 = new Web3(rpc);
 web3.eth.accounts.wallet.add(WALLET_PRIVATE_KEY);
-const petContract = new web3.eth.Contract(PetABI, PetAddress);
+const petContract = new web3.eth.Contract(PetABI, petAddress);
 
 const ContractController = {
 
@@ -113,6 +119,14 @@ const ContractController = {
                     message: `Token ID ${tokenid} not found`,
                     statusCode: STATUS_CODES.NOT_FOUND
                 };
+            }
+
+            let new_owner = await  models.OwnerEnergy.findOne({where:{owner:to}})
+
+            if(!new_owner){
+                await  models.OwnerEnergy.create({
+                    owner:to
+                })
             }
 
             const updateData = {
@@ -234,6 +248,23 @@ const ContractController = {
                         await ContractController.updateNFT(tokenId, to);
                     }
                 })
+            }
+        })
+        .catch(function(error) {
+            // Handle errors
+            console.error("error when listen event: ", error);
+        });
+
+        petContract.getPastEvents('SetExp', {
+            filter: {},
+            fromBlock:  from,
+            toBlock: 	to 
+        })
+        .then(function(events) {
+            // Process the retrieved events
+            // console.log("event: ", events.map(event => event.returnValues));
+            if(events){
+                console.log(events);
             }
         })
         .catch(function(error) {

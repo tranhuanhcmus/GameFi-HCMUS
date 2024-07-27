@@ -173,7 +173,7 @@ async function checkSpriteAndImage(filesInTheFolder_old,filesInTheFolder_old_ima
         // await writeFile(file, JSON.stringify(content))
         let isInclude=false
         for(let path of filesInTheFolder_old_image){
-            if(path.includes(tokenId) && path.includes(key))
+            if(path.includes(tokenId) && path.includes(key) &&path.includes('.png'))
                 {
                     isInclude=true
                 }
@@ -207,13 +207,13 @@ async function checkField(filesInTheFolder_old,field,condition=()=>{}){
 }
 
 async function run() {
-    const gateway = `${BEAR_GATEWAY_IPFS}/QmXa1ddMXeFZLBej4GP61RLUdCJBhsBkLTx54HNjrKFqAh`
+    const gateway = `${BEAR_GATEWAY_IPFS}/QmVZbphhJuVFpzEMY87ZHfKCXECcu1oWi56bKrEW7kbAK4`
 
     const folderPath_old = 'D:\\DOAN\\nftData_Reproduce_luc\\json'
     const filesInTheFolder_old = getFiles(folderPath_old)
 
-    // const folderPath_old_image = 'D:\\DOAN\\nftData_Reproduce_luc\\images';
-    // const filesInTheFolder_old_image = getFiles(folderPath_old_image)
+    const folderPath_old_image = 'D:\\DOAN\\nftData_Reproduce_luc\\images';
+    const filesInTheFolder_old_image = getFiles(folderPath_old_image)
 
     
     // // checking data

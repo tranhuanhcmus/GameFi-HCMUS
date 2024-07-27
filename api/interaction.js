@@ -5,7 +5,7 @@ async function run(){
     try {
         let to_address=WALLET_PUBLIC_KEY
 
-        let json_client_id='QmYXQ36GK4L5hiBdTBBKj96HMLr2zk1bNsagCLmW3Dnp6T'
+        let json_client_id='QmZqaCxqodLqypCP4bWce77mnYuDmpFmXYzSB1wqFg1orH'
         let new_token_id=1117
         let new_token_uri=`https://ipfs.io/ipfs/${json_client_id}/${new_token_id}.json`
 
@@ -15,5 +15,9 @@ async function run(){
     } catch (error) {
         console.log(error);
     }
+}
+
+async function updateDB(){
+    ContractController.updateDB()
 }
 run()
