@@ -285,7 +285,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDate(new Date());
-    }, 60000); // Update every minute
+    }, 60000); 
 
     return () => {
       clearInterval(timer);
@@ -440,7 +440,7 @@ const HomeScreen = () => {
             // fontFamily: "mt-2",
             fontWeight: "bold",
             fontFamily: "rexlia",
-            fontSize: 40,
+            fontSize: ConstantsResponsive.YR * 25,
             color: COLOR.BLACK,
           }}
         >

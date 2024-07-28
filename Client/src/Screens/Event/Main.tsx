@@ -7,11 +7,21 @@ const EventScreen = () => {
   return (
     <View
       style={{
+        position: "relative",
         height: ConstantsResponsive.MAX_HEIGHT,
         width: ConstantsResponsive.MAX_WIDTH,
-        backgroundColor: COLOR.PURPLE,
       }}
     >
+      <Image
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: ConstantsResponsive.MAX_HEIGHT,
+          position: "absolute",
+          zIndex: 100,
+        }}
+        resizeMode="stretch"
+        source={require("../../../assets/backGroundForInventory.png")}
+      />
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,

@@ -140,7 +140,7 @@ const Tab = createBottomTabNavigator();
 
 // Bottom tab navigator.
 const MainTab = () => (
-  <Tab.Navigator initialRouteName="Connect" screenOptions={Screenstyle}>
+  <Tab.Navigator initialRouteName="HomeScreen" screenOptions={Screenstyle}>
     {renderNavElement(navArr)}
   </Tab.Navigator>
 );

@@ -464,35 +464,42 @@ const Bar: React.FC<propsBar> = ({ hp, element, typleFlex }) => {
         {ELEMENT.FIRE === formatElement(element) && (
           <Image
             resizeMode="contain"
-            source={require("../../../assets/elements/Fire.png")}
+            source={require("../../../assets/elements/fire.png")}
             style={{ width: "30%", height: "100%" }}
           />
         )}
-        {ELEMENT.IRON === formatElement(element) && (
+        {ELEMENT.DARK === formatElement(element) && (
           <Image
             resizeMode="contain"
-            source={require("../../../assets/elements/Iron.png")}
+            source={require("../../../assets/elements/dark.png")}
             style={{ width: "30%", height: "100%" }}
           />
         )}
-        {ELEMENT.LEAF === formatElement(element) && (
+        {ELEMENT.FOREST === formatElement(element) && (
           <Image
             resizeMode="contain"
-            source={require("../../../assets/elements/Leaf.png")}
+            source={require("../../../assets/elements/forest.png")}
             style={{ width: "30%", height: "100%" }}
           />
         )}
-        {ELEMENT.STONE === formatElement(element) && (
+        {ELEMENT.FROZEN === formatElement(element) && (
           <Image
             resizeMode="contain"
-            source={require("../../../assets/elements/Stone.png")}
+            source={require("../../../assets/elements/frozen.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.THUNDER === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/thunder.png")}
             style={{ width: "30%", height: "100%" }}
           />
         )}
         {ELEMENT.WATER === formatElement(element) && (
           <Image
             resizeMode="contain"
-            source={require("../../../assets/elements/Water.png")}
+            source={require("../../../assets/elements/water.png")}
             style={{ width: "30%", height: "100%" }}
           />
         )}

@@ -54,10 +54,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
 
   const navigate = useCustomNavigation();
   return (
-    <TouchableOpacity
-      onPress={() => {
-        navigate.navigate("Shop");
-      }}
+    <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
         height: ConstantsResponsive.YR * 40,
@@ -132,7 +129,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           {energyUser?.energy}
         </CustomText>
       </View>
-    </TouchableOpacity>
+    </View>
 
     // <View className="relative flex h-fit w-[100%] flex-row items-center justify-center   ">
     //   <W3mAccountButton balance="show" style={{ backgroundColor: "white" }} />

@@ -18,16 +18,16 @@ type Props = {};
 const trend = true;
 const TrendMarketScreen = (props: Props) => {
   return (
-    <SafeAreaView className="flex-1 bg-color_app">
-      {/* <Image
+    <SafeAreaView className="flex-1 ">
+      <Image
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           height: ConstantsResponsive.MAX_HEIGHT,
           position: "absolute",
         }}
         resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
-      /> */}
+        source={require("../../../assets/backGroundForInventory.png")}
+      />
       <View style={styles.playArea} className="flex flex-col p-2 ">
         <View className="gap-1">
           <Text className="font-light text-white">TrendMarketScreen</Text>

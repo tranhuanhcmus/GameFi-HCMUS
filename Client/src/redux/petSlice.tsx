@@ -30,8 +30,7 @@ const initialState: PetState = {
   hp: 0,
   atk: 0,
   active: false,
-  assets:
-    "https://ipfs.io/ipfs/QmPcvN9XUUPFuu8HG5uC8jHEiWWk5xa8sLUfaqHnmyVHf5/sprites_1111.png",
+  assets: "",
   tokenId: "",
   level: 0,
   attributes: {

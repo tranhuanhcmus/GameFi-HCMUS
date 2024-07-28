@@ -28,12 +28,15 @@ import AwesomeButton from "react-native-really-awesome-button";
 
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import useFetch from "../../hooks/useFetch";
+import { updatePet } from "../../redux/petSlice";
+import { updatePetActive } from "../../redux/petActiveSlice";
 
 type Props = {};
 
 type NFTData = {
   id: string;
   petImg: string;
+  energy: number;
   element: string;
   level: number;
   atk: number;
@@ -65,6 +68,8 @@ const PetsModal = ({
   // const [isBreed, setIsBreed] = useState(route?.params)
   // const { isBreed } = props.route.params;
   const { address, isConnecting, isDisconnected } = useAccount();
+
+  const { assets } = useSelector((state: any) => state.pet);
   const [data, setData] = useState<NFTData[]>(petArray);
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
@@ -82,7 +87,7 @@ const PetsModal = ({
       const mappedData: any[] = apiData.map((nft: any) => {
         return {
           id: nft.data.tokenId,
-
+          energy: nft.data.energy,
           hp: nft.data.hp,
           atk: nft.data.atk,
           level: nft.exp,
@@ -100,6 +105,23 @@ const PetsModal = ({
           },
         };
       });
+
+      if (!assets) {
+        dispatch(
+          updatePet({
+            ...mappedData[0],
+            active: true,
+
+            attributes: { ...mappedData[0].attributes },
+          }),
+          updatePetActive({
+            ...mappedData[0],
+            active: true,
+
+            attributes: { ...mappedData[0].attributes },
+          }),
+        );
+      }
 
       setData([...mappedData]);
     }

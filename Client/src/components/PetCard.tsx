@@ -77,7 +77,6 @@ const PetCard: React.FC<PetCardProps> = ({
           if (isBreed) {
             onPress(item);
           } else {
-            console.log(item);
             dispatch(
               updatePet({
                 ...item,
@@ -93,6 +92,7 @@ const PetCard: React.FC<PetCardProps> = ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
+
         alignItems: "center",
         height: styles.borderContainer.height,
         width: styles.borderContainer.width,
@@ -112,10 +112,38 @@ const PetCard: React.FC<PetCardProps> = ({
             ConstantsResponsive.XR * 70 +
             ConstantsResponsive.YR * 30,
           borderRadius: ConstantsResponsive.XR * 20,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: ConstantsResponsive.YR * 5,
           padding: ConstantsResponsive.XR * 20,
           backgroundColor: COLOR.BROWN_BORDER,
         }}
       >
+        <View
+          style={{
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 200,
+            position: "absolute",
+            right: ConstantsResponsive.XR * 5,
+          }}
+        >
+          {Array(3)
+            .fill({})
+            .map((index) => (
+              <Image
+                key={index}
+                source={require("../../assets/navIcon/thunderBlue.png")}
+                resizeMode="contain"
+                style={{
+                  height: ConstantsResponsive.XR * 35,
+                  width: ConstantsResponsive.XR * 35,
+                }}
+              />
+            ))}
+        </View>
+
         <View
           style={{
             flexDirection: "row",
@@ -130,36 +158,43 @@ const PetCard: React.FC<PetCardProps> = ({
           {ELEMENT.FIRE === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Fire.png")}
+              source={require("../../assets/elements/fire.png")}
               style={{ width: "20%", height: "100%" }}
             />
           )}
-          {ELEMENT.IRON === formatElement(attributes.element) && (
+          {ELEMENT.DARK === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Iron.png")}
+              source={require("../../assets/elements/dark.png")}
               style={{ width: "20%", height: "100%" }}
             />
           )}
-          {ELEMENT.LEAF === formatElement(attributes.element) && (
+          {ELEMENT.FOREST === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Leaf.png")}
+              source={require("../../assets/elements/forest.png")}
               style={{ width: "20%", height: "100%" }}
             />
           )}
-          {ELEMENT.STONE === formatElement(attributes.element) && (
+          {ELEMENT.FROZEN === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Stone.png")}
+              source={require("../../assets/elements/frozen.png")}
+              style={{ width: "20%", height: "100%" }}
+            />
+          )}
+          {ELEMENT.THUNDER === formatElement(attributes.element) && (
+            <Image
+              resizeMode="contain"
+              source={require("../../assets/elements/thunder.png")}
               style={{ width: "20%", height: "100%" }}
             />
           )}
           {ELEMENT.WATER === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Water.png")}
-              style={{ width: 19, height: 19 }}
+              source={require("../../assets/elements/water.png")}
+              style={{ width: "20%", height: "100%" }}
             />
           )}
           <View
@@ -173,9 +208,10 @@ const PetCard: React.FC<PetCardProps> = ({
             <CustomText
               style={{
                 // fontFamily: "mt-2",
-
+                fontFamily: "rexlia",
+                color: "white",
                 fontWeight: "bold",
-                fontSize: ConstantsResponsive.YR * 28,
+                fontSize: ConstantsResponsive.YR * 25,
               }}
             >
               {Math.floor(getLevel(level))}
@@ -198,12 +234,16 @@ const PetCard: React.FC<PetCardProps> = ({
           />
           <CustomText
             style={{
-              // fontFamily: "mrt-mid",
               fontFamily: "rexlia",
               fontWeight: "bold",
               color: COLOR.WHITE,
+              width: "100%",
+              height: "20%",
+
+              textAlign: "center",
+
               fontSize: ConstantsResponsive.YR * 25,
-              marginTop: 5,
+              marginTop: ConstantsResponsive.YR * 7,
             }}
           >
             {name}

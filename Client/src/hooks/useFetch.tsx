@@ -12,7 +12,7 @@ type ServerError = any; // Replace 'any' with the actual error type you expect f
 
 const useFetch = <T,>(service: () => Promise<T>) => {
   const [apiData, setApiData] = useState<T | null>(null);
-  const { isLoading } = useSelector(selectLoading);
+  const isLoading = useSelector(selectLoading);
   const [serverError, setServerError] = useState<ServerError | null>(null);
   const dispatch = useDispatch();
 
@@ -21,7 +21,7 @@ const useFetch = <T,>(service: () => Promise<T>) => {
     try {
       const data = await service();
       setApiData(data);
-    } catch (error) {
+    } catch (error: any) {
       setServerError(error);
     } finally {
       dispatch(stopLoading());

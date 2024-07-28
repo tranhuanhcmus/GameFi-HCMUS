@@ -132,11 +132,33 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
   };
 
   return (
-    <Modal isVisible={isVisible} onBackdropPress={handleCancel}>
+    <Modal isVisible={isVisible}>
       <View
         className="relative flex w-full flex-col items-center bg-opacity-[0%] "
         style={styles.container}
       >
+        <View style={styles.btnDelete}>
+          <NormalButton
+            onPress={onClose}
+            style={{
+              height: "100%",
+              width: "100%",
+              alignItems: "center",
+
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={require("../../assets/delete.png")}
+              style={{
+                height: "100%",
+                width: "100%",
+                position: "absolute",
+              }}
+            />
+          </NormalButton>
+        </View>
+
         <View
           style={styles.imgContainer}
           className="relative items-center justify-center"
@@ -234,6 +256,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: ConstantsResponsive.YR * 30,
     left: ConstantsResponsive.XR * 30,
+  },
+  btnDelete: {
+    position: "absolute",
+    alignSelf: "flex-end",
+    top: 0,
+    zIndex: 1000,
+    right: ConstantsResponsive.XR * -20,
+    width: ConstantsResponsive.XR * 80,
+    height: ConstantsResponsive.XR * 80,
   },
   buttonBuy: {
     width: ConstantsResponsive.MAX_WIDTH * 0.4,

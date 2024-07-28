@@ -746,7 +746,7 @@ const styles = StyleSheet.create({
   },
 
   textSize: {
-    fontSize: ConstantsResponsive.YR * 22,
+    fontSize: ConstantsResponsive.YR * 17,
     fontFamily: "rexlia",
     fontWeight: "900",
     textAlign: "center",
