@@ -18,6 +18,7 @@ import UnknownCard from "../../../assets/UnknowCard.svg";
 import Card from "../../../assets/BearCard.svg";
 import PetsModal from "../Pet/Pets";
 import { getLevel } from "../../utils/pet";
+import { ELEMENT, formatElement } from "../../constants/types";
 const BearCard = (props: any) => {
   /** useState */
   const [isVisible, setIsVisible] = useState(false);
@@ -64,10 +65,6 @@ const BearCard = (props: any) => {
     setTimeout(startShakeAnimation, 2000);
   }, []);
 
-  // useEffect(() => {
-  //   logger.warn("props ahahah ", props);
-  //   if (props.disabled && props.name) scaleAnimation();
-  // }, [props]);
   return (
     <>
       <PetsModal
@@ -118,15 +115,41 @@ const BearCard = (props: any) => {
               alignItems: "center",
             }}
           >
-            <CustomText
-              style={{
-                color: "#972E28",
-                fontWeight: "bold",
-                fontSize: ConstantsResponsive.YR * 20,
-              }}
-            >
-              {props.element ? props.element : "FIRE"}
-            </CustomText>
+            {ELEMENT.FIRE === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/Fire.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
+            {ELEMENT.IRON === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/Iron.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
+            {ELEMENT.LEAF === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/Leaf.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
+            {ELEMENT.STONE === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/Stone.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
+            {ELEMENT.WATER === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/Water.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
           </View>
 
           <View

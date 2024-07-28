@@ -11,6 +11,7 @@ import { COLOR } from "../../utils/color";
 import UnknownCard from "../../../assets/UnknowCard.svg";
 import Card from "../../../assets/BearCard.svg";
 import { getLevel } from "../../utils/pet";
+import { ELEMENT, formatElement } from "../../constants/types";
 const BabyCard = (props: any) => {
   const [isVisble, setIsVisble] = useState(false);
   const [animatedValue] = useState(new Animated.Value(0));
@@ -84,7 +85,7 @@ const BabyCard = (props: any) => {
             fontSize: ConstantsResponsive.YR * 20,
           }}
         >
-          {props.name ? props.name : "FIRE BEAR"}
+          {props.name ? props.name : ""}
         </CustomText>
       </View>
 
@@ -96,15 +97,41 @@ const BabyCard = (props: any) => {
           alignItems: "center",
         }}
       >
-        <CustomText
-          style={{
-            color: "#972E28",
-            fontWeight: "bold",
-            fontSize: ConstantsResponsive.YR * 20,
-          }}
-        >
-          {props.rarity ? props.rarity : "EPIC"}
-        </CustomText>
+        {ELEMENT.FIRE === formatElement(props.element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Fire.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )}
+        {ELEMENT.IRON === formatElement(props.element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Iron.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )}
+        {ELEMENT.LEAF === formatElement(props.element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Leaf.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )}
+        {ELEMENT.STONE === formatElement(props.element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Stone.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )}
+        {ELEMENT.WATER === formatElement(props.element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/Water.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )}
       </View>
 
       <View
@@ -140,7 +167,7 @@ const BabyCard = (props: any) => {
           color: COLOR.WHITE,
         }}
       >
-        LEVEL {props.level ? Math.floor(getLevel(props.level)) : 1}
+        LEVEL {props.exp ? Math.floor(getLevel(props.level)) : 1}
       </CustomText>
     </Animated.View>
   ) : (

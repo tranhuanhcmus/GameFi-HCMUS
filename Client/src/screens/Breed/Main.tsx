@@ -30,10 +30,14 @@ import { BreedService } from "../../services/BreedService";
 import NormalButton from "../../components/Button/NormalButton";
 import AwesomeButton from "react-native-really-awesome-button";
 import BabyCard from "./BabyCard";
+import { useAccount } from "wagmi";
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
 const TIME_TO_BREED = 10;
 export function BreedScreen() {
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
   const [childPet, setChildPet] = useState<any>(null);
 
@@ -60,8 +64,8 @@ export function BreedScreen() {
 
   useEffect(() => {
     if (remainingTime === 0) {
-      if (fatherPet.id && fatherPet.id) {
-        breedFunction(fatherPet.id, fatherPet.id);
+      if (fatherPet.id && motherPet.id) {
+        breedFunction(fatherPet.id, motherPet.id);
       }
       setIsActive(false); // Reset isActive state when time finishes
     }
@@ -69,42 +73,32 @@ export function BreedScreen() {
 
   const navigate = useCustomNavigation();
 
-  useEffect(() => {
-    log.info("fatherPet", fatherPet);
-    log.info("motherPet", motherPet);
-  }, [fatherPet, motherPet]);
-
   /**
    *
    * @param father
    * @param mother
    */
 
+  useEffect(() => {
+    console.log({ fatherPet, motherPet });
+  }, [fatherPet, motherPet]);
   const breedFunction = async (father: any, mother: any) => {
-    log.error("father", father);
-    log.error("mother", mother);
-
     try {
-      const response = await BreedService.breed(father, mother);
+      // console.log("breedFunction", { father, mother, address });
+      const response = await BreedService.breed(father, mother, address);
       if (response) {
-        log.warn("A baby born ", response.data);
-        setChildPet(response.data);
+        log.warn("A baby born ", response);
+        setChildPet(response);
         setIsOpen(true);
-      } else {
-        dispatch(
-          showAlert({
-            title: "Notice",
-            message: "This is not a good match",
-          }),
-        );
       }
     } catch (postError: any) {
-      dispatch(
-        showAlert({
-          title: "Notice",
-          message: "This is not a good match",
-        }),
-      );
+      console.log("postError ", postError);
+      // dispatch(
+      //   showAlert({
+      //     title: "Notice",
+      //     message: postError,
+      //   }),
+      // );
     }
   };
 
@@ -215,6 +209,7 @@ export function BreedScreen() {
             name={fatherPet.name}
             rarity={fatherPet.rarityPet}
             tokenUri={fatherPet.tokenUri}
+            attributes={fatherPet.attributes}
           />
           <BearCard
             element={motherPet.element}
@@ -222,7 +217,8 @@ export function BreedScreen() {
             image={motherPet.petImg}
             name={motherPet.name}
             rarity={motherPet.rarityPet}
-            tokenUri={fatherPet.tokenUri}
+            tokenUri={motherPet.tokenUri}
+            attributes={motherPet.attributes}
           />
         </View>
         <View
@@ -246,13 +242,10 @@ export function BreedScreen() {
         >
           <BabyCard
             disabled={true}
-            hp={childPet?.hp}
-            atk={childPet?.atk}
-            element={childPet?.element}
-            description={childPet?.description}
-            image={childPet?.image}
-            name={childPet?.name}
-            assets={childPet?.assets}
+            element={childPet?.data?.attributes?.element}
+            image={childPet?.data?.image}
+            name={childPet?.data?.name}
+            level={childPet?.exp}
             isOpen={isOpen}
           />
         </View>

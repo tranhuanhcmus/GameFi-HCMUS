@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
   };
 
   const { apiData: energyUser, serverError } = useFetch(() =>
-    UsersService.getOwnerEnergy("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
+    UsersService.getOwnerEnergy(address!),
   );
 
   useEffect(() => {

@@ -33,6 +33,7 @@ import { Ionicons } from "@expo/vector-icons";
 import NormalButton from "../Button/NormalButton";
 import { UsersService } from "../../services/UsersService";
 import { GAMETYPE } from "../../constants/types";
+import { useAccount } from "wagmi";
 
 const LoadingModal = ({
   isVisible,
@@ -50,6 +51,9 @@ const LoadingModal = ({
 
   const [second, setSecond] = useState(30);
   const dispatch = useDispatch();
+
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
   // THIS HOOK COUNT DOWN BEFORE GAME
 
@@ -77,6 +81,8 @@ const LoadingModal = ({
         "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
         body,
       );
+      // const res = await UsersService.playGame(address!, body);
+      // console.log(res);
     } catch (err) {
       console.log(err);
     }
