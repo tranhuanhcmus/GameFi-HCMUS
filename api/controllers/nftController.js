@@ -37,6 +37,7 @@ const getAll = async(req, res, next) => {
 
         return res.sendResponse(result, "Get All Success", STATUS_CODES.OK)
     } catch (error) {
+        console.log(error);
         return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR);
     }
 }

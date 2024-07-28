@@ -1,6 +1,7 @@
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
 const { Op } = require('sequelize');
+const { ContractController } = require("./ContractController");
 
 const getAll = async(req, res, next) => {
     try {
