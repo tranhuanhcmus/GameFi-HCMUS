@@ -8,6 +8,6 @@ const { ContractController } = require('../controllers/ContractController');
 router.get('/energy/:owner',userController.getEnergyOwner)
 router.get('/energyNFT/:tokenId',userController.getEnergyNFT)
 router.post('/energy/:owner',userController.updateEnergyOwner)
-router.get('/contract/updateDB',ContractController.updateDB)
+router.post('/contract/updateDB',ContractController.updateDB)
 
 module.exports = router;
