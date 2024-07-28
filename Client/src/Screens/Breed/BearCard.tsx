@@ -118,28 +118,28 @@ const BearCard = (props: any) => {
             {ELEMENT.FIRE === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Fire.png")}
+                source={require("../../../assets/elements/fire.png")}
                 style={{ width: 20, height: 20 }}
               />
             )}
-            {ELEMENT.IRON === formatElement(props.attributes.element) && (
+            {ELEMENT.DARK === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Iron.png")}
+                source={require("../../../assets/elements/dark.png")}
                 style={{ width: 20, height: 20 }}
               />
             )}
-            {ELEMENT.LEAF === formatElement(props.attributes.element) && (
+            {ELEMENT.FOREST === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Leaf.png")}
+                source={require("../../../assets/elements/forest.png")}
                 style={{ width: 20, height: 20 }}
               />
             )}
-            {ELEMENT.STONE === formatElement(props.attributes.element) && (
+            {ELEMENT.FROZEN === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Stone.png")}
+                source={require("../../../assets/elements/frozen.png")}
                 style={{ width: 20, height: 20 }}
               />
             )}
