@@ -277,13 +277,14 @@ const victoryReward = async (req, res, next) => {
         console.log(result.dataValues);
         console.log(response.dataValues);
 
+        const resultDetail = await models.ItemApp.findOne({ where: { id: result.dataValues.id } });
         userCurrencyBalance.dataValues.quantity = totalGold;
-        result.dataValues.quantity = randomItemQuantity;
+        resultDetail.dataValues.quantity = randomItemQuantity;
         response.dataValues.cup = randomCup;
 
         const responseObj = {
             currencyData: userCurrencyBalance.dataValues,
-            itemData: result.dataValues,
+            itemData: resultDetail.dataValues,
             cupData: response.dataValues
         };
         console.log(responseObj);
