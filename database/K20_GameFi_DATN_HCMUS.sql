@@ -175,14 +175,15 @@ CREATE TABLE "ItemPools" (
 
 CREATE TABLE "NFTs" (
 	"tokenId" int4 NOT NULL,
-	"tokenUri" text NULL,
+	"tokenUri" text NOT NULL,
 	"owner" text NULL,
 	"exp" int4 NULL DEFAULT 0,
 	"createdAt" timestamptz NOT NULL,
 	"updatedAt" timestamptz NOT NULL,
 	"lastTimePlayed" timestamptz NULL,
 	energy int4 NULL DEFAULT 3,
-	CONSTRAINT "NFTs_pkey" PRIMARY KEY ("tokenId")
+	CONSTRAINT "NFTs_pkey" PRIMARY KEY ("tokenId"),
+	CONSTRAINT "NFTs_tokenUri_unique" UNIQUE ("tokenUri");
 );
 
 -- "TokenUris" definition
@@ -192,18 +193,19 @@ CREATE TABLE "NFTs" (
 
 CREATE TABLE "TokenUris" (
 	id serial NOT NULL,
-	"tokenUri" text NULL,
+	"tokenUri" text NOT NULL,
 	"data" jsonb NULL,
 	"createdAt" timestamptz NOT NULL,
 	"updatedAt" timestamptz NOT NULL,
-	CONSTRAINT "TokenUris_pkey" PRIMARY KEY (id)
+	CONSTRAINT "TokenUris_pkey" PRIMARY KEY (id),
+	CONSTRAINT "TokenUris_tokenUri_unique" UNIQUE ("tokenUri")
 );
 
--- NFTs and TokenUris relationship
-ALTER TABLE "NFTs"
-ADD CONSTRAINT fk_nfts_tokenuri
+-- TokenUris and NFTs relationship
+ALTER TABLE "TokenUris"
+ADD CONSTRAINT fk_tokenuris_nfts
 FOREIGN KEY ("tokenUri")
-REFERENCES "TokenUris"("tokenUri");
+REFERENCES "NFTs"("tokenUri");
 
 -- ItemAppOwners and ItemApps relationship
 ALTER TABLE "ItemAppOwners"
