@@ -2,6 +2,7 @@ const { BearFactory, Bear } = require('../bears');
 const { STATUS_CODES, BEAR_GATEWAY_IPFS } = require('../constants');
 const models = require('../database/models');
 const { ContractController, WALLET_PUBLIC_KEY } = require('./ContractController');
+require('dotenv').config()
 
 const breedBear = async(req, res) => {
     try {
@@ -26,6 +27,12 @@ const breedBear = async(req, res) => {
         const result = await models.NFT.findOne({ where: { tokenId: child } })
 
         let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: result.tokenUri } })
+        let client_gateway = process.env.CLIENT_IPFS_ID || null
+        let public_gateway = `ipfs.io`
+        if (client_gateway) {
+            tokenUri.data.image = tokenUri.data.image.replace(public_gateway, client_gateway)
+            tokenUri.data.assets = tokenUri.data.assets.replace(public_gateway, client_gateway)
+        }
         result.dataValues.data = tokenUri.data
 
         // transfer to Owner
