@@ -7,7 +7,7 @@ import { COLOR } from "../../utils/color";
 import { Audio } from "expo-av";
 import ConstantsResponsive from "../../constants/Constanst";
 import { initSocket } from "../../redux/socketSlice";
-import GameHeader from "../../components/Game/Header";
+import GameHeader from "../HangManGame/Header";
 import UpperLayer from "../../components/Game/UpperLayer";
 import GameBoard from "../../components/Game/Board";
 

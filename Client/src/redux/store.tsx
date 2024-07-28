@@ -11,6 +11,7 @@ import hangManSlice from "./hangManSlice";
 import settingGameSlice from "./settingGameSlice";
 import breedSlice from "./breedSlice";
 import petSlice from "./petSlice";
+import petActiveSlice from "./petActiveSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     alert: alertSlice,
     loading: loadingSlice,
     board: boardSlice,
+    petActive: petActiveSlice,
     upperLayer: upperLayerSlice,
     hangMan: hangManSlice,
     player: playerSlice,

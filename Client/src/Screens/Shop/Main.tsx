@@ -49,7 +49,7 @@ const ShopScreen = (props: Props) => {
   const isFocused = useIsFocused();
   const [buySuccess, setBuySuccess] = useState<boolean>(false);
   const { apiData, serverError } = useFetch(() => ItemAppService.getAllItems());
-  const [itemImg, setItemImg] = useState<string>("");
+  const [itemImg, setItemImg] = useState<any>("");
   useEffect(() => {
     if (apiData) {
       setItems({ ...apiData });
@@ -72,11 +72,17 @@ const ShopScreen = (props: Props) => {
     }
   };
 
-  const onBuy = (buy: boolean, itemImg: string) => {
-    console.log(buy);
+  const onBuy = (buy: boolean, itemImg: any, arrayItem?: any) => {
     setTimeout(() => {
-      setBuySuccess(buy);
-      setItemImg(itemImg);
+      if (typeof itemImg === "string" && !arrayItem) {
+        setBuySuccess(buy);
+        setItemImg(itemImg);
+      } else if (Array.isArray(arrayItem)) {
+        setBuySuccess(buy);
+        setItemImg({ pack: itemImg, data: [...arrayItem] });
+      } else {
+        console.error("Invalid itemImg or arrayItem");
+      }
     }, 500);
   };
 
@@ -98,17 +104,19 @@ const ShopScreen = (props: Props) => {
         resizeMode="stretch"
         source={require("../../../assets/backGroundShop.png")}
       />
+      {buySuccess && (
+        <AlertBuyItemsSuccess
+          name={item?.name || "error"}
+          category={item?.category || "default"}
+          quantity={item?.quantity || 0}
+          itemImg={itemImg}
+          isVisible={buySuccess}
+          onClose={() => {
+            setBuySuccess(false);
+          }}
+        />
+      )}
 
-      <AlertBuyItemsSuccess
-        name={item?.name || "error"}
-        category={item?.category || "default"}
-        quantity={item?.quantity || 0}
-        itemImg={itemImg}
-        isVisible={buySuccess}
-        onClose={() => {
-          setBuySuccess(false);
-        }}
-      />
       <AlertBuyComponent
         isVisible={clickItem}
         onClose={onSetClose}
@@ -116,6 +124,7 @@ const ShopScreen = (props: Props) => {
         gemcost={item?.gemcost}
         name={item?.name}
         goldcost={item?.goldcost}
+        category={item?.category}
         itemImg={item?.image}
         id={item?.id}
         quantity={item?.quantity}
@@ -138,7 +147,7 @@ const ShopScreen = (props: Props) => {
           data={Object.values(items)}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ gap: 20 }}
-          keyExtractor={(item) => item}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <View className="mb-2 flex items-center justify-center  rounded-md  px-2">
               <View className="relative " style={styles.img}>
@@ -165,6 +174,7 @@ const ShopScreen = (props: Props) => {
                         fontSize: 20,
                         color: COLOR.WHITE,
                         fontWeight: "bold",
+                        textAlign: "center",
                       },
                     ]}
                   >

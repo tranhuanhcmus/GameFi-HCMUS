@@ -28,12 +28,15 @@ import AwesomeButton from "react-native-really-awesome-button";
 
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import useFetch from "../../hooks/useFetch";
+import { updatePet } from "../../redux/petSlice";
+import { updatePetActive } from "../../redux/petActiveSlice";
 
 type Props = {};
 
 type NFTData = {
   id: string;
   petImg: string;
+  energy: number;
   element: string;
   level: number;
   atk: number;
@@ -42,7 +45,7 @@ type NFTData = {
   rarityPet: string;
   tokenUri: string;
   attributes: {
-    element: string;
+    element: number;
     eye: string;
     fur: string;
     item: string;
@@ -65,12 +68,14 @@ const PetsModal = ({
   // const [isBreed, setIsBreed] = useState(route?.params)
   // const { isBreed } = props.route.params;
   const { address, isConnecting, isDisconnected } = useAccount();
+
+  const { assets } = useSelector((state: any) => state.pet);
   const [data, setData] = useState<NFTData[]>(petArray);
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
   const { apiData, serverError } = useFetch(() =>
-    UserService.getNFTsByOwner("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
+    UserService.getNFTsByOwner(address),
   );
 
   useEffect(() => {
@@ -82,11 +87,12 @@ const PetsModal = ({
       const mappedData: any[] = apiData.map((nft: any) => {
         return {
           id: nft.data.tokenId,
-          element: ELEMENT.FIRE,
+          energy: nft.energy,
           hp: nft.data.hp,
           atk: nft.data.atk,
-          level: getLevel(nft.exp),
+          level: nft.exp,
           petImg: nft.data.image,
+          tokenId: nft.data.tokenId,
           assets: nft.data.assets,
           name: nft.data.name,
           rarityPet: "special",
@@ -99,13 +105,29 @@ const PetsModal = ({
           },
         };
       });
-      console.log(apiData);
+
+      if (!assets && mappedData[0]) {
+        dispatch(
+          updatePet({
+            ...mappedData[0],
+            active: true,
+
+            attributes: { ...mappedData[0].attributes },
+          }),
+          updatePetActive({
+            ...mappedData[0],
+            active: true,
+
+            attributes: { ...mappedData[0].attributes },
+          }),
+        );
+      }
+
       setData([...mappedData]);
     }
   };
 
   const onPress = (item: any) => {
-    console.log("item ", item);
     try {
       if (!fatherPet.id) {
         setIsVisible(false);
@@ -168,7 +190,6 @@ const PetsModal = ({
               <PetCard
                 item={{ ...item }}
                 petImg={item.petImg}
-                element={item.element}
                 level={item.level}
                 name={item.name}
                 rarityPet={item.rarityPet}

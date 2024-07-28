@@ -6,7 +6,7 @@ import { StatusBar } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
 import WordBox from "./WordBox";
-import { WordsArray } from "./data";
+
 import InputBox from "./InputBox";
 import Keyboard from "./Keyboard";
 import ConstantsResponsive from "../../constants/Constanst";
@@ -23,6 +23,7 @@ import {
   setComponentHp,
   setHp,
 } from "../../redux/playerSlice";
+
 import { updateTurn } from "../../redux/hangManSlice";
 import { swapTurn } from "../../redux/hangManSlice";
 import { DataSocketTransfer } from "../../../socket";
@@ -34,18 +35,34 @@ import { setVisable } from "../../redux/settingGameSlice";
 import useAudioPlayer from "../../hooks/useMusicPlayer";
 import { playSound } from "../../function/SoundGame";
 import { NativeModules } from "react-native";
+import useFetch from "../../hooks/useFetch";
+import { GameService } from "../../services/GameService";
+import { ContraryElement } from "../../function/ContraryElement";
 
 // ...
 
 const Index = () => {
-  const { hp, componentHp, gameRoom } = useSelector(
-    (state: any) => state.player,
-  );
+  const { hp, componentHp, gameRoom, atkOpponent, elementOpponent } =
+    useSelector((state: any) => state.player);
   const { turn, damage } = useSelector((state: any) => state.hangMan);
 
   const { isVisable, sound, music } = useSelector(
     (state: any) => state.settingGame,
   );
+
+  const {
+    name,
+    type,
+    image,
+    assets,
+    title,
+    tokenUri,
+    attributes,
+    level,
+    hp: hpPet,
+    atk,
+  } = useSelector((state: any) => state.petActive);
+
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
   const socket = SocketIOClient.getInstance();
@@ -56,8 +73,23 @@ const Index = () => {
   const [timing, setTiming] = useState(30);
   const [gameOver, setGameOver] = useState(false);
   const isFocused = useIsFocused();
+  const { apiData, serverError, isLoading } = useFetch(() =>
+    GameService.questionGame(),
+  );
 
-  const correctWord = WordsArray[currentIndex].answer;
+  const [correctWord, setCorrectWords] = useState("");
+
+  const [damagePet, setDamagePet] = useState(atk);
+
+  useEffect(() => {
+    setDamagePet(atk * ContraryElement(attributes.element, elementOpponent));
+  }, [atk]);
+
+  useEffect(() => {
+    if (apiData) {
+      setCorrectWords(apiData[currentIndex].answer);
+    }
+  }, [currentIndex, apiData]);
 
   const handleDamage = useCallback((data: DataSocketTransfer) => {
     if (data?.event == "Defeat") {
@@ -65,17 +97,38 @@ const Index = () => {
     } else if (data?.event == "Victory") {
       setStatus("Victory");
     } else {
-      console.log(data.damage);
+      setCorrectLetters("");
+      setWrongLetters("");
+      setStatus("");
       dispatch(updateHp(data.damage));
       setCurrentIndex(data.table);
     }
   }, []);
 
-  useEffect(() => {
-    if (status == "Defeat" || status == "Victory") {
-      setGameOver(true);
+  const attackComponent = (damage: number, indexQuestion: number) => {
+    if (componentHp - damage <= 0) {
+      setStatus("Victory");
+      socket.emitEventGame({
+        gameRoom: gameRoom,
+        damage: damage,
+        table: indexQuestion,
+        event: "Defeat",
+      });
+    } else {
+      socket.emitEventGame({
+        gameRoom: gameRoom,
+        damage: damage,
+        table: indexQuestion,
+      });
     }
-  }, [status]);
+    dispatch(updateComponentHp(damage));
+  };
+
+  useEffect(() => {
+    if (componentHp === 0) {
+      setStatus("Victory");
+    }
+  }, [componentHp]);
 
   const storeCorrectLetters = (keyInput: string) => {
     const ans = correctWord.toUpperCase();
@@ -99,31 +152,6 @@ const Index = () => {
     }
   };
 
-  const attackComponent = (damage: number, indexQuestion: number) => {
-    if (componentHp - damage <= 0) {
-      setStatus("Victory");
-      socket.emitEventGame({
-        gameRoom: gameRoom,
-        damage: damage,
-        table: indexQuestion,
-        event: "Defeat",
-      });
-    } else {
-      socket.emitEventGame({
-        gameRoom: gameRoom,
-        damage: damage,
-        table: indexQuestion,
-      });
-    }
-    dispatch(updateComponentHp(damage));
-  };
-
-  useEffect(() => {
-    if (componentHp == 0) {
-      setStatus("Victory");
-    }
-  }, [componentHp]);
-
   const updateStatus = (cl: string) => {
     let status = "win";
     const correctWordArray = Array.from(correctWord.toUpperCase());
@@ -132,15 +160,11 @@ const Index = () => {
         status = "";
       }
     });
-    // if (status === "win" && currentIndex === WordsArray.length - 1) {
-    //   setStatus("completed");
-    //   return;
-    // }
 
     if (status === "win") {
       // go to next word
       //dispatch(updateHp(10));
-      attackComponent(10, currentIndex + 1);
+      attackComponent(damagePet, currentIndex + 1);
       setCurrentIndex((i) => i + 1);
       setCorrectLetters("");
       setWrongLetters("");
@@ -149,12 +173,20 @@ const Index = () => {
     setStatus(status);
   };
 
+  const handleSurrender = () => {
+    setStatus("Defeat");
+
+    socket.emitEventGame({
+      gameRoom: gameRoom,
+      damage: null,
+      event: "Victory",
+    });
+  };
+
   const handlePopupButton = () => {
     // clear all stored data
     // replay
     setStatus("");
-    dispatch(setComponentHp(40));
-    dispatch(setHp(40));
     dispatch(updateTurn(false));
     socket.emitSuccess(gameRoom);
     socket.removeListenFristTurn();
@@ -176,9 +208,29 @@ const Index = () => {
   useAudioPlayer(music, "soundTrackGame");
 
   useEffect(() => {
+    if (status == "Defeat" || status == "Victory") {
+      setGameOver(true);
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (componentHp <= 0) {
+      setStatus("Victory");
+    }
+  }, [componentHp]);
+
+  useEffect(() => {
     socket.onListenFirstTurn((data) => {
       console.log(data);
       dispatch(updateTurn(data));
+    });
+
+    socket.onListenDisConnect((data) => {
+      handleCloseModal();
+      setTimeout(() => {
+        console.log(data);
+        setStatus("Victory");
+      }, 500);
     });
 
     socket.onListenTakeDamage(handleDamage);
@@ -186,11 +238,14 @@ const Index = () => {
     return () => {
       // Remove the event listeners:
       socket.removeListenFristTurn();
+      socket.removeListenOppentDisconnect();
       socket.removeListenTakeDamage();
     };
   }, []);
 
-  return (
+  return isLoading && apiData === null ? (
+    <></>
+  ) : (
     <View style={styles.container}>
       <Image
         resizeMode="stretch"
@@ -216,7 +271,7 @@ const Index = () => {
               source={require("../../../assets/backGroundForTableQuestion.png")}
               style={{ position: "absolute", width: "100%", height: "100%" }}
             />
-            <WordBox wordData={WordsArray[currentIndex]} />
+            <WordBox wordData={apiData !== null && apiData[currentIndex]} />
           </View>
 
           <InputBox correctLetters={correctLetters} answer={correctWord} />
@@ -231,7 +286,11 @@ const Index = () => {
           />
           <StatusPopup status={status} onPress={handlePopupButton} />
         </View>
-        <GameSettings isVisible={isVisable} onClose={handleCloseModal} />
+        <GameSettings
+          isVisible={isVisable}
+          onClose={handleCloseModal}
+          onSurrender={handleSurrender}
+        />
       </SafeAreaView>
     </View>
   );
@@ -267,6 +326,6 @@ const styles = StyleSheet.create({
   WordBox: {
     display: "flex",
     width: "100%",
-    height: ConstantsResponsive.MAX_HEIGHT * 0.1,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.12,
   },
 });

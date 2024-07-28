@@ -23,7 +23,7 @@ const matchPairs = new Map(); // Map to store
 
 function findMatch(socket, data) {
   let foundMatch = false;
-
+  console.log(data.gameName);
   // Iterate through the map to find an available match
   socketPairs.forEach((value, key) => {
     // If a match is found and it's not the same socket
@@ -31,11 +31,11 @@ function findMatch(socket, data) {
       !foundMatch &&
       value.available &&
       key !== socket.id &&
-      value.gameName == data
+      value.gameName == data.gameName
     ) {
       const gameRoom = `game_${socket.id}_${key}`;
       // Join the sockets to the same game room
-      console.log(gameRoom);
+
       socket.join(gameRoom);
       value.socket.join(gameRoom);
 
@@ -43,12 +43,20 @@ function findMatch(socket, data) {
       socketPairs.set(socket.id, {
         socket: socket,
         available: false,
-        gameName: data,
+        gameName: data.gameName,
+        assetsOpponent: data.assets,
+        hpOpponent: data.hp,
+        atkOpponent: data.atk,
+        elementOpponent: data.element,
       });
       socketPairs.set(key, {
         socket: value.socket,
         available: false,
         gameName: value.gameName,
+        assetsOpponent: value.assetsOpponent,
+        hpOpponent: value.hpOpponent,
+        atkOpponent: value.atkOpponent,
+        elementOpponent: value.elementOpponent,
       });
       matchPairs.set(gameRoom, {
         [socket.id]: socket.id,
@@ -57,7 +65,22 @@ function findMatch(socket, data) {
 
       console.log("matchPairs.gameRoom", matchPairs.get(gameRoom));
       // Notify both clients that the game is starting
-      io.to(gameRoom).emit(SOCKET.KEY_ROOM, `${gameRoom}`);
+      console.log(data);
+      io.to(socket.id).emit(SOCKET.KEY_ROOM, {
+        gameRoom: gameRoom,
+        hpOpponent: value.hpOpponent,
+        assetsOpponent: value.assetsOpponent,
+        atkOpponent: value.atkOpponent,
+        elementOpponent: value.elementOpponent,
+      });
+
+      io.to(key).emit(SOCKET.KEY_ROOM, {
+        gameRoom: gameRoom,
+        hpOpponent: data.hp,
+        assetsOpponent: data.assets,
+        atkOpponent: data.atk,
+        elementOpponent: data.element,
+      });
 
       // randomly first turn for any player
       const values = Object.values(matchPairs.get(gameRoom));
@@ -74,7 +97,11 @@ function findMatch(socket, data) {
     socketPairs.set(socket.id, {
       socket: socket,
       available: true,
-      gameName: data,
+      gameName: data.gameName,
+      assetsOpponent: data.assets,
+      hpOpponent: data.hp,
+      atkOpponent: data.atk,
+      elementOpponent: data.element,
     });
     console.log("waiting_for_opponent", "Waiting for an opponent...");
     socket.emit("waiting_for_opponent", "Waiting for an opponent...");
@@ -109,22 +136,15 @@ function handleDisconnection(disconnectedSocket) {
   const disconnectedSocketId = disconnectedSocket.id;
 
   // Check if the disconnected socket was in a game and notify the other player
-  socketPairs.forEach((value, key) => {
-    if (value.available === false) {
-      // Two users are in a game, and one disconnects
-      const gameRoom = value.gameRoom;
-      disconnectedSocket
-        .to(gameRoom)
-        .emit("opponent_disconnected", "Your opponent has disconnected.");
 
-      // Setting the remaining user as available again
-      if (socketPairs.has(key)) {
-        socketPairs.set(key, {
-          socket: value.socket,
-          available: true,
-          gameRoom: null,
-        });
-      }
+  matchPairs.forEach((value, key) => {
+    if (value[disconnectedSocketId] == disconnectedSocketId) {
+      // Two users are in a game, and one disconnects
+
+      io.to(key).emit(
+        "opponent_disconnected",
+        "Your opponent has disconnected."
+      );
     }
   });
 

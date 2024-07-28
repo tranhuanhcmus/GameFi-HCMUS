@@ -7,11 +7,8 @@ import {
 
 import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Bear from "../../assets/iconBear.svg";
-// import SVGEvent from "../../assets/SVGEvent.svg";
-// import SVGPlay from "../../assets/SVGPlay.svg";
-// import SVGStore from "../../assets/SVGStore.svg"; // Import the SVG file
-// import SVGTrophy from "../../assets/SVGTrophy.svg";
+import Bear from "../../assets/navIcon/iconBear.svg";
+
 import ConnectScreen from "../Screens/Connect/Main";
 import PetScreen from "../Screens/Pet/Main";
 import GameScreen from "../Screens/Game/Main";
@@ -22,7 +19,6 @@ import Header from "../components/Header";
 import LoadingComponent from "../components/LoadingComponent";
 import HeaderRight from "../components/HeaderRight";
 import HangManGame from "../Screens/HangManGame/index";
-import Breed from "../../assets/breed.svg";
 
 import { BreedScreen } from "../Screens/Breed/Main";
 import HomeScreen from "../Screens/Home/Main";
@@ -30,15 +26,16 @@ import TrendMarketScreen from "../Screens/TrendMarket/Main";
 import HeaderLeft from "../components/HeaderLeft";
 import LeagueScreen from "../Screens/League/Main";
 import EventScreen from "../Screens/Event/Main";
-import Thunder from "../../assets/thunder.svg";
-import Star from "../../assets/star.svg";
-import Trophy from "../../assets/trophy.svg";
-import Coin from "../../assets/coin.svg";
+import Thunder from "../../assets/navIcon/thunder.svg";
+import Star from "../../assets/navIcon/star.svg";
+import Trophy from "../../assets/navIcon/trophy.svg";
+import Coin from "../../assets/navIcon/coin.svg";
 import ProfileScreen from "../Screens/Profile/Main";
 import Match3Game from "../Screens/Match3Game/Main";
 import { flare } from "viem/chains";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import ConstantsResponsive from "../constants/Constanst";
+import Settings from "../components/Setting";
 
 const navArr: NavItem[] = [
   {
@@ -144,7 +141,7 @@ const Tab = createBottomTabNavigator();
 
 // Bottom tab navigator.
 const MainTab = () => (
-  <Tab.Navigator initialRouteName="Connect" screenOptions={Screenstyle}>
+  <Tab.Navigator initialRouteName="HomeScreen" screenOptions={Screenstyle}>
     {renderNavElement(navArr)}
   </Tab.Navigator>
 );
@@ -245,6 +242,7 @@ const Route = () => (
       />
     </Stack.Navigator>
     <AlertComponent />
+    <Settings></Settings>
     <LoadingComponent />
   </NavigationContainer>
 );
