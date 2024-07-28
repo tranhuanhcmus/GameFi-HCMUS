@@ -273,6 +273,9 @@ const ContractController = {
         });
     },
     catchEventNFT: () => {
+        console.log('pet Address',petAddress);
+        console.log(WALLET_PRIVATE_KEY);
+        console.log('Key',);
         var evMitter = petContract.events.Transfer({
             filter: {},
             fromBlock: "latest"
