@@ -9,13 +9,14 @@ import {
 // import SwappableGrid from '../components/SwappableGrid';
 import { useIsFocused } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import GameHeader from "../../components/Game/Header";
+
 import ConstantsResponsive from "../../constants/Constanst";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import logger from "../../logger";
 import TimingLine from "../HangManGame/TimingLine";
 import SwappableGrid from "./components/SwappableGrid";
+import GameHeader from "../HangManGame/Header";
 
 // import Images from '../lib/Images';
 

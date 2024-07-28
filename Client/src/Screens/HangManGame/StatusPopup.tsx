@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Animatable from "react-native-animatable";
 import {
   StyleSheet,
@@ -14,7 +14,11 @@ import Defeat from "../../../assets/defeat.svg";
 import Victory from "../../../assets/victory.svg";
 import ConstantsResponsive from "../../constants/Constanst";
 import profile from "../../../assets/avatar.png";
-import Cup from "../../../assets/Trophy.png";
+import Cup from "../../../assets/navIcon/trophy.svg";
+import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
+import AlertBuyItemsSuccess from "../../components/AlertBuyItemsSuccess";
+import { CATEGORY } from "../../constants/types";
+import NormalButton from "../../components/Button/NormalButton";
 
 interface props {
   status: string;
@@ -23,8 +27,52 @@ interface props {
 
 const StatusPopup: React.FC<props> = ({ status, onPress }) => {
   const message = status === "Victory" ? "Victory" : "Defeat";
-  const buttonText = status === "Victory" ? "ok" : "ok";
+  const buttonText = status === "Victory" ? "Claim" : "ok";
   const resultColor = status === "Victory" ? "victoryColor" : "defeatColor";
+  const [reward, setReward] = useState<any>();
+  const [getItems, setGetItems] = useState<boolean>(false);
+  const fetchData = async () => {
+    try {
+      const res = await ItemAppOwnerService.getReward(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
+
+      console.log("API Response:", res); // Log the response to see its structure
+
+      if (res && typeof res === "object") {
+        const mappedData = {
+          cup: res.cupData.cup,
+          gold: res.currencyData.quantity,
+          itemData: {
+            data: [
+              {
+                quantity: res.itemData.quantity,
+                name: res.itemData.name,
+                image: res.itemData.image,
+              },
+              {
+                quantity: res.currencyData.quantity,
+                name: "gold",
+                image: "/uploads/gold.jpg",
+              },
+            ],
+            pack: require("../../../assets/silver_treasure.png"),
+          },
+        };
+        setReward(mappedData);
+      } else {
+        console.error("Unexpected response format:", res);
+      }
+    } catch (e) {
+      console.error("Error fetching data:", e);
+    }
+  };
+
+  useEffect(() => {
+    if (status === "Victory") {
+      fetchData();
+    }
+  }, [status]);
 
   return (
     <Modal
@@ -32,11 +80,32 @@ const StatusPopup: React.FC<props> = ({ status, onPress }) => {
       animationType="fade"
       transparent={true}
     >
+      {getItems && (
+        <AlertBuyItemsSuccess
+          name={"food"}
+          category={CATEGORY.REWARD}
+          quantity={0}
+          itemImg={reward?.itemData}
+          isVisible={getItems}
+          onClose={() => {
+            onPress();
+            setGetItems(false);
+          }}
+        />
+      )}
       <View style={styles.modalContainer}>
+        <Image
+          source={require("../../../assets/backGroundForInventory.png")}
+          style={{
+            height: "100%",
+            width: "100%",
+            position: "absolute",
+          }}
+        />
         <Animatable.View
           animation={"zoomIn"}
           delay={400}
-          style={[styles.popup, { backgroundColor: colors[resultColor] }]}
+          style={[styles.popup]}
         >
           <SafeAreaView style={styles.containerContent}>
             {status === "Victory" ? (
@@ -48,11 +117,27 @@ const StatusPopup: React.FC<props> = ({ status, onPress }) => {
               <Image source={profile} style={styles.imgProfile} />
               <View className="mt-5 flex flex-row items-center justify-center gap-2">
                 <Text style={styles.text}>
-                  {status === "Victory" ? `+${100}` : 0}
+                  {status === "Victory" ? `+${reward?.cup}` : 0}
                 </Text>
                 <Image source={Cup} />
               </View>
             </View>
+            {status === "Victory" && (
+              <TouchableOpacity
+                onPress={() => setGetItems(true)}
+                style={{ height: "40%", width: "50%" }}
+              >
+                <Image
+                  source={require("../../../assets/silver_treasure.png")}
+                  resizeMode="contain"
+                  style={{
+                    height: "100%",
+                    position: "absolute",
+                    width: "100%",
+                  }}
+                />
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity onPress={onPress} style={styles.btn}>
               <Text style={styles.btnText}>{buttonText}</Text>

@@ -25,15 +25,17 @@ import useFetch from "../hooks/useFetch";
 import { ItemGameOwnerService } from "../services/ItemGameOwnerService";
 import { startLoading, stopLoading } from "../redux/loadingSlice";
 import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
+import { useAccount } from "wagmi";
 
 interface AlertBuyComponentProps {
   isVisible?: boolean;
   onClose?: () => void;
-  onBuy: (buy: boolean, itemImg: string) => void;
+  onBuy: (buy: boolean, itemImg: string, arrayItem?: any) => void;
   gemcost?: number;
-  goldcost?: number | null;
+  goldcost?: number;
   name?: string;
   quantity?: number | null;
+  category?: string;
   itemImg?: string;
   quality?: string;
   description?: string;
@@ -55,6 +57,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
   onBuy,
   quality,
   id,
+  category,
   itemImg,
   quantity,
   name,
@@ -65,23 +68,56 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const handleBuy = async () => {
-    if (id && quality && quality && goldcost && gemcost && itemImg) {
-      dispatch(startLoading());
-      try {
-        const body: item = {
-          id: id,
-          owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-          quantity: quantity || 0,
-          goldcost: goldcost || 0,
-          gemcost: gemcost || 0,
-          currency: 1,
-        };
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
-        const response = await ItemAppOwnerService.buyItem(body);
+  const handleBuy = async () => {
+    if (
+      id &&
+      quality &&
+      quality &&
+      category &&
+      gemcost &&
+      goldcost != null &&
+      goldcost >= 0 &&
+      itemImg
+    ) {
+      onClose?.();
+      dispatch(startLoading());
+
+      const body: item = {
+        id: id,
+        owner: address!,
+        quantity: quantity || 0,
+        goldcost: goldcost || 0,
+        gemcost: gemcost || 0,
+        currency: 1,
+      };
+
+      try {
+        if (category.includes("pack")) {
+          const body1 = {
+            id: id,
+            quality: quality,
+            category: category.substring(0, category.indexOf(" ")),
+            owner: address!,
+
+            quantity: quantity || 0,
+            goldcost: goldcost || 0,
+            gemcost: gemcost || 0,
+            currency: 1,
+          };
+
+          const response = await ItemAppOwnerService.buyItemPack(body1);
+
+          onBuy(true, itemImg, [response]);
+        } else {
+          await ItemAppOwnerService.buyItem(body);
+
+          onBuy(true, itemImg);
+        }
 
         onClose?.();
-        onBuy(true, itemImg);
 
         dispatch(stopLoading());
       } catch (error) {
@@ -97,11 +133,33 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
   };
 
   return (
-    <Modal isVisible={isVisible} onBackdropPress={handleCancel}>
+    <Modal isVisible={isVisible}>
       <View
         className="relative flex w-full flex-col items-center bg-opacity-[0%] "
         style={styles.container}
       >
+        <View style={styles.btnDelete}>
+          <NormalButton
+            onPress={onClose}
+            style={{
+              height: "100%",
+              width: "100%",
+              alignItems: "center",
+
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={require("../../assets/delete.png")}
+              style={{
+                height: "100%",
+                width: "100%",
+                position: "absolute",
+              }}
+            />
+          </NormalButton>
+        </View>
+
         <View
           style={styles.imgContainer}
           className="relative items-center justify-center"
@@ -112,8 +170,8 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             style={styles.img}
           />
           <CustomText
-            className="absolute mt-3 text-start font-rexlia text-[40px]"
-            style={{ color: COLOR.DARKER_PURPLE }}
+            className="absolute mt-3 text-start font-rexlia text-[32px]"
+            style={{ color: COLOR.BRIGHT_YELLOW }}
           >
             {name}
           </CustomText>
@@ -199,6 +257,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: ConstantsResponsive.YR * 30,
     left: ConstantsResponsive.XR * 30,
+  },
+  btnDelete: {
+    position: "absolute",
+    alignSelf: "flex-end",
+    top: 0,
+    zIndex: 1000,
+    right: ConstantsResponsive.XR * -20,
+    width: ConstantsResponsive.XR * 80,
+    height: ConstantsResponsive.XR * 80,
   },
   buttonBuy: {
     width: ConstantsResponsive.MAX_WIDTH * 0.4,

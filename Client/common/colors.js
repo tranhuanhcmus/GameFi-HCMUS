@@ -1,5 +1,5 @@
 export default {
-  key: "#606B83",
+  key: "rgba(0, 0, 0, 0.4)",
   inputBox: "white",
   Modal: "#82a7c9",
   darkOverlayColor: "rgba(0, 0, 0, 0.4)",

@@ -5,13 +5,17 @@ import { W3mAccountButton } from "@web3modal/wagmi-react-native";
 import ConstantsResponsive from "../constants/Constanst";
 import { COLOR } from "../utils/color";
 import CustomText from "./CustomText";
-import Thunder from "../../assets/thunder.svg";
-import Coin from "../../assets/coin.svg";
+import Thunder from "../../assets/navIcon/thunder.svg";
+import Coin from "../../assets/navIcon/coin.svg";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 import { useAccount } from "wagmi";
 import log from "../logger/index.js";
 import logger from "../logger/index.js";
+import useFetch from "../hooks/useFetch";
+import { UsersService } from "../services/UsersService";
+import { useDispatch } from "react-redux";
+import { updateEnergy } from "../redux/playerSlice";
 
 interface HeaderProps {
   name: string;
@@ -21,6 +25,7 @@ const GEM = "Gem";
 
 const Header: React.FC<HeaderProps> = ({ name }) => {
   const [data, setData] = useState<any[]>([]);
+  const dispatch = useDispatch();
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
@@ -34,15 +39,21 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
     }
   };
 
+  const { apiData: energyUser, serverError } = useFetch(() =>
+    UsersService.getOwnerEnergy(address!),
+  );
+
   useEffect(() => {
     fetchData();
   }, [address]);
+
+  useEffect(() => {
+    dispatch(updateEnergy(energyUser?.energy || 0));
+  }, [energyUser?.energy]);
+
   const navigate = useCustomNavigation();
   return (
-    <TouchableOpacity
-      onPress={() => {
-        navigate.navigate("Shop");
-      }}
+    <View
       style={{
         width: ConstantsResponsive.MAX_WIDTH * 0.4,
         height: ConstantsResponsive.YR * 40,
@@ -50,11 +61,13 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         flexDirection: "row",
         alignItems: "center",
 
-        justifyContent: "space-around",
+        justifyContent: "center",
+        columnGap: ConstantsResponsive.XR * 30,
+
         position: "relative",
 
         borderRadius: 20,
-        paddingVertical: ConstantsResponsive.XR * 4,
+        paddingHorizontal: ConstantsResponsive.XR * 10,
       }}
     >
       <Image
@@ -88,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         >
           {data && data.length
             ? data.find((item) => item.name == GOLD).quantity
-            : 0}
+            : 100}
         </CustomText>
       </View>
 
@@ -112,12 +125,10 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             fontWeight: "bold",
           }}
         >
-          {data && data.length
-            ? data.find((item) => item.name == GEM).quantity
-            : 0}
+          {energyUser?.energy}
         </CustomText>
       </View>
-    </TouchableOpacity>
+    </View>
 
     // <View className="relative flex h-fit w-[100%] flex-row items-center justify-center   ">
     //   <W3mAccountButton balance="show" style={{ backgroundColor: "white" }} />

@@ -4,7 +4,7 @@ import { SOCKET } from "./constants";
 
 const PORT = 3001;
 let server: string;
-// server = `http://192.168.1.14:${PORT}`; // TODO CHANGE LATER
+//server = `http://192.168.1.11:${PORT}`; // TODO CHANGE LATER
 server = `http://localhost:${PORT}`; // TODO CHANGE LATER
 // // Check if the environment is a browser and window.location is defined
 // const isBrowser =
@@ -92,12 +92,11 @@ export class SocketIOClient {
     this.socket.emit(SOCKET.JOIN_ROOM, data);
   }
 
-  emitFindMatch(nameGame: string) {
-    this.socket.emit(SOCKET.FIND_MATCH, nameGame);
+  emitFindMatch(data: object) {
+    this.socket.emit(SOCKET.FIND_MATCH, data);
   }
 
   emitEventGame(data: any) {
-    console.log("alooo");
     this.socket.emit(SOCKET.EVENT_DIAMOND, data);
   }
 
@@ -122,22 +121,14 @@ export class SocketIOClient {
     });
   }
 
-  onListenCustomerLocation(callback: (data: any) => void) {
-    this.socket.on(SOCKET.SEND_CUSTOMER_LOCATION, (data) => {
+  onListenDisConnect(callback: (data: any) => void) {
+    this.socket.on(SOCKET.OPPONENT_DISCONNECT, (data) => {
       callback(data);
     });
   }
 
-  onListenCustomerLocationRequest(callback: (data: any) => void) {
-    this.socket.on(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, (data) => {
-      callback(data);
-    });
-  }
-
-  onListenCancelFromCustomer(callback: (data: any) => void) {
-    this.socket.on(SOCKET.SEND_NOTIFY_CANCEL_TRIP_TO_DRIVER, (data) => {
-      callback(data);
-    });
+  removeListenOppentDisconnect() {
+    this.socket.off(SOCKET.OPPONENT_DISCONNECT);
   }
 
   onListenTakeDamage(callback: (data: DataSocketTransfer) => void) {

@@ -10,12 +10,14 @@ type Props = {
   className?: any;
   children: React.ReactNode;
   style?: ViewStyle;
+  ref?: any;
 } & React.ComponentProps<typeof TouchableOpacity>;
 
 const NormalButton = ({
   className,
   children,
   onPress,
+  ref,
   style,
   ...rest
 }: Props) => {
@@ -24,6 +26,7 @@ const NormalButton = ({
     <TouchableOpacity
       onPress={onPress}
       {...rest}
+      ref={ref}
       style={[styles.shadowProp, style]}
     >
       {children}

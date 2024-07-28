@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -17,6 +17,7 @@ import CustomText from "./CustomText";
 import ItemShowComponent from "./ItemShowComponent";
 import { CATEGORY } from "../constants/types";
 import { StatusBarHeight } from "../function/CalculateStatusBar";
+import { updateBoost } from "../redux/petActiveSlice";
 
 interface AlertBuyItemsSuccessProps {
   isVisible: boolean;
@@ -37,9 +38,33 @@ const AlertBuyItemsSuccess: React.FC<AlertBuyItemsSuccessProps> = ({
 }) => {
   const dispatch = useDispatch();
 
+  const [currentIndex, setCurrentIndex] = useState(-1);
+
   const handleCancel = () => {
-    dispatch(hideAlert());
-    onClose?.();
+    if (category === CATEGORY.BOOST) {
+      dispatch(
+        updateBoost({
+          boostType: name,
+          boostStatus: true,
+        }),
+      );
+    }
+
+    if (
+      typeof itemImg !== "string" &&
+      itemImg?.data.length > 0 &&
+      itemImg?.data?.length > currentIndex + 1
+    ) {
+      setCurrentIndex((prev) => {
+        return prev + 1;
+      });
+    } else if (itemImg?.data?.length === currentIndex + 1) {
+      dispatch(hideAlert());
+      onClose?.();
+    } else {
+      dispatch(hideAlert());
+      onClose?.();
+    }
   };
 
   return (
@@ -56,15 +81,39 @@ const AlertBuyItemsSuccess: React.FC<AlertBuyItemsSuccessProps> = ({
                 top: StatusBarHeight + ConstantsResponsive.YR * 100,
               }}
             >
-              <ItemShowComponent
-                name={name}
-                quantity={quantity}
-                itemImg={itemImg}
-              />
+              {itemImg?.data && currentIndex >= 0 && (
+                <ItemShowComponent
+                  name={itemImg?.data[currentIndex].name}
+                  quantity={itemImg?.data[currentIndex].quantity}
+                  itemImg={itemImg?.data[currentIndex].image}
+                />
+              )}
             </View>
             <Image
               resizeMode="contain"
-              source={{ uri: API.server + itemImg }}
+              source={{ uri: API.server + itemImg?.pack }}
+              style={styles.img}
+            />
+          </>
+        ) : category == CATEGORY.REWARD ? (
+          <>
+            <View
+              style={{
+                position: "absolute",
+                top: StatusBarHeight + ConstantsResponsive.YR * 100,
+              }}
+            >
+              {itemImg?.data && currentIndex >= 0 && (
+                <ItemShowComponent
+                  name={itemImg?.data[currentIndex].name}
+                  quantity={itemImg?.data[currentIndex].quantity}
+                  itemImg={itemImg?.data[currentIndex].image}
+                />
+              )}
+            </View>
+            <Image
+              resizeMode="contain"
+              source={itemImg?.pack}
               style={styles.img}
             />
           </>

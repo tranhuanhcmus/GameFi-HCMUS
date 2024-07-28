@@ -3,6 +3,8 @@ import { View, Image, StyleSheet } from "react-native";
 import { API } from "../apis/constants";
 import ConstantsResponsive from "../constants/Constanst";
 import CustomText from "./CustomText";
+import { COLOR } from "../utils/color";
+// import useImageColors from "../hooks/useImageColors";
 
 interface Props {
   name: string;
@@ -11,6 +13,8 @@ interface Props {
 }
 
 const ItemShowComponent: React.FC<Props> = ({ name, quantity, itemImg }) => {
+  const imageUrl = itemImg ? API.server + itemImg : null;
+  // const colors = useImageColors(imageUrl);
   return (
     <View style={{ display: "flex", flexDirection: "row", columnGap: 5 }}>
       <Image
@@ -28,7 +32,7 @@ const ItemShowComponent: React.FC<Props> = ({ name, quantity, itemImg }) => {
         <CustomText
           style={{
             textAlign: "center",
-            color: "white",
+            color: COLOR.WHITE,
             fontWeight: "bold",
             fontSize: ConstantsResponsive.YR * 30,
           }}
@@ -38,7 +42,7 @@ const ItemShowComponent: React.FC<Props> = ({ name, quantity, itemImg }) => {
         <CustomText
           style={{
             textAlign: "center",
-            color: "white",
+            color: COLOR.WHITE,
             fontWeight: "bold",
             maxWidth: ConstantsResponsive.XR * 100,
             fontSize: ConstantsResponsive.YR * 20,
@@ -50,16 +54,16 @@ const ItemShowComponent: React.FC<Props> = ({ name, quantity, itemImg }) => {
     </View>
   );
 };
+
 export default ItemShowComponent;
+
 const styles = StyleSheet.create({
   container: {
     height: ConstantsResponsive.MAX_HEIGHT / 2.5,
     borderRadius: ConstantsResponsive.XR * 60,
   },
-
   img: {
     width: ConstantsResponsive.MAX_WIDTH / 3,
-
     height: ConstantsResponsive.MAX_WIDTH / 3,
   },
 });

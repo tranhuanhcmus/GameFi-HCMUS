@@ -2,17 +2,26 @@ import { ScrollView, View, Image } from "react-native";
 import CustomText from "../../components/CustomText";
 import { COLOR } from "../../utils/color";
 import ConstantsResponsive from "../../constants/Constanst";
-import Medicine from "../../../assets/medicine.svg";
-import Lucky from "../../../assets/medicine.png";
+
 const EventScreen = () => {
   return (
     <View
       style={{
+        position: "relative",
         height: ConstantsResponsive.MAX_HEIGHT,
         width: ConstantsResponsive.MAX_WIDTH,
-        backgroundColor: COLOR.PURPLE,
       }}
     >
+      <Image
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH,
+          height: ConstantsResponsive.MAX_HEIGHT,
+          position: "absolute",
+          zIndex: 100,
+        }}
+        resizeMode="stretch"
+        source={require("../../../assets/backGroundForInventory.png")}
+      />
       <View
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
@@ -56,7 +65,6 @@ const EventScreen = () => {
                 padding: 10,
               }}
             >
-              <Medicine width={30} height={30} />
               <CustomText style={{ color: COLOR.WHITE, paddingStart: 5 }}>
                 230
               </CustomText>
@@ -141,7 +149,6 @@ const EventScreen = () => {
                 padding: 10,
               }}
             >
-              <Medicine width={30} height={30} />
               <CustomText style={{ color: COLOR.WHITE, paddingStart: 5 }}>
                 230
               </CustomText>
@@ -186,7 +193,7 @@ const EventScreen = () => {
               >
                 ENTER
               </CustomText>
-              <Image source={Lucky} style={{ width: 30, height: 30 }} />
+
               <CustomText
                 style={{
                   color: COLOR.WHITE,

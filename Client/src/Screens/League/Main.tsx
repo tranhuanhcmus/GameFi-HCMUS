@@ -84,7 +84,7 @@ const LeagueScreen = () => {
         <CustomText
           style={{
             fontSize: 40,
-            // fontFamily: "mt-2",
+            fontFamily: "rexlia",
             fontWeight: "bold",
             color: COLOR.YELLOW,
             textShadowColor: "rgba(0, 0, 0, 0.75)",
@@ -97,7 +97,7 @@ const LeagueScreen = () => {
         <CustomText
           style={{
             fontSize: 35,
-            // fontFamily: "mt-2",
+            fontFamily: "rexlia",
             color: COLOR.YELLOW,
             textShadowColor: "rgba(0, 0, 0, 0.75)",
             textShadowOffset: { width: -1, height: 1 },
@@ -117,6 +117,9 @@ const LeagueScreen = () => {
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
+
+                alignItems: "center",
+
                 marginHorizontal: 20,
                 marginBottom: 10,
                 borderRadius: 20,
@@ -141,11 +144,23 @@ const LeagueScreen = () => {
                   }}
                 />
                 <CustomText
-                  style={{ color: COLOR.WHITE, fontSize: 20, marginEnd: 10 }}
+                  style={{
+                    color: COLOR.WHITE,
+                    fontSize: 20,
+                    marginEnd: 10,
+                    alignSelf: "center",
+                    textAlign: "center",
+                  }}
                 >
                   {item.rank}.
                 </CustomText>
-                <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
+                <CustomText
+                  style={{
+                    color: COLOR.WHITE,
+                    fontSize: 20,
+                    fontFamily: "rexlia",
+                  }}
+                >
                   {shortenString(item.owner)}
                 </CustomText>
               </View>
@@ -162,7 +177,13 @@ const LeagueScreen = () => {
                   source={Trophy}
                   style={{ width: 25, height: 25, borderRadius: 20 }}
                 />
-                <CustomText style={{ color: COLOR.WHITE, fontSize: 20 }}>
+                <CustomText
+                  style={{
+                    color: COLOR.WHITE,
+                    fontSize: 20,
+                    fontFamily: "rexlia",
+                  }}
+                >
                   {item.total_cups}
                 </CustomText>
               </View>
@@ -180,7 +201,7 @@ const LeagueScreen = () => {
           <CustomText
             style={{
               fontSize: 35,
-              // fontFamily: "mt-2",
+              fontFamily: "rexlia",
               color: COLOR.YELLOW,
               textShadowColor: "rgba(0, 0, 0, 0.75)",
               textShadowOffset: { width: -1, height: 1 },

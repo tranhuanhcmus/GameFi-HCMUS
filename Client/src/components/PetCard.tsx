@@ -8,30 +8,32 @@ import {
   Animated,
   TouchableWithoutFeedback,
 } from "react-native";
-import FastImage from "react-native-fast-image";
+
 import { updatePet } from "../redux/petSlice";
 import React from "react";
 
 import Egg from "../../assets/SVGEgg.svg";
 
-import { ELEMENT } from "../constants/types";
+import { ELEMENT, formatElement } from "../constants/types";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 import CustomText from "./CustomText";
 import { COLOR } from "../utils/color";
 import ConstantsResponsive from "../constants/Constanst";
 import { useDispatch } from "react-redux";
+import { getLevel } from "../utils/pet";
 
 interface PetCardProps {
   petImg: string;
-  element: string;
+
   level: number;
   name: string;
+
   rarityPet: string;
   isBreed?: boolean; // CHECK IF THIS PET CHOOSE TO BREED
   tokenUri: string;
   item: any;
   attributes: {
-    element: string;
+    element: number;
     eye: string;
     fur: string;
     item: string;
@@ -41,8 +43,9 @@ interface PetCardProps {
 
 const PetCard: React.FC<PetCardProps> = ({
   petImg,
-  element,
+
   level,
+
   name,
   rarityPet,
   isBreed,
@@ -55,7 +58,7 @@ const PetCard: React.FC<PetCardProps> = ({
   const dispatch = useDispatch();
   const translateYValue = new Animated.Value(0);
   const placeholderImage = "https://via.placeholder.com/150";
-  console.log(petImg);
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -74,7 +77,6 @@ const PetCard: React.FC<PetCardProps> = ({
           if (isBreed) {
             onPress(item);
           } else {
-            console.log(item);
             dispatch(
               updatePet({
                 ...item,
@@ -90,6 +92,7 @@ const PetCard: React.FC<PetCardProps> = ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
+
         alignItems: "center",
         height: styles.borderContainer.height,
         width: styles.borderContainer.width,
@@ -109,52 +112,112 @@ const PetCard: React.FC<PetCardProps> = ({
             ConstantsResponsive.XR * 70 +
             ConstantsResponsive.YR * 30,
           borderRadius: ConstantsResponsive.XR * 20,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: ConstantsResponsive.YR * 5,
           padding: ConstantsResponsive.XR * 20,
           backgroundColor: COLOR.BROWN_BORDER,
         }}
       >
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            height: "15%",
-            width: "100%",
-            marginBottom: 5,
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 200,
+            position: "absolute",
+            right: ConstantsResponsive.XR * 5,
           }}
         >
-          {ELEMENT.FIRE === element && (
+          {item.energy >= 0 &&
+            Array(3)
+              .fill({})
+              .map((index) =>
+                item.energy == 3 ? (
+                  <Image
+                    key={index}
+                    source={require("../../assets/navIcon/thunderBlue.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 32,
+                      width: ConstantsResponsive.XR * 32,
+                    }}
+                  />
+                ) : index < item.energy ? (
+                  <Image
+                    key={index}
+                    source={require("../../assets/navIcon/thunderBlue.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 32,
+                      width: ConstantsResponsive.XR * 32,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    key={index}
+                    source={require("../../assets/navIcon/thunderBlack.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 32,
+                      width: ConstantsResponsive.XR * 32,
+                    }}
+                  />
+                ),
+              )}
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            height: "20%",
+            width: "100%",
+            alignItems: "center",
+            marginBottom: 5,
+            paddingHorizontal: 5,
+          }}
+        >
+          {ELEMENT.FIRE === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Fire.png")}
+              source={require("../../assets/elements/fire.png")}
               style={{ width: "20%", height: "100%" }}
             />
           )}
-          {ELEMENT.IRON === element && (
+          {ELEMENT.DARK === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Iron.png")}
+              source={require("../../assets/elements/dark.png")}
               style={{ width: "20%", height: "100%" }}
             />
           )}
-          {ELEMENT.LEAF === element && (
+          {ELEMENT.FOREST === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Leaf.png")}
+              source={require("../../assets/elements/forest.png")}
               style={{ width: "20%", height: "100%" }}
             />
           )}
-          {ELEMENT.STONE === element && (
+          {ELEMENT.FROZEN === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Stone.png")}
+              source={require("../../assets/elements/frozen.png")}
               style={{ width: "20%", height: "100%" }}
             />
           )}
-          {ELEMENT.WATER === element && (
+          {ELEMENT.THUNDER === formatElement(attributes.element) && (
             <Image
               resizeMode="contain"
-              source={require("../../assets/elements/Water.png")}
-              style={{ width: 19, height: 19 }}
+              source={require("../../assets/elements/thunder.png")}
+              style={{ width: "20%", height: "100%" }}
+            />
+          )}
+          {ELEMENT.WATER === formatElement(attributes.element) && (
+            <Image
+              resizeMode="contain"
+              source={require("../../assets/elements/water.png")}
+              style={{ width: "20%", height: "100%" }}
             />
           )}
           <View
@@ -162,23 +225,19 @@ const PetCard: React.FC<PetCardProps> = ({
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              height: ConstantsResponsive.YR * 35,
-              width: ConstantsResponsive.XR * 35,
+              height: "100%",
             }}
           >
-            <Egg
-              height={ConstantsResponsive.YR * 35}
-              width={ConstantsResponsive.XR * 35}
-            ></Egg>
             <CustomText
               style={{
                 // fontFamily: "mt-2",
-                position: "absolute",
+                fontFamily: "rexlia",
+                color: "white",
                 fontWeight: "bold",
-                fontSize: ConstantsResponsive.YR * 20,
+                fontSize: ConstantsResponsive.YR * 25,
               }}
             >
-              {Math.floor(level)}
+              {Math.floor(getLevel(level))}
             </CustomText>
           </View>
         </View>
@@ -194,16 +253,20 @@ const PetCard: React.FC<PetCardProps> = ({
           <Image
             style={{ width: "100%", height: "70%" }}
             resizeMode="contain"
-            source={{ uri: petImg || placeholderImage }}
+            source={{ uri: petImg }}
           />
           <CustomText
             style={{
-              // fontFamily: "mrt-mid",
               fontFamily: "rexlia",
               fontWeight: "bold",
               color: COLOR.WHITE,
+              width: "100%",
+              height: "20%",
+
+              textAlign: "center",
+
               fontSize: ConstantsResponsive.YR * 25,
-              marginTop: 5,
+              marginTop: ConstantsResponsive.YR * 7,
             }}
           >
             {name}

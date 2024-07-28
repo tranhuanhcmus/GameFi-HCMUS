@@ -8,27 +8,17 @@ import {
   Text,
   Modal,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import PetCard from "../../components/PetCard";
 import BarInfor from "../../components/barInfor";
 import ConstantsResponsive from "../../constants/Constanst";
-import { ELEMENT } from "../../constants/types";
-import { showAlert } from "../../redux/alertSlice";
 
 import CustomText from "../../components/CustomText";
-import { NFT, UserService } from "../../services/UserService";
+
 import { COLOR } from "../../utils/color";
-import { getLevel } from "../../utils/pet";
-
-import log from "../../logger/index";
-import useCustomNavigation from "../../hooks/useCustomNavigation";
-import breedSlice, { setFatherPet, setMotherPet } from "../../redux/breedSlice";
-import { useAccount } from "wagmi";
-
-import AwesomeButton from "react-native-really-awesome-button";
 
 import CloseButton from "../../../assets/carbon_close-filled.svg";
+import { getLevel } from "../../utils/pet";
 
 type Props = {};
 
@@ -40,7 +30,7 @@ const StatsModal = ({
 
   setIsVisible: (value: boolean) => void;
 }) => {
-  const { hp, atk } = useSelector((state: any) => state.pet);
+  const { hp, atk, level } = useSelector((state: any) => state.pet);
 
   return (
     <Modal animationType="slide" transparent={true} visible={isVisible}>
@@ -85,7 +75,9 @@ const StatsModal = ({
               columnGap: ConstantsResponsive.XR * 100,
             }}
           >
-            <CustomText style={styles.text}>Level 1</CustomText>
+            <CustomText style={styles.text}>
+              LEVEL {Math.floor(getLevel(level))}
+            </CustomText>
             <CustomText style={styles.text}>Common Pet</CustomText>
           </View>
           <BarInfor color="green" title="Health" value={hp} />
@@ -138,9 +130,9 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: "Helvetica",
+    fontFamily: "rexlia",
     fontWeight: "bold",
-    fontSize: ConstantsResponsive.YR * 25,
+    fontSize: ConstantsResponsive.YR * 30,
     color: "white",
   },
 

@@ -9,8 +9,10 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   PanResponder,
+  ActivityIndicator,
+  FlexAlignType,
 } from "react-native";
-import SpriteSheet from "rn-sprite-sheet";
+import SpriteSheet from "../../components/SpriteSheet";
 import { LinearGradient } from "expo-linear-gradient";
 
 import ConstantsResponsive from "../../constants/Constanst";
@@ -24,14 +26,23 @@ import { playerSlice } from "../../redux/playerSlice";
 
 import Setting from "../../../assets/setting.svg";
 import { setVisable } from "../../redux/settingGameSlice";
+import { ELEMENT, formatElement } from "../../constants/types";
+import { ContraryElement } from "../../function/ContraryElement";
+import { useIsFocused } from "@react-navigation/native";
 
 interface props {
   hp: number;
+}
+interface propsBar {
+  hp: number;
+  element: number;
+  typleFlex: FlexAlignType;
 }
 
 const GameHeader = () => {
   const { hp, componentHp } = useSelector((state: any) => state.player);
   const dispatch = useDispatch();
+
   return (
     <View style={styles.characterArea}>
       <TouchableOpacity
@@ -55,13 +66,46 @@ const GameHeader = () => {
 const User: React.FC<props> = ({ hp }) => {
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [fps, setFps] = useState<string>("3");
+  const [fps, setFps] = useState<string>("10");
   const mummyRef = useRef<SpriteSheet>(null);
+  const { assets, attributes } = useSelector((state: any) => state.petActive);
+
+  const { atkOpponent, elementOpponent } = useSelector(
+    (state: any) => state.player,
+  );
+
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
+  const isFocused = useIsFocused();
   const isFirstRender = useRef(true);
   const floatingTextAnim = useRef(new Animated.Value(0)).current;
+
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  const [imageSource, setImageSource] = useState({
+    uri: "",
+    height: 0,
+    width: 0,
+  });
+  useEffect(() => {
+    setIsImageLoaded(false);
+
+    Image.getSize(
+      assets,
+      (width, height) => {
+        setImageSource({
+          height: height,
+          width: width,
+          uri: assets,
+        });
+        setIsImageLoaded(true);
+      },
+      (error) => {
+        console.error("Error loading image", error);
+      },
+    );
+  }, [assets]);
 
   // Call this function when the character receives damage
   const receiveDamage = (damageAmount: number) => {
@@ -105,10 +149,12 @@ const User: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
+        onFinish: () => console.log("hi"),
       });
     }
-    setOffsetX(0);
-    setOffsetY(0);
+
+    setLoop(true);
+    setResetAfterFinish(true);
   };
   const play1 = (type: string) => {
     const parsedFps = Number(fps + 1);
@@ -132,16 +178,25 @@ const User: React.FC<props> = ({ hp }) => {
   useEffect(() => {
     if (isFirstRender.current) {
       // Skip the effect on first render
-      play("default");
+      play1("default");
       isFirstRender.current = false;
       return;
     }
 
-    play("walk");
+    play1("walk");
     setTimeout(() => {
       receiveDamage(10);
     }, 1000);
   }, [hp]);
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     play("walk");
+  //   } else {
+  //     // Optional: stop the animation when the screen is not focused
+  //     stop();
+  //   }
+  // }, [isFocused]);
 
   return (
     <View style={styles.player}>
@@ -151,32 +206,33 @@ const User: React.FC<props> = ({ hp }) => {
           source={Avatar}
           resizeMode="contain"
         ></Image>
-        <Bar hp={hp} />
+        <Bar hp={hp} element={attributes.element} typleFlex="flex-start" />
       </View>
 
       <View style={styles.playerPet}>
         <View style={{ transform: [{ scaleX: -1 }] }}>
-          <SpriteSheet
-            ref={mummyRef1}
-            source={require("../../../assets/spritesSheet_18.png")}
-            columns={60}
-            rows={1}
-            height={ConstantsResponsive.YR * 250}
-            width={ConstantsResponsive.XR * 250}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-              ],
-            }}
-          />
+          {isImageLoaded ? (
+            <SpriteSheet
+              ref={mummyRef}
+              source={imageSource}
+              columns={60}
+              height={ConstantsResponsive.YR * 2 * 80}
+              rows={1}
+              animations={{
+                walk: Array.from({ length: 60 }, (_, i) => i),
+              }}
+            />
+          ) : (
+            <ActivityIndicator size="large" color="#0000ff" />
+          )}
         </View>
 
         {/* Your Animated Text for displaying damage */}
         <Animated.Text style={[styles.damageText, floatingTextStyle]}>
-          -10
+          -
+          {Math.floor(
+            atkOpponent * ContraryElement(attributes.element, elementOpponent),
+          )}
         </Animated.Text>
       </View>
 
@@ -187,7 +243,7 @@ const User: React.FC<props> = ({ hp }) => {
         }}
       >
         <SpriteSheet
-          ref={mummyRef}
+          ref={mummyRef1}
           source={require("../../../assets/skill.png")}
           columns={12}
           rows={1}
@@ -206,13 +262,18 @@ const User: React.FC<props> = ({ hp }) => {
 const Component: React.FC<props> = ({ hp }) => {
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [fps, setFps] = useState<string>("3");
+  const [fps, setFps] = useState<string>("10");
   const mummyRef = useRef<SpriteSheet>(null);
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
+  const { assets, elementOpponent } = useSelector((state: any) => state.player);
   const isFirstRender = useRef(true);
+
+  const { attributes, atk } = useSelector((state: any) => state.petActive);
+
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const play = (type: string) => {
     const parsedFps = Number(fps);
@@ -223,9 +284,14 @@ const Component: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
+        onFinish: () => console.log("hi"),
       });
     }
+
+    setLoop(true);
+    setResetAfterFinish(true);
   };
+
   const play1 = (type: string) => {
     const parsedFps = Number(fps + 1);
 
@@ -255,6 +321,32 @@ const Component: React.FC<props> = ({ hp }) => {
     }),
   };
 
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  const [imageSource, setImageSource] = useState({
+    uri: "",
+    height: 0,
+    width: 0,
+  });
+  useEffect(() => {
+    setIsImageLoaded(false);
+
+    Image.getSize(
+      assets,
+      (width, height) => {
+        setImageSource({
+          height: height,
+          width: width,
+          uri: assets,
+        });
+        setIsImageLoaded(true);
+      },
+      (error) => {
+        console.error("Error loading image", error);
+      },
+    );
+  }, [assets]);
+
   // Call this function when the character receives damage
   const receiveDamage = (damageAmount: number) => {
     // Trigger other damage effects like red flash or shake if you have
@@ -273,21 +365,30 @@ const Component: React.FC<props> = ({ hp }) => {
   useEffect(() => {
     if (isFirstRender.current) {
       // Skip the effect on first render
-      play("default");
+      play1("default");
       isFirstRender.current = false;
       return;
     }
 
-    play("walk");
+    play1("walk");
     setTimeout(() => {
       receiveDamage(10);
     }, 1000);
   }, [hp]);
 
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     play("walk");
+  //   } else {
+  //     // Optional: stop the animation when the screen is not focused
+  //     stop();
+  //   }
+  // }, [isFocused]);
+
   return (
     <View style={styles.playerComponent}>
       <View style={styles.playerHeader}>
-        <Bar hp={hp} />
+        <Bar hp={hp} element={elementOpponent} typleFlex="flex-end" />
         <Image
           style={styles.avatarImage}
           source={Avatar}
@@ -296,25 +397,26 @@ const Component: React.FC<props> = ({ hp }) => {
       </View>
 
       <View style={styles.playerPet}>
-        <SpriteSheet
-          ref={mummyRef1}
-          source={require("../../../assets/spritesSheet_18.png")}
-          columns={60}
-          rows={1}
-          height={ConstantsResponsive.YR * 250}
-          width={ConstantsResponsive.XR * 250}
-          animations={{
-            walk: [
-              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-              19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-              35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-              51, 52, 53, 54, 55, 56, 57, 58, 59,
-            ],
-          }}
-        />
+        {isImageLoaded ? (
+          <SpriteSheet
+            ref={mummyRef}
+            source={imageSource}
+            columns={60}
+            height={ConstantsResponsive.YR * 2 * 80}
+            rows={1}
+            animations={{
+              walk: Array.from({ length: 60 }, (_, i) => i),
+            }}
+          />
+        ) : (
+          <ActivityIndicator size="large" color="#0000ff" />
+        )}
         {/* Your Animated Text for displaying damage */}
         <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
-          -10
+          -
+          {Math.floor(
+            atk * ContraryElement(elementOpponent, attributes.element),
+          )}
         </Animated.Text>
       </View>
 
@@ -325,11 +427,11 @@ const Component: React.FC<props> = ({ hp }) => {
         }}
       >
         <SpriteSheet
-          ref={mummyRef}
+          ref={mummyRef1}
           source={require("../../../assets/skill.png")}
           columns={12}
           rows={1}
-          width={ConstantsResponsive.XR * 2 * 80}
+          height={ConstantsResponsive.XR * 2 * 80}
           animations={{
             default: [20],
             walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -341,12 +443,18 @@ const Component: React.FC<props> = ({ hp }) => {
 };
 const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
 //  HEALTH BAR AND DAMAGE BAR.
-const Bar: React.FC<props> = ({ hp }) => {
+const Bar: React.FC<propsBar> = ({ hp, element, typleFlex }) => {
   const animatedWidth = useRef(new Animated.Value(0)).current;
+
+  const [hpDefaults, setHpDefaults] = useState(hp);
+
+  useEffect(() => {
+    setHpDefaults(hp);
+  }, []);
 
   useEffect(() => {
     Animated.timing(animatedWidth, {
-      toValue: (hp / GameLogic.HEALTH_POINT) * 100,
+      toValue: (hp / hpDefaults) * 100,
       duration: 700,
       useNativeDriver: false,
     }).start();
@@ -357,24 +465,78 @@ const Bar: React.FC<props> = ({ hp }) => {
   const colorLocations = [0, 1];
 
   return (
-    <View style={styles.barContainer}>
-      <AnimatedGradient
-        style={[
-          styles.healthBar,
-          {
-            width: animatedWidth.interpolate({
-              inputRange: [0, 100],
-              outputRange: ["0%", "100%"],
-            }),
-          },
-        ]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={barColors}
-        locations={colorLocations}
-      ></AnimatedGradient>
+    <View
+      style={{
+        width: "80%",
 
-      <Text style={styles.barText}>{`${hp}`}</Text>
+        flexDirection: "column",
+        height: 70,
+        rowGap: 3,
+      }}
+    >
+      <View style={styles.barContainer}>
+        <AnimatedGradient
+          style={[
+            styles.healthBar,
+            {
+              width: animatedWidth.interpolate({
+                inputRange: [0, 100],
+                outputRange: ["0%", "100%"],
+              }),
+            },
+          ]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={barColors}
+          locations={colorLocations}
+        ></AnimatedGradient>
+
+        <Text style={styles.barText}>{`${Math.floor(hp)}`}</Text>
+      </View>
+      <View style={{ width: "100%", height: "35%", alignItems: typleFlex }}>
+        {ELEMENT.FIRE === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/fire.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.DARK === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/dark.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.FOREST === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/forest.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.FROZEN === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/frozen.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.THUNDER === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/thunder.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+        {ELEMENT.WATER === formatElement(element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/water.png")}
+            style={{ width: "30%", height: "100%" }}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -505,7 +667,7 @@ const styles = StyleSheet.create({
   },
 
   barContainer: {
-    width: "60%",
+    width: "100%",
     height: 30,
     padding: 3,
     backgroundColor: "rgba(128,128,128,0.7)",

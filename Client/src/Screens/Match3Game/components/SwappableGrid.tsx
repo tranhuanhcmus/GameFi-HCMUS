@@ -82,12 +82,12 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
     (state: any) => state.player,
   );
 
-  const attackComponent = (tileData: TileDataType[][]) => {
-    dispatch(updateComponentHp(10));
+  const attackComponent = (tileData: TileDataType[][], damage: number) => {
+    dispatch(updateComponentHp(damage));
 
     socket?.emitEventGame({
       gameRoom: gameRoom,
-      damage: 10,
+      damage: damage,
       table: tileData,
     });
   };
@@ -96,8 +96,7 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
     // clear all stored data
     // replay
     // setStatus("");
-    // dispatch(setComponentHp(40));
-    // dispatch(setHp(40));
+
     // dispatch(updateTurn(false));
     socket.emitSuccess(gameRoom);
     socket.removeListenFristTurn();
@@ -296,7 +295,7 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
       recolorMatches(newTileDataSource);
 
       if (!isComponentTurn) {
-        attackComponent(newTileDataSource);
+        attackComponent(newTileDataSource, calcAttackDamage(matches));
       }
       return newTileDataSource;
     });
@@ -315,6 +314,18 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
     });
   };
 
+  const DAM_PER_TILE = 10;
+  const calcAttackDamage = (matches: number[][][]) => {
+    let numTileMatched = 0;
+    if (matches.length > 0) {
+      matches.forEach((item) => {
+        console.log("item.length ", item.length);
+        numTileMatched += item.length;
+      });
+    }
+
+    return DAM_PER_TILE * numTileMatched;
+  };
   return (
     <>
       {isVisible ? (

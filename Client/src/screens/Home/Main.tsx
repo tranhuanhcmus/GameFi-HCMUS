@@ -8,9 +8,11 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
+
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { SocketIOClient } from "../../../socket";
 import CustomText from "../../components/CustomText";
@@ -29,13 +31,19 @@ import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
-import Thunder from "../../../assets/thunder.svg";
-
 import { updatePet } from "../../redux/petSlice";
 import { UserService } from "../../services/UserService";
 import logger from "../../logger";
-import { BoostEffectsService } from "../../services/BoostEffectsService";
-import { calculateEnergy } from "../../utils/pet";
+import useFetch from "../../hooks/useFetch";
+import { GameService } from "../../services/GameService";
+import { selectLoading } from "../../redux/loadingSlice";
+import { getLevel } from "../../utils/pet";
+import { BoostService } from "../../services/BoostService";
+import { calculateTimeDifference } from "../../function/DownLoadResource";
+import { updateBoost, updateEnergy } from "../../redux/petActiveSlice";
+import { setHp, updateHp } from "../../redux/playerSlice";
+import { UsersService } from "../../services/UsersService";
+import { BOOST, GAMETYPE } from "../../constants/types";
 type Props = {};
 
 const HomeScreen = () => {
@@ -46,12 +54,16 @@ const HomeScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isChooseGameModalVisible, setIsChooseGameModalVisible] =
     useState(false);
+
+  const { apiData: statusBoost, serverError } = useFetch(() =>
+    BoostService.getStatusBoost(address),
+  );
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
-  const [boostEffects, setBoostEffects] = useState(3);
+
   const isFocused = useIsFocused();
 
   const [gameName, setGameName] = useState<string>("");
-  const [fps, setFps] = useState<string>("10");
+  const [fps, setFps] = useState<string>("12");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
 
@@ -60,14 +72,31 @@ const HomeScreen = () => {
 
   /** useSelector */
   const userState = useSelector(selectUser);
-  const { name, type, image, title, tokenId, attributes, level } = useSelector(
-    (state: any) => state.pet,
-  );
+
+  const {
+    name,
+    type,
+    image,
+    assets,
+    boost,
+    energy,
+    title,
+    tokenId,
+    tokenUri,
+    attributes,
+    level,
+    hp,
+    atk,
+  } = useSelector((state: any) => state.petActive);
+
+  const { energy: energyPlayer } = useSelector((state: any) => state.player);
 
   /** useBalance */
   const { data, isError, isLoading } = useBalance({
     address: userState.address,
   });
+
+  const { isLoading: isLoadingFetch } = useSelector(selectLoading);
 
   /** useDisconnect */
   const { disconnect } = useDisconnect(); // Add useDisconnect hook
@@ -99,7 +128,6 @@ const HomeScreen = () => {
     setResetAfterFinish(true);
   };
 
-  const healthBarScaleValue = new Animated.Value(1);
   const inventoryTranslateYValue = new Animated.Value(0);
   const changeGameBtnTranslateYValue = new Animated.Value(0);
   const playGameBtnTranslateYValue = new Animated.Value(0);
@@ -117,64 +145,19 @@ const HomeScreen = () => {
     }
   };
 
-  // const fetchData = async () => {
-  //   try {
-  //     const res: any[] = await ItemAppOwnerService.getItemAppOwner(address);
-  //     console.log("fetchData res", res.data);
-  //     // const mappedData: any[] = res.map((nft: any) => {
-  //     //   console.log("nft ", nft);
-  //     //   return {
-  //     //     id: nft.tokenid,
-  //     //     element: ELEMENT.FIRE,
-  //     //     level: getLevel(nft.exp),
-  //     //     petImg: nft.data.image || "",
-  //     //     name: nft.data.name,
-  //     //     rarityPet: "special",
-  //     //   };
-  //     // });
-
-  //     // setData(mappedData);
-  //   } catch (error) {
-  //     console.error("Error fetching NFTs:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     navigate.replace("Connect");
-  //     dispatch(setAddress(undefined));
-  //   } else {
-  //     dispatch(setAddress(address));
-  //   }
-  // }, [isConnected]);
-
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     navigate.replace("Connect");
-  //     dispatch(setAddress(undefined));
-  //   } else {
-  //     dispatch(setAddress(address));
-  //   }
-  // }, [isConnected]);
+  const FetchEnergy = async () => {
+    try {
+      const response = await UsersService.getEnergyNFT(tokenId);
+      console.log(response);
+      dispatch(updateEnergy(response.energy));
+    } catch (error) {
+      console.error("Error fetching)\n", error);
+    }
+  };
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.spring(healthBarScaleValue, {
-        toValue: 1.1,
-        tension: 10,
-        useNativeDriver: true,
-      }),
-      Animated.spring(healthBarScaleValue, {
-        toValue: 1,
-        tension: 10,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [isFocused, boostEffects]);
+    FetchEnergy();
+  }, [energy, assets, isFocused]);
 
   useEffect(() => {
     if (isFocused) {
@@ -185,55 +168,98 @@ const HomeScreen = () => {
     }
   }, [isFocused]);
 
-  const fetchBoostEffects = async () => {
-    try {
-      const res: any[] = await BoostEffectsService.getBoostEffects();
+  // const fetchData = async () => {
+  //   try {
+  //     const res: any[] = await UserService.getNFTsByOwner(address);
 
-      console.log("Successfully fetchBoostEffects ", res);
-      const data = res.find((item: any) => item.tokenId === tokenId);
-      if (data) {
-        let energyCnt = calculateEnergy(data.lastTimeBoost);
-        setBoostEffects(energyCnt);
-      }
-    } catch (error) {
-      console.error("Error fetchBoostEffects:", error);
-    }
-  };
+  //     const data = res[0].data; // SET DEFAULT THE FIRST
+  //     dispatch(updatePet(data));
+  //   } catch (error) {
+  //     console.error("Error fetching NFTs:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (
+  //     !name ||
+  //     !type ||
+  //     !image ||
+  //     !title ||
+  //     !tokenUri ||
+  //     !attributes ||
+  //     !level
+  //   )
+  //     fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   logger.warn(
+  //     "name, type, image, title, tokenUri, attributes, level  ",
+  //     name,
+  //     type,
+  //     image,
+  //     title,
+  //     tokenUri,
+  //     attributes,
+  //     level,
+  //   );
+  // }, [name, type, image, title, tokenUri, attributes, level]);
+
+  const [imageSource, setImageSource] = useState({
+    uri: "",
+    height: 0,
+    width: 0,
+  });
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
-    logger.debug("eheheh fetchBoostEffects");
-    if (tokenId !== "") {
-      fetchBoostEffects();
-    }
-  }, [tokenId]);
-  const fetchData = async () => {
-    try {
-      const res: any[] = await UserService.getNFTsByOwner(address);
+    setIsImageLoaded(false);
 
-      const data = res[0].data; // SET DEFAULT THE FIRST
-      dispatch(updatePet(data));
-    } catch (error) {
-      console.error("Error fetching NFTs:", error);
-    }
-  };
+    Image.getSize(
+      assets,
+      (width, height) => {
+        setImageSource({
+          height: height,
+          width: width,
+          uri: assets,
+        });
+        setIsImageLoaded(true);
+        play("walk");
+      },
+      (error) => {
+        console.error("Error loading image", error);
+      },
+    );
+  }, [assets]);
 
+  const [timeBoost, setTimeBoost] = useState({
+    hours: 0,
+    minutes: 0,
+    timeDifference: 0,
+  });
+  const [currentDate, setCurrentDate] = useState(new Date());
   useEffect(() => {
-    if (!name || !type || !image || !title || !tokenId || !attributes || !level)
-      fetchData();
+    const timer = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 60000);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   useEffect(() => {
-    logger.warn(
-      "name, type, image, title, tokenId, attributes, level  ",
-      name,
-      type,
-      image,
-      title,
-      tokenId,
-      attributes,
-      level,
-    );
-  }, [name, type, image, title, tokenId, attributes, level]);
+    if (statusBoost && statusBoost[0] && statusBoost[0].lastTimeBoost) {
+      const time = calculateTimeDifference(statusBoost[0].lastTimeBoost);
+      dispatch(
+        updateBoost({
+          boostType: statusBoost[0].name,
+          boostStatus: time.timeDifference > 0 ? true : false,
+        }),
+      );
+      setTimeBoost(time);
+    }
+  }, [statusBoost, currentDate, isFocused, boost.boostStatus]);
 
   return (
     <View
@@ -271,23 +297,68 @@ const HomeScreen = () => {
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           position: "absolute",
-          justifyContent: "flex-end",
+
+          alignItems: "flex-end",
+
           top: ConstantsResponsive.YR * 2 * 120,
         }}
       >
+        {timeBoost.timeDifference !== 0 && (
+          <View
+            style={{
+              justifyContent: "flex-start",
+              flexDirection: "column",
+              width: ConstantsResponsive.XR * 120,
+              alignItems: "center",
+            }}
+          >
+            {statusBoost && statusBoost[0].name === BOOST.HEALTH ? (
+              <Image
+                source={require("../../../assets/boost/boostHealth.png")}
+                style={{
+                  height: ConstantsResponsive.YR * 50,
+                  width: ConstantsResponsive.XR * 70,
+                }}
+                resizeMode="contain"
+              />
+            ) : (
+              <Image
+                source={require("../../../assets/boost/boostAtk.png")}
+                style={{
+                  height: ConstantsResponsive.YR * 50,
+                  width: ConstantsResponsive.XR * 70,
+                }}
+                resizeMode="contain"
+              />
+            )}
+            <CustomText
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: ConstantsResponsive.XR * 22,
+                color: COLOR.WHITE,
+              }}
+            >
+              {timeBoost.hours}:
+              {timeBoost.minutes >= 10
+                ? `${timeBoost.minutes}`
+                : `0${timeBoost.minutes}`}
+            </CustomText>
+          </View>
+        )}
         <TouchableWithoutFeedback
           onPress={() => {
             Animated.sequence([
               Animated.timing(inventoryTranslateYValue, {
                 toValue: 10,
-                duration: 100,
+                duration: 150,
                 useNativeDriver: true,
               }),
               Animated.timing(inventoryTranslateYValue, {
                 toValue: 0,
-                duration: 100,
+                duration: 150,
                 useNativeDriver: true,
               }),
             ]).start(() => {
@@ -312,8 +383,11 @@ const HomeScreen = () => {
         style={{
           display: "flex",
           flexDirection: "column",
+          position: "relative",
           alignItems: "center",
+          justifyContent: "center",
           height: ConstantsResponsive.YR * 120,
+          width: ConstantsResponsive.MAX_WIDTH,
           marginTop: ConstantsResponsive.YR * 150,
         }}
       >
@@ -322,89 +396,75 @@ const HomeScreen = () => {
             // fontFamily: "mt-2",
             fontWeight: "bold",
             fontFamily: "rexlia",
-            fontSize: 40,
-            color: COLOR.RED_BG_BUTTON,
+            fontSize: ConstantsResponsive.YR * 35,
+            color: COLOR.BLACK,
           }}
         >
-          LEVEL {level}
+          LEVEL {Math.floor(getLevel(level))}
         </CustomText>
-        <Animated.View
-          style={[
-            styles.healthBar,
-            { transform: [{ scale: healthBarScaleValue }] },
-          ]}
-        >
-          {boostEffects >= 3 ? (
-            <>
-              <Thunder
-                width={ConstantsResponsive.MAX_WIDTH * 0.1}
-                height={ConstantsResponsive.MAX_WIDTH * 0.1}
-              />
-              <Thunder
-                width={ConstantsResponsive.MAX_WIDTH * 0.1}
-                height={ConstantsResponsive.MAX_WIDTH * 0.1}
-              />
-              <Thunder
-                width={ConstantsResponsive.MAX_WIDTH * 0.1}
-                height={ConstantsResponsive.MAX_WIDTH * 0.1}
-              />
-            </>
-          ) : boostEffects >= 2 ? (
-            <>
-              <Thunder
-                width={ConstantsResponsive.MAX_WIDTH * 0.1}
-                height={ConstantsResponsive.MAX_WIDTH * 0.1}
-              />
-              <Thunder
-                width={ConstantsResponsive.MAX_WIDTH * 0.1}
-                height={ConstantsResponsive.MAX_WIDTH * 0.1}
-              />
-            </>
-          ) : boostEffects >= 1 ? (
-            <>
-              <Thunder
-                width={ConstantsResponsive.MAX_WIDTH * 0.1}
-                height={ConstantsResponsive.MAX_WIDTH * 0.1}
-              />
-            </>
-          ) : (
-            <></>
-          )}
-        </Animated.View>
+
+        {energy >= 0 && (
+          <View style={{ flexDirection: "row" }}>
+            {Array(3)
+              .fill({})
+              .map((item, index) =>
+                energy == 3 ? (
+                  <Image
+                    key={index}
+                    source={require("../../../assets/navIcon/thunderBlue.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 50,
+                      width: ConstantsResponsive.XR * 50,
+                      marginRight: 10, // Adjust spacing between images
+                    }}
+                  />
+                ) : index < energy ? (
+                  <Image
+                    key={index}
+                    source={require("../../../assets/navIcon/thunderBlue.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 50,
+                      width: ConstantsResponsive.XR * 50,
+                      marginRight: 10, // Adjust spacing between images
+                    }}
+                  />
+                ) : (
+                  <Image
+                    key={index}
+                    source={require("../../../assets/navIcon/thunderBlack.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 50,
+                      width: ConstantsResponsive.XR * 50,
+                      marginRight: 10, // Adjust spacing between images
+                    }}
+                  />
+                ),
+              )}
+          </View>
+        )}
       </View>
 
       <View style={styles.playArea}>
         <View className="absolute bottom-0 left-0 right-0  items-center">
-          <SpriteSheet
-            ref={mummyRef}
-            source={require("../../../assets/spritesSheet_18.png")}
-            columns={60}
-            rows={1}
-            height={ConstantsResponsive.MAX_HEIGHT * 0.3}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-                34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-                50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-              ],
-            }}
-          />
-          {/* <SpriteSheet
-            ref={mummyRef}
-            source={require("../../../assets/spritesheet_5.png")}
-            columns={21}
-            offsetX={0}
-            offsetY={0}
-            rows={1}
-            height={ConstantsResponsive.MAX_HEIGHT * 0.2}
-            animations={{
-              walk: [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20,
-              ],
-            }}
-          /> */}
+          {isImageLoaded ? (
+            <SpriteSheet
+              ref={mummyRef}
+              source={imageSource}
+              columns={60}
+              height={ConstantsResponsive.YR * 300}
+              rows={1}
+              animations={{
+                walk: Array.from({ length: 60 }, (_, i) => i),
+              }}
+            />
+          ) : (
+            isLoadingFetch == false && (
+              <ActivityIndicator size="large" color="#0000ff" />
+            )
+          )}
         </View>
       </View>
       <View
@@ -451,9 +511,11 @@ const HomeScreen = () => {
               resizeMode="stretch"
               source={require("../../../assets/backGroundButtonBrown.png")}
             />
-            <Text style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}>
+            <CustomText
+              style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}
+            >
               CHANGE GAME
-            </Text>
+            </CustomText>
           </NormalButton>
         </Animated.View>
         <Animated.View
@@ -473,9 +535,23 @@ const HomeScreen = () => {
                   useNativeDriver: true,
                 }),
               ]).start(() => {
-                if (!isVisible) setIsVisible(true);
+                if (energy == 0 || energyPlayer == 0) {
+                  console.log("energy ", energy);
+                  console.log("energyPlayer ", energyPlayer);
+                  console.log("khong dc choi");
+                } else {
+                  if (!isVisible) setIsVisible(true);
 
-                socket.emitFindMatch(gameName);
+                  dispatch(setHp(hp));
+
+                  socket.emitFindMatch({
+                    gameName: gameName,
+                    hp: hp,
+                    assets: assets,
+                    atk: atk,
+                    element: attributes.element,
+                  });
+                }
               });
             }}
             style={styles.btnPlay}
@@ -502,15 +578,18 @@ const HomeScreen = () => {
               }}
             >
               <Image
-                source={gameName === "HangManGame" ? HangmanBg : DiamondGameBg}
+                source={
+                  gameName === GAMETYPE.WORDMASTER ? HangmanBg : DiamondGameBg
+                }
                 style={{
                   height: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
                   width: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
                   resizeMode: "cover",
+
                   borderRadius: 10,
                 }}
               />
-              <Text style={styles.textSize}>Play</Text>
+              <CustomText style={styles.textSize}>Play</CustomText>
             </View>
           </NormalButton>
         </Animated.View>
@@ -553,15 +632,20 @@ const styles = StyleSheet.create({
     top: -30,
   },
   textSize: {
-    fontSize: ConstantsResponsive.YR * 50,
-    lineHeight: ConstantsResponsive.YR * 50,
+    fontSize: ConstantsResponsive.YR * 60,
+
     fontWeight: "900",
+    fontFamily: "rexlia",
     textAlign: "center",
     color: "white",
   },
   textSizeChangGame: {
-    fontSize: ConstantsResponsive.YR * 20,
-    lineHeight: ConstantsResponsive.YR * 20,
+    fontSize: ConstantsResponsive.YR * 25,
+
+    fontFamily: "rexlia",
+
+    width: ConstantsResponsive.MAX_WIDTH * 0.25,
+
     fontWeight: "900",
     textAlign: "center",
   },
@@ -675,19 +759,17 @@ const styles = StyleSheet.create({
     height: ConstantsResponsive.YR * 40,
   },
   healthBar: {
-    height: ConstantsResponsive.MAX_WIDTH * 0.1,
+    height: ConstantsResponsive.YR * 20,
     width:
       ConstantsResponsive.MAX_WIDTH -
       ConstantsResponsive.XR * 200 -
       ConstantsResponsive.XR * 60,
     marginLeft: ConstantsResponsive.XR * 40,
     marginTop: ConstantsResponsive.YR * 10,
+    backgroundColor: COLOR.WHITE,
+    borderWidth: 2,
+    borderColor: COLOR.RED_BG_BUTTON,
     borderRadius: ConstantsResponsive.YR * 10,
-    paddingHorizontal: ConstantsResponsive.MAX_WIDTH * 0.1,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
   },
   healthBarInner: {
     position: "absolute",
