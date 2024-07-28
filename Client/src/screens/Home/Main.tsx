@@ -43,7 +43,7 @@ import { calculateTimeDifference } from "../../function/DownLoadResource";
 import { updateBoost, updateEnergy } from "../../redux/petActiveSlice";
 import { setHp, updateHp } from "../../redux/playerSlice";
 import { UsersService } from "../../services/UsersService";
-import { BOOST } from "../../constants/types";
+import { BOOST, GAMETYPE } from "../../constants/types";
 type Props = {};
 
 const HomeScreen = () => {
@@ -145,50 +145,6 @@ const HomeScreen = () => {
     }
   };
 
-  // const fetchData = async () => {
-  //   try {
-  //     const res: any[] = await ItemAppOwnerService.getItemAppOwner(address);
-  //     console.log("fetchData res", res.data);
-  //     // const mappedData: any[] = res.map((nft: any) => {
-  //     //   console.log("nft ", nft);
-  //     //   return {
-  //     //     id: nft.tokenUri,
-  //     //     element: ELEMENT.FIRE,
-  //     //     level: getLevel(nft.exp),
-  //     //     petImg: nft.data.image || "",
-  //     //     name: nft.data.name,
-  //     //     rarityPet: "special",
-  //     //   };
-  //     // });
-
-  //     // setData(mappedData);
-  //   } catch (error) {
-  //     console.error("Error fetching NFTs:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     navigate.replace("Connect");
-  //     dispatch(setAddress(undefined));
-  //   } else {
-  //     dispatch(setAddress(address));
-  //   }
-  // }, [isConnected]);
-
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     navigate.replace("Connect");
-  //     dispatch(setAddress(undefined));
-  //   } else {
-  //     dispatch(setAddress(address));
-  //   }
-  // }, [isConnected]);
-
   const FetchEnergy = async () => {
     try {
       const response = await UsersService.getEnergyNFT(tokenId);
@@ -285,7 +241,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDate(new Date());
-    }, 60000); 
+    }, 60000);
 
     return () => {
       clearInterval(timer);
@@ -377,7 +333,7 @@ const HomeScreen = () => {
                 resizeMode="contain"
               />
             )}
-            <Text
+            <CustomText
               style={{
                 textAlign: "center",
                 fontWeight: "bold",
@@ -389,7 +345,7 @@ const HomeScreen = () => {
               {timeBoost.minutes >= 10
                 ? `${timeBoost.minutes}`
                 : `0${timeBoost.minutes}`}
-            </Text>
+            </CustomText>
           </View>
         )}
         <TouchableWithoutFeedback
@@ -440,7 +396,7 @@ const HomeScreen = () => {
             // fontFamily: "mt-2",
             fontWeight: "bold",
             fontFamily: "rexlia",
-            fontSize: ConstantsResponsive.YR * 25,
+            fontSize: ConstantsResponsive.YR * 35,
             color: COLOR.BLACK,
           }}
         >
@@ -555,9 +511,11 @@ const HomeScreen = () => {
               resizeMode="stretch"
               source={require("../../../assets/backGroundButtonBrown.png")}
             />
-            <Text style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}>
+            <CustomText
+              style={[styles.textSizeChangGame, { color: COLOR.WHITE }]}
+            >
               CHANGE GAME
-            </Text>
+            </CustomText>
           </NormalButton>
         </Animated.View>
         <Animated.View
@@ -620,15 +578,18 @@ const HomeScreen = () => {
               }}
             >
               <Image
-                source={gameName === "HangManGame" ? HangmanBg : DiamondGameBg}
+                source={
+                  gameName === GAMETYPE.WORDMASTER ? HangmanBg : DiamondGameBg
+                }
                 style={{
                   height: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
                   width: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,
                   resizeMode: "cover",
+
                   borderRadius: 10,
                 }}
               />
-              <Text style={styles.textSize}>Play</Text>
+              <CustomText style={styles.textSize}>Play</CustomText>
             </View>
           </NormalButton>
         </Animated.View>
@@ -671,16 +632,19 @@ const styles = StyleSheet.create({
     top: -30,
   },
   textSize: {
-    fontSize: ConstantsResponsive.YR * 50,
-    lineHeight: ConstantsResponsive.YR * 50,
+    fontSize: ConstantsResponsive.YR * 60,
+
     fontWeight: "900",
+    fontFamily: "rexlia",
     textAlign: "center",
     color: "white",
   },
   textSizeChangGame: {
-    fontSize: ConstantsResponsive.YR * 20,
-    lineHeight: ConstantsResponsive.YR * 20,
-    width: ConstantsResponsive.MAX_WIDTH * 0.27,
+    fontSize: ConstantsResponsive.YR * 25,
+
+    fontFamily: "rexlia",
+
+    width: ConstantsResponsive.MAX_WIDTH * 0.25,
 
     fontWeight: "900",
     textAlign: "center",

@@ -32,6 +32,7 @@ import profile from "../../../assets/avatar.png";
 import { Ionicons } from "@expo/vector-icons";
 import NormalButton from "../Button/NormalButton";
 import { UsersService } from "../../services/UsersService";
+import { GAMETYPE } from "../../constants/types";
 
 const LoadingModal = ({
   isVisible,
@@ -76,7 +77,6 @@ const LoadingModal = ({
         "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
         body,
       );
-      console.log(res);
     } catch (err) {
       console.log(err);
     }
@@ -96,7 +96,6 @@ const LoadingModal = ({
   if (isVisible) {
     socket.connect();
     socket.onListenKeyRoom((data) => {
-      console.log(data);
       setIsVisible(false);
       if (data.gameRoom !== "NO ROOM") {
         PlayGame();
@@ -110,9 +109,9 @@ const LoadingModal = ({
           }),
         );
 
-        if (gameName == "Match3Game") {
+        if (gameName == GAMETYPE.DIAMONDPUZZLE) {
           navigate.navigate("Match3Game");
-        } else if (gameName == "HangManGame") {
+        } else if (gameName == GAMETYPE.WORDMASTER) {
           navigate.navigate("HangManGame");
         }
       }

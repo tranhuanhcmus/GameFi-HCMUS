@@ -30,6 +30,7 @@ import { StatusBarHeight } from "../../function/CalculateStatusBar";
 import BackIcon from "../../../assets/BackIcon.svg";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import { useAccount, useDisconnect } from "wagmi";
+import NormalButton from "../../components/Button/NormalButton";
 
 const ProfileScreen = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -78,8 +79,10 @@ const ProfileScreen = () => {
         style={{
           position: "absolute",
           width: ConstantsResponsive.MAX_WIDTH,
+          height: ConstantsResponsive.MAX_HEIGHT,
         }}
       />
+
       <TouchableWithoutFeedback
         onPress={() => {
           Animated.sequence([
@@ -103,17 +106,41 @@ const ProfileScreen = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
-            marginTop: StatusBarHeight * 0.3,
-            paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+            marginLeft: ConstantsResponsive.XR * 30,
+            marginTop: StatusBarHeight,
+
+            width: ConstantsResponsive.XR * 70,
+
+            height: ConstantsResponsive.XR * 70,
             transform: [{ translateY: backTranslateYValue }],
           }}
         >
-          <BackIcon
-            height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+          <Image
+            style={{
+              position: "absolute",
+              borderRadius: ConstantsResponsive.YR * 16,
+              width: "100%",
+              padding: ConstantsResponsive.XR * 12,
+              height: "100%",
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonBrown-1.png")}
+          />
+          <Image
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+
+              width: ConstantsResponsive.XR * 30,
+
+              height: ConstantsResponsive.XR * 30,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/arrow-back-basic-svgrepo-com.png")}
           />
         </Animated.View>
       </TouchableWithoutFeedback>
+
       <View
         id="image_info"
         style={{
@@ -149,13 +176,13 @@ const ProfileScreen = () => {
         id="bottom_button"
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
-          height: ConstantsResponsive.MAX_HEIGHT * 0.3,
+          height: ConstantsResponsive.MAX_HEIGHT * 0.2,
           display: "flex",
           justifyContent: "space-around",
           alignItems: "center",
         }}
       >
-        <AwesomeButton
+        <NormalButton
           onPress={() => {
             if (isConnected) {
               setIsConnected(false);
@@ -163,20 +190,85 @@ const ProfileScreen = () => {
               setIsConnected(true);
             }
           }}
-          width={ConstantsResponsive.MAX_WIDTH * 0.8}
-          backgroundColor={COLOR.BLUE}
-          backgroundDarker={COLOR.DARK_YELLOW}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+
+            alignItems: "center",
+            justifyContent: "center",
+            shadowColor: COLOR.SHADOW_BROWN,
+
+            borderRadius: ConstantsResponsive.YR * 20,
+            width: ConstantsResponsive.MAX_WIDTH * 0.7,
+            height: ConstantsResponsive.YR * 80,
+            padding: ConstantsResponsive.XR * 12,
+          }}
         >
-          View wallet
-        </AwesomeButton>
-        <AwesomeButton
+          <Image
+            style={{
+              position: "absolute",
+              borderRadius: ConstantsResponsive.YR * 20,
+
+              width: ConstantsResponsive.MAX_WIDTH * 0.7,
+              height: ConstantsResponsive.YR * 80,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonBrown-1.png")}
+          />
+          <Text
+            style={{
+              fontSize: ConstantsResponsive.YR * 40,
+              fontFamily: "rexlia",
+              fontWeight: "900",
+              textAlign: "center",
+
+              color: COLOR.WHITE,
+            }}
+          >
+            View wallet
+          </Text>
+        </NormalButton>
+
+        <NormalButton
           onPress={handleDisconnect}
-          width={ConstantsResponsive.MAX_WIDTH * 0.8}
-          backgroundColor={COLOR.RED_BG_BUTTON}
-          backgroundDarker={COLOR.SHADOW_BROWN}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+
+            alignItems: "center",
+            justifyContent: "center",
+            shadowColor: COLOR.SHADOW_BROWN,
+
+            borderRadius: ConstantsResponsive.YR * 20,
+            width: ConstantsResponsive.MAX_WIDTH * 0.7,
+            height: ConstantsResponsive.YR * 80,
+            padding: ConstantsResponsive.XR * 12,
+          }}
         >
-          LOG OUT
-        </AwesomeButton>
+          <Image
+            style={{
+              position: "absolute",
+              borderRadius: ConstantsResponsive.YR * 20,
+
+              width: ConstantsResponsive.MAX_WIDTH * 0.7,
+              height: ConstantsResponsive.YR * 80,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonRed_1.png")}
+          />
+          <Text
+            style={{
+              fontSize: ConstantsResponsive.YR * 40,
+              fontFamily: "rexlia",
+              fontWeight: "900",
+              textAlign: "center",
+
+              color: COLOR.WHITE,
+            }}
+          >
+            LOG OUT
+          </Text>
+        </NormalButton>
       </View>
     </ScrollView>
   );

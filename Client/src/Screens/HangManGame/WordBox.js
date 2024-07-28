@@ -11,11 +11,11 @@ const WordBox = ({ wordData }) => {
       <Text
         style={{
           fontWeight: "700",
-          fontSize: ConstantsResponsive.YR * 19,
+          fontSize: ConstantsResponsive.XR * 20,
           color: "white",
         }}
       >
-        Answer the question:{" "}
+        Answer the question:
       </Text>
       <Text style={styles.word}>{wordData.question}</Text>
     </View>

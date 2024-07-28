@@ -28,6 +28,7 @@ import Setting from "../../../assets/setting.svg";
 import { setVisable } from "../../redux/settingGameSlice";
 import { ELEMENT, formatElement } from "../../constants/types";
 import { ContraryElement } from "../../function/ContraryElement";
+import { useIsFocused } from "@react-navigation/native";
 
 interface props {
   hp: number;
@@ -76,7 +77,7 @@ const User: React.FC<props> = ({ hp }) => {
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
-
+  const isFocused = useIsFocused();
   const isFirstRender = useRef(true);
   const floatingTextAnim = useRef(new Animated.Value(0)).current;
 
@@ -148,10 +149,12 @@ const User: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
+        onFinish: () => console.log("hi"),
       });
     }
-    setOffsetX(0);
-    setOffsetY(0);
+
+    setLoop(true);
+    setResetAfterFinish(true);
   };
   const play1 = (type: string) => {
     const parsedFps = Number(fps + 1);
@@ -175,16 +178,25 @@ const User: React.FC<props> = ({ hp }) => {
   useEffect(() => {
     if (isFirstRender.current) {
       // Skip the effect on first render
-      play("default");
+      play1("default");
       isFirstRender.current = false;
       return;
     }
 
-    play("walk");
+    play1("walk");
     setTimeout(() => {
       receiveDamage(10);
     }, 1000);
   }, [hp]);
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     play("walk");
+  //   } else {
+  //     // Optional: stop the animation when the screen is not focused
+  //     stop();
+  //   }
+  // }, [isFocused]);
 
   return (
     <View style={styles.player}>
@@ -217,7 +229,10 @@ const User: React.FC<props> = ({ hp }) => {
 
         {/* Your Animated Text for displaying damage */}
         <Animated.Text style={[styles.damageText, floatingTextStyle]}>
-          -{atkOpponent * ContraryElement(attributes.element, elementOpponent)}
+          -
+          {Math.floor(
+            atkOpponent * ContraryElement(attributes.element, elementOpponent),
+          )}
         </Animated.Text>
       </View>
 
@@ -228,7 +243,7 @@ const User: React.FC<props> = ({ hp }) => {
         }}
       >
         <SpriteSheet
-          ref={mummyRef}
+          ref={mummyRef1}
           source={require("../../../assets/skill.png")}
           columns={12}
           rows={1}
@@ -258,6 +273,7 @@ const Component: React.FC<props> = ({ hp }) => {
   const { attributes, atk } = useSelector((state: any) => state.petActive);
 
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const play = (type: string) => {
     const parsedFps = Number(fps);
@@ -268,9 +284,14 @@ const Component: React.FC<props> = ({ hp }) => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
+        onFinish: () => console.log("hi"),
       });
     }
+
+    setLoop(true);
+    setResetAfterFinish(true);
   };
+
   const play1 = (type: string) => {
     const parsedFps = Number(fps + 1);
 
@@ -344,16 +365,25 @@ const Component: React.FC<props> = ({ hp }) => {
   useEffect(() => {
     if (isFirstRender.current) {
       // Skip the effect on first render
-      play("default");
+      play1("default");
       isFirstRender.current = false;
       return;
     }
 
-    play("walk");
+    play1("walk");
     setTimeout(() => {
       receiveDamage(10);
     }, 1000);
   }, [hp]);
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     play("walk");
+  //   } else {
+  //     // Optional: stop the animation when the screen is not focused
+  //     stop();
+  //   }
+  // }, [isFocused]);
 
   return (
     <View style={styles.playerComponent}>
@@ -383,7 +413,10 @@ const Component: React.FC<props> = ({ hp }) => {
         )}
         {/* Your Animated Text for displaying damage */}
         <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
-          -{atk * ContraryElement(elementOpponent, attributes.element)}
+          -
+          {Math.floor(
+            atk * ContraryElement(elementOpponent, attributes.element),
+          )}
         </Animated.Text>
       </View>
 
@@ -394,7 +427,7 @@ const Component: React.FC<props> = ({ hp }) => {
         }}
       >
         <SpriteSheet
-          ref={mummyRef}
+          ref={mummyRef1}
           source={require("../../../assets/skill.png")}
           columns={12}
           rows={1}

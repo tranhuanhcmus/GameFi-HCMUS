@@ -42,7 +42,11 @@ import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 import StatsModal from "./Stats";
 import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
 import { API } from "../../apis/constants";
-import { selectLoading } from "../../redux/loadingSlice";
+import {
+  selectLoading,
+  startLoading,
+  stopLoading,
+} from "../../redux/loadingSlice";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import Breed from "../../../assets/breed.svg";
 import { setFatherPet, setMotherPet } from "../../redux/breedSlice";
@@ -185,7 +189,24 @@ const PetScreen = () => {
       const foodItem = foodArray.find((food: any) => food.id === id);
       const foodImage = foodItem.image;
 
+      const food: item = {
+        id: id.toString(),
+        owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+        quantity: 1,
+        tokenId: tokenId,
+      };
+
+      setFoodArray((prevArray: any) =>
+        prevArray.filter((item: any) => item.id !== id),
+      );
+      dispatch(startLoading());
+      await EatService.Eat(food);
+      dispatch(stopLoading());
       setFeed({ feed: foodImage, pageX: pageX, pageY: pageY });
+      setTimeout(() => {
+        playSound(sound, "eatingSound");
+      }, 100);
+
       if (foodItem.quality === "normal") {
         dispatch(updateLevel(FOODVALUE.normal));
       } else if (foodItem.quality === "rare") {
@@ -193,21 +214,6 @@ const PetScreen = () => {
       } else {
         dispatch(updateLevel(FOODVALUE.superRare));
       }
-
-      const food: item = {
-        id: id.toString(),
-        owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-        quantity: 1,
-        tokenId: tokenId,
-      };
-      setTimeout(() => {
-        playSound(sound, "eatingSound");
-      }, 100);
-
-      setFoodArray((prevArray: any) =>
-        prevArray.filter((item: any) => item.id !== id),
-      );
-      await EatService.Eat(food);
     } catch (err) {
       console.log(err);
     }
@@ -505,7 +511,7 @@ const PetScreen = () => {
             <CustomText
               style={{
                 fontWeight: "bold",
-                fontSize: ConstantsResponsive.YR * 28,
+                fontSize: ConstantsResponsive.YR * 35,
                 color: COLOR.BLACK,
                 alignSelf: "center",
                 fontFamily: "rexlia",
@@ -746,7 +752,7 @@ const styles = StyleSheet.create({
   },
 
   textSize: {
-    fontSize: ConstantsResponsive.YR * 17,
+    fontSize: ConstantsResponsive.XR * 25,
     fontFamily: "rexlia",
     fontWeight: "900",
     textAlign: "center",

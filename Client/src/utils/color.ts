@@ -6,6 +6,7 @@ export const COLOR = {
   BLUE: "#1A87EE",
   BLUE1: "#BCCFDF",
   BROWN: "#EE8554",
+BLACK_OPACITY: "rgba(0, 0, 0, 0.3)",
   YELLOW: "#F3B207",  
   GREEN: "#4BBA16",
   LIGHT_PURPLE: "#BC93F4",

@@ -80,7 +80,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
     ) {
       onClose?.();
       dispatch(startLoading());
-      console.log(category);
+
       const body: item = {
         id: id,
         owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
@@ -103,13 +103,11 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             gemcost: gemcost || 0,
             currency: 1,
           };
-          console.log(body1);
+
           const response = await ItemAppOwnerService.buyItemPack(body1);
-          console.log(response);
 
           onBuy(true, itemImg, [response]);
         } else {
-          console.log(body);
           await ItemAppOwnerService.buyItem(body);
 
           onBuy(true, itemImg);
@@ -119,7 +117,6 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
 
         dispatch(stopLoading());
       } catch (error) {
-        console.log(error);
         onBuy(false, itemImg || "");
         dispatch(stopLoading());
       }
@@ -169,8 +166,8 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             style={styles.img}
           />
           <CustomText
-            className="absolute mt-3 text-start font-rexlia text-[40px]"
-            style={{ color: COLOR.DARKER_PURPLE }}
+            className="absolute mt-3 text-start font-rexlia text-[32px]"
+            style={{ color: COLOR.BRIGHT_YELLOW }}
           >
             {name}
           </CustomText>

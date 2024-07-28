@@ -43,8 +43,6 @@ const ListFood: React.FC<Props> = (props: Props) => {
       ? ConstantsResponsive.MAX_WIDTH * 0.425
       : ConstantsResponsive.MAX_WIDTH * 0.2;
 
-  console.log(props.arrayFood);
-
   return (
     <View style={[styles.container, { width: containerWidth }]}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>

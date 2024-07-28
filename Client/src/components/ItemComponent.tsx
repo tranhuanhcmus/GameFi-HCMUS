@@ -63,11 +63,11 @@ export const ItemComponent: React.FC<ItemProps> = ({
       >
         <Text
           style={{
-            fontFamily: "mt-2",
+            fontFamily: "rexlia",
             color: COLOR.WHITE,
             fontSize: 17,
             textAlign: "center",
-            fontWeight: "bold",
+            fontWeight: "500",
           }}
         >
           {itemName}
@@ -75,11 +75,11 @@ export const ItemComponent: React.FC<ItemProps> = ({
       </View>
       <View style={{ display: "flex", alignItems: "center" }}>
         <Image
-          resizeMode="stretch"
+          resizeMode="contain"
           source={{ uri: API.server + itemImg }}
           style={{
-            width: 60,
-            height: 60,
+            width: ConstantsResponsive.XR * 100,
+            height: ConstantsResponsive.YR * 100,
           }}
         />
       </View>
@@ -106,8 +106,8 @@ export const ItemComponent: React.FC<ItemProps> = ({
             />
             <Text
               style={{
-                // fontFamily: "mt-2",
-                fontWeight: "bold",
+                fontFamily: "rexlia",
+                fontWeight: "500",
                 color: COLOR.WHITE,
                 fontSize: 15,
               }}
@@ -123,8 +123,8 @@ export const ItemComponent: React.FC<ItemProps> = ({
             />
             <Text
               style={{
-                // fontFamily: "mt-2",
-                fontWeight: "bold",
+                fontFamily: "rexlia",
+                fontWeight: "500",
                 color: COLOR.WHITE,
                 fontSize: 17,
               }}
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   itemTop: {
     width: "100%",
-    height: ConstantsResponsive.YR * 50,
+
     marginBottom: ConstantsResponsive.YR * 10,
   },
   itemBottom: {

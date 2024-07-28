@@ -18,6 +18,7 @@ import CustomText from "../../components/CustomText";
 import { COLOR } from "../../utils/color";
 
 import CloseButton from "../../../assets/carbon_close-filled.svg";
+import { getLevel } from "../../utils/pet";
 
 type Props = {};
 
@@ -29,7 +30,7 @@ const StatsModal = ({
 
   setIsVisible: (value: boolean) => void;
 }) => {
-  const { hp, atk } = useSelector((state: any) => state.pet);
+  const { hp, atk, level } = useSelector((state: any) => state.pet);
 
   return (
     <Modal animationType="slide" transparent={true} visible={isVisible}>
@@ -74,7 +75,9 @@ const StatsModal = ({
               columnGap: ConstantsResponsive.XR * 100,
             }}
           >
-            <CustomText style={styles.text}>Level 1</CustomText>
+            <CustomText style={styles.text}>
+              LEVEL {Math.floor(getLevel(level))}
+            </CustomText>
             <CustomText style={styles.text}>Common Pet</CustomText>
           </View>
           <BarInfor color="green" title="Health" value={hp} />
@@ -127,9 +130,9 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: "Helvetica",
+    fontFamily: "rexlia",
     fontWeight: "bold",
-    fontSize: ConstantsResponsive.YR * 25,
+    fontSize: ConstantsResponsive.YR * 30,
     color: "white",
   },
 

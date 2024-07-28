@@ -164,14 +164,37 @@ export function BreedScreen() {
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
-            marginTop: StatusBarHeight * 0.3,
-            paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+            marginLeft: ConstantsResponsive.XR * 30,
+            marginTop: StatusBarHeight,
+
+            width: ConstantsResponsive.XR * 70,
+
+            height: ConstantsResponsive.XR * 70,
             transform: [{ translateY: backTranslateYValue }],
           }}
         >
-          <BackIcon
-            height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+          <Image
+            style={{
+              position: "absolute",
+              borderRadius: ConstantsResponsive.YR * 16,
+              width: "100%",
+              padding: ConstantsResponsive.XR * 12,
+              height: "100%",
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonBrown-1.png")}
+          />
+          <Image
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+
+              width: ConstantsResponsive.XR * 30,
+
+              height: ConstantsResponsive.XR * 30,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/arrow-back-basic-svgrepo-com.png")}
           />
         </Animated.View>
       </TouchableWithoutFeedback>

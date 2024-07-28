@@ -45,14 +45,17 @@ const TrendMarketScreen = (props: Props) => {
           <View className=" flex flex-row">
             <TrendCard
               imgUrl=""
-              name="FireBird"
+              name="Fire Bear"
               price={20}
               up={true}
               number={1112}
             ></TrendCard>
           </View>
         </View>
-        <View className="mt-6 flex flex-col ">
+        <View
+          className="mt-6 flex flex-col "
+          style={{ width: ConstantsResponsive.MAX_WIDTH }}
+        >
           <Text className="text-[25px] font-bold text-white">
             Market Statistics
           </Text>
@@ -100,7 +103,7 @@ const TrendMarketScreen = (props: Props) => {
           </ScrollView>
           <CartFilter
             imgUrl=""
-            name="FireBird"
+            name="Bear 2"
             price={20}
             up={false}
             number={10}
@@ -108,7 +111,7 @@ const TrendMarketScreen = (props: Props) => {
           ></CartFilter>
           <CartFilter
             imgUrl=""
-            name="FireBird"
+            name="Bear 3"
             price={20}
             up={true}
             number={11.2}

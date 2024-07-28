@@ -23,7 +23,7 @@ import {
   setComponentHp,
   setHp,
 } from "../../redux/playerSlice";
-import { WordsArray } from "./data";
+
 import { updateTurn } from "../../redux/hangManSlice";
 import { swapTurn } from "../../redux/hangManSlice";
 import { DataSocketTransfer } from "../../../socket";
@@ -82,10 +82,7 @@ const Index = () => {
   const [damagePet, setDamagePet] = useState(atk);
 
   useEffect(() => {
-    setDamagePet(
-      (prev: number) =>
-        prev * ContraryElement(attributes.element, elementOpponent),
-    );
+    setDamagePet(atk * ContraryElement(attributes.element, elementOpponent));
   }, [atk]);
 
   useEffect(() => {
@@ -128,7 +125,7 @@ const Index = () => {
   };
 
   useEffect(() => {
-    if (componentHp == 0) {
+    if (componentHp === 0) {
       setStatus("Victory");
     }
   }, [componentHp]);
@@ -215,6 +212,12 @@ const Index = () => {
       setGameOver(true);
     }
   }, [status]);
+
+  useEffect(() => {
+    if (componentHp <= 0) {
+      setStatus("Victory");
+    }
+  }, [componentHp]);
 
   useEffect(() => {
     socket.onListenFirstTurn((data) => {

@@ -7,6 +7,12 @@ export const ELEMENT = {
   FOREST: "forest",
 };
 
+export const GAMETYPE ={
+  WORDMASTER:"Word Master",
+  DIAMONDPUZZLE: "Diamond Puzzle",
+
+}
+
 export const formatElement = (types: number) => {
   switch(types) {
     case 1:
@@ -29,6 +35,7 @@ export const formatElement = (types: number) => {
 export const CATEGORY = {
   FOODPACK: "food pack",
   PACK: "pack",
+  REWARD:"reward",
   BOOST:"boost"
 
 }

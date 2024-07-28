@@ -95,6 +95,28 @@ const AlertBuyItemsSuccess: React.FC<AlertBuyItemsSuccessProps> = ({
               style={styles.img}
             />
           </>
+        ) : category == CATEGORY.REWARD ? (
+          <>
+            <View
+              style={{
+                position: "absolute",
+                top: StatusBarHeight + ConstantsResponsive.YR * 100,
+              }}
+            >
+              {itemImg?.data && currentIndex >= 0 && (
+                <ItemShowComponent
+                  name={itemImg?.data[currentIndex].name}
+                  quantity={itemImg?.data[currentIndex].quantity}
+                  itemImg={itemImg?.data[currentIndex].image}
+                />
+              )}
+            </View>
+            <Image
+              resizeMode="contain"
+              source={itemImg?.pack}
+              style={styles.img}
+            />
+          </>
         ) : (
           <ItemShowComponent
             name={name}

@@ -74,13 +74,13 @@ const petActiveSlice = createSlice({
     },
     updateBoost(state, action) {
       state.boost = action.payload;
-      if (action.payload.boostStatus === true) {
-        if (action.payload.boostType === BOOST.HEALTH) {
-          state.hp = state.hp * 1.2;
-        } else {
-          state.atk = state.atk * 1.2;
-        }
-      }
+      // if (action.payload.boostStatus === true) {
+      //   if (action.payload.boostType === BOOST.HEALTH) {
+      //     state.hp = state.hp * 1.2;
+      //   } else {
+      //     state.atk = state.atk * 1.2;
+      //   }
+      // }
     },
 
     updateEnergy(state, action: PayloadAction<number>) {

@@ -80,9 +80,9 @@ const styles = StyleSheet.create({
     borderRadius: ConstantsResponsive.YR * 8,
   },
   text: {
-    fontFamily: "Helvetica",
+    fontFamily: "rexlia",
     fontWeight: "bold",
-    fontSize: ConstantsResponsive.YR * 25,
+    fontSize: ConstantsResponsive.YR * 30,
     color: "white",
   },
   area: {

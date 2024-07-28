@@ -87,7 +87,7 @@ const PetsModal = ({
       const mappedData: any[] = apiData.map((nft: any) => {
         return {
           id: nft.data.tokenId,
-          energy: nft.data.energy,
+          energy: nft.energy,
           hp: nft.data.hp,
           atk: nft.data.atk,
           level: nft.exp,
@@ -106,7 +106,7 @@ const PetsModal = ({
         };
       });
 
-      if (!assets) {
+      if (!assets && mappedData[0]) {
         dispatch(
           updatePet({
             ...mappedData[0],

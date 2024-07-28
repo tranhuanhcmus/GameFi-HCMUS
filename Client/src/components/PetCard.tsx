@@ -129,19 +129,42 @@ const PetCard: React.FC<PetCardProps> = ({
             right: ConstantsResponsive.XR * 5,
           }}
         >
-          {Array(3)
-            .fill({})
-            .map((index) => (
-              <Image
-                key={index}
-                source={require("../../assets/navIcon/thunderBlue.png")}
-                resizeMode="contain"
-                style={{
-                  height: ConstantsResponsive.XR * 35,
-                  width: ConstantsResponsive.XR * 35,
-                }}
-              />
-            ))}
+          {item.energy >= 0 &&
+            Array(3)
+              .fill({})
+              .map((index) =>
+                item.energy == 3 ? (
+                  <Image
+                    key={index}
+                    source={require("../../assets/navIcon/thunderBlue.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 32,
+                      width: ConstantsResponsive.XR * 32,
+                    }}
+                  />
+                ) : index < item.energy ? (
+                  <Image
+                    key={index}
+                    source={require("../../assets/navIcon/thunderBlue.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 32,
+                      width: ConstantsResponsive.XR * 32,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    key={index}
+                    source={require("../../assets/navIcon/thunderBlack.png")}
+                    resizeMode="contain"
+                    style={{
+                      height: ConstantsResponsive.XR * 32,
+                      width: ConstantsResponsive.XR * 32,
+                    }}
+                  />
+                ),
+              )}
         </View>
 
         <View

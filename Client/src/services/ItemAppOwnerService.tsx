@@ -60,6 +60,18 @@ export class ItemAppOwnerService {
     });
   }
 
+  static async getReward(address: `0x${string}` | undefined) {
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        const response = await api.get(API.ITEM_APP_OWNER + `/win/${address}`);
+
+        resolve(response.data.data);
+      } catch (error: any) {
+        reject(error.message);
+      }
+    });
+  }
+
   static async buyItem(data: item) {
     return new Promise<any[]>(async (resolve, reject) => {
       try {

@@ -48,7 +48,6 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
   }, [address]);
 
   useEffect(() => {
-    console.log(1, energyUser);
     dispatch(updateEnergy(energyUser?.energy || 0));
   }, [energyUser?.energy]);
 
@@ -102,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
         >
           {data && data.length
             ? data.find((item) => item.name == GOLD).quantity
-            : 0}
+            : 100}
         </CustomText>
       </View>
 

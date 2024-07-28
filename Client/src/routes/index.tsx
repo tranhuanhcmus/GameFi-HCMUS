@@ -35,6 +35,7 @@ import Match3Game from "../Screens/Match3Game/Main";
 import { flare } from "viem/chains";
 import { height } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import ConstantsResponsive from "../constants/Constanst";
+import Settings from "../components/Setting";
 
 const navArr: NavItem[] = [
   {
@@ -241,6 +242,7 @@ const Route = () => (
       />
     </Stack.Navigator>
     <AlertComponent />
+    <Settings></Settings>
     <LoadingComponent />
   </NavigationContainer>
 );
