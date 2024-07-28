@@ -55,7 +55,7 @@ const HomeScreen = () => {
     useState(false);
 
   const { apiData: statusBoost, serverError } = useFetch(() =>
-    BoostService.getStatusBoost("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
+    BoostService.getStatusBoost(address),
   );
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
 

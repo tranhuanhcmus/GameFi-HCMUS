@@ -150,9 +150,7 @@ const PetScreen = () => {
 
   const fetchData = async () => {
     try {
-      const res: any[] = await ItemAppOwnerService.getItems(
-        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-      );
+      const res: any[] = await ItemAppOwnerService.getItems(address);
 
       const data = res.filter((item) => item.category == "food");
 
@@ -196,7 +194,7 @@ const PetScreen = () => {
 
       const food: item = {
         id: id.toString(),
-        owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+        owner: address!,
         quantity: 1,
         tokenId: tokenId,
       };

@@ -25,6 +25,7 @@ import useFetch from "../hooks/useFetch";
 import { ItemGameOwnerService } from "../services/ItemGameOwnerService";
 import { startLoading, stopLoading } from "../redux/loadingSlice";
 import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
+import { useAccount } from "wagmi";
 
 interface AlertBuyComponentProps {
   isVisible?: boolean;
@@ -67,6 +68,9 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
 }) => {
   const dispatch = useDispatch();
 
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+
   const handleBuy = async () => {
     if (
       id &&
@@ -82,7 +86,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
       console.log(category);
       const body: item = {
         id: id,
-        owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+        owner: address!,
         quantity: quantity || 0,
         goldcost: goldcost || 0,
         gemcost: gemcost || 0,
@@ -95,7 +99,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             id: id,
             quality: quality,
             category: category.substring(0, category.indexOf(" ")),
-            owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+            owner: address!,
 
             quantity: quantity || 0,
             goldcost: goldcost || 0,
