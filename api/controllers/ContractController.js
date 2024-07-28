@@ -201,6 +201,7 @@ const ContractController = {
     addExp: async(tokenId,exp) => {
         try {
             const exp_result = await petContract.methods.addExp(tokenId,exp).send({ from: WALLET_PUBLIC_KEY })
+            console.log(`add exp for ${tokenId} success, value ${exp}`);
             return exp_result;
         } catch (error) {
             console.error('Error fetching exp:', error);
