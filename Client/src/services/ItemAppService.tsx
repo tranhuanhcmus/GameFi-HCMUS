@@ -10,9 +10,8 @@ export class ItemAppService {
   static async getAllItems() {
     return new Promise<any[]>(async (resolve, reject) => {
       try {
-        const response = await api.get(API.ITEM_APP);
+        const response = await api.get(API.ITEM_APP + "/?category=shop");
 
-        console.log("response ", response.data);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);
@@ -30,7 +29,6 @@ export class ItemAppService {
       try {
         const response = await api.get(API.NFT + `/${address}`);
 
-        console.log("response ", response.data);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);

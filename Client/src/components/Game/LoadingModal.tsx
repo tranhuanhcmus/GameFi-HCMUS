@@ -18,13 +18,22 @@ import { SocketIOClient } from "../../../socket";
 import ConstantsResponsive from "../../constants/Constanst";
 import AwesomeButton from "react-native-really-awesome-button";
 import useCustomNavigation from "../../hooks/useCustomNavigation/index";
-import { setGameRoom } from "../../redux/playerSlice";
-import { useDispatch } from "react-redux";
+import {
+  setAssets,
+  setComponentHp,
+  setGameRoom,
+  setOpponentValue,
+  updateComponentHp,
+} from "../../redux/playerSlice";
+import { useDispatch, useSelector } from "react-redux";
 import BouncingText from "../BouncingText";
 
 import profile from "../../../assets/avatar.png";
 import { Ionicons } from "@expo/vector-icons";
 import NormalButton from "../Button/NormalButton";
+import { UsersService } from "../../services/UsersService";
+import { GAMETYPE } from "../../constants/types";
+import { useAccount } from "wagmi";
 
 const LoadingModal = ({
   isVisible,
@@ -38,8 +47,13 @@ const LoadingModal = ({
   const navigate = useCustomNavigation();
   const socket = SocketIOClient.getInstance();
 
+  const { tokenId } = useSelector((state: any) => state.petActive);
+
   const [second, setSecond] = useState(30);
   const dispatch = useDispatch();
+
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
 
   // THIS HOOK COUNT DOWN BEFORE GAME
 
@@ -60,6 +74,20 @@ const LoadingModal = ({
     }
   }, [isVisible]);
 
+  const PlayGame = async () => {
+    try {
+      const body = { tokenId: tokenId };
+      const res = await UsersService.playGame(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+        body,
+      );
+      // const res = await UsersService.playGame(address!, body);
+      // console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   //   THIS HOOK NAVIGATE TO GAME WHEN SECOND IS 0
   useEffect(() => {
     if (second == 0) {
@@ -74,14 +102,22 @@ const LoadingModal = ({
   if (isVisible) {
     socket.connect();
     socket.onListenKeyRoom((data) => {
-      console.log(data);
       setIsVisible(false);
-      if (data !== "NO ROOM") {
-        dispatch(setGameRoom(data));
+      if (data.gameRoom !== "NO ROOM") {
+        PlayGame();
+        dispatch(setGameRoom(data.gameRoom));
+        dispatch(
+          setOpponentValue({
+            hpOpponent: data.hpOpponent,
+            assetsOpponent: data.assetsOpponent,
+            elementOpponent: data.elementOpponent,
+            atkOpponent: data.atkOpponent,
+          }),
+        );
 
-        if (gameName == "Match3Game") {
+        if (gameName == GAMETYPE.DIAMONDPUZZLE) {
           navigate.navigate("Match3Game");
-        } else if (gameName == "HangManGame") {
+        } else if (gameName == GAMETYPE.WORDMASTER) {
           navigate.navigate("HangManGame");
         }
       }

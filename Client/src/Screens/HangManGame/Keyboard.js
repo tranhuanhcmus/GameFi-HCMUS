@@ -8,16 +8,22 @@ const Key = ({ text, onPress, disabled }) => {
     <TouchableOpacity
       disabled={disabled}
       onPress={() => onPress(text)}
-      style={[
-        styles.keyContainer,
-        // { backgroundColor: disabled ? "#99a" : colors.key },
-      ]}
+      style={[styles.keyContainer]}
     >
-      <Image
-        style={{ position: "absolute", width: "100%", height: "100%" }}
-        source={require("../../../assets/backGroundForKey.png")}
-        resizeMode="stretch"
-      />
+      {disabled ? (
+        <Image
+          style={{ position: "absolute", width: "100%", height: "100%" }}
+          source={require("../../../assets/buttonStoneRed.png")}
+          resizeMode="stretch"
+        />
+      ) : (
+        <Image
+          style={{ position: "absolute", width: "100%", height: "100%" }}
+          source={require("../../../assets/backGroundForKey.png")}
+          resizeMode="stretch"
+        />
+      )}
+
       <Text style={styles.key}>{text}</Text>
     </TouchableOpacity>
   );
@@ -27,21 +33,25 @@ const Keyboard = ({ turn, onPress, correctLetters, wrongLetters }) => {
   const keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   return (
     <View style={styles.container}>
-      {turn
-        ? keys.split("").map((_, index) => {
-            const disable =
-              correctLetters.includes(_) || wrongLetters.includes(_);
-            return (
-              <Key key={index} text={_} onPress={onPress} disabled={disable} />
-            );
-          })
-        : keys.split("").map((_, index) => {
+      {turn ? (
+        keys.split("").map((_, index) => {
+          const disable =
+            correctLetters.includes(_) || wrongLetters.includes(_);
+          return (
+            <Key key={index} text={_} onPress={onPress} disabled={disable} />
+          );
+        })
+      ) : (
+        <>
+          {keys.split("").map((_, index) => {
             const disable = true;
 
             return (
               <Key key={index} text={_} onPress={onPress} disabled={disable} />
             );
           })}
+        </>
+      )}
     </View>
   );
 };
@@ -52,6 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     width: "100%",
+
     justifyContent: "center",
     marginVertical: 20,
     flexWrap: "wrap",

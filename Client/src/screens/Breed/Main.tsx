@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
-
+import { showAlert, hideAlert, selectAlert } from "../../redux/alertSlice";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
@@ -21,9 +21,8 @@ import Egg from "../../../assets/Egg.png";
 import Hourglass from "../../../assets/Hourglass.png";
 import Plus from "../../../assets/Plus.png";
 import QuestionMark from "../../../assets/Question.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import log from "../../logger/index";
-import SpriteSheet from "rn-sprite-sheet";
 import Breed from "../../../assets/breed.svg";
 import BackIcon from "../../../assets/BackIcon.svg";
 import BearCard from "./BearCard";
@@ -31,10 +30,14 @@ import { BreedService } from "../../services/BreedService";
 import NormalButton from "../../components/Button/NormalButton";
 import AwesomeButton from "react-native-really-awesome-button";
 import BabyCard from "./BabyCard";
+import { useAccount } from "wagmi";
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
 const TIME_TO_BREED = 10;
 export function BreedScreen() {
+  /** useAccount */
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
   const [childPet, setChildPet] = useState<any>(null);
 
@@ -47,6 +50,7 @@ export function BreedScreen() {
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
+  const dispatch = useDispatch();
   useEffect(() => {
     let intervalId: any;
     if (isActive) {
@@ -60,9 +64,8 @@ export function BreedScreen() {
 
   useEffect(() => {
     if (remainingTime === 0) {
-      if (fatherPet.id && fatherPet.id) {
-        breedFunction(fatherPet.id, fatherPet.id);
-        setIsOpen(true);
+      if (fatherPet.id && motherPet.id) {
+        breedFunction(fatherPet.id, motherPet.id);
       }
       setIsActive(false); // Reset isActive state when time finishes
     }
@@ -70,31 +73,32 @@ export function BreedScreen() {
 
   const navigate = useCustomNavigation();
 
-  useEffect(() => {
-    log.info("fatherPet", fatherPet);
-    log.info("motherPet", motherPet);
-  }, [fatherPet, motherPet]);
-
   /**
    *
    * @param father
    * @param mother
    */
 
+  useEffect(() => {
+    console.log({ fatherPet, motherPet });
+  }, [fatherPet, motherPet]);
   const breedFunction = async (father: any, mother: any) => {
-    log.error("father", father);
-    log.error("mother", mother);
-
     try {
-      const response = await BreedService.breed(father, mother);
+      // console.log("breedFunction", { father, mother, address });
+      const response = await BreedService.breed(father, mother, address);
       if (response) {
-        log.warn("A baby born ", response.data);
-        setChildPet(response.data);
-      } else {
-        log.warn("A baby is not born");
+        log.warn("A baby born ", response);
+        setChildPet(response);
+        setIsOpen(true);
       }
     } catch (postError: any) {
-      log.error("Error making POST request:", postError);
+      console.log("postError ", postError);
+      // dispatch(
+      //   showAlert({
+      //     title: "Notice",
+      //     message: postError,
+      //   }),
+      // );
     }
   };
 
@@ -154,14 +158,37 @@ export function BreedScreen() {
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
-            marginTop: StatusBarHeight * 0.3,
-            paddingLeft: ConstantsResponsive.MAX_WIDTH * 0.05,
+            marginLeft: ConstantsResponsive.XR * 30,
+            marginTop: StatusBarHeight,
+
+            width: ConstantsResponsive.XR * 70,
+
+            height: ConstantsResponsive.XR * 70,
             transform: [{ translateY: backTranslateYValue }],
           }}
         >
-          <BackIcon
-            height={ConstantsResponsive.MAX_HEIGHT * 0.1}
-            width={ConstantsResponsive.MAX_WIDTH * 0.1}
+          <Image
+            style={{
+              position: "absolute",
+              borderRadius: ConstantsResponsive.YR * 16,
+              width: "100%",
+              padding: ConstantsResponsive.XR * 12,
+              height: "100%",
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/backGroundButtonBrown-1.png")}
+          />
+          <Image
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+
+              width: ConstantsResponsive.XR * 30,
+
+              height: ConstantsResponsive.XR * 30,
+            }}
+            resizeMode="stretch"
+            source={require("../../../assets/arrow-back-basic-svgrepo-com.png")}
           />
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -182,6 +209,7 @@ export function BreedScreen() {
             name={fatherPet.name}
             rarity={fatherPet.rarityPet}
             tokenUri={fatherPet.tokenUri}
+            attributes={fatherPet.attributes}
           />
           <BearCard
             element={motherPet.element}
@@ -189,7 +217,8 @@ export function BreedScreen() {
             image={motherPet.petImg}
             name={motherPet.name}
             rarity={motherPet.rarityPet}
-            tokenUri={fatherPet.tokenUri}
+            tokenUri={motherPet.tokenUri}
+            attributes={motherPet.attributes}
           />
         </View>
         <View
@@ -213,13 +242,10 @@ export function BreedScreen() {
         >
           <BabyCard
             disabled={true}
-            hp={childPet?.hp}
-            atk={childPet?.atk}
-            element={childPet?.element}
-            description={childPet?.description}
-            image={childPet?.image}
-            name={childPet?.name}
-            assets={childPet?.assets}
+            element={childPet?.data?.attributes?.element}
+            image={childPet?.data?.image}
+            name={childPet?.data?.name}
+            level={childPet?.exp}
             isOpen={isOpen}
           />
         </View>

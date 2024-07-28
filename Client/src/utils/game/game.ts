@@ -1,15 +1,17 @@
 import { Animated } from "react-native";
 import ConstantsResponsive from "../../constants/Constanst";
 import log from "../../logger/index.js";
+import { useSelector } from "react-redux";
 export default interface AnimationPropertyType {
   [key: string]: string;
 }
 
+ 
 export interface AnimatedValues {
   [key: string]: any[][];
 }
 export default class GameLogic {
-  public static HEALTH_POINT = 40;
+  public static HEALTH_POINT = 200;
 
   /**
    * Size in pixel of table, please change if needed.

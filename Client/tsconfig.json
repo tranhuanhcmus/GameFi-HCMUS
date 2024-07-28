@@ -3,10 +3,16 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": "/src",
+     "target": "es6",
+    "jsx": "react-native",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
     
   },
-  "include": ["**/*.ts", "**/*.tsx", "src/components/SpriteSheet.js", "src/components/SpriteSheet.jsx", "src/components/SpriteSheet.js"],
+  "include": ["**/*.ts", "**/*.tsx", "src/components/SpriteSheet.js", "src/components/SpriteSheet.jsx", "src/components/SpriteSheet.js", "src/node_modules"],
   "scripts": {
     "ts:check": "tsc"
   }
 }
+
+

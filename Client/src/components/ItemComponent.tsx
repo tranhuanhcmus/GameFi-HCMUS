@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import Coin from "../../assets/coin.svg";
+import Coin from "../../assets/navIcon/coin.svg";
 import Gem from "../../assets/diamond.svg";
 import Food from "../../assets/candy/14.png";
 import { API } from "../apis/constants";
@@ -63,10 +63,11 @@ export const ItemComponent: React.FC<ItemProps> = ({
       >
         <Text
           style={{
-            // fontFamily: "mt-2",
+            fontFamily: "rexlia",
             color: COLOR.WHITE,
-            fontSize: 15,
-            fontWeight: "bold",
+            fontSize: 17,
+            textAlign: "center",
+            fontWeight: "500",
           }}
         >
           {itemName}
@@ -74,11 +75,11 @@ export const ItemComponent: React.FC<ItemProps> = ({
       </View>
       <View style={{ display: "flex", alignItems: "center" }}>
         <Image
-          resizeMode="stretch"
+          resizeMode="contain"
           source={{ uri: API.server + itemImg }}
           style={{
-            width: 60,
-            height: 60,
+            width: ConstantsResponsive.XR * 100,
+            height: ConstantsResponsive.YR * 100,
           }}
         />
       </View>
@@ -105,8 +106,8 @@ export const ItemComponent: React.FC<ItemProps> = ({
             />
             <Text
               style={{
-                // fontFamily: "mt-2",
-                fontWeight: "bold",
+                fontFamily: "rexlia",
+                fontWeight: "500",
                 color: COLOR.WHITE,
                 fontSize: 15,
               }}
@@ -122,10 +123,10 @@ export const ItemComponent: React.FC<ItemProps> = ({
             />
             <Text
               style={{
-                // fontFamily: "mt-2",
-                fontWeight: "bold",
+                fontFamily: "rexlia",
+                fontWeight: "500",
                 color: COLOR.WHITE,
-                fontSize: 15,
+                fontSize: 17,
               }}
             >
               {goldcost}
@@ -151,7 +152,8 @@ const styles = StyleSheet.create({
     height: ConstantsResponsive.MAX_HEIGHT / 3 - 120 * ConstantsResponsive.YR,
   },
   itemTop: {
-    height: ConstantsResponsive.YR * 50,
+    width: "100%",
+
     marginBottom: ConstantsResponsive.YR * 10,
   },
   itemBottom: {

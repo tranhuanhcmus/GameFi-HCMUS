@@ -17,6 +17,8 @@ import { COLOR } from "../../utils/color";
 import UnknownCard from "../../../assets/UnknowCard.svg";
 import Card from "../../../assets/BearCard.svg";
 import PetsModal from "../Pet/Pets";
+import { getLevel } from "../../utils/pet";
+import { ELEMENT, formatElement } from "../../constants/types";
 const BearCard = (props: any) => {
   /** useState */
   const [isVisible, setIsVisible] = useState(false);
@@ -63,10 +65,6 @@ const BearCard = (props: any) => {
     setTimeout(startShakeAnimation, 2000);
   }, []);
 
-  // useEffect(() => {
-  //   logger.warn("props ahahah ", props);
-  //   if (props.disabled && props.name) scaleAnimation();
-  // }, [props]);
   return (
     <>
       <PetsModal
@@ -117,15 +115,41 @@ const BearCard = (props: any) => {
               alignItems: "center",
             }}
           >
-            <CustomText
-              style={{
-                color: "#972E28",
-                fontWeight: "bold",
-                fontSize: ConstantsResponsive.YR * 20,
-              }}
-            >
-              {props.element ? props.element : "FIRE"}
-            </CustomText>
+            {ELEMENT.FIRE === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/fire.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
+            {ELEMENT.DARK === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/dark.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
+            {ELEMENT.FOREST === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/forest.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
+            {ELEMENT.FROZEN === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/frozen.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
+            {ELEMENT.WATER === formatElement(props.attributes.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/Water.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            )}
           </View>
 
           <View
@@ -161,7 +185,7 @@ const BearCard = (props: any) => {
               color: COLOR.WHITE,
             }}
           >
-            LEVEL {props.level ? props.level : 1}
+            LEVEL {props.level ? Math.floor(getLevel(props.level)) : 1}
           </CustomText>
         </Animated.View>
       ) : (

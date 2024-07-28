@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import TrendComponent from "./TrendComponent";
 
-import Pet from "../../assets/bear.png";
+import Pet from "../../assets/avatar.png";
 import {
   LineChart,
   BarChart,
@@ -11,6 +11,7 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from "react-native-chart-kit";
+import { COLOR } from "../utils/color";
 
 interface Props {
   className: string;
@@ -44,16 +45,16 @@ const CartFilter: React.FC<Props> = ({
   };
 
   const chartConfig = {
-    backgroundGradientFrom: "#ffffff",
+    backgroundGradientFrom: "#F45151",
     backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#ffffff",
+    backgroundGradientTo: "#F45151",
     backgroundGradientToOpacity: 0,
-    color: (opacity = 1) => `rgba(75, 112, 255, ${opacity})`,
+    color: (opacity = 1) => `rgba(244, 81, 81, ${opacity})`,
     barPercentage: 1,
   };
   return (
     <TouchableOpacity>
-      <View className="flex flex-row items-center">
+      <View className="mt-2 flex flex-row items-center">
         <View className=" flex h-fit flex-row items-center gap-2">
           <Image className="h-[40px] w-[40px]  " source={Pet} />
 

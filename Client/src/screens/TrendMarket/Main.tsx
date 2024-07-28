@@ -18,16 +18,16 @@ type Props = {};
 const trend = true;
 const TrendMarketScreen = (props: Props) => {
   return (
-    <SafeAreaView className="flex-1 bg-color_app">
-      {/* <Image
+    <SafeAreaView className="flex-1 ">
+      <Image
         style={{
           width: ConstantsResponsive.MAX_WIDTH,
           height: ConstantsResponsive.MAX_HEIGHT,
           position: "absolute",
         }}
         resizeMode="stretch"
-        source={require("../../../assets/background2.jpg")}
-      /> */}
+        source={require("../../../assets/backGroundForInventory.png")}
+      />
       <View style={styles.playArea} className="flex flex-col p-2 ">
         <View className="gap-1">
           <Text className="font-light text-white">TrendMarketScreen</Text>
@@ -45,14 +45,17 @@ const TrendMarketScreen = (props: Props) => {
           <View className=" flex flex-row">
             <TrendCard
               imgUrl=""
-              name="FireBird"
+              name="Fire Bear"
               price={20}
               up={true}
               number={1112}
             ></TrendCard>
           </View>
         </View>
-        <View className="mt-6 flex flex-col ">
+        <View
+          className="mt-6 flex flex-col "
+          style={{ width: ConstantsResponsive.MAX_WIDTH }}
+        >
           <Text className="text-[25px] font-bold text-white">
             Market Statistics
           </Text>
@@ -100,7 +103,7 @@ const TrendMarketScreen = (props: Props) => {
           </ScrollView>
           <CartFilter
             imgUrl=""
-            name="FireBird"
+            name="Bear 2"
             price={20}
             up={false}
             number={10}
@@ -108,7 +111,7 @@ const TrendMarketScreen = (props: Props) => {
           ></CartFilter>
           <CartFilter
             imgUrl=""
-            name="FireBird"
+            name="Bear 3"
             price={20}
             up={true}
             number={11.2}

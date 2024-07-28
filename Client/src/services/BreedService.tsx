@@ -8,14 +8,23 @@ export class BreedService {
    * @param address
    * @returns
    */
-  static async breed(dad: any, mom: any) {
+  static async breed(dad: any, mom: any, address: any) {
     return new Promise<any>(async (resolve, reject) => {
       try {
-        const response = await api.post(API.BREED, { dad, mom });
-
-        console.log("response ", response);
+        const response = await api.post(API.BREED, {
+          dad: dad,
+          mom: mom,
+          owner: address,
+        });
+        console.log("breedFunction", {
+          dad: dad,
+          mom: mom,
+          owner: address,
+        });
+        console.log("breed service ", response.data);
         resolve(response.data.data);
       } catch (error: any) {
+        console.log("breed error ", error);
         reject(error.message);
       }
     });

@@ -19,6 +19,7 @@ import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
 import HangmanBg from "../../../assets/HangmanBg.png";
 import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import { SocketIOClient } from "../../../socket";
+import { GAMETYPE } from "../../constants/types";
 
 const ChooseGameModal = ({
   isVisible,
@@ -117,7 +118,7 @@ const ChooseGameModal = ({
                   onPress={() => {
                     setIsVisible(false);
 
-                    setGameName("Match3Game");
+                    setGameName(GAMETYPE.DIAMONDPUZZLE);
                   }}
                   style={{ flex: 1 }}
                 >
@@ -141,7 +142,7 @@ const ChooseGameModal = ({
                   fontFamily: "rexlia",
                 }}
               >
-                Diamond crash
+                {GAMETYPE.DIAMONDPUZZLE}
               </CustomText>
               <CustomText
                 style={{
@@ -159,7 +160,7 @@ const ChooseGameModal = ({
                   onPress={() => {
                     setIsVisible(false);
 
-                    setGameName("HangManGame");
+                    setGameName(GAMETYPE.WORDMASTER);
                   }}
                   style={{ flex: 1 }}
                 >
@@ -183,7 +184,7 @@ const ChooseGameModal = ({
                   fontFamily: "rexlia",
                 }}
               >
-                Hangman
+                {GAMETYPE.WORDMASTER}
               </CustomText>
               <CustomText
                 style={{

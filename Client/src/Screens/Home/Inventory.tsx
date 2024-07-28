@@ -5,9 +5,10 @@ import { API } from "../../apis/constants";
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import CustomText from "../../components/CustomText";
 import ConstantsResponsive from "../../constants/Constanst";
-import { ItemGameOwnerService } from "../../services/ItemGameOwnerService";
+
 import { COLOR } from "../../utils/color";
 import useFetch from "../../hooks/useFetch";
+import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 const InventoryModal = ({
   isVisible,
   setIsVisible,
@@ -21,26 +22,10 @@ const InventoryModal = ({
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
   const { apiData, serverError } = useFetch(() =>
-    ItemGameOwnerService.getItems("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
+    ItemAppOwnerService.getItems(address),
   );
 
-  // const fetchData = async () => {
-  //   try {
-  //     const res: any[] = await ItemGameOwnerService.getItems(
-  //       "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-  //     );
-  //     console.log(res);
-  //     setData([...res]);
-  //   } catch (error) {
-  //     console.error("ItemGameOwnerService.getItems", error);
-  //   }
-  // };
-
-  useEffect(() => {
-    // fetchData();
-    // console.log("41", apiData);
-    // setData([apiData]);
-  }, []);
+  useEffect(() => {}, []);
 
   const InventoryItem = ({
     image,
