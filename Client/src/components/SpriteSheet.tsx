@@ -9,7 +9,7 @@ import {
   ImageSourcePropType,
   ImageStyle,
 } from "react-native";
-import FastImage, { Source } from "react-native-fast-image";
+
 import { Image as RNImage } from "react-native";
 import { Image as ExpoImage } from "expo-image";
 

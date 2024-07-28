@@ -11,7 +11,6 @@ interface Props {
 }
 
 const BarInfor: React.FC<Props> = ({ color, title, value }) => {
-  console.log(value);
   let healthBarWidth =
     ((ConstantsResponsive.MAX_WIDTH -
       ConstantsResponsive.XR * 300 -

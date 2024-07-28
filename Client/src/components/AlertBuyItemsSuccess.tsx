@@ -37,7 +37,6 @@ const AlertBuyItemsSuccess: React.FC<AlertBuyItemsSuccessProps> = ({
   onClose,
 }) => {
   const dispatch = useDispatch();
-  console.log(itemImg);
 
   const [currentIndex, setCurrentIndex] = useState(-1);
 
