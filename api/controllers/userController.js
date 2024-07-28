@@ -1,7 +1,8 @@
 const { STATUS_CODES, MAX_OWNER_ENERGY, COUNTDOWN_OWNER_ENERGY } = require("../constants/index.js");
 const models = require("../database/models")
 const userServices = require('../services/userServices.js');
-const moment = require('moment')
+const moment = require('moment');
+const { ContractController } = require("./ContractController.js");
 
 const getEnergyNFT = async(req, res) => {
     const { tokenId } = req.params;
@@ -131,10 +132,25 @@ const updateEnergyOwner = async(req, res) => {
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
+    
 };
+
+const updateDB= async (req, res) => {
+    const { from,to } = req.body
+
+    try {
+         ContractController.updateDB(from,to)
+
+        return res.sendResponse(null, 'update DB success', STATUS_CODES.OK);
+    } catch (error) {
+        console.log(error);
+        return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
+    }
+}
 
 module.exports = {
     updateEnergyOwner,
     getEnergyOwner,
     getEnergyNFT,
+    updateDB
 };
