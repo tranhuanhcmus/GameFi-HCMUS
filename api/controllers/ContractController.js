@@ -260,11 +260,22 @@ const ContractController = {
             fromBlock:  from,
             toBlock: 	to 
         })
-        .then(function(events) {
+        .then(async function(events) {
             // Process the retrieved events
             // console.log("event: ", events.map(event => event.returnValues));
             if(events){
-                console.log(events);
+               for (const event of events) {
+                const {tokenId, exp} = event.returnValues; 
+
+                const row = await models.NFT.findOne({ where: { tokenId: tokenId } })
+    
+                if (!row) {
+                    console.log('not found NFT',tokenId);
+                } else {
+                    await row.update({exp:Number(exp)})
+                    await row.reload()
+                }
+               }
             }
         })
         .catch(function(error) {
