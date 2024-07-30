@@ -119,28 +119,28 @@ const BearCard = (props: any) => {
               <Image
                 resizeMode="contain"
                 source={require("../../../assets/elements/fire.png")}
-                style={{ width: "20%", height: "100%" }}
+                style={{ width: 20, height: 20 }}
               />
             )}
-            {ELEMENT.DARK === formatElement(props.element) && (
+            {ELEMENT.DARK === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
                 source={require("../../../assets/elements/dark.png")}
-                style={{ width: "20%", height: "100%" }}
+                style={{ width: 20, height: 20 }}
               />
             )}
-            {ELEMENT.FOREST === formatElement(props.element) && (
+            {ELEMENT.FOREST === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
                 source={require("../../../assets/elements/forest.png")}
-                style={{ width: "20%", height: "100%" }}
+                style={{ width: 20, height: 20 }}
               />
             )}
-            {ELEMENT.FROZEN === formatElement(props.element) && (
+            {ELEMENT.FROZEN === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
                 source={require("../../../assets/elements/frozen.png")}
-                style={{ width: "20%", height: "100%" }}
+                style={{ width: 20, height: 20 }}
               />
             )}
             {ELEMENT.THUNDER === formatElement(props.element) && (

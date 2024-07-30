@@ -101,35 +101,28 @@ const BabyCard = (props: any) => {
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/fire.png")}
-            style={{ width: "20%", height: "100%" }}
+            style={{ width: 20, height: 20 }}
           />
         )}
         {ELEMENT.DARK === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/dark.png")}
-            style={{ width: "20%", height: "100%" }}
+            style={{ width: 20, height: 20 }}
           />
         )}
         {ELEMENT.FOREST === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/forest.png")}
-            style={{ width: "20%", height: "100%" }}
+            style={{ width: 20, height: 20 }}
           />
         )}
         {ELEMENT.FROZEN === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/frozen.png")}
-            style={{ width: "20%", height: "100%" }}
-          />
-        )}
-        {ELEMENT.THUNDER === formatElement(props.element) && (
-          <Image
-            resizeMode="contain"
-            source={require("../../../assets/elements/thunder.png")}
-            style={{ width: "20%", height: "100%" }}
+            style={{ width: 20, height: 20 }}
           />
         )}
         {ELEMENT.WATER === formatElement(props.element) && (
