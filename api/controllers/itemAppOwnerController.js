@@ -378,6 +378,28 @@ const purchaseItem = async(req, res, next) => {
         if (rowData.id === currencyId[0] && currencyId[currency] === currencyId[1]) {
             return res.sendResponse(null, 'Cannot use gold to purchase gem.', STATUS_CODES.NOT_FOUND);
         }
+        // purchase gem
+        if (rowData.id === currencyId[0] && currencyId[currency] === currencyId[0]) {
+            const row = await models.ItemAppOwner.findOne({ where: { id: id, owner: owner } });
+            if (row) {
+                const updateData = {
+                    id: id,
+                    owner: owner,
+                    quantity: row.quantity + rowData.quantity
+                }
+                await row.update(updateData);
+                await row.reload();
+                return res.sendResponse(row, `Purchase success (update)`, STATUS_CODES.OK);
+            } else {
+                const newRow = {
+                    id: id,
+                    owner: owner,
+                    quantity: quantity
+                }
+                const result = await models.ItemAppOwner.create(newRow);
+                return res.sendResponse(result, `Purchase success (create)`, STATUS_CODES.OK);
+            }
+        }
         const totalPrice = (currency == 0) ? rowData.gemcost * rowData.quantity : rowData.goldcost * rowData.quantity;
         console.log(userCurrencyBalance.quantity, totalPrice);
         if (userCurrencyBalance.quantity < totalPrice) {
@@ -473,7 +495,7 @@ const purchaseItem = async(req, res, next) => {
                         owner: owner,
                         quantity: quantity
                     }
-                    const result = await models.ItemAppOwner.create(rowData);
+                    const result = await models.ItemAppOwner.create(newRow);
                     const updateCurrencyData = {
                         id: currencyId[currency],
                         owner: owner,
