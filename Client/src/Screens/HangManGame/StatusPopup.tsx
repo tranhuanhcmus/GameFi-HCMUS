@@ -19,6 +19,7 @@ import { ItemAppOwnerService } from "../../services/ItemAppOwnerService";
 import AlertBuyItemsSuccess from "../../components/AlertBuyItemsSuccess";
 import { CATEGORY } from "../../constants/types";
 import NormalButton from "../../components/Button/NormalButton";
+import { useAccount } from "wagmi";
 
 interface props {
   status: string;
@@ -27,14 +28,15 @@ interface props {
 
 const StatusPopup: React.FC<props> = ({ status, onPress }) => {
   const message = status === "Victory" ? "Victory" : "Defeat";
-  const buttonText = status === "Victory" ? "Claim" : "ok";
+  const buttonText = status === "Victory" ? "Claim" : "Ok";
   const resultColor = status === "Victory" ? "victoryColor" : "defeatColor";
   const [reward, setReward] = useState<any>();
+  const { address } = useAccount();
   const [getItems, setGetItems] = useState<boolean>(false);
   const fetchData = async () => {
     try {
       const res = await ItemAppOwnerService.getReward(
-        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+        address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
       );
 
       console.log("API Response:", res); // Log the response to see its structure

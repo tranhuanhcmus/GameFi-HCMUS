@@ -22,7 +22,9 @@ const InventoryModal = ({
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
   const { apiData, serverError } = useFetch(() =>
-    ItemAppOwnerService.getItems(address),
+    ItemAppOwnerService.getItems(
+      address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+    ),
   );
 
   useEffect(() => {}, []);

@@ -115,39 +115,46 @@ const BearCard = (props: any) => {
               alignItems: "center",
             }}
           >
-            {ELEMENT.FIRE === formatElement(props.attributes.element) && (
+            {ELEMENT.FIRE === formatElement(props.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Fire.png")}
-                style={{ width: 20, height: 20 }}
+                source={require("../../../assets/elements/fire.png")}
+                style={{ width: "20%", height: "100%" }}
               />
             )}
-            {ELEMENT.IRON === formatElement(props.attributes.element) && (
+            {ELEMENT.DARK === formatElement(props.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Iron.png")}
-                style={{ width: 20, height: 20 }}
+                source={require("../../../assets/elements/dark.png")}
+                style={{ width: "20%", height: "100%" }}
               />
             )}
-            {ELEMENT.LEAF === formatElement(props.attributes.element) && (
+            {ELEMENT.FOREST === formatElement(props.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Leaf.png")}
-                style={{ width: 20, height: 20 }}
+                source={require("../../../assets/elements/forest.png")}
+                style={{ width: "20%", height: "100%" }}
               />
             )}
-            {ELEMENT.STONE === formatElement(props.attributes.element) && (
+            {ELEMENT.FROZEN === formatElement(props.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Stone.png")}
-                style={{ width: 20, height: 20 }}
+                source={require("../../../assets/elements/frozen.png")}
+                style={{ width: "20%", height: "100%" }}
               />
             )}
-            {ELEMENT.WATER === formatElement(props.attributes.element) && (
+            {ELEMENT.THUNDER === formatElement(props.element) && (
               <Image
                 resizeMode="contain"
-                source={require("../../../assets/elements/Water.png")}
-                style={{ width: 20, height: 20 }}
+                source={require("../../../assets/elements/thunder.png")}
+                style={{ width: "20%", height: "100%" }}
+              />
+            )}
+            {ELEMENT.WATER === formatElement(props.element) && (
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/elements/water.png")}
+                style={{ width: "20%", height: "100%" }}
               />
             )}
           </View>

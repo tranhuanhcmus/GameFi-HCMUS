@@ -5,7 +5,12 @@ import Modal from "react-native-modal";
 import { COLOR } from "../utils/color";
 import AwesomeButton from "react-native-really-awesome-button";
 import { useDispatch } from "react-redux";
-import { setMusic, setSound, setVisable } from "../redux/settingGameSlice";
+import {
+  setMusic,
+  setSound,
+  setVisable,
+  setVisableSetting,
+} from "../redux/settingGameSlice";
 import { useSelector } from "react-redux";
 import NormalButton from "./Button/NormalButton";
 
@@ -16,7 +21,7 @@ interface Props {
 
 const Settings: React.FC<Props> = ({ isVisible, onClose }) => {
   const {
-    isVisable: settingVisable,
+    isVisableSetting: settingVisable,
     sound,
     music,
   } = useSelector((state: any) => state.settingGame);
@@ -47,7 +52,7 @@ const Settings: React.FC<Props> = ({ isVisible, onClose }) => {
 
         <View style={styles.btnDelete}>
           <NormalButton
-            onPress={() => dispatch(setVisable(false))}
+            onPress={() => dispatch(setVisableSetting(false))}
             style={{
               height: "100%",
               width: "100%",
@@ -93,7 +98,7 @@ const Settings: React.FC<Props> = ({ isVisible, onClose }) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: ConstantsResponsive.MAX_HEIGHT * 0.4,
+    height: ConstantsResponsive.MAX_HEIGHT * 0.35,
     width: ConstantsResponsive.MAX_WIDTH * 0.7,
     position: "relative",
     padding: 20,
@@ -102,14 +107,16 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   header: {
-    fontSize: 32,
+    fontSize: ConstantsResponsive.YR * 50,
     fontWeight: "bold",
+    fontFamily: "rexlia",
     color: "white",
     textAlign: "center",
-    marginBottom: 30,
+    marginBottom: ConstantsResponsive.YR * 35,
   },
   body: {
-    fontSize: 20,
+    fontSize: ConstantsResponsive.YR * 35,
+    fontFamily: "rexlia",
     fontWeight: "bold",
     color: "white",
   },
@@ -121,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: ConstantsResponsive.YR * 30,
   },
 
   btn: {

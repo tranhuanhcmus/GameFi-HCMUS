@@ -24,6 +24,7 @@ export class EatService {
         resolve(response.data);
       } catch (error: any) {
         reject(error.message);
+        console.log(error.message);
       }
     });
   }

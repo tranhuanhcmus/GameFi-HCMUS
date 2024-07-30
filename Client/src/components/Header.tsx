@@ -14,8 +14,9 @@ import log from "../logger/index.js";
 import logger from "../logger/index.js";
 import useFetch from "../hooks/useFetch";
 import { UsersService } from "../services/UsersService";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateEnergy } from "../redux/playerSlice";
+import { useIsFocused } from "@react-navigation/native";
 
 interface HeaderProps {
   name: string;
@@ -26,26 +27,34 @@ const GEM = "Gem";
 const Header: React.FC<HeaderProps> = ({ name }) => {
   const [data, setData] = useState<any[]>([]);
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
-  logger.info("address ", address);
+  const { reLoad } = useSelector((state: any) => state.reLoad);
+
   const fetchData = async () => {
     try {
-      const res: any[] = await ItemAppOwnerService.getCurrency(address);
+      const res: any[] = await ItemAppOwnerService.getCurrency(
+        address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
       setData([...data, ...res]);
     } catch (error) {
       log.error("ItemAppOwnerService.getCurrency", error);
     }
   };
 
-  const { apiData: energyUser, serverError } = useFetch(() =>
-    UsersService.getOwnerEnergy(address!),
+  const { apiData: energyUser, serverError } = useFetch(
+    () =>
+      UsersService.getOwnerEnergy(
+        address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      ),
+    [reLoad],
   );
 
   useEffect(() => {
     fetchData();
-  }, [address]);
+  }, [address, reLoad, isFocused]);
 
   useEffect(() => {
     dispatch(updateEnergy(energyUser?.energy || 0));

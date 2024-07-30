@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setMusic, setSound } from "../redux/settingGameSlice";
 import { useSelector } from "react-redux";
 import NormalButton from "./Button/NormalButton";
+import { useRoute } from "@react-navigation/native";
 
 interface Props {
   isVisible?: boolean;
@@ -19,6 +20,8 @@ const GameSettings: React.FC<Props> = ({ isVisible, onClose, onSurrender }) => {
   const { isVisable, sound, music } = useSelector(
     (state: any) => state.settingGame,
   );
+  const route = useRoute();
+
   const dispatch = useDispatch();
   const toggleSwitchMusic = () => {
     dispatch(setMusic(!music));
@@ -89,6 +92,7 @@ const GameSettings: React.FC<Props> = ({ isVisible, onClose, onSurrender }) => {
             style={{
               height: "100%",
               width: "100%",
+
               alignItems: "center",
               justifyContent: "center",
             }}

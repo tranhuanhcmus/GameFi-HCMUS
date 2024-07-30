@@ -30,7 +30,7 @@ import { DataSocketTransfer } from "../../../socket";
 import { useIsFocused } from "@react-navigation/native";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import GameSettings from "../../components/GameSetting";
-import { setVisable } from "../../redux/settingGameSlice";
+import { setVisable, setVisableSetting } from "../../redux/settingGameSlice";
 
 import useAudioPlayer from "../../hooks/useMusicPlayer";
 import { playSound } from "../../function/SoundGame";
@@ -83,7 +83,7 @@ const Index = () => {
 
   useEffect(() => {
     setDamagePet(atk * ContraryElement(attributes.element, elementOpponent));
-  }, [atk]);
+  }, []);
 
   useEffect(() => {
     if (apiData) {
@@ -174,7 +174,10 @@ const Index = () => {
   };
 
   const handleSurrender = () => {
-    setStatus("Defeat");
+    handleCloseModal();
+    setTimeout(() => {
+      setStatus("Defeat");
+    }, 1000);
 
     socket.emitEventGame({
       gameRoom: gameRoom,
@@ -187,10 +190,7 @@ const Index = () => {
     // clear all stored data
     // replay
     setStatus("");
-    dispatch(updateTurn(false));
-    socket.emitSuccess(gameRoom);
-    socket.removeListenFristTurn();
-    socket.removeListenTakeDamage();
+
     navigate.navigate("MainTab");
   };
 
@@ -209,7 +209,11 @@ const Index = () => {
 
   useEffect(() => {
     if (status == "Defeat" || status == "Victory") {
-      setGameOver(true);
+      // setGameOver(true);
+      dispatch(updateTurn(false));
+      socket.emitSuccess(gameRoom);
+      socket.removeListenFristTurn();
+      socket.removeListenTakeDamage();
     }
   }, [status]);
 

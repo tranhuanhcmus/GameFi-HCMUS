@@ -56,7 +56,9 @@ const HomeScreen = () => {
     useState(false);
 
   const { apiData: statusBoost, serverError } = useFetch(() =>
-    BoostService.getStatusBoost(address),
+    BoostService.getStatusBoost(
+      address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+    ),
   );
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
 
@@ -120,7 +122,7 @@ const HomeScreen = () => {
         fps: isNaN(parsedFps) ? 16 : parsedFps,
         loop,
         resetAfterFinish,
-        onFinish: () => console.log("hi"),
+        onFinish: () => {},
       });
     }
 
@@ -148,7 +150,7 @@ const HomeScreen = () => {
   const FetchEnergy = async () => {
     try {
       const response = await UsersService.getEnergyNFT(tokenId);
-      console.log(response);
+
       dispatch(updateEnergy(response.energy));
     } catch (error) {
       console.error("Error fetching)\n", error);
@@ -161,49 +163,11 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (isFocused) {
-      play("walk");
+      play("animation1");
     } else {
-      // Optional: stop the animation when the screen is not focused
       stop();
     }
   }, [isFocused]);
-
-  // const fetchData = async () => {
-  //   try {
-  //     const res: any[] = await UserService.getNFTsByOwner(address);
-
-  //     const data = res[0].data; // SET DEFAULT THE FIRST
-  //     dispatch(updatePet(data));
-  //   } catch (error) {
-  //     console.error("Error fetching NFTs:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (
-  //     !name ||
-  //     !type ||
-  //     !image ||
-  //     !title ||
-  //     !tokenUri ||
-  //     !attributes ||
-  //     !level
-  //   )
-  //     fetchData();
-  // }, []);
-
-  // useEffect(() => {
-  //   logger.warn(
-  //     "name, type, image, title, tokenUri, attributes, level  ",
-  //     name,
-  //     type,
-  //     image,
-  //     title,
-  //     tokenUri,
-  //     attributes,
-  //     level,
-  //   );
-  // }, [name, type, image, title, tokenUri, attributes, level]);
 
   const [imageSource, setImageSource] = useState({
     uri: "",
@@ -224,7 +188,7 @@ const HomeScreen = () => {
           uri: assets,
         });
         setIsImageLoaded(true);
-        play("walk");
+        play("animation1");
       },
       (error) => {
         console.error("Error loading image", error);
@@ -457,7 +421,10 @@ const HomeScreen = () => {
               height={ConstantsResponsive.YR * 300}
               rows={1}
               animations={{
-                walk: Array.from({ length: 60 }, (_, i) => i),
+                animation1: [
+                  ...Array.from({ length: 60 }, (_, i) => i),
+                  ...Array.from({ length: 30 }, (_, i) => 30 - i),
+                ],
               }}
             />
           ) : (

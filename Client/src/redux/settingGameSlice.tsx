@@ -7,12 +7,14 @@ interface settingGameState {
   sound: boolean;
   music: boolean;
   isVisable: boolean;
+  isVisableSetting: boolean;
 }
 
 const initialState: settingGameState = {
   sound: true,
   music: true,
   isVisable: false,
+  isVisableSetting: false,
 };
 
 const settingGameSlice = createSlice({
@@ -28,10 +30,14 @@ const settingGameSlice = createSlice({
     setVisable(state, action) {
       state.isVisable = action.payload;
     },
+    setVisableSetting(state, action) {
+      state.isVisableSetting = action.payload;
+    },
   },
 });
 
 export { settingGameSlice };
-export const { setMusic, setSound, setVisable } = settingGameSlice.actions;
+export const { setMusic, setSound, setVisable, setVisableSetting } =
+  settingGameSlice.actions;
 
 export default settingGameSlice.reducer;

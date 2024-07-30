@@ -154,7 +154,9 @@ const PetScreen = () => {
 
   const fetchData = async () => {
     try {
-      const res: any[] = await ItemAppOwnerService.getItems(address);
+      const res: any[] = await ItemAppOwnerService.getItems(
+        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+      );
 
       const data = res.filter((item) => item.category == "food");
 
@@ -193,6 +195,7 @@ const PetScreen = () => {
         quantity: 1,
         tokenId: tokenId,
       };
+      console.log(food);
 
       setFoodArray((prevArray: any) =>
         prevArray.filter((item: any) => item.id !== id),
@@ -213,6 +216,7 @@ const PetScreen = () => {
         dispatch(updateLevel(FOODVALUE.superRare));
       }
     } catch (err) {
+      dispatch(stopLoading());
       console.log(err);
     }
   };
@@ -802,14 +806,14 @@ const styles = StyleSheet.create({
       ConstantsResponsive.XR * 60,
     marginLeft: ConstantsResponsive.XR * 40,
 
-    backgroundColor: COLOR.WHITE,
+    backgroundColor: COLOR.GRAY2,
     borderWidth: 2,
     borderColor: COLOR.BLACK,
     borderRadius: ConstantsResponsive.YR * 10,
   },
   healthBarInner: {
     position: "absolute",
-    backgroundColor: COLOR.BLACK,
+    backgroundColor: COLOR.BLUE,
     left: ConstantsResponsive.XR * 3,
 
     top: ConstantsResponsive.YR * 3,

@@ -12,6 +12,7 @@ import settingGameSlice from "./settingGameSlice";
 import breedSlice from "./breedSlice";
 import petSlice from "./petSlice";
 import petActiveSlice from "./petActiveSlice";
+import reLoadSlice from "./reloadSlice";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     upperLayer: upperLayerSlice,
     hangMan: hangManSlice,
     player: playerSlice,
+    reLoad: reLoadSlice,
     settingGame: settingGameSlice,
     socket: socketSlice,
     breed: breedSlice,

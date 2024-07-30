@@ -75,7 +75,9 @@ const PetsModal = ({
   const navigate = useCustomNavigation();
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
   const { apiData, serverError } = useFetch(() =>
-    UserService.getNFTsByOwner(address),
+    UserService.getNFTsByOwner(
+      address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+    ),
   );
 
   useEffect(() => {
@@ -86,7 +88,7 @@ const PetsModal = ({
     if (apiData) {
       const mappedData: any[] = apiData.map((nft: any) => {
         return {
-          id: nft.data.tokenId,
+          id: nft.tokenId,
           energy: nft.energy,
           hp: nft.data.hp,
           atk: nft.data.atk,

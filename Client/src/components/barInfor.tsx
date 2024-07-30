@@ -26,19 +26,28 @@ const BarInfor: React.FC<Props> = ({ color, title, value }) => {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        columnGap: ConstantsResponsive.XR * 20,
       }}
     >
       <CustomText style={styles.text}>{title}</CustomText>
-      <View style={styles.healthBar}>
-        <View
-          style={[
-            styles.healthBarInner,
-            { width: healthBarWidth, backgroundColor: color },
-          ]}
-        />
+      <View
+        style={{
+          width: ConstantsResponsive.MAX_WIDTH - ConstantsResponsive.XR * 250,
+          flexDirection: "row",
+
+          alignItems: "center",
+          columnGap: 10,
+        }}
+      >
+        <View style={styles.healthBar}>
+          <View
+            style={[
+              styles.healthBarInner,
+              { width: healthBarWidth, backgroundColor: color },
+            ]}
+          />
+        </View>
+        <CustomText style={styles.text}>{value}</CustomText>
       </View>
-      <CustomText style={styles.text}>{value}</CustomText>
     </View>
   );
 };
@@ -80,6 +89,7 @@ const styles = StyleSheet.create({
     borderRadius: ConstantsResponsive.YR * 8,
   },
   text: {
+    width: ConstantsResponsive.XR * 150,
     fontFamily: "rexlia",
     fontWeight: "bold",
     fontSize: ConstantsResponsive.YR * 30,

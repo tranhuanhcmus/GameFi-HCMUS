@@ -148,7 +148,7 @@ const MainTab = () => (
 
 const Route = () => (
   <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Connect">
+    <Stack.Navigator initialRouteName="MainTab">
       <Stack.Screen
         name="Connect"
         component={ConnectScreen}

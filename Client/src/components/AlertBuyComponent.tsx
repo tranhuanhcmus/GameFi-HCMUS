@@ -87,7 +87,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
 
       const body: item = {
         id: id,
-        owner: address!,
+        owner: address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
         quantity: quantity || 0,
         goldcost: goldcost || 0,
         gemcost: gemcost || 0,
@@ -100,7 +100,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             id: id,
             quality: quality,
             category: category.substring(0, category.indexOf(" ")),
-            owner: address!,
+            owner: address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
 
             quantity: quantity || 0,
             goldcost: goldcost || 0,
