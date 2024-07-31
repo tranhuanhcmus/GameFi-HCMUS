@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   ImageBackground,
@@ -8,15 +8,19 @@ import {
 } from "react-native";
 // import SwappableGrid from '../components/SwappableGrid';
 import { useIsFocused } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import { SocketIOClient } from "../../../socket";
 import ConstantsResponsive from "../../constants/Constanst";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import logger from "../../logger";
+import { swapTurn, updateTurn } from "../../redux/hangManSlice";
+import { setVisable } from "../../redux/settingGameSlice";
+import { initSocket } from "../../redux/socketSlice";
+import GameHeader from "../HangManGame/Header";
 import TimingLine from "../HangManGame/TimingLine";
 import SwappableGrid from "./components/SwappableGrid";
-import GameHeader from "../HangManGame/Header";
 
 // import Images from '../lib/Images';
 
@@ -31,12 +35,68 @@ const GameScreen = () => {
   const [timing, setTiming] = useState(30);
   const [gameOver, setGameOver] = useState(false);
   const isFocused = useIsFocused();
-  const { turn, damage } = useSelector((state: any) => state.player);
-
+  const socket = SocketIOClient.getInstance();
+  const [status, setStatus] = useState("");
+  const dispatch = useDispatch();
   const handleEndTime = () => {
     logger.debug("Hello");
-    // dispatch(swapTurn());
+    dispatch(swapTurn());
   };
+
+  // const { socket } = useSelector((state: any) => state.socket);
+
+  const { gameRoom, hp, componentHp, isComponentTurn } = useSelector(
+    (state: any) => state.player,
+  );
+
+  const { turn, damage } = useSelector((state: any) => state.hangMan);
+
+  useEffect(() => {
+    initSocket();
+  }, []);
+  const handleCloseModal = () => {
+    dispatch(setVisable(false));
+  };
+
+  useEffect(() => {
+    if (status == "Defeat" || status == "Victory") {
+      // setGameOver(true);
+      dispatch(updateTurn(false));
+      socket.emitSuccess(gameRoom);
+      socket.removeListenFristTurn();
+      socket.removeListenTakeDamage();
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (componentHp <= 0) {
+      setStatus("Victory");
+    }
+  }, [componentHp]);
+
+  useEffect(() => {
+    socket.onListenFirstTurn((data: any) => {
+      console.log(data);
+      dispatch(updateTurn(data));
+    });
+
+    socket.onListenDisConnect((data: any) => {
+      handleCloseModal();
+      setTimeout(() => {
+        console.log(data);
+        setStatus("Victory");
+      }, 500);
+    });
+
+    // socket.onListenTakeDamage(handleDamage);
+
+    return () => {
+      // Remove the event listeners:
+      socket.removeListenFristTurn();
+      socket.removeListenOppentDisconnect();
+      socket.removeListenTakeDamage();
+    };
+  }, []);
 
   return (
     <ImageBackground source={justClouds} style={styles.backGroundImage}>
@@ -55,7 +115,11 @@ const GameScreen = () => {
           duration={timing}
           onCompletion={handleEndTime}
         />
-        <SwappableGrid setMoveCount={setMoveCount} setScore={setScore} />
+        <SwappableGrid
+          socket={socket}
+          setMoveCount={setMoveCount}
+          setScore={setScore}
+        />
       </SafeAreaView>
     </ImageBackground>
   );

@@ -45,10 +45,11 @@ export enum swipeDirections {
 }
 
 interface Props {
+  socket: any;
   setMoveCount: React.Dispatch<React.SetStateAction<number>>;
   setScore: React.Dispatch<React.SetStateAction<number>>;
 }
-const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
+const SwappableGrid = ({ socket, setMoveCount, setScore }: Props) => {
   /** ====================================================== */
   /** useState */
   const [tileDataSource, setTileDataSource] = useState(initializeDataSource());
@@ -75,21 +76,39 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
 
   /** ====================================================== */
   /** useSelector */
-  const { socket, move, tableSocket } = useSelector(
-    (state: any) => state.socket,
-  );
-  const { gameRoom, hp, componentHp, isComponentTurn } = useSelector(
+
+  const { gameRoom, hp, componentHp } = useSelector(
     (state: any) => state.player,
   );
+  const { turn, damage } = useSelector((state: any) => state.hangMan);
+
+  // const attackComponent = (tileData: TileDataType[][], damage: number) => {
+  //   dispatch(updateComponentHp(damage));
+
+  //   socket?.emitEventGame({
+  //     gameRoom: gameRoom,
+  //     damage: damage,
+  //     table: tileData,
+  //   });
+  // };
 
   const attackComponent = (tileData: TileDataType[][], damage: number) => {
+    if (componentHp - damage <= 0) {
+      // setStatus("Victory");
+      socket.emitEventGame({
+        gameRoom: gameRoom,
+        damage: damage,
+        table: tileData,
+        event: "Defeat",
+      });
+    } else {
+      socket.emitEventGame({
+        gameRoom: gameRoom,
+        damage: damage,
+        table: tileData,
+      });
+    }
     dispatch(updateComponentHp(damage));
-
-    socket?.emitEventGame({
-      gameRoom: gameRoom,
-      damage: damage,
-      table: tileData,
-    });
   };
 
   const handlePopupButton = () => {
@@ -212,6 +231,7 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
     gestureState: PanResponderGestureState,
   ) => {
     console.error("gestureName ", gestureName);
+    if (!turn) return; // COMPONENT TURN, YOU CAN NOT SWIPE
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
 
     let initialGestureX = gestureState.x0;
@@ -294,7 +314,7 @@ const SwappableGrid = ({ setMoveCount, setScore }: Props) => {
       condenseColumns(newTileDataSource);
       recolorMatches(newTileDataSource);
 
-      if (!isComponentTurn) {
+      if (turn) {
         attackComponent(newTileDataSource, calcAttackDamage(matches));
       }
       return newTileDataSource;
