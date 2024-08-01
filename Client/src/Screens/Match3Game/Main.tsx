@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
+  Image,
 } from "react-native";
 // import SwappableGrid from '../components/SwappableGrid';
 import { useIsFocused } from "@react-navigation/native";
@@ -99,7 +100,14 @@ const GameScreen = () => {
   }, []);
 
   return (
-    <ImageBackground source={justClouds} style={styles.backGroundImage}>
+    <View
+      style={{ height: styles.bgHeader.height, width: styles.bgHeader.width }}
+    >
+      <Image
+        resizeMode="stretch"
+        source={require("../../../assets/gameBackGround.png")}
+        style={styles.bgHeader}
+      />
       <SafeAreaView style={styles.scoreBoard}>
         <View
           style={{
@@ -121,7 +129,7 @@ const GameScreen = () => {
           setScore={setScore}
         />
       </SafeAreaView>
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -138,6 +146,12 @@ let styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+  },
+  bgHeader: {
+    width: ConstantsResponsive.MAX_WIDTH,
+    height: ConstantsResponsive.MAX_HEIGHT,
+    // height: ConstantsResponsive.MAX_HEIGHT * 0.2 + StatusBarHeight,
+    position: "absolute",
   },
   scoreBoard: {
     alignItems: "center",

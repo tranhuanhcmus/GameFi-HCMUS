@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet, Dimensions, Animated } from "react-native";
-import { COLOR } from "../../../utils/color";
 
 interface tileProps {
   location: Animated.ValueXY;
@@ -10,9 +9,6 @@ interface tileProps {
 }
 
 const Tile = (props: tileProps) => {
-  useEffect(() => {
-    if (!props.img) console.log("Khong co r");
-  }, []);
   return (
     <Animated.Image
       source={props.img}
@@ -32,7 +28,7 @@ const Tile = (props: tileProps) => {
 
 let Window = Dimensions.get("window");
 let windowSpan = Math.min(Window.width, Window.height);
-let TILE_WIDTH = windowSpan / 10;
+let TILE_WIDTH = (windowSpan * 0.6) / 6;
 
 let styles = StyleSheet.create({
   tile: {

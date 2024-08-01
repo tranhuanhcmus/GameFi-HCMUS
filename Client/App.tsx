@@ -31,7 +31,7 @@ export default function App() {
     <WagmiConfig config={wagmiConfig}>
       <Provider store={store}>
         <Route />
-        <Web3Modal />
+        {/* <Web3Modal /> */}
       </Provider>
     </WagmiConfig>
   );
