@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const http = require("http");
 const bodyParser = require('body-parser');
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -40,6 +41,7 @@ app.use(express.static('public'));
 // Swagger configuration
 const swaggerOptions = require('./swaggerOptions');
 const { ContractController } = require('./controllers/ContractController');
+const { initSocket } = require('./services/SocketService');
 const specs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
@@ -65,6 +67,9 @@ app.use('/itemAppOwners', itemAppOwnerRouter);
 app.use("/admin",adminRouter)
 app.get("*",(req,res)=>res.render("error"))
 
+//socket
+const server = http.createServer(app);
+
 async function connectDB() {
   try {
     await models.sequelize.authenticate();
@@ -82,11 +87,14 @@ async function connectDB() {
 connectDB().then((connected) => {
   if (connected) {
 
-    app.listen(port, () => {
+    initSocket(server)
+
+    app.listen(port, async () => {
       console.log(`Server is running on ${process.env.SERVER_URL}:${port}`);
       //====================================Events====================================//
       // ContractController.updateDB(6218894,6219122)      
       ContractController.catchEventNFT()      
+      await ContractController.catchDeposit()      
     });
   }
 });

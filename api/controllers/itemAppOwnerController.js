@@ -24,7 +24,7 @@ const getById = async(req, res, next) => {
     try {
 
         const { id } = req.params
-        const result = await models.ItemAppOwner.findOne(
+        const result = await models.ItemAppOwner.find(
             { 
                 where: 
                 { 
