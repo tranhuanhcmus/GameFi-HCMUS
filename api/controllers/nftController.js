@@ -1,4 +1,3 @@
-const { tokenUriController } = require(".")
 const { STATUS_CODES } = require("../constants")
 const models = require("../database/models")
 const { getInfoFromTokenURI } = require("./ContractController")
