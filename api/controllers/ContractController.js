@@ -33,25 +33,32 @@ const web3 = new Web3(rpc, {
 web3.eth.accounts.wallet.add(WALLET_PRIVATE_KEY);
 const petContract = new web3.eth.Contract(PetABI, petAddress);
 
-
-function waitForConfirmation(txHash) {
+function waitForConfirmation(txHash, maxAttempts = 30) {
     return new Promise((resolve, reject) => {
-        web3.eth.getTransactionReceipt(txHash)
-            .then(receipt => {
-                if (receipt) {
-                    resolve(receipt);
-                } else {
-                    web3.eth.subscribe('confirmation', txHash)
-                        .on('data', async(confirmationData) => {
-                            if (confirmationData.confirmations === 1) {
-                                const receipt = await web3.eth.getTransactionReceipt(txHash);
-                                resolve(receipt);
-                            }
-                        })
-                        .on('error', error => reject(error));
-                }
-            })
-            .catch(error => reject(error));
+        let attempts = 0;
+
+        const checkReceipt = () => {
+            attempts++;
+            web3.eth.getTransactionReceipt(txHash)
+                .then(receipt => {
+                    if (receipt) {
+                        resolve(receipt);
+                    } else if (attempts >= maxAttempts) {
+                        reject(new Error(`Transaction not found after ${maxAttempts} attempts`));
+                    } else {
+                        setTimeout(checkReceipt, 5000); // Wait 10 seconds before checking again
+                    }
+                })
+                .catch(error => {
+                    if (error.message.includes('Transaction not found') && attempts < maxAttempts) {
+                        setTimeout(checkReceipt, 5000); // Wait 10 seconds before checking again
+                    } else {
+                        reject(error);
+                    }
+                });
+        };
+
+        checkReceipt();
     });
 }
 
@@ -381,15 +388,19 @@ const ContractController = {
                 const transaction = await web3.eth.getTransaction(transactionHash);
                 if (transaction && transaction.to && transaction.to.toLowerCase() === WALLET_PUBLIC_KEY.toLowerCase()) {
                     try {
+                        console.log('--------------------------------------------');
+                        console.log('transaction hash:',transactionHash);
+                        console.log('--------------------------------------------');
                         const receipt = await waitForConfirmation(transactionHash);
-        
+                        console.log(receipt);
                         if (receipt.status) {
         
                             console.log('Successful ETH transfer to server wallet detected:', transactionHash);
                             const sender = transaction.from;
                             const value = web3.utils.fromWei(transaction.value, 'ether');
                             console.log(`Received ${value} ETH from ${sender}`);
-                            await CurrencyService.depositETH(sender,value)
+                            let result= await CurrencyService.depositETH(sender,value)
+                            console.log(result);
                         }
                     } catch (error) {
                         console.error('Error processing transaction:', error);
