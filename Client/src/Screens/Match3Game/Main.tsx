@@ -7,7 +7,7 @@ import {
   View,
   Image,
 } from "react-native";
-// import SwappableGrid from '../components/SwappableGrid';
+
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 

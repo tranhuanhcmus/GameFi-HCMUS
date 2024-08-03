@@ -43,6 +43,7 @@ import { calculateTimeDifference } from "../../function/DownLoadResource";
 import { updateBoost, updateEnergy } from "../../redux/petActiveSlice";
 import { setHp, updateHp } from "../../redux/playerSlice";
 import { UsersService } from "../../services/UsersService";
+
 import { BOOST, GAMETYPE } from "../../constants/types";
 type Props = {};
 
@@ -60,6 +61,13 @@ const HomeScreen = () => {
       address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
     ),
   );
+
+  const { apiData: dataOwner, serverError: serverDataError } = useFetch(() =>
+    UsersService.getDataOwner(
+      address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+    ),
+  );
+
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);
 
   const isFocused = useIsFocused();

@@ -113,25 +113,9 @@ const SwappableGrid = ({ socket, setMoveCount, setScore }: Props) => {
   };
 
   const handlePopupButton = () => {
-    // clear all stored data
-    // replay
-    // setStatus("");
-
-    // dispatch(updateTurn(false));
-    socket.emitSuccess(gameRoom);
-    socket.removeListenFristTurn();
-    socket.removeListenTakeDamage();
     navigate.navigate("MainTab");
   };
 
-  /** ====================================================== */
-  /** useEffect */
-  /** Init socket */
-  useEffect(() => {
-    dispatch(initSocket());
-  }, []);
-
-  /** THIS USEEFFECT HANDLE SOCKET EVENT */
   useEffect(() => {
     socket?.onListenTakeDamage((data: DataSocketTransfer) => {
       dispatch(updateComponentTurn(true));

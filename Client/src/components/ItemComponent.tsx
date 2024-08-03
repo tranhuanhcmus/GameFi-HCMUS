@@ -93,8 +93,8 @@ export const ItemComponent: React.FC<ItemProps> = ({
             alignItems: "center",
             justifyContent: "center",
             columnGap: 5,
-            paddingHorizontal: 20,
-            paddingBottom: 5,
+
+            paddingBottom: 10,
           },
         ]}
       >

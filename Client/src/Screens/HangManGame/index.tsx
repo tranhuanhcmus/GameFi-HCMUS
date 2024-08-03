@@ -162,8 +162,6 @@ const Index = () => {
     });
 
     if (status === "win") {
-      // go to next word
-      //dispatch(updateHp(10));
       attackComponent(damagePet, currentIndex + 1);
       setCurrentIndex((i) => i + 1);
       setCorrectLetters("");
@@ -228,6 +226,7 @@ const Index = () => {
       console.log(data);
       dispatch(updateTurn(data));
     });
+    socket.onListenTakeDamage(handleDamage);
 
     socket.onListenDisConnect((data) => {
       handleCloseModal();
@@ -236,8 +235,6 @@ const Index = () => {
         setStatus("Victory");
       }, 500);
     });
-
-    socket.onListenTakeDamage(handleDamage);
 
     return () => {
       // Remove the event listeners:

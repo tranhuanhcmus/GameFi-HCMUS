@@ -7,6 +7,7 @@ import { COLOR } from "../utils/color";
 import CustomText from "./CustomText";
 import Thunder from "../../assets/navIcon/thunder.svg";
 import Coin from "../../assets/navIcon/coin.svg";
+import Gem from "../../assets/navIcon/diamond.svg";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 import { useAccount } from "wagmi";
@@ -38,6 +39,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
       const res: any[] = await ItemAppOwnerService.getCurrency(
         address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
       );
+      console.log(res);
       setData([...data, ...res]);
     } catch (error) {
       log.error("ItemAppOwnerService.getCurrency", error);
@@ -64,28 +66,26 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
   return (
     <View
       style={{
-        width: ConstantsResponsive.MAX_WIDTH * 0.4,
-        height: ConstantsResponsive.YR * 40,
+        maxWidth: ConstantsResponsive.MAX_WIDTH * 0.6,
+        height: ConstantsResponsive.YR * 50,
         display: "flex",
         flexDirection: "row",
-        alignItems: "center",
 
+        alignItems: "center",
+        marginHorizontal: ConstantsResponsive.XR * 40,
         justifyContent: "center",
         columnGap: ConstantsResponsive.XR * 30,
 
         position: "relative",
 
         borderRadius: 20,
-        paddingHorizontal: ConstantsResponsive.XR * 10,
       }}
     >
       <Image
         resizeMode="stretch"
         style={{
-          height: ConstantsResponsive.YR * 40,
-          width:
-            ConstantsResponsive.MAX_WIDTH * 0.4 + ConstantsResponsive.XR * 4,
-          left: 0,
+          height: ConstantsResponsive.YR * 50,
+          maxWidth: ConstantsResponsive.MAX_WIDTH * 0.5,
 
           position: "absolute",
         }}
@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           alignItems: "center",
         }}
       >
-        <Coin></Coin>
+        <Coin height={20} width={20}></Coin>
         <CustomText
           style={{
             color: COLOR.YELLOW,
@@ -109,7 +109,29 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           }}
         >
           {data && data.length
-            ? data.find((item) => item.name == GOLD).quantity
+            ? Math.floor(data.find((item) => item.name == GOLD).quantity / 1000)
+            : 100}
+        </CustomText>
+      </View>
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Gem height={20} width={20} />
+        <CustomText
+          style={{
+            color: COLOR.YELLOW,
+            textAlign: "center",
+            fontSize: 15,
+            fontWeight: "bold",
+          }}
+        >
+          {data && data.length
+            ? Math.floor(data.find((item) => item.name == GEM).quantity / 1000)
             : 100}
         </CustomText>
       </View>

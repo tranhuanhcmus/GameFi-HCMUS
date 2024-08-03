@@ -20,6 +20,7 @@ import AlertBuyItemsSuccess from "../../components/AlertBuyItemsSuccess";
 import { CATEGORY } from "../../constants/types";
 import NormalButton from "../../components/Button/NormalButton";
 import { useAccount } from "wagmi";
+import { SocketIOClient } from "../../../socket";
 
 interface props {
   status: string;
@@ -31,6 +32,7 @@ const StatusPopup: React.FC<props> = ({ status, onPress }) => {
   const buttonText = status === "Victory" ? "Claim" : "Ok";
   const resultColor = status === "Victory" ? "victoryColor" : "defeatColor";
   const [reward, setReward] = useState<any>();
+  const socket = SocketIOClient.getInstance();
   const { address } = useAccount();
   const [getItems, setGetItems] = useState<boolean>(false);
   const fetchData = async () => {
@@ -73,6 +75,9 @@ const StatusPopup: React.FC<props> = ({ status, onPress }) => {
   useEffect(() => {
     if (status === "Victory") {
       fetchData();
+    }
+    if (status !== "" && status !== "win") {
+      socket.cleanup();
     }
   }, [status]);
 

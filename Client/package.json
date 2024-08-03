@@ -24,9 +24,10 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@reduxjs/toolkit": "^1.9.7",
-    "@walletconnect/react-native-compat": "^2.10.6",
-    "@web3modal/ethers-react-native": "^1.3.0",
-    "@web3modal/wagmi-react-native": "^1.0.1",
+    "@tanstack/react-query": "^5.51.21",
+    "@walletconnect/react-native-compat": "^2.14.0",
+    "@web3modal/ethers-react-native": "^1.3.0-alpha.1",
+    "@web3modal/wagmi-react-native": "^2.0.0",
     "axios": "^1.6.7",
     "colorthief": "^2.4.0",
     "expo": "^51.0.9",
@@ -66,8 +67,9 @@
     "rn-dominant-color": "^1.7.2",
     "socket.io-client": "^4.7.5",
     "uint8arrays": "^5.1.0",
-    "viem": "^1.20.1",
-    "wagmi": "^1.4.12"
+    "viem": "^2.18.7",
+    "wagmi": "^2.12.2",
+    "web3": "^4.11.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

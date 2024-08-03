@@ -100,7 +100,7 @@ const LoadingModal = ({
     socket.onListenKeyRoom((data) => {
       setIsVisible(false);
       if (data.gameRoom !== "NO ROOM") {
-        // PlayGame();
+        PlayGame();
         dispatch(setGameRoom(data.gameRoom));
         dispatch(
           setOpponentValue({
