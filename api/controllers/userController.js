@@ -1,4 +1,4 @@
-const { STATUS_CODES, MAX_OWNER_ENERGY, COUNTDOWN_OWNER_ENERGY } = require("../constants/index.js");
+const { STATUS_CODES, MAX_OWNER_ENERGY, COUNTDOWN_OWNER_ENERGY, GOLD_ID, GEM_ID } = require("../constants/index.js");
 const models = require("../database/models")
 const userServices = require('../services/userServices.js');
 const moment = require('moment');
@@ -7,7 +7,7 @@ const { ContractController } = require("./ContractController.js");
 const getEnergyNFT = async(req, res) => {
     const { tokenId } = req.params;
     try {
-        const result = await models.NFT.findOne({ where: { tokenId: tokenId} })
+        const result = await models.NFT.findOne({ where: { tokenId: tokenId } })
         let new_energy
         let lastTimePlayed = result.lastTimePlayed
         let current_time = new Date()
@@ -132,14 +132,14 @@ const updateEnergyOwner = async(req, res) => {
     } catch (error) {
         return res.sendResponse(null, error, STATUS_CODES.INTERNAL_ERROR)
     }
-    
+
 };
 
-const updateDB= async (req, res) => {
-    const { from,to } = req.body
+const updateDB = async(req, res) => {
+    const { from, to } = req.body
 
     try {
-         ContractController.updateDB(from,to)
+        ContractController.updateDB(from, to)
 
         return res.sendResponse(null, 'update DB success', STATUS_CODES.OK);
     } catch (error) {
@@ -148,9 +148,50 @@ const updateDB= async (req, res) => {
     }
 }
 
+const checkDB = async(req, res) => {
+    const { owner } = req.param
+
+    try {
+        //check energy
+        let energy_row = await models.OwnerEnergy.findOne({ owner: owner })
+        if (!energy_row) {
+            await models.OwnerEnergy.create({
+                owner: owner
+            })
+        }
+
+        //check gold
+        let gold_row = await models.ItemAppOwner.findOne({ owner: owner, id: GOLD_ID })
+        if (!gold_row) {
+            await models.ItemAppOwner.create({
+                owner: owner,
+                id: GOLD_ID,
+                quantity: 0
+            })
+        }
+
+        //check gem
+        let gem_row = await models.ItemAppOwner.findOne({ owner: owner, id: GEM_ID })
+        if (!gem_row) {
+            await models.ItemAppOwner.create({
+                owner: owner,
+                id: GEM_ID,
+                quantity: 0
+            })
+        }
+
+        return res.sendResponse(null, 'CHECKING DB USER SUCCESS ', STATUS_CODES.OK)
+
+    } catch (error) {
+        console.log(error);
+        return res.sendResponse(error, error, STATUS_CODES.INTERNAL_ERROR)
+    }
+}
+
 module.exports = {
     updateEnergyOwner,
     getEnergyOwner,
     getEnergyNFT,
-    updateDB
+    updateDB,
+    checkDB
 };
