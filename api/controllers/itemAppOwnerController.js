@@ -549,62 +549,77 @@ const updateById = async(req, res, next) => {
 const getOwnerCurrency = async(req, res, next) => {
     try {
         const { owner } = req.params;
-        const results = await models.ItemAppOwner.findAll({
+        const currencyId = ["7dc748d5-de7d-4a76-9a58-62463ee7be14", "1a06543f-42c7-402f-a22a-32594b58c0e5"]; // 0 is gem, 1 is gold
+        let results = await models.ItemAppOwner.findAll({
             where: {
-                owner: owner
+                owner: owner,
+                id: {
+                    [Op.in]: currencyId
+                }
             }
         });
 
-        if (!results || results.length === 0) {
-            return res.sendResponse(null, `Not Found Owner ${owner}`, STATUS_CODES.NOT_FOUND);
-        }
+        // Check for missing currencies and create them
+        const missingIds = currencyId.filter(id => !results.find(result => result.id === id));
+        if (missingIds.length > 0) {
+            const newRecords = missingIds.map(id => ({
+                id: id,
+                owner: owner,
+                quantity: 0
+            }));
+            await models.ItemAppOwner.bulkCreate(newRecords);
 
-        // Initialize an array to hold filtered detailed results
-        const detailedResults = [];
-
-        // Loop through the results array
-        for (const result of results) {
-            // Get detailed information for each id with an OR condition on the name field
-            const detailedResult = await models.ItemApp.findOne({
+            // Fetch the newly created records
+            const newResults = await models.ItemAppOwner.findAll({
                 where: {
-                    id: result.dataValues.id,
-                    [Op.or]: [
-                        { name: 'Gem' },
-                        { name: 'Gold' }
-                    ]
+                    owner: owner,
+                    id: {
+                        [Op.in]: missingIds
+                    }
                 }
             });
 
-            // Check the result from getById and handle the response
-            if (!detailedResult) {
-                // If not found or there's an error, continue to the next result
-                continue;
+            // Combine the new records with the existing results
+            results = [...results, ...newResults];
+        }
+
+        // Initialize an array to hold detailed results
+        const detailedResults = [];
+
+        // Loop through the results array to get detailed information
+        for (const result of results) {
+            const detailedResult = await models.ItemApp.findOne({
+                where: {
+                    id: result.dataValues.id,
+                    name: {
+                        [Op.in]: ['Gem', 'Gold']
+                    }
+                }
+            });
+
+            if (detailedResult) {
+                // Attach detailed information to the result
+                result.dataValues.name = detailedResult.dataValues.name;
+                result.dataValues.description = detailedResult.dataValues.description;
+                result.dataValues.category = detailedResult.dataValues.category;
+                result.dataValues.quality = detailedResult.dataValues.quality;
+                result.dataValues.itemquantity = detailedResult.dataValues.quantity;
+                result.dataValues.gemcost = detailedResult.dataValues.gemcost;
+                result.dataValues.goldcost = detailedResult.dataValues.goldcost;
+                result.dataValues.image = detailedResult.dataValues.image;
+
+                // Push the detailed result to the array
+                detailedResults.push(result);
             }
-
-            // If successful, attach the detailed information to the result
-            result.dataValues.name = detailedResult.dataValues.name;
-            result.dataValues.description = detailedResult.dataValues.description;
-            result.dataValues.category = detailedResult.dataValues.category;
-            result.dataValues.quality = detailedResult.dataValues.quality;
-            result.dataValues.itemquantity = detailedResult.dataValues.quantity;
-            result.dataValues.gemcost = detailedResult.dataValues.gemcost;
-            result.dataValues.goldcost = detailedResult.dataValues.goldcost;
-            result.dataValues.image = detailedResult.dataValues.image;
-
-            // Push the detailed result to the filtered array
-            detailedResults.push(result);
         }
 
-        if (detailedResults.length === 0) {
-            return res.sendResponse(null, `No items found for owner ${owner} with names 'Gem' or 'Gold'`, STATUS_CODES.NOT_FOUND);
-        }
-
-        // Return the results with mapped detailed information
+        // Return the results with detailed information
         return res.sendResponse(detailedResults, `Get Owner ${owner} App Items Success`, STATUS_CODES.OK);
     } catch (error) {
         return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);
     }
 }
+
 
 module.exports = {
     getAll,
