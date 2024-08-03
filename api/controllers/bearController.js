@@ -22,7 +22,7 @@ const breedBear = async(req, res) => {
         let child = await factory.breed(bearDad, bearMom)
 
         if (!child) {
-            return res.sendResponse(null, `All children of this dad and mom already generated!`);
+            return res.sendResponse(null, `All children of this dad and mom already generated!`,STATUS_CODES.BAD_REQUEST);
         }
         const result = await models.NFT.findOne({ where: { tokenId: child } })
 
