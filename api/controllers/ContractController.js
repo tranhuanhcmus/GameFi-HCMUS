@@ -396,10 +396,10 @@ const ContractController = {
                         if (receipt.status) {
         
                             console.log('Successful ETH transfer to server wallet detected:', transactionHash);
-                            const sender = transaction.from;
+                            const sender = Web3.utils.toChecksumAddress(transaction.from);
                             const value = web3.utils.fromWei(transaction.value, 'ether');
                             console.log(`Received ${value} ETH from ${sender}`);
-                            let result= await CurrencyService.depositETH(sender.toUpperCase(),value)
+                            let result= await CurrencyService.depositETH(sender,value)
                             console.log(result);
                         }
                     } catch (error) {
