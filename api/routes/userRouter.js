@@ -8,6 +8,6 @@ router.get('/energy/:owner',userController.getEnergyOwner)
 router.get('/energyNFT/:tokenId',userController.getEnergyNFT)
 router.post('/energy/:owner',userController.updateEnergyOwner)
 router.post('/contract/updateDB',userController.updateDB)
-router.post('checkData/:owner',userController.checkDB)
+router.get('checkData/:owner',userController.checkDB)
 
 module.exports = router;
