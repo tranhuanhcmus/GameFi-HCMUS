@@ -382,7 +382,7 @@ const purchaseItemPack = async(req, res, next) => {
                 
                 // // transfer to Owner
                 try {
-                    // await ContractController.transferFrom(WALLET_PUBLIC_KEY,owner,random_nft.tokenId)
+                    await ContractController.transferFrom(WALLET_PUBLIC_KEY,rowData.owner,random_nft.tokenId)
                     extra_nft=tokenUri.data
                 } catch (error) {
                     extra_nft=null
