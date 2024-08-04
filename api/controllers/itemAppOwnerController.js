@@ -369,7 +369,7 @@ const purchaseItemPack = async(req, res, next) => {
                 //get valid NFT
 
                 const WALLET_PUBLIC_KEY=process.env.WALLET_PUBLIC_KEY
-                let valid_nft_list= await models.NFT.find({where:{owner: WALLET_PUBLIC_KEY}})
+                let valid_nft_list= await models.NFT.findAll({where:{owner: WALLET_PUBLIC_KEY}})
                 let random_nft= valid_nft_list[Math.floor(Math.random() * valid_nft_list.length)];
 
                 let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: random_nft.tokenUri } })
@@ -390,7 +390,7 @@ const purchaseItemPack = async(req, res, next) => {
             }
 
             randomItem.dataValues.quantity = rowData.quantity;
-            return res.sendResponse({...randomItem,extra_nft}, `Random item found for category ${rowData.category} with quality ${randomQuality}`, STATUS_CODES.OK);
+            return res.sendResponse({...randomItem.dataValues,extra_nft}, `Random item found for category ${rowData.category} with quality ${randomQuality}`, STATUS_CODES.OK);
         }
     } catch (error) {
         return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);
