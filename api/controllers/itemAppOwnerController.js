@@ -1,7 +1,8 @@
-const { STATUS_CODES } = require("../constants")
+const { STATUS_CODES, RANDOM_PERCENT_NFT } = require("../constants")
 const models = require("../database/models")
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 const { ContractController } = require("./ContractController");
+require('dotenv').config()
 
 const getAll = async(req, res, next) => {
     try {
@@ -361,8 +362,35 @@ const purchaseItemPack = async(req, res, next) => {
             await userCurrencyBalance.update(updateCurrencyData);
             await userCurrencyBalance.reload();
 
+            let extra_nft=null
+            let randomPercent = RANDOM_PERCENT_NFT 
+            let is_get_new_nft = Math.random() < randomPercent && randomQuality =='super rare';
+            if(is_get_new_nft){
+                //get valid NFT
+
+                const WALLET_PUBLIC_KEY=process.env.WALLET_PUBLIC_KEY
+                let valid_nft_list= await models.NFT.find({where:{owner: WALLET_PUBLIC_KEY}})
+                let random_nft= valid_nft_list[Math.floor(Math.random() * valid_nft_list.length)];
+
+                let tokenUri = await models.TokenUri.findOne({ where: { tokenUri: random_nft.tokenUri } })
+                let client_gateway = process.env.CLIENT_IPFS_ID || null
+                let public_gateway = `ipfs.io`
+                if (client_gateway) {
+                    tokenUri.data.image = tokenUri.data.image.replace(public_gateway, client_gateway)
+                    tokenUri.data.assets = tokenUri.data.assets.replace(public_gateway, client_gateway)
+                }
+                
+                // // transfer to Owner
+                try {
+                    // await ContractController.transferFrom(WALLET_PUBLIC_KEY,owner,random_nft.tokenId)
+                    extra_nft=tokenUri.data
+                } catch (error) {
+                    extra_nft=null
+                }
+            }
+
             randomItem.dataValues.quantity = rowData.quantity;
-            return res.sendResponse(randomItem, `Random item found for category ${rowData.category} with quality ${randomQuality}`, STATUS_CODES.OK);
+            return res.sendResponse({...randomItem,extra_nft}, `Random item found for category ${rowData.category} with quality ${randomQuality}`, STATUS_CODES.OK);
         }
     } catch (error) {
         return res.sendResponse(null, error.message, STATUS_CODES.INTERNAL_ERROR);

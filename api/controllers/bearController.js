@@ -36,7 +36,7 @@ const breedBear = async(req, res) => {
         result.dataValues.data = tokenUri.data
 
         // transfer to Owner
-        ContractController.transferFrom(WALLET_PUBLIC_KEY,owner,result.tokenId)
+        await ContractController.transferFrom(WALLET_PUBLIC_KEY,owner,result.tokenId)
 
         return res.sendResponse(result, 'Breed bear success', STATUS_CODES.OK);
     } catch (error) {
