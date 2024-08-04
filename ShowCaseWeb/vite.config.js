@@ -7,6 +7,10 @@ const aliases = {
 };
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    host: true, // This will allow connections from any IP
+    port: process.env.PORT || 3000, // Use the PORT environment variable provided by Render, or default to 3000
+  },
   plugins: [react()],
   resolve: {
     alias: {
