@@ -48,9 +48,9 @@ const NFTPage = () => {
               <div className="nft_page__label">Price</div>
               <p style={{ fontSize: 22, fontWeight: 700 }}>{data.price}</p>
               <p style={{ fontSize: 16 }} className="nft_page__label">
-                $300
+                $5
               </p>
-              <div className="primary_button buy_button">Buy Now</div>
+              <a href={`https://testnets.opensea.io/assets/sepolia/0x8633955d078ef222997407e76e7902f4f5370a17/${data.tokenId}`} className="primary_button buy_button">Buy Now</a>
               <div
                 className="make_offer"
                 style={{
@@ -73,7 +73,7 @@ const NFTPage = () => {
                 </div>
                 <div className="information__own__wrapper">
                   <div className="information__own__label">Collection</div>
-                  <div className="information__own__content">Abstract</div>
+                  <div className="information__own__content">HPET-4</div>
                 </div>
               </div>
               <div className="information__own__item">

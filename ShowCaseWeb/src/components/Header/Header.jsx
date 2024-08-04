@@ -18,7 +18,6 @@ const Header = () => {
         </div>
         <div className="header_menu_wrapper">
           <Menu />
-          <Menu />
         </div>
         <div className="search_wrapper">
           <SearchBar />
