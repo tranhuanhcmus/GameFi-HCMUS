@@ -77,16 +77,12 @@ const ReCharge: React.FC<Props> = ({ amount, children, style }) => {
   const handleSendTransaction = async () => {
     if (isConnected) {
       dispatch(startLoading());
-      try {
-        const roundedEthAmount = parseFloat(ethAmount).toFixed(18);
-        await sendTransaction({
-          to: recipient as `0x${string}`,
-          value: ethers.parseEther(roundedEthAmount),
-        });
-      } catch (error) {
-        console.error("Transaction failed:", error);
-        dispatch(stopLoading());
-      }
+
+      const roundedEthAmount = parseFloat(ethAmount).toFixed(18);
+      sendTransaction({
+        to: recipient as `0x${string}`,
+        value: ethers.parseEther(roundedEthAmount),
+      });
     } else {
       console.error("Wallet is not connected or ETH amount is not available");
     }

@@ -50,8 +50,7 @@ const BabyCard = (props: any) => {
   };
 
   useEffect(() => {
-    if (props.isOpen) startShakeAnimation();
-    // Start the animation with a 2-second delay
+    if (props?.element) startShakeAnimation();
   }, [props]);
 
   return isVisble ? (
@@ -97,42 +96,42 @@ const BabyCard = (props: any) => {
           alignItems: "center",
         }}
       >
-        {ELEMENT.FIRE === formatElement(props.attributes.element) && (
+        {ELEMENT.FIRE === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/fire.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.DARK === formatElement(props.attributes.element) && (
+        {ELEMENT.DARK === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/dark.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.FOREST === formatElement(props.attributes.element) && (
+        {ELEMENT.FOREST === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/forest.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.FROZEN === formatElement(props.attributes.element) && (
+        {ELEMENT.FROZEN === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/frozen.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.THUNDER === formatElement(props.attributes.element) && (
+        {ELEMENT.THUNDER === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/thunder.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.WATER === formatElement(props.attributes.element) && (
+        {ELEMENT.WATER === formatElement(props.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/water.png")}

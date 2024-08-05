@@ -31,6 +31,7 @@ import NormalButton from "../../components/Button/NormalButton";
 import AwesomeButton from "react-native-really-awesome-button";
 import BabyCard from "./BabyCard";
 import { useAccount } from "wagmi";
+import { setReLoad } from "../../redux/reloadSlice";
 const URL = "http://192.168.1.12:4500"; // YOU CAN CHANGE THIS.
 
 const TIME_TO_BREED = 10;
@@ -242,7 +243,6 @@ export function BreedScreen() {
           }}
         >
           <BabyCard
-            disabled={true}
             element={childPet?.data?.attributes?.element}
             image={childPet?.data?.image}
             name={childPet?.data?.name}
@@ -264,6 +264,7 @@ export function BreedScreen() {
             onPress={() => {
               if (remainingTime == 0) {
                 // navigate.navigate("Pet");
+                dispatch(setReLoad());
                 navigate.goBack();
               }
 

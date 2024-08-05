@@ -72,11 +72,13 @@ const PetsModal = ({
 
   const { assets } = useSelector((state: any) => state.pet);
   const [data, setData] = useState<NFTData[]>(petArray);
+  const { reLoad } = useSelector((state: any) => state.reLoad);
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
-  const { apiData, serverError } = useFetch(() =>
-    UserService.getNFTsByOwner(address),
+  const { apiData, serverError } = useFetch(
+    () => UserService.getNFTsByOwner(address),
+    [reLoad],
   );
 
   useEffect(() => {
