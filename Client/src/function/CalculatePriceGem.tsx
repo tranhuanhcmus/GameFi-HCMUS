@@ -14,7 +14,7 @@ const fetchEthToUsdcRate = async () => {
 
 // Updated function to calculate price in USDC
 export async function calculatePriceInUSDC(priceInGems: number) {
-  const ETH_TO_GEMS_CONVERSION_RATE = 76000; // 1 ETH = 76,000 gems
+  const ETH_TO_GEMS_CONVERSION_RATE = 70000; // 1 ETH = 70,000 gems
 
   const ethToUsdcRate = await fetchEthToUsdcRate();
   if (ethToUsdcRate === null) {
