@@ -57,15 +57,11 @@ const HomeScreen = () => {
     useState(false);
 
   const { apiData: statusBoost, serverError } = useFetch(() =>
-    BoostService.getStatusBoost(
-      address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-    ),
+    BoostService.getStatusBoost(address as `0x${string}`),
   );
 
   const { apiData: dataOwner, serverError: serverDataError } = useFetch(() =>
-    UsersService.getDataOwner(
-      address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-    ),
+    UsersService.getDataOwner(address as `0x${string}`),
   );
 
   const [isInventoryModalVisible, setIsInventoryModalVisible] = useState(false);

@@ -115,7 +115,7 @@ const BearCard = (props: any) => {
               alignItems: "center",
             }}
           >
-            {ELEMENT.FIRE === formatElement(props.element) && (
+            {ELEMENT.FIRE === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
                 source={require("../../../assets/elements/fire.png")}
@@ -143,18 +143,18 @@ const BearCard = (props: any) => {
                 style={{ width: 20, height: 20 }}
               />
             )}
-            {ELEMENT.THUNDER === formatElement(props.element) && (
+            {ELEMENT.THUNDER === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
                 source={require("../../../assets/elements/thunder.png")}
-                style={{ width: "20%", height: "100%" }}
+                style={{ width: 20, height: 20 }}
               />
             )}
-            {ELEMENT.WATER === formatElement(props.element) && (
+            {ELEMENT.WATER === formatElement(props.attributes.element) && (
               <Image
                 resizeMode="contain"
                 source={require("../../../assets/elements/water.png")}
-                style={{ width: "20%", height: "100%" }}
+                style={{ width: 20, height: 20 }}
               />
             )}
           </View>

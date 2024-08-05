@@ -54,8 +54,8 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
   }, [address, reLoad, isFocused]);
 
   useEffect(() => {
-    dispatch(updateEnergy(energyUser?.energy || 0));
-  }, [energyUser?.energy, reLoad]);
+    dispatch(updateEnergy(energyUser.energy));
+  }, [energyUser.energy, reLoad]);
 
   const navigate = useCustomNavigation();
   return (
