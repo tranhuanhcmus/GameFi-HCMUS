@@ -36,6 +36,7 @@ import { TileData, TileDataType } from "../lib/TileData";
 import { COLUMN, ROW } from "../lib/spec";
 import Tile from "./Tile";
 import { StatusBarHeight } from "../../../function/CalculateStatusBar";
+import { playSound } from "../../../function/SoundGame";
 
 // react-native-swipe-gestures swipeDirections type
 export enum swipeDirections {
@@ -70,6 +71,9 @@ const SwappableGrid = ({ socket, setMoveCount, setScore }: Props) => {
   /** ====================================================== */
   /** useDispatch */
   const dispatch = useDispatch();
+  const { isVisable, sound, music } = useSelector(
+    (state: any) => state.settingGame,
+  );
 
   /** ====================================================== */
   /** useCustomNavigation */
@@ -206,6 +210,11 @@ const SwappableGrid = ({ socket, setMoveCount, setScore }: Props) => {
   ) => {
     console.error("gestureName ", gestureName);
     if (!turn) return; // COMPONENT TURN, YOU CAN NOT SWIPE
+
+    setTimeout(() => {
+      playSound(sound, "moveSound");
+    }, 100);
+
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
 
     let initialGestureX = gestureState.x0;
@@ -269,6 +278,9 @@ const SwappableGrid = ({ socket, setMoveCount, setScore }: Props) => {
   };
   const processMatches = (matches: number[][][]) => {
     let nextMatches: string | any[] = [];
+    setTimeout(() => {
+      playSound(sound, "brokenSound");
+    }, 100);
     setTileDataSource((state) => {
       let newTileDataSource = state.slice();
       markAsMatch(matches, newTileDataSource);
