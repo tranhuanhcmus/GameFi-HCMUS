@@ -1,5 +1,6 @@
 export const COLOR = {
   PURPLE: "#40107E",
+  PINK: "#E87070",
   PURPLE1: "#6C3499",
   RED: "#E60722",
   GRAY: "#B6B8B5",
@@ -25,7 +26,7 @@ BLACK_OPACITY: "rgba(0, 0, 0, 0.3)",
   CYAN: "#00F8F8",
   BROWN_BORDER:"#CD9762",
   DARKER_PURPLE: "#271647",
-  PINK: "#F0357D",
+
   LIGHT_GREEN: "#C6FFC5",
   SKY: "#D7E6F3",
 };

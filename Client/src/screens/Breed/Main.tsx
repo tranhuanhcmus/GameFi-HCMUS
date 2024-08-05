@@ -159,11 +159,12 @@ export function BreedScreen() {
             justifyContent: "center",
             alignItems: "flex-start",
             marginLeft: ConstantsResponsive.XR * 30,
-            marginTop: StatusBarHeight,
+            marginTop: StatusBarHeight - 10,
+            marginBottom: 10,
 
-            width: ConstantsResponsive.XR * 70,
+            width: ConstantsResponsive.XR * 60,
 
-            height: ConstantsResponsive.XR * 70,
+            height: ConstantsResponsive.XR * 60,
             transform: [{ translateY: backTranslateYValue }],
           }}
         >
@@ -256,25 +257,71 @@ export function BreedScreen() {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: 10,
+            marginTop: 50,
           }}
         >
-          <TouchableWithoutFeedback
+          <NormalButton
             onPress={() => {
-              Animated.sequence([
-                Animated.timing(backTranslateYValue, {
-                  toValue: 10,
-                  duration: 100,
-                  useNativeDriver: true,
-                }),
-                Animated.timing(backTranslateYValue, {
-                  toValue: 0,
-                  duration: 100,
-                  useNativeDriver: true,
-                }),
-              ]).start(() => {
+              if (remainingTime == 0) {
+                // navigate.navigate("Pet");
                 navigate.goBack();
-              });
+              }
+
+              if (fatherPet.id && motherPet.id) {
+                setIsActive(true);
+              }
+            }}
+            style={{
+              display: "flex",
+              width: ConstantsResponsive.MAX_WIDTH * 0.4,
+              height: ConstantsResponsive.MAX_WIDTH * 0.1,
+              alignItems: "center",
+
+              justifyContent: "center",
+              borderRadius: 15,
+              marginTop: 10,
+            }}
+            disabled={isActive}
+          >
+            <Image
+              source={require("../../../assets/backGroundButtonRed_1.png")}
+              resizeMode="stretch"
+              style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                borderRadius: 15,
+              }}
+            />
+            {remainingTime > 0 ? (
+              <CustomText
+                style={{
+                  color: COLOR.WHITE,
+                  textAlign: "center",
+                  fontSize: 23,
+                  fontFamily: "rexlia",
+                }}
+              >
+                BREED {minutes > 0 ? `${minutes} m ` : ""}:
+                {seconds.toString().padStart(2, "0")} s
+              </CustomText>
+            ) : (
+              <CustomText
+                style={{
+                  color: COLOR.WHITE,
+                  fontSize: 23,
+                  textAlign: "center",
+                  fontFamily: "rexlia",
+                }}
+              >
+                PICK UP
+              </CustomText>
+            )}
+          </NormalButton>
+          <View
+            style={{
+              position: "absolute",
+              right: ConstantsResponsive.XR * 50,
             }}
           >
             <Animated.View
@@ -295,42 +342,7 @@ export function BreedScreen() {
                 }}
               />
             </Animated.View>
-          </TouchableWithoutFeedback>
-          <AwesomeButton
-            onPress={() => {
-              if (remainingTime == 0) {
-                // navigate.navigate("Pet");
-                navigate.goBack();
-              }
-
-              if (fatherPet.id && motherPet.id) {
-                setIsActive(true);
-              }
-            }}
-            width={ConstantsResponsive.MAX_WIDTH * 0.3}
-            height={ConstantsResponsive.MAX_WIDTH * 0.2}
-            backgroundColor={COLOR.RED}
-            backgroundDarker={COLOR.BROWN}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 15,
-              marginTop: 10,
-            }}
-            disabled={isActive}
-          >
-            {remainingTime > 0 ? (
-              <CustomText style={{ color: COLOR.WHITE, textAlign: "center" }}>
-                BREED {minutes > 0 ? `${minutes} m ` : ""}:
-                {seconds.toString().padStart(2, "0")} s
-              </CustomText>
-            ) : (
-              <CustomText style={{ color: COLOR.WHITE, textAlign: "center" }}>
-                PICK UP
-              </CustomText>
-            )}
-          </AwesomeButton>
+          </View>
         </View>
       </ScrollView>
     </View>

@@ -223,7 +223,6 @@ const Index = () => {
 
   useEffect(() => {
     socket.onListenFirstTurn((data) => {
-      console.log(data);
       dispatch(updateTurn(data));
     });
     socket.onListenTakeDamage(handleDamage);
@@ -231,7 +230,6 @@ const Index = () => {
     socket.onListenDisConnect((data) => {
       handleCloseModal();
       setTimeout(() => {
-        console.log(data);
         setStatus("Victory");
       }, 500);
     });

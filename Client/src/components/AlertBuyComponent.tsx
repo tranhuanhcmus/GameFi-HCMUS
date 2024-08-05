@@ -107,6 +107,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             gemcost: gemcost || 0,
             currency: 1,
           };
+          console.log(body1);
 
           const response = await ItemAppOwnerService.buyItemPack(body1);
 
@@ -121,6 +122,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
 
         dispatch(stopLoading());
       } catch (error) {
+        console.log(error);
         onBuy(false, itemImg || "");
         dispatch(stopLoading());
       }

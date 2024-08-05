@@ -37,11 +37,7 @@ const StatusPopup: React.FC<props> = ({ status, onPress }) => {
   const [getItems, setGetItems] = useState<boolean>(false);
   const fetchData = async () => {
     try {
-      const res = await ItemAppOwnerService.getReward(
-        address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-      );
-
-      console.log("API Response:", res); // Log the response to see its structure
+      const res = await ItemAppOwnerService.getReward(address);
 
       if (res && typeof res === "object") {
         const mappedData = {

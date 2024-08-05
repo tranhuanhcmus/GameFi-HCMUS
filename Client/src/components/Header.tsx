@@ -7,7 +7,7 @@ import { COLOR } from "../utils/color";
 import CustomText from "./CustomText";
 import Thunder from "../../assets/navIcon/thunder.svg";
 import Coin from "../../assets/navIcon/coin.svg";
-import Gem from "../../assets/navIcon/diamond.svg";
+import Gem from "../../assets/diamond.svg";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 import { useAccount } from "wagmi";
@@ -36,21 +36,16 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
 
   const fetchData = async () => {
     try {
-      const res: any[] = await ItemAppOwnerService.getCurrency(
-        address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-      );
+      const res: any[] = await ItemAppOwnerService.getCurrency(address);
       console.log(res);
-      setData([...data, ...res]);
+      setData([...res]);
     } catch (error) {
       log.error("ItemAppOwnerService.getCurrency", error);
     }
   };
 
   const { apiData: energyUser, serverError } = useFetch(
-    () =>
-      UsersService.getOwnerEnergy(
-        address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-      ),
+    () => UsersService.getOwnerEnergy(address as `0x${string}`),
     [reLoad],
   );
 
@@ -60,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
 
   useEffect(() => {
     dispatch(updateEnergy(energyUser?.energy || 0));
-  }, [energyUser?.energy]);
+  }, [energyUser?.energy, reLoad]);
 
   const navigate = useCustomNavigation();
   return (
@@ -109,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           }}
         >
           {data && data.length
-            ? Math.floor(data.find((item) => item.name == GOLD).quantity / 1000)
+            ? Math.floor(data.find((item) => item.name == GOLD).quantity)
             : 100}
         </CustomText>
       </View>
@@ -131,7 +126,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           }}
         >
           {data && data.length
-            ? Math.floor(data.find((item) => item.name == GEM).quantity / 1000)
+            ? Math.floor(data.find((item) => item.name == GEM).quantity)
             : 100}
         </CustomText>
       </View>
