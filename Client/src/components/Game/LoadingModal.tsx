@@ -77,10 +77,7 @@ const LoadingModal = ({
   const PlayGame = async () => {
     try {
       const body = { tokenId: tokenId };
-      const res = await UsersService.playGame(
-        address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-        body,
-      );
+      const res = await UsersService.playGame(address as `0x${string}`, body);
     } catch (err) {
       console.log(err);
     }

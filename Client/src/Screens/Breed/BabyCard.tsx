@@ -97,39 +97,46 @@ const BabyCard = (props: any) => {
           alignItems: "center",
         }}
       >
-        {ELEMENT.FIRE === formatElement(props.element) && (
+        {ELEMENT.FIRE === formatElement(props.attributes.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/fire.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.DARK === formatElement(props.element) && (
+        {ELEMENT.DARK === formatElement(props.attributes.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/dark.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.FOREST === formatElement(props.element) && (
+        {ELEMENT.FOREST === formatElement(props.attributes.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/forest.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.FROZEN === formatElement(props.element) && (
+        {ELEMENT.FROZEN === formatElement(props.attributes.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/frozen.png")}
             style={{ width: 20, height: 20 }}
           />
         )}
-        {ELEMENT.WATER === formatElement(props.element) && (
+        {ELEMENT.THUNDER === formatElement(props.attributes.element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/thunder.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )}
+        {ELEMENT.WATER === formatElement(props.attributes.element) && (
           <Image
             resizeMode="contain"
             source={require("../../../assets/elements/water.png")}
-            style={{ width: "20%", height: "100%" }}
+            style={{ width: 20, height: 20 }}
           />
         )}
       </View>
