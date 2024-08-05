@@ -222,9 +222,6 @@ const Index = () => {
   }, [componentHp]);
 
   useEffect(() => {
-    socket.onListenFirstTurn((data) => {
-      dispatch(updateTurn(data));
-    });
     socket.onListenTakeDamage(handleDamage);
 
     socket.onListenDisConnect((data) => {
@@ -236,7 +233,7 @@ const Index = () => {
 
     return () => {
       // Remove the event listeners:
-      socket.removeListenFristTurn();
+
       socket.removeListenOppentDisconnect();
       socket.removeListenTakeDamage();
     };

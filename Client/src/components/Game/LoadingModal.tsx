@@ -34,6 +34,7 @@ import NormalButton from "../Button/NormalButton";
 import { UsersService } from "../../services/UsersService";
 import { GAMETYPE } from "../../constants/types";
 import { useAccount } from "wagmi";
+import { updateTurn } from "../../redux/hangManSlice";
 
 const LoadingModal = ({
   isVisible,
@@ -102,7 +103,6 @@ const LoadingModal = ({
     }) => {
       setIsVisible(false);
       if (data.gameRoom !== "NO ROOM") {
-        await PlayGame();
         dispatch(setGameRoom(data.gameRoom));
         dispatch(
           setOpponentValue({
@@ -118,14 +118,19 @@ const LoadingModal = ({
         } else if (gameName === GAMETYPE.WORDMASTER) {
           navigate.navigate("HangManGame");
         }
+        await PlayGame();
       }
     };
 
     socket.connect();
     socket.onListenKeyRoom(handleRoomData);
+    socket.onListenFirstTurn((data) => {
+      dispatch(updateTurn(data));
+    });
 
     return () => {
       socket.removeListenKeyRoom();
+      socket.removeListenFristTurn();
     };
   }, [gameName, socket]);
 
