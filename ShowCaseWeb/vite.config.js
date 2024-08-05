@@ -11,6 +11,10 @@ export default defineConfig({
     host: true, // This will allow connections from any IP
     port: process.env.PORT || 3000, // Use the PORT environment variable provided by Render, or default to 3000
   },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+  },
   plugins: [react()],
   resolve: {
     alias: {
