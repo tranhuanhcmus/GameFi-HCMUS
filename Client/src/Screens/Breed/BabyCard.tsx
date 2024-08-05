@@ -50,8 +50,7 @@ const BabyCard = (props: any) => {
   };
 
   useEffect(() => {
-    if (props.isOpen) startShakeAnimation();
-    // Start the animation with a 2-second delay
+    if (props?.element) startShakeAnimation();
   }, [props]);
 
   return isVisble ? (
@@ -125,10 +124,17 @@ const BabyCard = (props: any) => {
             style={{ width: 20, height: 20 }}
           />
         )}
+        {ELEMENT.THUNDER === formatElement(props.element) && (
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/elements/thunder.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        )}
         {ELEMENT.WATER === formatElement(props.element) && (
           <Image
             resizeMode="contain"
-            source={require("../../../assets/elements/Water.png")}
+            source={require("../../../assets/elements/water.png")}
             style={{ width: 20, height: 20 }}
           />
         )}

@@ -22,6 +22,8 @@ import Medicine from "../../../assets/medicine.svg";
 import { ItemAppService } from "../../services/ItemAppService";
 import useFetch from "../../hooks/useFetch";
 import AlertBuyItemsSuccess from "../../components/AlertBuyItemsSuccess";
+
+import { Gem } from "../../utils/constantValue";
 type Props = {};
 
 interface Item {
@@ -51,8 +53,9 @@ const ShopScreen = (props: Props) => {
   const { apiData, serverError } = useFetch(() => ItemAppService.getAllItems());
   const [itemImg, setItemImg] = useState<any>("");
   useEffect(() => {
+    //console.log(apiData);
     if (apiData) {
-      setItems({ ...apiData });
+      setItems({ ...apiData, ...Gem });
     }
   }, [apiData]);
 

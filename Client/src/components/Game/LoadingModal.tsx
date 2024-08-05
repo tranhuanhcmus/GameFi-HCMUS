@@ -77,12 +77,7 @@ const LoadingModal = ({
   const PlayGame = async () => {
     try {
       const body = { tokenId: tokenId };
-      const res = await UsersService.playGame(
-        "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-        body,
-      );
-      // const res = await UsersService.playGame(address!, body);
-      // console.log(res);
+      const res = await UsersService.playGame(address as `0x${string}`, body);
     } catch (err) {
       console.log(err);
     }
@@ -93,9 +88,7 @@ const LoadingModal = ({
     if (second == 0) {
       setIsVisible(false);
       setSecond(30);
-    }
-
-    if (second % 2 === 0 && isVisible) {
+      socket.emitSuccess("");
     }
   }, [second]);
 
@@ -159,6 +152,7 @@ const LoadingModal = ({
             onPress={() => {
               setIsVisible(false);
               setSecond(30);
+              socket.emitSuccess("");
             }}
             style={{
               position: "absolute",

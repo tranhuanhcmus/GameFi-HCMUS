@@ -1,4 +1,4 @@
-import { arbitrum,sepolia  } from "viem/chains";
+import { arbitrum, sepolia } from "viem/chains";
 
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = "039c22f40077998e7e7a801569526cd9";
@@ -18,5 +18,5 @@ const metadata = {
 const mainnet = arbitrum;
 const testnet = sepolia;
 
-const connectConfig = { projectId, metadata, mainnet,testnet };
+const connectConfig = { projectId, metadata, mainnet, testnet };
 export default connectConfig;

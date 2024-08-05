@@ -3,13 +3,19 @@ import { RootState } from "./store";
 
 interface AlertState {
   title: string | null;
-  message: string | null;
+  message: {
+    error: true;
+    message: "";
+  };
   isVisible: boolean;
 }
 
 const initialState: AlertState = {
   title: null,
-  message: null,
+  message: {
+    error: true,
+    message: "",
+  },
   isVisible: false,
 };
 
@@ -24,7 +30,10 @@ const alertSlice = createSlice({
     },
     hideAlert: (state) => {
       state.title = null;
-      state.message = null;
+      state.message = {
+        error: true,
+        message: "",
+      };
       state.isVisible = false;
     },
   },

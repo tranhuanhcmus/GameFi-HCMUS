@@ -7,6 +7,7 @@ import { COLOR } from "../utils/color";
 import CustomText from "./CustomText";
 import Thunder from "../../assets/navIcon/thunder.svg";
 import Coin from "../../assets/navIcon/coin.svg";
+import Gem from "../../assets/diamond.svg";
 import useCustomNavigation from "../hooks/useCustomNavigation";
 import { ItemAppOwnerService } from "../services/ItemAppOwnerService";
 import { useAccount } from "wagmi";
@@ -14,8 +15,9 @@ import log from "../logger/index.js";
 import logger from "../logger/index.js";
 import useFetch from "../hooks/useFetch";
 import { UsersService } from "../services/UsersService";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateEnergy } from "../redux/playerSlice";
+import { useIsFocused } from "@react-navigation/native";
 
 interface HeaderProps {
   name: string;
@@ -26,57 +28,61 @@ const GEM = "Gem";
 const Header: React.FC<HeaderProps> = ({ name }) => {
   const [data, setData] = useState<any[]>([]);
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   /** useAccount */
   const { address, isConnecting, isDisconnected, isConnected } = useAccount();
-  logger.info("address ", address);
+  const { reLoad } = useSelector((state: any) => state.reLoad);
+
   const fetchData = async () => {
     try {
       const res: any[] = await ItemAppOwnerService.getCurrency(address);
-      setData([...data, ...res]);
+      console.log(res);
+      setData([...res]);
     } catch (error) {
       log.error("ItemAppOwnerService.getCurrency", error);
     }
   };
 
-  const { apiData: energyUser, serverError } = useFetch(() =>
-    UsersService.getOwnerEnergy(address!),
+  const { apiData: energyUser, serverError } = useFetch(
+    () => UsersService.getOwnerEnergy(address as `0x${string}`),
+    [reLoad],
   );
 
   useEffect(() => {
     fetchData();
-  }, [address]);
+  }, [address, reLoad, isFocused]);
 
   useEffect(() => {
-    dispatch(updateEnergy(energyUser?.energy || 0));
-  }, [energyUser?.energy]);
+    if (energyUser) {
+      dispatch(updateEnergy(energyUser.energy));
+    }
+  }, [energyUser, reLoad]);
 
   const navigate = useCustomNavigation();
   return (
     <View
       style={{
-        width: ConstantsResponsive.MAX_WIDTH * 0.4,
-        height: ConstantsResponsive.YR * 40,
+        maxWidth: ConstantsResponsive.MAX_WIDTH * 0.6,
+        height: ConstantsResponsive.YR * 50,
         display: "flex",
         flexDirection: "row",
-        alignItems: "center",
 
+        alignItems: "center",
+        marginHorizontal: ConstantsResponsive.XR * 40,
         justifyContent: "center",
         columnGap: ConstantsResponsive.XR * 30,
 
         position: "relative",
 
         borderRadius: 20,
-        paddingHorizontal: ConstantsResponsive.XR * 10,
       }}
     >
       <Image
         resizeMode="stretch"
         style={{
-          height: ConstantsResponsive.YR * 40,
-          width:
-            ConstantsResponsive.MAX_WIDTH * 0.4 + ConstantsResponsive.XR * 4,
-          left: 0,
+          height: ConstantsResponsive.YR * 50,
+          maxWidth: ConstantsResponsive.MAX_WIDTH * 0.5,
 
           position: "absolute",
         }}
@@ -90,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           alignItems: "center",
         }}
       >
-        <Coin></Coin>
+        <Coin height={20} width={20}></Coin>
         <CustomText
           style={{
             color: COLOR.YELLOW,
@@ -100,7 +106,29 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
           }}
         >
           {data && data.length
-            ? data.find((item) => item.name == GOLD).quantity
+            ? Math.floor(data.find((item) => item.name == GOLD).quantity)
+            : 100}
+        </CustomText>
+      </View>
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Gem height={20} width={20} />
+        <CustomText
+          style={{
+            color: COLOR.YELLOW,
+            textAlign: "center",
+            fontSize: 15,
+            fontWeight: "bold",
+          }}
+        >
+          {data && data.length
+            ? Math.floor(data.find((item) => item.name == GEM).quantity)
             : 100}
         </CustomText>
       </View>

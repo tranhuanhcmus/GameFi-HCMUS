@@ -8,7 +8,6 @@ export class BoostEffectsService {
       try {
         const response = await api.get(API.BOOST_EFFECTS);
 
-        console.log("response ", response);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);

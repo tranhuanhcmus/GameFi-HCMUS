@@ -18,6 +18,7 @@ import ItemShowComponent from "./ItemShowComponent";
 import { CATEGORY } from "../constants/types";
 import { StatusBarHeight } from "../function/CalculateStatusBar";
 import { updateBoost } from "../redux/petActiveSlice";
+import { setReLoad } from "../redux/reloadSlice";
 
 interface AlertBuyItemsSuccessProps {
   isVisible: boolean;
@@ -60,9 +61,11 @@ const AlertBuyItemsSuccess: React.FC<AlertBuyItemsSuccessProps> = ({
       });
     } else if (itemImg?.data?.length === currentIndex + 1) {
       dispatch(hideAlert());
+      dispatch(setReLoad());
       onClose?.();
     } else {
       dispatch(hideAlert());
+      dispatch(setReLoad());
       onClose?.();
     }
   };

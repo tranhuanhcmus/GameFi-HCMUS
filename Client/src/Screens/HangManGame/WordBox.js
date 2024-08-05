@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React, { useReducer } from "react";
-import colors from "../../../common/colors";
+
 import ConstantsResponsive from "../../constants/Constanst";
 
 const WordBox = ({ wordData }) => {

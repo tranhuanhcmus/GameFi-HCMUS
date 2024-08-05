@@ -87,11 +87,11 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
 
       const body: item = {
         id: id,
-        owner: address!,
-        quantity: quantity || 0,
+        owner: address as `0x${string}`,
+        quantity: 1,
         goldcost: goldcost || 0,
         gemcost: gemcost || 0,
-        currency: 1,
+        currency: 0,
       };
 
       try {
@@ -100,18 +100,19 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
             id: id,
             quality: quality,
             category: category.substring(0, category.indexOf(" ")),
-            owner: address!,
+            owner: address as `0x${string}`,
 
-            quantity: quantity || 0,
+            quantity: 1,
             goldcost: goldcost || 0,
             gemcost: gemcost || 0,
-            currency: 1,
+            currency: 0,
           };
 
           const response = await ItemAppOwnerService.buyItemPack(body1);
 
           onBuy(true, itemImg, [response]);
         } else {
+          console.log(body);
           await ItemAppOwnerService.buyItem(body);
 
           onBuy(true, itemImg);
@@ -121,6 +122,7 @@ const AlertBuyComponent: React.FC<AlertBuyComponentProps> = ({
 
         dispatch(stopLoading());
       } catch (error) {
+        console.log(error);
         onBuy(false, itemImg || "");
         dispatch(stopLoading());
       }

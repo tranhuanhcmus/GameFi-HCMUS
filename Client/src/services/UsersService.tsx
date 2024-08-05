@@ -7,7 +7,6 @@ export class UsersService {
       try {
         const response = await api.get(API.USERS + `/energy/${address}`);
 
-        console.log("response ", response);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);
@@ -18,8 +17,17 @@ export class UsersService {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const response = await api.get(API.USERS + `/energyNFT/${tokenId}`);
+        resolve(response.data.data);
+      } catch (error: any) {
+        reject(error.message);
+      }
+    });
+  }
 
-        console.log("response ", response);
+  static async getDataOwner(address: string) {
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        const response = await api.get(API.USERS + `/checkData/${address}`);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);
@@ -32,7 +40,6 @@ export class UsersService {
       try {
         const response = await api.post(API.USERS + `/energy/${address}`, body);
 
-        console.log("response ", response);
         resolve(response.data.data);
       } catch (error: any) {
         reject(error.message);

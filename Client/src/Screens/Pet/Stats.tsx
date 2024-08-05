@@ -19,6 +19,7 @@ import { COLOR } from "../../utils/color";
 
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import { getLevel } from "../../utils/pet";
+import { formatElement } from "../../constants/types";
 
 type Props = {};
 
@@ -30,7 +31,7 @@ const StatsModal = ({
 
   setIsVisible: (value: boolean) => void;
 }) => {
-  const { hp, atk, level } = useSelector((state: any) => state.pet);
+  const { hp, atk, level, attributes } = useSelector((state: any) => state.pet);
 
   return (
     <Modal animationType="slide" transparent={true} visible={isVisible}>
@@ -80,8 +81,12 @@ const StatsModal = ({
             </CustomText>
             <CustomText style={styles.text}>Common Pet</CustomText>
           </View>
-          <BarInfor color="green" title="Health" value={hp} />
-          <BarInfor color="red" title="Damage" value={atk} />
+          <BarInfor color={COLOR.GREEN} title="Health" value={hp} />
+          <BarInfor color={COLOR.RED} title="Damage" value={atk} />
+          <CustomText style={styles.text}>
+            ELement{" "}
+            {`      ${formatElement(attributes.element).toLocaleUpperCase()}`}
+          </CustomText>
         </View>
       </View>
     </Modal>

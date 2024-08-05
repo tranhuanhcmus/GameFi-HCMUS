@@ -10,6 +10,6 @@ export const API = {
   BREED: "/bears/breed",
   CUP: "/cups",
   BOOST_EFFECTS: "/boostEffects",
-  server: "https://gamefi-hcmus.onrender.com",
+  server: "https://gamefi-hcmus-aq3q.onrender.com/",
   BOOSTEFFECT: "/boostEffects",
 };

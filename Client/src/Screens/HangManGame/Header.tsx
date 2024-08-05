@@ -100,6 +100,7 @@ const User: React.FC<props> = ({ hp }) => {
           uri: assets,
         });
         setIsImageLoaded(true);
+        play("walk");
       },
       (error) => {
         console.error("Error loading image", error);
@@ -156,16 +157,20 @@ const User: React.FC<props> = ({ hp }) => {
     setLoop(true);
     setResetAfterFinish(true);
   };
-  const play1 = (type: string) => {
-    const parsedFps = Number(fps + 1);
+
+  const playSkill = (type: string) => {
+    const parsedFps = Number(fps);
 
     if (mummyRef1.current) {
       mummyRef1.current.play({
         type,
         fps: isNaN(parsedFps) ? 16 : parsedFps,
-        loop,
-        resetAfterFinish,
       });
+    }
+  };
+  const stopSkill = () => {
+    if (mummyRef1.current) {
+      mummyRef1.current.stop(() => console.log("stopped"));
     }
   };
 
@@ -178,25 +183,25 @@ const User: React.FC<props> = ({ hp }) => {
   useEffect(() => {
     if (isFirstRender.current) {
       // Skip the effect on first render
-      play1("default");
+      playSkill("default");
       isFirstRender.current = false;
       return;
     }
 
-    play1("walk");
+    playSkill("skill");
     setTimeout(() => {
       receiveDamage(10);
     }, 1000);
+    stopSkill();
   }, [hp]);
 
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     play("walk");
-  //   } else {
-  //     // Optional: stop the animation when the screen is not focused
-  //     stop();
-  //   }
-  // }, [isFocused]);
+  useEffect(() => {
+    if (isFocused) {
+      play("walk");
+    } else {
+      stop();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.player}>
@@ -231,7 +236,7 @@ const User: React.FC<props> = ({ hp }) => {
         <Animated.Text style={[styles.damageText, floatingTextStyle]}>
           -
           {Math.floor(
-            atkOpponent * ContraryElement(attributes.element, elementOpponent),
+            atkOpponent * ContraryElement(elementOpponent, attributes.element),
           )}
         </Animated.Text>
       </View>
@@ -250,7 +255,7 @@ const User: React.FC<props> = ({ hp }) => {
           width={ConstantsResponsive.XR * 2 * 80}
           animations={{
             default: [20],
-            walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            skill: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           }}
         />
       </View>
@@ -262,7 +267,7 @@ const User: React.FC<props> = ({ hp }) => {
 const Component: React.FC<props> = ({ hp }) => {
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
-  const [fps, setFps] = useState<string>("10");
+  const [fps, setFps] = useState<string>("12");
   const mummyRef = useRef<SpriteSheet>(null);
   const mummyRef1 = useRef<SpriteSheet>(null);
   const [offsetX, setOffsetX] = useState<number>(0);
@@ -292,16 +297,24 @@ const Component: React.FC<props> = ({ hp }) => {
     setResetAfterFinish(true);
   };
 
-  const play1 = (type: string) => {
-    const parsedFps = Number(fps + 1);
+  const playSkill = (type: string) => {
+    const parsedFps = Number(fps);
 
     if (mummyRef1.current) {
       mummyRef1.current.play({
         type,
         fps: isNaN(parsedFps) ? 16 : parsedFps,
-        loop,
-        resetAfterFinish,
       });
+    }
+  };
+  const stop = () => {
+    if (mummyRef.current) {
+      mummyRef.current.stop(() => console.log("stopped"));
+    }
+  };
+  const stopSkill = () => {
+    if (mummyRef1.current) {
+      mummyRef1.current.stop(() => console.log("stopped"));
     }
   };
 
@@ -339,7 +352,9 @@ const Component: React.FC<props> = ({ hp }) => {
           width: width,
           uri: assets,
         });
+
         setIsImageLoaded(true);
+        play("walk");
       },
       (error) => {
         console.error("Error loading image", error);
@@ -365,25 +380,26 @@ const Component: React.FC<props> = ({ hp }) => {
   useEffect(() => {
     if (isFirstRender.current) {
       // Skip the effect on first render
-      play1("default");
+      playSkill("default");
       isFirstRender.current = false;
       return;
     }
 
-    play1("walk");
+    playSkill("skill");
     setTimeout(() => {
       receiveDamage(10);
     }, 1000);
+    stopSkill();
   }, [hp]);
 
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     play("walk");
-  //   } else {
-  //     // Optional: stop the animation when the screen is not focused
-  //     stop();
-  //   }
-  // }, [isFocused]);
+  useEffect(() => {
+    if (isFocused) {
+      play("walk");
+    } else {
+      // Optional: stop the animation when the screen is not focused
+      stop();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.playerComponent}>
@@ -415,7 +431,7 @@ const Component: React.FC<props> = ({ hp }) => {
         <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
           -
           {Math.floor(
-            atk * ContraryElement(elementOpponent, attributes.element),
+            atk * ContraryElement(attributes.element, elementOpponent),
           )}
         </Animated.Text>
       </View>
@@ -431,10 +447,10 @@ const Component: React.FC<props> = ({ hp }) => {
           source={require("../../../assets/skill.png")}
           columns={12}
           rows={1}
-          height={ConstantsResponsive.XR * 2 * 80}
+          width={ConstantsResponsive.XR * 2 * 80}
           animations={{
             default: [20],
-            walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            skill: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           }}
         />
       </View>

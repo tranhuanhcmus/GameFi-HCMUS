@@ -56,7 +56,7 @@ type Props = {};
 
 interface item {
   id: string;
-  owner: string;
+  owner: any;
   quantity: number;
 
   tokenId: number;
@@ -189,16 +189,17 @@ const PetScreen = () => {
 
       const food: item = {
         id: id.toString(),
-        owner: "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
+        owner: address,
         quantity: 1,
         tokenId: tokenId,
       };
+      console.log(food);
 
+      dispatch(startLoading());
+      await EatService.Eat(food);
       setFoodArray((prevArray: any) =>
         prevArray.filter((item: any) => item.id !== id),
       );
-      dispatch(startLoading());
-      await EatService.Eat(food);
       dispatch(stopLoading());
       setFeed({ feed: foodImage, pageX: pageX, pageY: pageY });
       setTimeout(() => {
@@ -213,6 +214,7 @@ const PetScreen = () => {
         dispatch(updateLevel(FOODVALUE.superRare));
       }
     } catch (err) {
+      dispatch(stopLoading());
       console.log(err);
     }
   };
@@ -802,14 +804,14 @@ const styles = StyleSheet.create({
       ConstantsResponsive.XR * 60,
     marginLeft: ConstantsResponsive.XR * 40,
 
-    backgroundColor: COLOR.WHITE,
+    backgroundColor: COLOR.GRAY2,
     borderWidth: 2,
     borderColor: COLOR.BLACK,
     borderRadius: ConstantsResponsive.YR * 10,
   },
   healthBarInner: {
     position: "absolute",
-    backgroundColor: COLOR.BLACK,
+    backgroundColor: COLOR.BLUE,
     left: ConstantsResponsive.XR * 3,
 
     top: ConstantsResponsive.YR * 3,

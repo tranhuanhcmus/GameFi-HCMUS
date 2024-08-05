@@ -49,20 +49,22 @@ const GameScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Image
-          style={styles.backgroundImage}
-          resizeMode="stretch"
-          source={backGroundImage}
-        />
-        <GameHeader />
+    <View>
+      <Image
+        style={styles.backgroundImage}
+        resizeMode="stretch"
+        source={require("../../../assets/gameBackGround.png")}
+      />
+      <SafeAreaView>
+        <View style={styles.container}>
+          <GameHeader />
 
-        <UpperLayer />
+          <UpperLayer />
 
-        <GameBoard />
-      </View>
-    </SafeAreaView>
+          <GameBoard />
+        </View>
+      </SafeAreaView>
+    </View>
   );
 };
 
