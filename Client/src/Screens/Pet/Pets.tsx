@@ -30,6 +30,7 @@ import CloseButton from "../../../assets/carbon_close-filled.svg";
 import useFetch from "../../hooks/useFetch";
 import { updatePet } from "../../redux/petSlice";
 import { updatePetActive } from "../../redux/petActiveSlice";
+import { scaleStats } from "../../function/CalculateLevelAndDamage";
 
 type Props = {};
 
@@ -75,9 +76,7 @@ const PetsModal = ({
   const navigate = useCustomNavigation();
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
   const { apiData, serverError } = useFetch(() =>
-    UserService.getNFTsByOwner(
-      address || "0xFe25C8BB510D24ab8B3237294D1A8fCC93241454",
-    ),
+    UserService.getNFTsByOwner("0xFe25C8BB510D24ab8B3237294D1A8fCC93241454"),
   );
 
   useEffect(() => {
@@ -90,8 +89,8 @@ const PetsModal = ({
         return {
           id: nft.tokenId,
           energy: nft.energy,
-          hp: nft.data.hp,
-          atk: nft.data.atk,
+          hp: scaleStats(nft.exp, nft.data.hp, nft.data.atk).hp,
+          atk: scaleStats(nft.exp, nft.data.hp, nft.data.atk).damage,
           level: nft.exp,
           petImg: nft.data.image,
           tokenId: nft.data.tokenId,

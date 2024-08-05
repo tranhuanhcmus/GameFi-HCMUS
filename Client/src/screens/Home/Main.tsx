@@ -30,7 +30,7 @@ import Inventory from "../../../assets/inventory.svg";
 import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
-import HangmanBg from "../../../assets/HangmanBg.png";
+import wordMaster from "../../../assets/wordMaster.png";
 import { updatePet } from "../../redux/petSlice";
 import { UserService } from "../../services/UserService";
 import logger from "../../logger";
@@ -72,7 +72,7 @@ const HomeScreen = () => {
 
   const isFocused = useIsFocused();
 
-  const [gameName, setGameName] = useState<string>("");
+  const [gameName, setGameName] = useState<string>(GAMETYPE.DIAMONDPUZZLE);
   const [fps, setFps] = useState<string>("12");
   const [loop, setLoop] = useState<boolean>(false);
   const [resetAfterFinish, setResetAfterFinish] = useState<boolean>(false);
@@ -554,7 +554,7 @@ const HomeScreen = () => {
             >
               <Image
                 source={
-                  gameName === GAMETYPE.WORDMASTER ? HangmanBg : DiamondGameBg
+                  gameName === GAMETYPE.WORDMASTER ? wordMaster : DiamondGameBg
                 }
                 style={{
                   height: ConstantsResponsive.MAX_HEIGHT * 0.1 * 0.7,

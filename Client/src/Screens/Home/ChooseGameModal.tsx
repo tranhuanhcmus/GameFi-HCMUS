@@ -16,7 +16,7 @@ import useCustomNavigation from "../../hooks/useCustomNavigation";
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import CustomText from "../../components/CustomText";
 import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
-import HangmanBg from "../../../assets/HangmanBg.png";
+import wordMaster from "../../../assets/wordMaster.png";
 import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import { SocketIOClient } from "../../../socket";
 import { GAMETYPE } from "../../constants/types";
@@ -165,7 +165,7 @@ const ChooseGameModal = ({
                   style={{ flex: 1 }}
                 >
                   <Image
-                    source={HangmanBg}
+                    source={wordMaster}
                     style={{
                       flex: 1,
                       width: null,
