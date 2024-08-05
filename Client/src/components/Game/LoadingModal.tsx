@@ -77,7 +77,7 @@ const LoadingModal = ({
   const PlayGame = async () => {
     try {
       const body = { tokenId: tokenId };
-      const res = await UsersService.playGame(address as `0x${string}`, body);
+      await UsersService.playGame(address as `0x${string}`, body);
     } catch (err) {
       console.log(err);
     }
@@ -92,12 +92,17 @@ const LoadingModal = ({
     }
   }, [second]);
 
-  if (isVisible) {
-    socket.connect();
-    socket.onListenKeyRoom((data) => {
+  useEffect(() => {
+    const handleRoomData = async (data: {
+      gameRoom: string;
+      hpOpponent: any;
+      assetsOpponent: any;
+      elementOpponent: any;
+      atkOpponent: any;
+    }) => {
       setIsVisible(false);
       if (data.gameRoom !== "NO ROOM") {
-        PlayGame();
+        await PlayGame();
         dispatch(setGameRoom(data.gameRoom));
         dispatch(
           setOpponentValue({
@@ -108,14 +113,21 @@ const LoadingModal = ({
           }),
         );
 
-        if (gameName == GAMETYPE.DIAMONDPUZZLE) {
+        if (gameName === GAMETYPE.DIAMONDPUZZLE) {
           navigate.navigate("Match3Game");
-        } else if (gameName == GAMETYPE.WORDMASTER) {
+        } else if (gameName === GAMETYPE.WORDMASTER) {
           navigate.navigate("HangManGame");
         }
       }
-    });
-  }
+    };
+
+    socket.connect();
+    socket.onListenKeyRoom(handleRoomData);
+
+    return () => {
+      socket.removeListenKeyRoom();
+    };
+  }, [gameName, socket]);
 
   return (
     <Modal visible={isVisible} animationType="fade" transparent={true}>

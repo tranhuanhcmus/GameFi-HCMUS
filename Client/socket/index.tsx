@@ -140,6 +140,10 @@ export class SocketIOClient {
     this.socket.off(SOCKET.TAKE_DAMAGE);
   }
 
+  removeListenKeyRoom() {
+    this.socket.off(SOCKET.KEY_ROOM);
+  }
+
   removeListenFristTurn() {
     this.socket.off(SOCKET.FIRST_TURN);
   }
