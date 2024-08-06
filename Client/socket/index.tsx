@@ -149,7 +149,7 @@ export class SocketIOClient {
   }
 
   onListenMove(callback: (data: any) => void) {
-    this.socket.on(SOCKET.MOVE, (data) => {
+    this.socket.on(SOCKET.MOVE, (data: any) => {
       callback(data);
     });
   }

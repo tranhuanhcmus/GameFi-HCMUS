@@ -4,7 +4,6 @@ import { API } from "../apis/constants";
 import ConstantsResponsive from "../constants/Constanst";
 import CustomText from "./CustomText";
 import { COLOR } from "../utils/color";
-// import useImageColors from "../hooks/useImageColors";
 
 interface Props {
   name: string;

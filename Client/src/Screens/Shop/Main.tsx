@@ -10,15 +10,15 @@ import {
   StyleSheet,
 } from "react-native";
 import { ItemComponent } from "../../components/ItemComponent";
-import { ELEMENT } from "../../constants/types";
+
 import CustomText from "../../components/CustomText";
 import AlertBuyComponent from "../../components/AlertBuyComponent";
 import woodSign from "../../../assets/WoodSign3.png";
-import { flare } from "viem/chains";
+
 import { COLOR } from "../../utils/color";
-import Lucky from "../../../assets/medicine.png";
+
 import { useIsFocused } from "@react-navigation/native";
-import Medicine from "../../../assets/medicine.svg";
+
 import { ItemAppService } from "../../services/ItemAppService";
 import useFetch from "../../hooks/useFetch";
 import AlertBuyItemsSuccess from "../../components/AlertBuyItemsSuccess";

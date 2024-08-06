@@ -22,7 +22,6 @@ const NormalButton = ({
   ...rest
 }: Props) => {
   return (
-    // <DropShadow style={[styles.shadowProp, { shadowColor: shadowColor }]}>
     <TouchableOpacity
       onPress={onPress}
       {...rest}
@@ -31,7 +30,6 @@ const NormalButton = ({
     >
       {children}
     </TouchableOpacity>
-    // </DropShadow>
   );
 };
 
