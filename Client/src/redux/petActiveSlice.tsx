@@ -10,6 +10,8 @@ interface PetActiveState {
   active: boolean;
   hp: number;
   atk: number;
+  boostHp: number;
+  boostAtk: number;
   tokenId: String;
   boost: {
     boostType: string;
@@ -32,6 +34,8 @@ const initialState: PetActiveState = {
   image: "",
   title: "",
   hp: 0,
+  boostAtk: 1,
+  boostHp: 1,
   atk: 0,
   active: false,
   boost: {
@@ -74,13 +78,18 @@ const petActiveSlice = createSlice({
     },
     updateBoost(state, action) {
       state.boost = action.payload;
-      // if (action.payload.boostStatus === true) {
-      //   if (action.payload.boostType === BOOST.HEALTH) {
-      //     state.hp = state.hp * 1.2;
-      //   } else {
-      //     state.atk = state.atk * 1.2;
-      //   }
-      // }
+      if (action.payload.boostStatus === true) {
+        if (action.payload.boostType === BOOST.HEALTH) {
+          state.boostHp = 1.2;
+          state.boostAtk = 1;
+        } else {
+          state.boostHp = 1;
+          state.boostAtk = 1.2;
+        }
+      } else {
+        state.boostHp = 1;
+        state.boostAtk = 1;
+      }
     },
 
     updateEnergy(state, action: PayloadAction<number>) {

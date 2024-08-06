@@ -13,8 +13,8 @@ export function scaleStats(exp: number, baseHP: number, baseDamage: number) {
   }
 
   // Calculate scaled HP and damage
-  const scaledHP = baseHP * Math.pow(hpScaleFactor, level - 1);
-  const scaledDamage = baseDamage * Math.pow(damageScaleFactor, level - 1);
+  const scaledHP = baseHP * Math.pow(hpScaleFactor, level);
+  const scaledDamage = baseDamage * Math.pow(damageScaleFactor, level);
 
   return {
     hp: Math.round(scaledHP),

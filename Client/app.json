@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Crypto Creatures",
-    "slug": "Crypto Creatures",
+    "slug": "Crypto-Creatures",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,8 +11,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
-    "permissions": ["INTERNET"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "permissions": [
+      "INTERNET"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -36,6 +40,13 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0493005c-c448-4e02-a70c-3590b9c35378"
+      }
+    }
   }
 }

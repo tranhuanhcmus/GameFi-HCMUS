@@ -161,7 +161,6 @@ export class SocketIOClient {
   }
 
   cleanup() {
-    this.socket.off();
-    this.socket.disconnect();
+    this.socket.off(SOCKET.EVENT_DIAMOND);
   }
 }

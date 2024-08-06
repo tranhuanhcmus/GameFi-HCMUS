@@ -122,9 +122,9 @@ const LoadingModal = ({
       }
     };
 
-    socket.connect();
     socket.onListenKeyRoom(handleRoomData);
     socket.onListenFirstTurn((data) => {
+      console.log(data);
       dispatch(updateTurn(data));
     });
 

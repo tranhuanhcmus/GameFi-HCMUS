@@ -22,6 +22,8 @@ import { initSocket } from "../../redux/socketSlice";
 import GameHeader from "../HangManGame/Header";
 import TimingLine from "../HangManGame/TimingLine";
 import SwappableGrid from "./components/SwappableGrid";
+import useAudioPlayer from "../../hooks/useMusicPlayer";
+import GameSettings from "../../components/GameSetting";
 
 // import Images from '../lib/Images';
 
@@ -50,6 +52,10 @@ const GameScreen = () => {
     (state: any) => state.player,
   );
 
+  const { isVisable, sound, music } = useSelector(
+    (state: any) => state.settingGame,
+  );
+
   const { turn, damage } = useSelector((state: any) => state.hangMan);
 
   useEffect(() => {
@@ -58,7 +64,18 @@ const GameScreen = () => {
   const handleCloseModal = () => {
     dispatch(setVisable(false));
   };
+  const handleSurrender = () => {
+    handleCloseModal();
+    setTimeout(() => {
+      setStatus("Defeat");
+    }, 1000);
 
+    socket.emitEventGame({
+      gameRoom: gameRoom,
+      damage: null,
+      event: "Victory",
+    });
+  };
   useEffect(() => {
     if (status == "Defeat" || status == "Victory") {
       // setGameOver(true);
@@ -68,7 +85,7 @@ const GameScreen = () => {
       socket.removeListenTakeDamage();
     }
   }, [status]);
-
+  useAudioPlayer(music, "soundTrackGame");
   useEffect(() => {
     if (componentHp <= 0) {
       setStatus("Victory");
@@ -127,6 +144,11 @@ const GameScreen = () => {
           socket={socket}
           setMoveCount={setMoveCount}
           setScore={setScore}
+        />
+        <GameSettings
+          isVisible={isVisable}
+          onClose={handleCloseModal}
+          onSurrender={handleSurrender}
         />
       </SafeAreaView>
     </View>

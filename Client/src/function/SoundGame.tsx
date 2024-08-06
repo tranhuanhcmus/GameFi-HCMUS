@@ -6,6 +6,7 @@ const soundLibrary = {
   eatingSound: require("../../assets/audio/game-eat-sound-83240.mp3"),
   moveSound: require("../../assets/audio/move.mp3"),
   brokenSound: require("../../assets/audio/broken.mp3"),
+  punch: require("../../assets/audio/punch.mp3"),
   // Add more sounds here ...
 };
 const soundGame = new Audio.Sound();

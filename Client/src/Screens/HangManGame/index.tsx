@@ -58,6 +58,7 @@ const Index = () => {
     title,
     tokenUri,
     attributes,
+    boostAtk,
     level,
     hp: hpPet,
     atk,
@@ -82,7 +83,9 @@ const Index = () => {
   const [damagePet, setDamagePet] = useState(atk);
 
   useEffect(() => {
-    setDamagePet(atk * ContraryElement(attributes.element, elementOpponent));
+    setDamagePet(
+      atk * boostAtk * ContraryElement(attributes.element, elementOpponent),
+    );
   }, []);
 
   useEffect(() => {
@@ -207,7 +210,7 @@ const Index = () => {
 
   useEffect(() => {
     if (status == "Defeat" || status == "Victory") {
-      // setGameOver(true);
+      setGameOver(true);
       dispatch(updateTurn(false));
       socket.emitSuccess(gameRoom);
       socket.removeListenFristTurn();
@@ -223,6 +226,10 @@ const Index = () => {
 
   useEffect(() => {
     socket.onListenTakeDamage(handleDamage);
+    socket.onListenFirstTurn((data) => {
+      console.log(data);
+      dispatch(updateTurn(data));
+    });
 
     socket.onListenDisConnect((data) => {
       handleCloseModal();
@@ -233,7 +240,7 @@ const Index = () => {
 
     return () => {
       // Remove the event listeners:
-
+      socket.removeListenFristTurn();
       socket.removeListenOppentDisconnect();
       socket.removeListenTakeDamage();
     };

@@ -29,6 +29,7 @@ import { setVisable } from "../../redux/settingGameSlice";
 import { ELEMENT, formatElement } from "../../constants/types";
 import { ContraryElement } from "../../function/ContraryElement";
 import { useIsFocused } from "@react-navigation/native";
+import { playSound } from "../../function/SoundGame";
 
 interface props {
   hp: number;
@@ -88,6 +89,9 @@ const User: React.FC<props> = ({ hp }) => {
     height: 0,
     width: 0,
   });
+  const { isVisable, sound, music } = useSelector(
+    (state: any) => state.settingGame,
+  );
   useEffect(() => {
     setIsImageLoaded(false);
 
@@ -159,7 +163,7 @@ const User: React.FC<props> = ({ hp }) => {
   };
 
   const playSkill = (type: string) => {
-    const parsedFps = Number(fps);
+    const parsedFps = Number(6);
 
     if (mummyRef1.current) {
       mummyRef1.current.play({
@@ -187,6 +191,8 @@ const User: React.FC<props> = ({ hp }) => {
       isFirstRender.current = false;
       return;
     }
+
+    playSound(sound, "punch");
 
     playSkill("skill");
     setTimeout(() => {
@@ -250,12 +256,12 @@ const User: React.FC<props> = ({ hp }) => {
         <SpriteSheet
           ref={mummyRef1}
           source={require("../../../assets/skill.png")}
-          columns={12}
-          rows={1}
+          columns={3}
+          rows={3}
           width={ConstantsResponsive.XR * 2 * 80}
           animations={{
             default: [20],
-            skill: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            skill: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
           }}
         />
       </View>
@@ -274,8 +280,12 @@ const Component: React.FC<props> = ({ hp }) => {
   const [offsetY, setOffsetY] = useState<number>(0);
   const { assets, elementOpponent } = useSelector((state: any) => state.player);
   const isFirstRender = useRef(true);
-
-  const { attributes, atk } = useSelector((state: any) => state.petActive);
+  const { isVisable, sound, music } = useSelector(
+    (state: any) => state.settingGame,
+  );
+  const { attributes, atk, boostAtk } = useSelector(
+    (state: any) => state.petActive,
+  );
 
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -298,7 +308,7 @@ const Component: React.FC<props> = ({ hp }) => {
   };
 
   const playSkill = (type: string) => {
-    const parsedFps = Number(fps);
+    const parsedFps = Number(6);
 
     if (mummyRef1.current) {
       mummyRef1.current.play({
@@ -384,7 +394,7 @@ const Component: React.FC<props> = ({ hp }) => {
       isFirstRender.current = false;
       return;
     }
-
+    playSound(sound, "punch");
     playSkill("skill");
     setTimeout(() => {
       receiveDamage(10);
@@ -431,7 +441,9 @@ const Component: React.FC<props> = ({ hp }) => {
         <Animated.Text style={[styles.damageText2, floatingTextStyle]}>
           -
           {Math.floor(
-            atk * ContraryElement(attributes.element, elementOpponent),
+            atk *
+              boostAtk *
+              ContraryElement(attributes.element, elementOpponent),
           )}
         </Animated.Text>
       </View>
@@ -445,12 +457,12 @@ const Component: React.FC<props> = ({ hp }) => {
         <SpriteSheet
           ref={mummyRef1}
           source={require("../../../assets/skill.png")}
-          columns={12}
-          rows={1}
+          columns={3}
+          rows={3}
           width={ConstantsResponsive.XR * 2 * 80}
           animations={{
             default: [20],
-            skill: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            skill: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
           }}
         />
       </View>

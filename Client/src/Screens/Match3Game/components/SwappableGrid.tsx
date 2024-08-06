@@ -325,12 +325,12 @@ const SwappableGrid = ({ socket, setMoveCount, setScore }: Props) => {
   };
   return (
     <>
-      {isVisible ? (
+      {isVisible && (
         <StatusPopup
           status={isWinner.current ? "Victory" : "Defeat"}
           onPress={handlePopupButton}
         />
-      ) : null}
+      )}
       <GestureRecognizer
         onLayout={onLayout}
         config={config}
@@ -339,12 +339,6 @@ const SwappableGrid = ({ socket, setMoveCount, setScore }: Props) => {
       >
         {renderTiles(tileDataSource)}
       </GestureRecognizer>
-
-      {!!blockScreen.length && (
-        <View style={styles.blindView}>
-          <Text>{blockScreen}</Text>
-        </View>
-      )}
     </>
   );
 };
@@ -390,16 +384,6 @@ let styles = StyleSheet.create({
     position: "absolute",
 
     top: ConstantsResponsive.MAX_HEIGHT * 0.35 + StatusBarHeight,
-  },
-  blindView: {
-    position: "absolute",
-    width: TILE_WIDTH * ROW,
-    height: TILE_WIDTH * COLUMN,
-    backgroundColor: "white",
-    color: "black",
-    alignItems: "center",
-    justifyContent: "center",
-    // opacity: 0.5,
   },
 });
 function dispatch(arg0: { payload: any; type: "player/updateComponentHp" }) {

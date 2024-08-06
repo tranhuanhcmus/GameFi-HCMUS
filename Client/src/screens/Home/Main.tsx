@@ -91,6 +91,8 @@ const HomeScreen = () => {
     tokenUri,
     attributes,
     level,
+    boostHp,
+    boostAtk,
     hp,
     atk,
   } = useSelector((state: any) => state.petActive);
@@ -494,6 +496,7 @@ const HomeScreen = () => {
         >
           <NormalButton
             onPress={() => {
+              socket.connect();
               Animated.sequence([
                 Animated.timing(playGameBtnTranslateYValue, {
                   toValue: 10,
@@ -513,13 +516,14 @@ const HomeScreen = () => {
                 } else {
                   if (!isVisible) setIsVisible(true);
 
-                  dispatch(setHp(hp));
+                  dispatch(setHp(hp * boostHp));
+                  console.log(gameName);
 
                   socket.emitFindMatch({
                     gameName: gameName,
-                    hp: hp,
+                    hp: hp * boostHp,
                     assets: assets,
-                    atk: atk,
+                    atk: atk * boostAtk,
                     element: attributes.element,
                   });
                 }
