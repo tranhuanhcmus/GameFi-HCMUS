@@ -25,12 +25,6 @@ import SwappableGrid from "./components/SwappableGrid";
 import useAudioPlayer from "../../hooks/useMusicPlayer";
 import GameSettings from "../../components/GameSetting";
 
-// import Images from '../lib/Images';
-
-// let playButton = require('../assets/PlayButton.png')
-
-let justClouds = require("./assets/Background.png");
-
 const GameScreen = () => {
   const [moveCount, setMoveCount] = useState(0);
   const [score, setScore] = useState(0);
