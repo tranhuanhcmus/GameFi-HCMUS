@@ -29,7 +29,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Inventory from "../../../assets/inventory.svg";
 import ChooseGameModal from "./ChooseGameModal";
 import InventoryModal from "./Inventory";
-import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
+import DiamondGameBg from "../../../assets/DiamondGameBg.png";
 import wordMaster from "../../../assets/wordMaster.png";
 import { updatePet } from "../../redux/petSlice";
 import { UserService } from "../../services/UserService";

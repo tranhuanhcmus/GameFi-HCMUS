@@ -15,7 +15,7 @@ import log from "../../logger/index.js";
 import useCustomNavigation from "../../hooks/useCustomNavigation";
 import CloseButton from "../../../assets/carbon_close-filled.svg";
 import CustomText from "../../components/CustomText";
-import DiamondGameBg from "../../../assets/DiamondGameBg.jpg";
+import DiamondGameBg from "../../../assets/DiamondGameBg.png";
 import wordMaster from "../../../assets/wordMaster.png";
 import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import { SocketIOClient } from "../../../socket";
