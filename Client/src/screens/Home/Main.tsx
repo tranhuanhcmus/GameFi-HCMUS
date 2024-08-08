@@ -237,8 +237,9 @@ const HomeScreen = () => {
         position: "relative",
         display: "flex",
         flexDirection: "column",
+        flex: 1,
         alignItems: "center",
-        backgroundColor: COLOR.PURPLE,
+
         height: ConstantsResponsive.MAX_HEIGHT,
         width: ConstantsResponsive.MAX_WIDTH,
       }}

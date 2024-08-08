@@ -2,7 +2,7 @@
   "expo": {
     "name": "Crypto Creatures",
     "slug": "Crypto-Creatures",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,14 +17,14 @@
       "infoPlist": {
         "LSApplicationQueriesSchemes": ["metamask"]
       },
-      "bundleIdentifier": "com.anonymous.Client"
+      "bundleIdentifier": "com.hcmus.cryptocreatures"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.Client"
+      "package": "com.hcmus.cryptocreatures"
     },
     "web": {
       "favicon": "./assets/favicon.png"

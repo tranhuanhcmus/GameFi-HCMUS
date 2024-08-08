@@ -135,7 +135,7 @@ const AlertBuyItemsSuccess: React.FC<AlertBuyItemsSuccessProps> = ({
             style={{
               textAlign: "center",
               color: "white",
-              fontWeight: "bold",
+            
               fontSize: ConstantsResponsive.YR * 25,
             }}
           >

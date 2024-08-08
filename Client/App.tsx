@@ -6,7 +6,7 @@ import {
 } from "@web3modal/wagmi-react-native";
 
 import { WagmiProvider, http, useAccount } from "wagmi";
-import { SafeAreaView, LogBox } from "react-native";
+import { LogBox } from "react-native";
 import Route from "./src/routes";
 import { Provider } from "react-redux";
 import { store } from "./src/redux/store";
@@ -44,6 +44,7 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <Route />
+
           <Web3Modal />
         </Provider>
       </QueryClientProvider>

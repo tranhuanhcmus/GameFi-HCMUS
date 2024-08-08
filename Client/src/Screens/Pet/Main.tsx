@@ -26,7 +26,6 @@ import { selectUser } from "../../redux/userSlice";
 import { StatusBarHeight } from "../../function/CalculateStatusBar";
 import { FOODVALUE } from "../../utils/constantValue";
 
-// import SpriteSheet from "rn-sprite-sheet";
 import SpriteSheet from "../../components/SpriteSheet";
 
 import { COLOR } from "../../utils/color";
@@ -673,10 +672,10 @@ const PetScreen = () => {
       </View>
       <View
         style={{
-          height: "auto",
+          height: ConstantsResponsive.YR * 100,
           width: ConstantsResponsive.MAX_WIDTH,
           position: "absolute",
-          bottom: ConstantsResponsive.YR * 100,
+          bottom: ConstantsResponsive.YR * 120,
           rowGap: ConstantsResponsive.YR * 20,
 
           display: "flex",
@@ -685,7 +684,7 @@ const PetScreen = () => {
       >
         <View
           style={{
-            height: "auto",
+            height: ConstantsResponsive.YR * 100,
 
             width: ConstantsResponsive.MAX_WIDTH,
             display: "flex",

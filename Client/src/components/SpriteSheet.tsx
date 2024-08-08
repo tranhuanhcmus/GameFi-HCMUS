@@ -11,13 +11,12 @@ import {
 } from "react-native";
 
 import { Image as RNImage } from "react-native";
-import { Image as ExpoImage } from "expo-image";
-
+import { Image } from "expo-image";
 import PropTypes from "prop-types";
 import resolveAssetSource from "react-native/Libraries/Image/resolveAssetSource";
 import { ImageURISource } from "react-native";
 
-const ImageComponent = Platform.OS === "ios" ? RNImage : ExpoImage;
+const ImageComponent = Platform.OS === "ios" ? RNImage : Image;
 const AnimatedFastImage = Animated.createAnimatedComponent(ImageComponent);
 
 type AnimationType = {
@@ -239,6 +238,7 @@ export default class SpriteSheet extends PureComponent<
             {
               height: imageHeight,
               width: imageWidth,
+
               transform: [
                 {
                   translateX: this.time.interpolate({
@@ -325,7 +325,7 @@ export default class SpriteSheet extends PureComponent<
         toValue: length,
         duration: (length / fps) * 1000,
         easing: Easing.linear,
-        useNativeDriver: true, // Using native animation driver instead of JS
+        useNativeDriver: Platform.OS === "ios" ? true : false,
       });
 
       this.time.setValue(0);
