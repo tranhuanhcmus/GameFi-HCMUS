@@ -79,7 +79,6 @@ const BabyCard = (props: any) => {
       >
         <CustomText
           style={{
-            fontWeight: "bold",
             color: COLOR.WHITE,
             fontSize: ConstantsResponsive.YR * 20,
           }}
@@ -165,7 +164,7 @@ const BabyCard = (props: any) => {
       <CustomText
         style={{
           textAlign: "center",
-          fontWeight: "900",
+
           position: "absolute",
           top: "80%",
           alignSelf: "center",

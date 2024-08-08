@@ -69,14 +69,14 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 32,
-    fontWeight: "bold",
+
     color: "white",
     textAlign: "center",
     marginBottom: 30,
   },
   body: {
     fontSize: 20,
-    fontWeight: "bold",
+
     color: "white",
   },
 

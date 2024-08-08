@@ -17,9 +17,6 @@ const CustomText: React.FC<CustomTextProps> = ({
 }) => {
   const [fontsLoaded, fontError] = useFonts({
     rexlia: require("../../assets/fonts/rexlia-rg.otf"),
-    "mrt-mid": require("../../assets/fonts/Montserrat-Medium.ttf"),
-    "mrt-bold": require("../../assets/fonts/Montserrat-Bold.ttf"),
-    "mrt-xbold": require("../../assets/fonts/Montserrat-ExtraBold.ttf"),
   });
 
   useEffect(() => {
@@ -38,7 +35,7 @@ const CustomText: React.FC<CustomTextProps> = ({
   }
 
   return (
-    <Text style={style} className={className}>
+    <Text style={[style, { fontFamily: "rexlia" }]} className={className}>
       {children}
     </Text>
   );

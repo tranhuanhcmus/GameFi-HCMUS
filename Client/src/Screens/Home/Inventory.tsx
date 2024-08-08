@@ -75,7 +75,6 @@ const InventoryModal = ({
               color: COLOR.WHITE,
               fontSize: 15,
               textAlign: "right",
-              fontWeight: "bold",
             }}
           >
             x{quantity}

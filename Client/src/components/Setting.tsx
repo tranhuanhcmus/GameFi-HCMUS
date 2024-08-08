@@ -37,7 +37,7 @@ const Settings: React.FC<Props> = ({ isVisible, onClose }) => {
   return (
     <Modal
       isVisible={isVisible || settingVisable}
-      style={{ alignItems: "center" }}
+      style={{ alignItems: "center", flex: 1 }}
     >
       <View style={styles.container}>
         <Image
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: ConstantsResponsive.YR * 50,
-    fontWeight: "bold",
+
     fontFamily: "rexlia",
     color: "white",
     textAlign: "center",
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   body: {
     fontSize: ConstantsResponsive.YR * 35,
     fontFamily: "rexlia",
-    fontWeight: "bold",
+
     color: "white",
   },
 

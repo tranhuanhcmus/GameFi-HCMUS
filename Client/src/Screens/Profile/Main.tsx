@@ -158,9 +158,7 @@ const ProfileScreen = () => {
             aspectRatio: 1,
           }}
         />
-        <CustomText
-          style={{ color: COLOR.WHITE, fontWeight: "bold", fontSize: 17 }}
-        >
+        <CustomText style={{ color: COLOR.WHITE, fontSize: 17 }}>
           Username
         </CustomText>
         <CustomText
@@ -219,7 +217,7 @@ const ProfileScreen = () => {
             style={{
               fontSize: ConstantsResponsive.YR * 40,
               fontFamily: "rexlia",
-              fontWeight: "900",
+
               textAlign: "center",
 
               color: COLOR.WHITE,
@@ -260,7 +258,7 @@ const ProfileScreen = () => {
             style={{
               fontSize: ConstantsResponsive.YR * 40,
               fontFamily: "rexlia",
-              fontWeight: "900",
+
               textAlign: "center",
 
               color: COLOR.WHITE,

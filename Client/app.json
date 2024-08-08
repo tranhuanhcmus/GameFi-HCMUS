@@ -15,13 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "LSApplicationQueriesSchemes": [
-          "metamask",
-          "trust",
-          "safe",
-          "rainbow",
-          "uniswap"
-        ]
+        "LSApplicationQueriesSchemes": ["metamask"]
       },
       "bundleIdentifier": "com.anonymous.Client"
     },
@@ -35,17 +29,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "enablePngCrunchInReleaseBuilds": false
-          }
-        }
-      ]
-    ],
+    "plugins": ["expo-font", ["expo-build-properties"]],
     "extra": {
       "eas": {
         "projectId": "0493005c-c448-4e02-a70c-3590b9c35378"

@@ -86,7 +86,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
         <Text
           style={{
             fontFamily: "rexlia",
-            fontWeight: "500",
+
             color: COLOR.WHITE,
             fontSize: 15,
           }}
@@ -122,7 +122,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
         <Text
           style={{
             fontFamily: "rexlia",
-            fontWeight: "500",
+
             color: COLOR.WHITE,
             fontSize: 15,
           }}
@@ -166,7 +166,6 @@ export const ItemComponent: React.FC<ItemProps> = ({
             color: COLOR.WHITE,
             fontSize: 17,
             textAlign: "center",
-            fontWeight: "500",
           }}
         >
           {itemName}
@@ -206,7 +205,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
             <Text
               style={{
                 fontFamily: "rexlia",
-                fontWeight: "500",
+
                 color: COLOR.WHITE,
                 fontSize: 15,
               }}
@@ -223,7 +222,7 @@ export const ItemComponent: React.FC<ItemProps> = ({
             <Text
               style={{
                 fontFamily: "rexlia",
-                fontWeight: "500",
+
                 color: COLOR.WHITE,
                 fontSize: 17,
               }}

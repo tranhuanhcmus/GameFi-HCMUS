@@ -583,7 +583,7 @@ const styles = StyleSheet.create({
     color: "red",
     position: "absolute",
     fontSize: 24,
-    fontWeight: "bold",
+
     // You may need to adjust these values to position the damage text correctly
     bottom: 50,
     right: 0,
@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
     color: "red",
     position: "absolute",
     fontSize: 24,
-    fontWeight: "bold",
+
     // You may need to adjust these values to position the damage text correctly
     bottom: 50,
     left: 0,
@@ -721,7 +721,6 @@ const styles = StyleSheet.create({
   barText: {
     textAlign: "center",
     color: "#fff",
-    fontWeight: "bold",
   },
 });
 

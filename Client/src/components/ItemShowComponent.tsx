@@ -32,7 +32,7 @@ const ItemShowComponent: React.FC<Props> = ({ name, quantity, itemImg }) => {
           style={{
             textAlign: "center",
             color: COLOR.WHITE,
-            fontWeight: "bold",
+
             fontSize: ConstantsResponsive.YR * 30,
           }}
         >
@@ -42,7 +42,7 @@ const ItemShowComponent: React.FC<Props> = ({ name, quantity, itemImg }) => {
           style={{
             textAlign: "center",
             color: COLOR.WHITE,
-            fontWeight: "bold",
+
             maxWidth: ConstantsResponsive.XR * 100,
             fontSize: ConstantsResponsive.YR * 20,
           }}

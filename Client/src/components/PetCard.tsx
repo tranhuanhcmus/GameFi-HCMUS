@@ -233,7 +233,7 @@ const PetCard: React.FC<PetCardProps> = ({
                 // fontFamily: "mt-2",
                 fontFamily: "rexlia",
                 color: "white",
-                fontWeight: "bold",
+
                 fontSize: ConstantsResponsive.YR * 25,
               }}
             >
@@ -258,7 +258,7 @@ const PetCard: React.FC<PetCardProps> = ({
           <CustomText
             style={{
               fontFamily: "rexlia",
-              fontWeight: "bold",
+
               color: COLOR.WHITE,
               width: "100%",
               height: "20%",

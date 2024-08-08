@@ -176,7 +176,7 @@ const ShopScreen = (props: Props) => {
                       {
                         fontSize: 20,
                         color: COLOR.WHITE,
-                        fontWeight: "bold",
+
                         textAlign: "center",
                       },
                     ]}

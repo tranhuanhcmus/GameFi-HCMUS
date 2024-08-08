@@ -102,7 +102,6 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             color: COLOR.YELLOW,
             textAlign: "center",
             fontSize: 15,
-            fontWeight: "bold",
           }}
         >
           {data && data.length
@@ -124,7 +123,6 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             color: COLOR.YELLOW,
             textAlign: "center",
             fontSize: 15,
-            fontWeight: "bold",
           }}
         >
           {data && data.length
@@ -150,7 +148,6 @@ const Header: React.FC<HeaderProps> = ({ name }) => {
             color: COLOR.CYAN,
             textAlign: "center",
             fontSize: 15,
-            fontWeight: "bold",
           }}
         >
           {energyUser?.energy}

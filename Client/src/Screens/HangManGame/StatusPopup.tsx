@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 30,
-    fontWeight: "700",
+
     color: "#FFA402",
   },
   btn: {
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   btnText: {
     textAlign: "center",
     color: "white",
-    fontWeight: "bold",
+
     fontSize: 20,
   },
 });

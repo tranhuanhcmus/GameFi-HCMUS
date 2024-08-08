@@ -87,7 +87,7 @@ const ChooseGameModal = ({
               color: COLOR.WHITE,
               fontSize: 30,
               textAlign: "center",
-              fontWeight: "bold",
+
               fontFamily: "rexlia",
             }}
           >

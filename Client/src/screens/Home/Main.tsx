@@ -21,7 +21,6 @@ import useCustomNavigation from "../../hooks/useCustomNavigation/index";
 import { useAppDispatch } from "../../redux/store";
 import { selectUser } from "../../redux/userSlice";
 
-// import SpriteSheet from "rn-sprite-sheet";
 import SpriteSheet from "../../components/SpriteSheet";
 import LoadingModal from "../../components/Game/LoadingModal";
 import { COLOR } from "../../utils/color";
@@ -45,6 +44,7 @@ import { setHp, updateHp } from "../../redux/playerSlice";
 import { UsersService } from "../../services/UsersService";
 
 import { BOOST, GAMETYPE } from "../../constants/types";
+import { useFonts } from "expo-font";
 type Props = {};
 
 const HomeScreen = () => {
@@ -306,7 +306,7 @@ const HomeScreen = () => {
             <CustomText
               style={{
                 textAlign: "center",
-                fontWeight: "bold",
+
                 fontSize: ConstantsResponsive.XR * 22,
                 color: COLOR.WHITE,
               }}
@@ -363,14 +363,12 @@ const HomeScreen = () => {
       >
         <CustomText
           style={{
-            // fontFamily: "mt-2",
-            fontWeight: "bold",
             fontFamily: "rexlia",
             fontSize: ConstantsResponsive.YR * 35,
             color: COLOR.BLACK,
           }}
         >
-          LEVEL {Math.floor(getLevel(level))}
+          {`LEVEL ${Math.floor(getLevel(level))}`}
         </CustomText>
 
         {energy >= 0 && (
@@ -609,7 +607,6 @@ const styles = StyleSheet.create({
   textSize: {
     fontSize: ConstantsResponsive.YR * 60,
 
-    fontWeight: "900",
     fontFamily: "rexlia",
     textAlign: "center",
     color: "white",
@@ -621,7 +618,6 @@ const styles = StyleSheet.create({
 
     width: ConstantsResponsive.MAX_WIDTH * 0.25,
 
-    fontWeight: "900",
     textAlign: "center",
   },
 

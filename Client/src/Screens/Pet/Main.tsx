@@ -401,7 +401,7 @@ const PetScreen = () => {
                 styles.textSize,
                 {
                   color: COLOR.CREAM,
-                  fontWeight: "heavy",
+
                   fontSize: ConstantsResponsive.YR * 26,
                 },
               ]}
@@ -490,7 +490,7 @@ const PetScreen = () => {
             style={{
               fontFamily: "rexlia",
               fontSize: ConstantsResponsive.YR * 40,
-              fontWeight: "heavy",
+
               color: COLOR.BLACK,
             }}
           >
@@ -510,7 +510,6 @@ const PetScreen = () => {
           >
             <CustomText
               style={{
-                fontWeight: "bold",
                 fontSize: ConstantsResponsive.YR * 35,
                 color: COLOR.BLACK,
                 alignSelf: "center",
@@ -754,7 +753,7 @@ const styles = StyleSheet.create({
   textSize: {
     fontSize: ConstantsResponsive.XR * 25,
     fontFamily: "rexlia",
-    fontWeight: "900",
+
     textAlign: "center",
 
     color: COLOR.WHITE,

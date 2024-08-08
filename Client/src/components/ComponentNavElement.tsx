@@ -23,7 +23,6 @@ const ComponentNavElement: React.FC<ComponentNavElementProps> = ({
         style={{
           color: focused ? COLOR.WHITE : COLOR.GRAY,
           fontSize: ConstantsResponsive.XR * 25,
-          fontWeight: "bold",
         }}
       >
         {content}

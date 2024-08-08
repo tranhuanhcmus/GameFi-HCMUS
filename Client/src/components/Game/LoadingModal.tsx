@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     marginTop: 10,
-    fontWeight: "bold",
+
     color: "white",
   },
   vsBlock: {
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
 
   vsText: {
     marginVertical: 10,
-    fontWeight: "bold",
+
     fontSize: 18,
     color: "white",
   },

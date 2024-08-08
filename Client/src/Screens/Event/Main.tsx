@@ -32,9 +32,7 @@ const EventScreen = () => {
           marginTop: 50,
         }}
       >
-        <CustomText
-          style={{ color: COLOR.GREEN, fontSize: 40, fontWeight: "bold" }}
-        >
+        <CustomText style={{ color: COLOR.GREEN, fontSize: 40 }}>
           LUCKY
         </CustomText>
         <CustomText style={{ color: COLOR.GREEN, fontSize: 35 }}>
@@ -104,7 +102,6 @@ const EventScreen = () => {
                   color: COLOR.WHITE,
                   paddingStart: 10,
                   fontSize: 15,
-                  fontWeight: "bold",
                 }}
               >
                 ENTER
@@ -118,7 +115,6 @@ const EventScreen = () => {
                   color: COLOR.WHITE,
                   paddingStart: 10,
                   fontSize: 15,
-                  fontWeight: "bold",
                 }}
               >
                 300
@@ -188,7 +184,6 @@ const EventScreen = () => {
                   color: COLOR.WHITE,
                   paddingStart: 10,
                   fontSize: 15,
-                  fontWeight: "bold",
                 }}
               >
                 ENTER
@@ -199,7 +194,6 @@ const EventScreen = () => {
                   color: COLOR.WHITE,
                   paddingStart: 10,
                   fontSize: 15,
-                  fontWeight: "bold",
                 }}
               >
                 50

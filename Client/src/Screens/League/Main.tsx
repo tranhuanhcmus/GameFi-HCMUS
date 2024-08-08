@@ -85,7 +85,7 @@ const LeagueScreen = () => {
           style={{
             fontSize: 40,
             fontFamily: "rexlia",
-            fontWeight: "bold",
+
             color: COLOR.YELLOW,
             textShadowColor: "rgba(0, 0, 0, 0.75)",
             textShadowOffset: { width: -1, height: 1 },

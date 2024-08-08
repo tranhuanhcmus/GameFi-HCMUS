@@ -24,7 +24,7 @@ const ReChargeButton = () => {
           style={{
             textAlign: "center",
             color: COLOR.WHITE,
-            fontWeight: "bold",
+
             fontSize: ConstantsResponsive.YR * 30,
           }}
         >
@@ -34,7 +34,7 @@ const ReChargeButton = () => {
           style={{
             textAlign: "center",
             color: COLOR.WHITE,
-            fontWeight: "bold",
+
             maxWidth: ConstantsResponsive.XR * 100,
             fontSize: ConstantsResponsive.YR * 20,
           }}

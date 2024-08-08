@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   bouncingText: {
     fontSize: 20,
     marginTop: 10,
-    fontWeight: "bold",
+
     color: "white",
   },
 });

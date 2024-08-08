@@ -13,6 +13,7 @@ import ButtonFilter from "../../components/Button/ButtonFilter";
 import CartFilter from "../../components/CartFilter";
 import ConstantsResponsive from "../../constants/Constanst";
 import { flare } from "viem/chains";
+import { StatusBarHeight } from "../../function/CalculateStatusBar";
 
 type Props = {};
 const trend = true;
@@ -265,7 +266,7 @@ const styles = StyleSheet.create({
   },
   playArea: {
     width: ConstantsResponsive.MAX_WIDTH,
-    marginTop: ConstantsResponsive.YR * 50,
+    marginTop: ConstantsResponsive.YR * 50 + StatusBarHeight,
     height:
       ConstantsResponsive.MAX_HEIGHT -
       ConstantsResponsive.YR * 250 -

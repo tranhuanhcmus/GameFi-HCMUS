@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   text: {
     width: ConstantsResponsive.XR * 150,
     fontFamily: "rexlia",
-    fontWeight: "bold",
+
     fontSize: ConstantsResponsive.YR * 30,
     color: "white",
   },

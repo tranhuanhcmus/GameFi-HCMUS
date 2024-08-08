@@ -130,7 +130,7 @@ const AlertComponent: React.FC<AlertComponentProps> = ({
               >
                 <Text
                   className="text-center text-[20px]"
-                  style={{ fontWeight: "bold", color: COLOR.WHITE }}
+                  style={{ color: COLOR.WHITE }}
                 >
                   OK
                 </Text>
