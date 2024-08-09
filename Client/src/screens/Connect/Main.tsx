@@ -1,6 +1,6 @@
 import { W3mAccountButton, useWeb3Modal } from "@web3modal/wagmi-react-native";
 import React, { useEffect } from "react";
-import { Image, SafeAreaView, View } from "react-native";
+import { Image, SafeAreaView, StatusBar, View } from "react-native";
 import { useAccount } from "wagmi"; // Import useDisconnect hook
 import Moon from "../../../assets/Moon.png";
 import GradientButton from "../../components/Button/GradientButton";
@@ -19,6 +19,11 @@ export default function ConnectScreen() {
       navigate.replace("MainTab");
     }
   }, [isConnected]);
+
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
 
   return (
     <SafeAreaView

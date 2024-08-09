@@ -5,8 +5,9 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  StatusBar,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import TrendComponent from "../../components/TrendComponent";
 import TrendCard from "../../components/TrendCard";
 import ButtonFilter from "../../components/Button/ButtonFilter";
@@ -18,6 +19,10 @@ import { StatusBarHeight } from "../../function/CalculateStatusBar";
 type Props = {};
 const trend = true;
 const TrendMarketScreen = (props: Props) => {
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
   return (
     <SafeAreaView className="flex-1 ">
       <Image

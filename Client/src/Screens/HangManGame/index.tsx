@@ -87,7 +87,10 @@ const Index = () => {
       atk * boostAtk * ContraryElement(attributes.element, elementOpponent),
     );
   }, []);
-
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
   useEffect(() => {
     if (apiData) {
       setCorrectWords(apiData[currentIndex].answer);

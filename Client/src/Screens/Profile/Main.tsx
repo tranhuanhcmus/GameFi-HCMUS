@@ -12,6 +12,7 @@ import {
   ScrollView,
   Animated,
   TouchableWithoutFeedback,
+  StatusBar,
 } from "react-native";
 import { ItemComponent } from "../../components/ItemComponent";
 import { ELEMENT } from "../../constants/types";
@@ -36,6 +37,10 @@ const ProfileScreen = () => {
   const [isConnected, setIsConnected] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const { isDisconnected } = useAccount();
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
   const navigation = useNavigation();
 
   const scrollToBottom = () => {

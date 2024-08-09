@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   ImageSourcePropType,
+  StatusBar,
 } from "react-native";
 import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
@@ -172,6 +173,10 @@ const PetScreen = () => {
       mummyRef.current.stop(() => console.log("stopped"));
     }
   };
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
 
   useEffect(() => {
     if (isFocused) {

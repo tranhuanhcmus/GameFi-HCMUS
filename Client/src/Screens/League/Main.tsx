@@ -1,4 +1,4 @@
-import { ScrollView, View, Image, Animated } from "react-native";
+import { ScrollView, View, Image, Animated, StatusBar } from "react-native";
 import ConstantsResponsive from "../../constants/Constanst";
 import { COLOR } from "../../utils/color";
 import CustomText from "../../components/CustomText";
@@ -11,7 +11,10 @@ import logger from "../../logger";
 import { shortenString } from "../../utils/StringUtils";
 const LeagueScreen = () => {
   const [data, setData] = useState([]);
-
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
   const fetchData = async () => {
     const data = await LeagueService.getUserCupsList();
     const newData = data.map((user: any, index: number) => ({

@@ -8,6 +8,7 @@ import {
   Image,
   FlatList,
   StyleSheet,
+  StatusBar,
 } from "react-native";
 import { ItemComponent } from "../../components/ItemComponent";
 
@@ -52,6 +53,10 @@ const ShopScreen = (props: Props) => {
   const [buySuccess, setBuySuccess] = useState<boolean>(false);
   const { apiData, serverError } = useFetch(() => ItemAppService.getAllItems());
   const [itemImg, setItemImg] = useState<any>("");
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
   useEffect(() => {
     //console.log(apiData);
     if (apiData) {

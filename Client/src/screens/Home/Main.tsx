@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Animated,
   ActivityIndicator,
+  StatusBar,
 } from "react-native";
 import NormalButton from "../../components/Button/NormalButton";
 import { useSelector } from "react-redux";
@@ -118,6 +119,10 @@ const HomeScreen = () => {
 
   /** useRef */
   const mummyRef = useRef<SpriteSheet>(null);
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
 
   const play = (type: string) => {
     const parsedFps = Number(fps);

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
   Image,
+  StatusBar,
 } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
@@ -51,7 +52,10 @@ const GameScreen = () => {
   );
 
   const { turn, damage } = useSelector((state: any) => state.hangMan);
-
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
   useEffect(() => {
     initSocket();
   }, []);

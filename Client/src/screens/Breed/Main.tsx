@@ -5,6 +5,7 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableHighlight,
   TouchableOpacity,
@@ -41,6 +42,11 @@ export function BreedScreen() {
 
   const { fatherPet, motherPet } = useSelector((state: any) => state.breed);
   const [childPet, setChildPet] = useState<any>(null);
+
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    StatusBar.setTranslucent(true);
+  }, []);
 
   const [remainingTime, setRemainingTime] = useState(TIME_TO_BREED);
   const [isActive, setIsActive] = useState(false);
