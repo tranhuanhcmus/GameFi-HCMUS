@@ -4,6 +4,7 @@
     "slug": "Crypto-Creatures",
     "version": "1.0.0",
     "orientation": "portrait",
+    "runtimeVersion": "1.0.0",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -20,7 +21,7 @@
       "bundleIdentifier": "com.anonymous.Client"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -35,6 +36,10 @@
       "eas": {
         "projectId": "0493005c-c448-4e02-a70c-3590b9c35378"
       }
+    },
+
+    "updates": {
+      "url": "https://u.expo.dev/0493005c-c448-4e02-a70c-3590b9c35378"
     }
   }
 }

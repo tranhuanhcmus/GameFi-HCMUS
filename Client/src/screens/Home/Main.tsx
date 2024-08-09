@@ -119,6 +119,7 @@ const HomeScreen = () => {
 
   /** useRef */
   const mummyRef = useRef<SpriteSheet>(null);
+  
   useEffect(() => {
     StatusBar.setHidden(true);
     StatusBar.setTranslucent(true);

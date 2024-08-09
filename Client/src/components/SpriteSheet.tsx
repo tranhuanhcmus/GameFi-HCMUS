@@ -11,12 +11,13 @@ import {
 } from "react-native";
 
 import { Image as RNImage } from "react-native";
-import { Image } from "expo-image";
+
+import FastImage from "react-native-fast-image";
 import PropTypes from "prop-types";
 import resolveAssetSource from "react-native/Libraries/Image/resolveAssetSource";
 import { ImageURISource } from "react-native";
 
-const ImageComponent = Platform.OS === "ios" ? RNImage : Image;
+const ImageComponent = Platform.OS === "ios" ? RNImage : FastImage;
 const AnimatedFastImage = Animated.createAnimatedComponent(ImageComponent);
 
 type AnimationType = {
