@@ -63,6 +63,12 @@ function findMatch(socket, data) {
         [key]: key,
       });
 
+      // randomly first turn for any player
+      const values = Object.values(matchPairs.get(gameRoom));
+      const randomIndex = Math.floor(Math.random() * values.length);
+      const randomValue = values[randomIndex];
+      io.to(randomValue).emit(SOCKET.FIRST_TURN, true);
+
       console.log("matchPairs.gameRoom", matchPairs.get(gameRoom));
       // Notify both clients that the game is starting
       console.log(data);
@@ -81,12 +87,6 @@ function findMatch(socket, data) {
         atkOpponent: data.atk,
         elementOpponent: data.element,
       });
-
-      // randomly first turn for any player
-      const values = Object.values(matchPairs.get(gameRoom));
-      const randomIndex = Math.floor(Math.random() * values.length);
-      const randomValue = values[randomIndex];
-      io.to(randomValue).emit(SOCKET.FIRST_TURN, true);
 
       foundMatch = true;
     }
