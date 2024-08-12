@@ -69,21 +69,23 @@ function findMatch(socket, data) {
       // Notify both clients that the game is starting
       console.log(data);
       
-      io.to(socket.id).emit(SOCKET.KEY_ROOM, {
-        gameRoom: gameRoom,
-        hpOpponent: value.hpOpponent,
-        assetsOpponent: value.assetsOpponent,
-        atkOpponent: value.atkOpponent,
-        elementOpponent: value.elementOpponent,
-      });
+      setTimeout(() => {
+          io.to(socket.id).emit(SOCKET.KEY_ROOM, {
+            gameRoom: gameRoom,
+            hpOpponent: value.hpOpponent,
+            assetsOpponent: value.assetsOpponent,
+            atkOpponent: value.atkOpponent,
+            elementOpponent: value.elementOpponent,
+          });
 
-      io.to(key).emit(SOCKET.KEY_ROOM, {
-        gameRoom: gameRoom,
-        hpOpponent: data.hp,
-        assetsOpponent: data.assets,
-        atkOpponent: data.atk,
-        elementOpponent: data.element,
-      });
+          io.to(key).emit(SOCKET.KEY_ROOM, {
+            gameRoom: gameRoom,
+            hpOpponent: data.hp,
+            assetsOpponent: data.assets,
+            atkOpponent: data.atk,
+            elementOpponent: data.element,
+          });
+      }, 1000);
 
       foundMatch = true;
     }
