@@ -85,7 +85,7 @@ function findMatch(socket, data) {
             atkOpponent: data.atk,
             elementOpponent: data.element,
           });
-      }, 1000);
+      }, 5000);
 
       foundMatch = true;
     }
