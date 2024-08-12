@@ -38,6 +38,11 @@ function findMatch(socket, data) {
 
       socket.join(gameRoom);
       value.socket.join(gameRoom);
+<<<<<<< HEAD
+=======
+      io.to(socket.id).emit(SOCKET.FIRST_TURN,true);
+      io.to(key).emit(SOCKET.FIRST_TURN,false);
+>>>>>>> f71a15cfbd6fc4a50082412a6adb8f060c0b0160
 
       // Set availability to false as they are now in a game
       socketPairs.set(socket.id, {
