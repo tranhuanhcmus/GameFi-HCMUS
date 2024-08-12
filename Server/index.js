@@ -38,6 +38,8 @@ function findMatch(socket, data) {
 
       socket.join(gameRoom);
       value.socket.join(gameRoom);
+      io.to(socket.id).emit(SOCKET.FIRST_TURN,true);
+      io.to(key).emit(SOCKET.FIRST_TURN,false);
 
       // Set availability to false as they are now in a game
       socketPairs.set(socket.id, {
@@ -66,8 +68,6 @@ function findMatch(socket, data) {
       console.log("matchPairs.gameRoom", matchPairs.get(gameRoom));
       // Notify both clients that the game is starting
       console.log(data);
-      io.to(socket.id).emit(SOCKET.FIRST_TURN,true);
-      io.to(key).emit(SOCKET.FIRST_TURN,false);
       
       io.to(socket.id).emit(SOCKET.KEY_ROOM, {
         gameRoom: gameRoom,
