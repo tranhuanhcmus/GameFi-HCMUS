@@ -11,10 +11,15 @@ Video: https://drive.google.com/drive/folders/1LRXgF8tQh-oXCp7I_D-1KG4VCnlYdoRN?
 Details:
 
 Develop Environment: Hardhat
+
 Network: Sepolia
+
 Wallet Support: ConnectWallet, MetaMask
+
 EtherScan: https://sepolia.etherscan.io
+
 MarketPlace: OpenSea Testnet
+
 Contract Address: 0x04Ce8b460eDA74606e7ECa0978D51F83100A7320
 
 Contact: tranhuanbs02@gmail.com
